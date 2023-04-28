@@ -100,7 +100,7 @@ IDxcBlob* CompileShader(
 		L"-E",L"main",//エントリーポイントの指定。基本的にmain以外にはしない
 		L"-T",profile,//ShaderProfileの設定
 		L"-Zi",L" - Qembed_debug",//デバッグ用の情報を埋め込む
-		L"-0d",//最適化を外しておく
+		L"-Od",//最適化を外しておく
 		L"-Zpr",//メモリレイアウトは行優先
 	};
 	//実際にShaderをコンパイルする
@@ -134,6 +134,8 @@ IDxcBlob* CompileShader(
 	//実行用のバイナリを返却
 	return shaderBlob;
 }
+
+
 //Windowsアプリでのエントリーポイント(main関数）
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
@@ -250,6 +252,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
 		//警告時に止まる
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+		
 		//抑制するメッセージのID
 		D3D12_MESSAGE_ID denyIds[] = {
 			//windows11でのDXGいデバッグレイヤーとDX12デバッグレイヤーの相互作用バグによるエラーメッセージ
@@ -340,16 +343,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	device->CreateRenderTargetView(swapChainResource[1], &rtvDesc, rtvHandle[1]);
 	
 
-	//初期値0でFenceを作る
-	ID3D12Fence* fence = nullptr;
-	uint64_t fenceValue = 0;
-	hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
-	assert(SUCCEEDED(hr));
-
-	//FenceのSignalを待つためのイベントを作成する
-	HANDLE fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	assert(fenceEvent != nullptr);
-
+	
 	//dxcCompilerを初期化
 	IDxcUtils* dxcUtils = nullptr;
 	IDxcCompiler3* dxcCompiler = nullptr;
@@ -406,12 +400,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 
 	//Shaderをコンパイルする
-	IDxcBlob* vertexShaderBlob = CompileShader(L"Object3D.VS.hlsl",
-		L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
+	IDxcBlob* vertexShaderBlob = CompileShader(L"Object3d.VS.hlsl", L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(vertexShaderBlob != nullptr);
 
-	IDxcBlob* pixelShaderBlob = CompileShader(L"Object3D.PS.hlsl",
-		L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
+	IDxcBlob* pixelShaderBlob = CompileShader(L"Object3d.PS.hlsl", L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(pixelShaderBlob != nullptr);
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
@@ -498,16 +490,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	scissorRect.top = 0;
 	scissorRect.bottom = kCliantHeight;
 
-	commandList->RSSetViewports(1, &viewport);	//Viewportを設定
-	commandList->RSSetScissorRects(1, &scissorRect);	//Scirssorを設定
-	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	commandList->SetGraphicsRootSignature(rootSignature);
-	commandList->SetPipelineState(graphicsPipelineState);	//PSOを設定
-	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
-	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
-	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
-	commandList->DrawInstanced(3, 1, 0, 0);
+	
 
 	
 
@@ -526,6 +509,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	
 	
+	//初期値0でFenceを作る
+	ID3D12Fence* fence = nullptr;
+	uint64_t fenceValue = 0;
+	hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	assert(SUCCEEDED(hr));
+
+	//FenceのSignalを待つためのイベントを作成する
+	HANDLE fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	assert(fenceEvent != nullptr);
 
 	
 	
@@ -563,6 +555,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			//指定した色で画面全体をクリアする
 			float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色、RGBAの順
 			commandList->ClearRenderTargetView(rtvHandle[backBufferIndex], clearColor, 0, nullptr);
+			
+			commandList->RSSetViewports(1, &viewport);	//Viewportを設定
+			commandList->RSSetScissorRects(1, &scissorRect);	//Scirssorを設定
+			//RootSignatureを設定。PSOに設定しているけど別途設定が必要
+			commandList->SetGraphicsRootSignature(rootSignature);
+			commandList->SetPipelineState(graphicsPipelineState);	//PSOを設定
+			commandList->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
+			//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
+			commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
+			commandList->DrawInstanced(3, 1, 0, 0);
+
 			//画面に描く処理は全て終わり、画面に映すので、状態を遷移
 			//今回はRenderTargetからPresentにする
 			barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
@@ -609,9 +613,18 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	CloseHandle(fenceEvent);
 	fence->Release();
+	vertexResource->Release();
+	graphicsPipelineState->Release();
+	if (errorBlob) {
+		errorBlob->Release();
+	}
+	rootSignature->Release();
+	pixelShaderBlob->Release();
+	vertexShaderBlob->Release();
+
 	rtvDescriptorHeap->Release();
 	swapChainResource[0]->Release();
-	swapChainResource[0]->Release();
+	swapChainResource[1]->Release();
 	swapChain->Release();
 	commandList->Release();
 	commandAllocator->Release();
@@ -619,6 +632,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	device->Release();
 	useAdapter->Release();
 	dxgiFactory->Release();
+
+	
 #ifdef _DEBUG
 	debugControllar->Release();
 #endif
@@ -632,8 +647,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
 		debug->Release();
 	}
-	//警告時に止まる
-	infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+	
 		
 	return 0;
 }

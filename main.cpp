@@ -472,7 +472,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//頂点リソースにデータを書き込む
 	Vector4* vertexData = nullptr;
 	//書き込むためのアドレスを取得
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(vertexData));
+	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 	//左下
 	vertexData[0] = { -0.5f,-0.5f,0.0f,1.0f };
 	//上
@@ -480,6 +480,36 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//右下
 	vertexData[2] = { 0.5f,-0.5f,0.0f,1.0f };
 
+	//ビューポート
+	D3D12_VIEWPORT viewport{};
+	//クライアント領域サイズと一緒にして画面残帯に表示
+	viewport.Width = kCliantWidth;
+	viewport.Height = kCliantHeight;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+
+	//シザー矩形
+	D3D12_RECT scissorRect{};
+	//基本的にビューポートと同じ矩形が構成されるようにする
+	scissorRect.left = 0;
+	scissorRect.right = kCliantWidth;
+	scissorRect.top = 0;
+	scissorRect.bottom = kCliantHeight;
+
+	commandList->RSSetViewports(1, &viewport);	//Viewportを設定
+	commandList->RSSetScissorRects(1, &scissorRect);	//Scirssorを設定
+	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
+	commandList->SetGraphicsRootSignature(rootSignature);
+	commandList->SetPipelineState(graphicsPipelineState);	//PSOを設定
+	commandList->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
+	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
+	commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
+	commandList->DrawInstanced(3, 1, 0, 0);
+
+	
 
 	/*typedef struct D3D12_CPU_DESCRIPTOR_HANDLE {
 		SIZE_T ptr;

@@ -19,6 +19,7 @@ public:
 	void WindowCreate();
 
 	
+
 public:
 	//ウインドウクラスの設定
 	WNDCLASS wc;

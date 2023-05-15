@@ -2,9 +2,7 @@
 #include <Windows.h>
 #include <cstdint>
 
-//クライアント領域のサイズ
-const int32_t kCliantWidth = 1280;
-const int32_t kCliantHeight = 720;
+
 
 class WindowsAPI
 {
@@ -14,7 +12,7 @@ public:
 
 	void Init();
 
-	void WindowProcedure();
+	
 
 	void WindowClass();
 	void WindowSize();
@@ -27,6 +25,10 @@ public:
 	
 	//ウインドウサイズを表す構造体にクライアント領域を入れる
 	RECT wrc;
+
+	//クライアント領域のサイズ
+	const int32_t kCliantWidth = 1280;
+	const int32_t kCliantHeight = 720;
 };
 
 

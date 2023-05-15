@@ -4,6 +4,7 @@ WindowsAPI::WindowsAPI()
 {
 	wc = {};
 	wrc = {};
+	
 }
 
 WindowsAPI::~WindowsAPI()
@@ -16,29 +17,27 @@ void WindowsAPI::Init() {
 	WindowCreate();
 }
 
-void WindowsAPI::WindowProcedure() {
-	LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-		//メッセージに応じてゲーム固有の処理を行う
-		switch (msg)
-		{
-			//ウインドウが破棄された
-		case WM_DESTROY:
-			//OSに対して、アプリの終了を伝える
-			PostQuitMessage(0);
-			return 0;
-		}
 
-		//標準のメッセージ処理を行う
-		return DefWindowProc(hwnd, msg, wparam, lparam);
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+	//メッセージに応じてゲーム固有の処理を行う
+	switch (msg)
+	{
+		//ウインドウが破棄された
+	case WM_DESTROY:
+		//OSに対して、アプリの終了を伝える
+		PostQuitMessage(0);
+		return 0;
 	}
-}
 
+	//標準のメッセージ処理を行う
+	return DefWindowProc(hwnd, msg, wparam, lparam);
+}
 
 void WindowsAPI::WindowClass() {
 	
 
 	//ウインドウプロシージャ	
-	wc.lpfnWndProc = WindowProcedure();
+	wc.lpfnWndProc = WindowProc;
 	//ウインドウクラス名（なんでもいい）
 	wc.lpszClassName = L"CG2WindowClass";
 	//インスタンスハンドル
@@ -70,4 +69,6 @@ void WindowsAPI::WindowCreate() {
 		wc.hInstance,			//インスタンスハンドル
 		nullptr
 	);
+
+	ShowWindow(hwnd, SW_SHOW);
 }

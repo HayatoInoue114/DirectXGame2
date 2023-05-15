@@ -18,7 +18,9 @@ public:
 	void WindowSize();
 	void WindowCreate();
 
-	
+	void WindowProc();
+
+	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 public:
 	//ウインドウクラスの設定

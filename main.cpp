@@ -2,9 +2,15 @@
 #include "MainRoop.h"
 
 
-
 WindowsAPI windowsAPI;
+MainRoop mainRoop;
 
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
+	windowsAPI.Init();
+
+	mainRoop.WindowProcess();
+	return 0;
+}
 
 
 

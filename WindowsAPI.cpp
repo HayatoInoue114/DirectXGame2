@@ -72,3 +72,4 @@ void WindowsAPI::WindowCreate() {
 
 	ShowWindow(hwnd, SW_SHOW);
 }
+

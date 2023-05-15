@@ -22,10 +22,13 @@ public:
 	void D3D12Device();
 
 	void Init();
+
+	HRESULT hr;
+	ID3D12Device* device;
 private:
 	IDXGIFactory7* dxgiFactory;
 
-	HRESULT hr;
+	
 
 	//使用するアダプタ用の変数。最初にnullptrを入れておく
 	IDXGIAdapter4* useAdapter;

@@ -43,7 +43,11 @@ void Log(const std::string& message) {
 
 DirectX12::DirectX12()
 {
-	
+	hr = {};
+	device = {};
+	dxgiFactory = nullptr;
+	useAdapter = nullptr;
+
 }
 
 DirectX12::~DirectX12()
@@ -51,9 +55,8 @@ DirectX12::~DirectX12()
 }
 
 void DirectX12::DXGIFactory() {
-	dxgiFactory = nullptr;
+	
 	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
-
 	assert(SUCCEEDED(hr));
 }
 
@@ -78,7 +81,7 @@ void DirectX12::Adapter() {
 }
 
 void DirectX12::D3D12Device() {
-	ID3D12Device* device = nullptr;
+	
 		//機能レベルとログ出力用の文字列
 		D3D_FEATURE_LEVEL featureLevels[] = {
 			D3D_FEATURE_LEVEL_12_2,D3D_FEATURE_LEVEL_12_1,D3D_FEATURE_LEVEL_12_0

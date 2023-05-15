@@ -1,14 +1,16 @@
 #include "WindowsAPI.h"
 #include "MainRoop.h"
-#include "DirectX12.h"
+#include "Command.h"
 
 WindowsAPI windowsAPI;
 MainRoop mainRoop;
 DirectX12 directX12;
+Command command;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	windowsAPI.Init();
 	directX12.Init();
+	command.Init();
 
 	mainRoop.WindowProcess();
 	return 0;

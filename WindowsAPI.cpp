@@ -39,7 +39,7 @@ void WindowsAPI::WindowClass() {
 	//ウインドウプロシージャ	
 	wc.lpfnWndProc = WindowProc;
 	//ウインドウクラス名（なんでもいい）
-	wc.lpszClassName = L"CG2WindowClass";
+	wc.lpszClassName = L"メンバ変数";
 	//インスタンスハンドル
 	wc.hInstance = GetModuleHandle(nullptr);
 	//カーソル
@@ -58,7 +58,7 @@ void WindowsAPI::WindowCreate() {
 	//ウインドウの生成
 	HWND hwnd = CreateWindow(
 		wc.lpszClassName,		//利用するクラス名
-		L"CG2",					//タイトルバーの文字
+		L"メンバ変数",			//タイトルバーの文字
 		WS_OVERLAPPEDWINDOW,	//よく見るウインドウスタイル
 		CW_USEDEFAULT,			//表示X座標（Windowsに任せる）
 		CW_USEDEFAULT,			//表示Y座標（Windowsに任せる）

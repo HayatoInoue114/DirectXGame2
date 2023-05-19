@@ -1,5 +1,7 @@
 #include "WindowsAPI.h"
 
+
+
 WindowsAPI::WindowsAPI()
 {
 	wc = {};
@@ -58,7 +60,7 @@ void WindowsAPI::WindowSize() {
 
 void WindowsAPI::WindowCreate() {
 	//ウインドウの生成
-	HWND hwnd = CreateWindow(
+	hwnd = CreateWindow(
 		wc.lpszClassName,		//利用するクラス名
 		L"メンバ変数",			//タイトルバーの文字
 		WS_OVERLAPPEDWINDOW,	//よく見るウインドウスタイル
@@ -71,6 +73,8 @@ void WindowsAPI::WindowCreate() {
 		wc.hInstance,			//インスタンスハンドル
 		nullptr
 	);
+
+	directX12->DebugLayer();
 
 	ShowWindow(hwnd, SW_SHOW);
 }

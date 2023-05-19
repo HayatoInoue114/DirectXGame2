@@ -1,8 +1,9 @@
 #include "MainRoop.h"
-
-MainRoop::MainRoop()
+ 
+MainRoop::MainRoop(DirectX12* directX12)
 {
 	msg = {};
+	this->directX12 = directX12;
 }
 
 MainRoop::~MainRoop()
@@ -19,6 +20,10 @@ void MainRoop::WindowProcess() {
 		}
 		else {
 			//ゲームの処理
+			directX12->CommandList();
+			directX12->CommandKick();
+			directX12->Signal();
+
 		}
 	}
 		

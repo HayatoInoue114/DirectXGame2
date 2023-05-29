@@ -74,7 +74,7 @@ void WindowsAPI::WindowCreate() {
 		nullptr
 	);
 
-	directX12->DebugLayer();
+	/*directX12->DebugLayer();*/
 
 	ShowWindow(hwnd, SW_SHOW);
 }

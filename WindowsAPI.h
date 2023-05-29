@@ -1,17 +1,19 @@
 #pragma once
 #include <Windows.h>
 #include <cstdint>
-#include "DirectX12.h"
+//#include "DirectX12.h"
 
+//クライアント領域のサイズ
+static const int32_t kCliantWidth = 1280;
+static const int32_t kCliantHeight = 720;
 
+//class DirectX12;
 
 class WindowsAPI
 {
 public:
 
-	//クライアント領域のサイズ
-	static const int32_t kCliantWidth = 1280;
-	static const int32_t kCliantHeight = 720;
+
 
 
 	WindowsAPI();
@@ -30,7 +32,7 @@ public:
 
 	HWND GetHwnd() const { return hwnd; }
 
-public:
+private:
 	//ウインドウクラスの設定
 	WNDCLASS wc;
 	
@@ -39,7 +41,7 @@ public:
 
 	HWND hwnd;
 
-	DirectX12* directX12;
+	/*DirectX12* directX12 = new DirectX12;*/
 };
 
 

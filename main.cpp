@@ -1,19 +1,31 @@
-#include "WindowsAPI.h"
-#include "MainRoop.h"
-#include "DirectX12.h"
+#include "GameRoop.h"
 
 
-WindowsAPI windowsAPI;
-MainRoop *mainRoop;
-DirectX12 directX12;
+WindowsAPI* windowsAPI = new WindowsAPI;
+DirectX12* directX12 = new DirectX12;
+GraphicsRenderer* graphicsRenderer = new GraphicsRenderer;
+
+GameRoop* gameRoop = new GameRoop;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	windowsAPI.Init();
-	directX12.Init(&windowsAPI);
+	gameRoop->Init(directX12, graphicsRenderer, windowsAPI);
 
-	mainRoop = new MainRoop(&directX12);
-	mainRoop->WindowProcess();
-	return 0;
+	MSG msg{};
+	//Windowにメッセージが来てたら最優先で処理させる
+	while (msg.message != WM_QUIT)
+	{
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		else {
+			//ゲームの処理
+			gameRoop->Update(directX12, graphicsRenderer, windowsAPI);
+
+			gameRoop->Release(directX12, graphicsRenderer, windowsAPI);
+		}
+		return 0;
+	}
 }
 
 

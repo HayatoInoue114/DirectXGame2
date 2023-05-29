@@ -2,13 +2,16 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
-#include <string.h>
-#include <format>
+#include "FormatString.h"
+#include <dxgidebug.h>
 
 #include "WindowsAPI.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
+#pragma comment(lib,"dxguid.lib")
+
+class WindowsAPI;
 
 class DirectX12
 {
@@ -30,7 +33,7 @@ public:
 
 	void Init(WindowsAPI* windowsAPI);
 	
-	void DebugLayer();
+	/*void DebugLayer();*/
 
 	void Error();
 
@@ -38,10 +41,19 @@ public:
 
 	void ScreenDisplay();
 
+	void CommandConfirm();
+
 	void Fence();
 
-	
+	void Update();
 
+	void ResourceLeakCheck();
+
+	void Release();
+
+	ID3D12Device* GetDevice() { return device; }
+
+	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
 public:
 	void CommandList();
 
@@ -91,7 +103,7 @@ private:
 	
 	UINT backBufferIndex{};
 	
-	ID3D12Resource* swapChainResource[2] = { nullptr };
+	ID3D12Resource* swapChainResource[2];
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier{};
 	
@@ -100,6 +112,8 @@ private:
 	uint64_t fenceValue = 0;
 
 	//FenceのSignalを待つためのイベントを作成する
-	HANDLE fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	HANDLE fenceEvent;
+
+	IDXGIDebug1* debug;
 };
 

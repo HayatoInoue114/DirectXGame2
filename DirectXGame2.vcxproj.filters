@@ -19,17 +19,29 @@
     <Filter Include="ヘッダー ファイル\DirectX12">
       <UniqueIdentifier>{c6c00c7f-d492-460f-9570-0372ace87a39}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\MainRoop">
-      <UniqueIdentifier>{ad5bed53-534c-4a9a-a9e9-dfa05959985d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ヘッダー ファイル\MainRoop">
-      <UniqueIdentifier>{d4fc6ca3-f2e7-4ac9-9d1f-6f26475aa383}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\WindowsAPI">
       <UniqueIdentifier>{754ed4e7-ce18-410f-8fdf-98b6dc372694}</UniqueIdentifier>
     </Filter>
     <Filter Include="ヘッダー ファイル\WindowsAPI">
       <UniqueIdentifier>{0860c094-b72e-4795-a660-5837524536d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GraphicsRenderer">
+      <UniqueIdentifier>{c58eec7d-b1c9-4d0b-9a5d-260fd2e92cce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GraphicsRenderer">
+      <UniqueIdentifier>{93e449ea-001f-4948-8c69-0cd2ff356a80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\FormatString">
+      <UniqueIdentifier>{1caf239b-ffb5-47e4-9eee-b5a40ca49623}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\FormatString">
+      <UniqueIdentifier>{507d3a5c-16f2-4c0a-8010-88312281c146}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\GameManager">
+      <UniqueIdentifier>{12a10a61-ffda-4dca-882e-a2db7dbf3019}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\GameManager">
+      <UniqueIdentifier>{4a7189fd-b318-4cfb-8f4d-14de7a7c66d2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,11 +51,17 @@
     <ClCompile Include="DirectX12.cpp">
       <Filter>ソース ファイル\DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="MainRoop.cpp">
-      <Filter>ソース ファイル\MainRoop</Filter>
-    </ClCompile>
     <ClCompile Include="WindowsAPI.cpp">
       <Filter>ソース ファイル\WindowsAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsRenderer.cpp">
+      <Filter>ソース ファイル\GraphicsRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="FormatString.cpp">
+      <Filter>ソース ファイル\FormatString</Filter>
+    </ClCompile>
+    <ClCompile Include="GameRoop.cpp">
+      <Filter>ソース ファイル\GameManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -57,11 +75,17 @@
     <ClInclude Include="DirectX12.h">
       <Filter>ヘッダー ファイル\DirectX12</Filter>
     </ClInclude>
-    <ClInclude Include="MainRoop.h">
-      <Filter>ヘッダー ファイル\MainRoop</Filter>
-    </ClInclude>
     <ClInclude Include="WindowsAPI.h">
       <Filter>ヘッダー ファイル\WindowsAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsRenderer.h">
+      <Filter>ヘッダー ファイル\GraphicsRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="FormatString.h">
+      <Filter>ヘッダー ファイル\FormatString</Filter>
+    </ClInclude>
+    <ClInclude Include="GameRoop.h">
+      <Filter>ヘッダー ファイル\GameManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

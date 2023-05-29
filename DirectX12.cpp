@@ -1,42 +1,4 @@
 #include "DirectX12.h"
-std::wstring ConvertString(const std::string& str)
-{
-	if (str.empty())
-	{
-		return std::wstring();
-	}
-
-	auto sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), NULL, 0);
-	if (sizeNeeded == 0)
-	{
-		return std::wstring();
-	}
-	std::wstring result(sizeNeeded, 0);
-	MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), &result[0], sizeNeeded);
-	return result;
-}
-
-//wstring->string
-std::string ConvertString(const std::wstring& str)
-{
-	if (str.empty())
-	{
-		return std::string();
-	}
-
-	auto sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), NULL, 0, NULL, NULL);
-	if (sizeNeeded == 0)
-	{
-		return std::string();
-	}
-	std::string result(sizeNeeded, 0);
-	WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), result.data(), sizeNeeded, NULL, NULL);
-	return result;
-}
-
-void Log(const std::string& message) {
-	OutputDebugStringA(message.c_str());
-}
 
 
 
@@ -124,8 +86,8 @@ void DirectX12::Command() {
 
 void DirectX12::SwapChain(WindowsAPI* windowsAPI) {
 
-	swapChainDesc.Width = WindowsAPI::kCliantWidth;		//画面の横。ウインドウのクライアント領域を同じものにしておく
-	swapChainDesc.Height = WindowsAPI::kCliantHeight;	//画面の高さ。ウインドウのクライアント領域を同じものにしておく
+	swapChainDesc.Width = kCliantWidth;		//画面の横。ウインドウのクライアント領域を同じものにしておく
+	swapChainDesc.Height = kCliantHeight;	//画面の高さ。ウインドウのクライアント領域を同じものにしておく
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	//色の形式
 	swapChainDesc.SampleDesc.Count = 1;	//マルチサンプルしない
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	//描画のターゲットとして利用する
@@ -145,7 +107,8 @@ void DirectX12::Descriptor() {
 	assert(SUCCEEDED(hr));
 
 	//SwapChainからResourceを引っ張ってくる
-	swapChainResource[2] = { nullptr };
+	swapChainResource[0] = { nullptr };
+	swapChainResource[1] = { nullptr };
 	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResource[0]));
 	//うまく取得できなければ起動できない
 	assert(SUCCEEDED(hr));
@@ -183,10 +146,6 @@ void DirectX12::CommandList() {
 		commandList->ClearRenderTargetView(rtvHandle[backBufferIndex], clearColor, 0, nullptr);
 			
 		ScreenDisplay();
-
-		//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
-		hr = commandList->Close();
-		assert(SUCCEEDED(hr));
 }
 
 void DirectX12::CommandKick() {
@@ -204,17 +163,17 @@ void DirectX12::CommandKick() {
 
 }
 
-void DirectX12::DebugLayer() {
-	#ifdef _DEBUG
-	ID3D12Debug1* debugControllar = nullptr;
-	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugControllar)))) {
-		//デバッグレイヤーを有効化する
-		debugControllar->EnableDebugLayer();
-		//さらにGPU側でもチェックを行うようにする
-		debugControllar->SetEnableGPUBasedValidation(TRUE);
-	}
-#endif // _DEBUG
-}
+//void DirectX12::DebugLayer() {
+//	#ifdef _DEBUG
+//	ID3D12Debug1* debugControllar = nullptr;
+//	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugControllar)))) {
+//		//デバッグレイヤーを有効化する
+//		debugControllar->EnableDebugLayer();
+//		//さらにGPU側でもチェックを行うようにする
+//		debugControllar->SetEnableGPUBasedValidation(TRUE);
+//	}
+//#endif // _DEBUG
+//}
 
 void DirectX12::Error() {
 	#ifdef _DEBUG
@@ -225,7 +184,7 @@ void DirectX12::Error() {
 		//エラー時に止まる
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
 		//警告時に止まる
-		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+		//infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
 		
 		//抑制するメッセージのID
 		D3D12_MESSAGE_ID denyIds[] = {
@@ -273,9 +232,16 @@ void DirectX12::ScreenDisplay() {
 			commandList->ResourceBarrier(1, &barrier);
 }
 
+void DirectX12::CommandConfirm() {
+	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
+	hr = commandList->Close();
+	assert(SUCCEEDED(hr));
+}
+
 void DirectX12::Fence() {
 	//初期値0でFenceを作る
 	fence = nullptr;
+	fenceValue = 0;
 	
 	hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 	assert(SUCCEEDED(hr));
@@ -301,6 +267,34 @@ void DirectX12::Signal() {
 	}
 }
 
+void DirectX12::ResourceLeakCheck() {
+	//リソースリークチェック
+	
+	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
+		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+		debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
+		debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
+		debug->Release();
+	}
+}
+
+void DirectX12::Release() {
+	CloseHandle(fenceEvent);
+		fence->Release();
+		
+		rtvDescriptorHeap->Release();
+		swapChainResource[0]->Release();
+		swapChainResource[1]->Release();
+		swapChain->Release();
+		commandList->Release();
+		commandAllocator->Release();
+		commandQueue->Release();
+		device->Release();
+		useAdapter->Release();
+		dxgiFactory->Release();
+	
+}
+
 void DirectX12::Init(WindowsAPI* windowsAPI) {
 	DXGIFactory();
 	Adapter();
@@ -311,4 +305,14 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 	SwapChain(windowsAPI);
 	Descriptor();
 	Fence();
+}
+
+void DirectX12::Update() {
+	//ゲームの処理
+	CommandList();
+	Signal();
+	CommandKick();
+
+
+	ResourceLeakCheck();
 }

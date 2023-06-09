@@ -1,14 +1,19 @@
-#include "GameRoop.h"
+//#include "GameManager.h"
+#include"DirectX12.h"
 
 
-WindowsAPI* windowsAPI = new WindowsAPI;
-DirectX12* directX12 = new DirectX12;
-GraphicsRenderer* graphicsRenderer = new GraphicsRenderer;
-
-GameRoop* gameRoop = new GameRoop;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	gameRoop->Init(directX12, graphicsRenderer, windowsAPI);
+
+	
+	WindowsAPI* windowsAPI = new WindowsAPI();
+	DirectX12* directX12 = new DirectX12;
+	directX12->Init(windowsAPI);
+	
+	/*GameManager* gameManager = new GameManager;
+	gameManager->Init(gameManager->directX12_,windowsAPI);
+	
+	gameManager->VariableInit();*/
 
 	MSG msg{};
 	//Windowにメッセージが来てたら最優先で処理させる
@@ -19,13 +24,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DispatchMessage(&msg);
 		}
 		else {
-			//ゲームの処理
-			gameRoop->Update(directX12, graphicsRenderer, windowsAPI);
+			////ゲームの処理
+			//gameManager->BeginFrame();
 
-			gameRoop->Release(directX12, graphicsRenderer, windowsAPI);
+			//gameManager->Update();
+
+			//gameManager->Draw();
+
+			//gameManager->EndFrame();
+			directX12->PreDraw();
+
+			directX12->PostDraw();
+			
 		}
-		return 0;
 	}
+
+	/*gameManager->Finalize();*/
+	return 0;
 }
 
 

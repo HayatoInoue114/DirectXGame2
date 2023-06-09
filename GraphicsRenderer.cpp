@@ -4,6 +4,7 @@
 
 
 void GraphicsRenderer::Dxc() {
+	HRESULT hr;
 	//dxcCompilerを初期化
 	dxcUtils = nullptr;
 	dxcCompiler = nullptr;
@@ -28,11 +29,12 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 	IDxcCompiler3* dxcComiler,
 	IDxcIncludeHandler* includeHandler)
  {
+	HRESULT hr;
 	//これからシェーダーをコンパイルする旨をログに出す
 	Log(ConvertString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
 	//hlslファイルを読み込む
-	IDxcBlobEncoding* shaderSource = nullptr;
-	HRESULT hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+	shaderSource = nullptr;
+	hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
 	//読めなかったら止める
 	assert(SUCCEEDED(hr));
 	//読み込んだファイルの内容を設定する
@@ -50,7 +52,7 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 		L"-Zpr",//メモリレイアウトは行優先
 	};
 	//実際にShaderをコンパイルする
-	IDxcResult* shaderResult = nullptr;
+	shaderResult = nullptr;
 	hr = dxcComiler->Compile(
 		&shaderSourceBuffer,			//読み込んだファイル
 		arguments,						//コンパイルオプション
@@ -61,7 +63,7 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 	//コンパイルエラーではなくdxcが起動できないなど致命的な状況
 	assert(SUCCEEDED(hr));
 	//警告・エラーが出てたらログに出して止める
-	IDxcBlobUtf8* shaderError = nullptr;
+	shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
 		Log(shaderError->GetStringPointer());
@@ -69,7 +71,7 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 		assert(false);
 	}
 	//コンパイル結果から実行用のバイナリ部分を取得
-	IDxcBlob* shaderBlob = nullptr;
+	shaderBlob = nullptr;
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 	//成功したログを出す
@@ -81,7 +83,8 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 	return shaderBlob;
 }
 
-void GraphicsRenderer::CreateRootSignature(DirectX12* directX12) {
+void GraphicsRenderer::CreateRootSignature() {
+	HRESULT hr;
 	descriptiomnRootSignature = {};
 	descriptiomnRootSignature.Flags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
@@ -134,7 +137,8 @@ void GraphicsRenderer::BuildShader() {
 	assert(pixelShaderBlob != nullptr);
 }
 
-void GraphicsRenderer::CreatePSO(DirectX12* directX12) {
+void GraphicsRenderer::CreatePSO() {
+	HRESULT hr;
 	graphicsPipelineStateDesc = {};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature;//RootSignature
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;//InputLayout
@@ -159,48 +163,9 @@ void GraphicsRenderer::CreatePSO(DirectX12* directX12) {
 	assert(SUCCEEDED(hr));
 }
 
-void GraphicsRenderer::CreateVertexResource(DirectX12* directX12) {
-	uploadHeapProperties = {};
-	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;//UploadHeapを使う
-	vertexResourceDesc = {};
-	//バッファリソース。テクスチャの場合はまた別の設定をする
-	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexResourceDesc.Width = sizeof(Vector4) * 3;//リソースのサイズ。今回はVector４を３頂点分
-	//バッファの場合はこれらは1にする決まり
-	vertexResourceDesc.Height = 1;
-	vertexResourceDesc.DepthOrArraySize = 1;
-	vertexResourceDesc.MipLevels = 1;
-	vertexResourceDesc.SampleDesc.Count = 1;
-	//バッファの場合はこれにする決まり
-	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	vertexResource = nullptr;
-	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-		&vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-		IID_PPV_ARGS(&vertexResource));
-	assert(SUCCEEDED(hr));
-}
 
-void GraphicsRenderer::CreateVertexBufferView() {
-	vertexBufferView = {};
-	//リソースの先頭のアドレスから使う
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
-	//1頂点当たりのサイズ
-	vertexBufferView.StrideInBytes = sizeof(Vector4);
-}
 
-void GraphicsRenderer::WriteDataToResource() {
-	vertexData = nullptr;
-	//書き込むためのアドレスを取得
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
-	//左下
-	vertexData[0] = { -0.5f,-0.5f,0.0f,1.0f };
-	//上
-	vertexData[1] = { 0.0f,0.5f,0.0f,1.0f };
-	//右下
-	vertexData[2] = { 0.5f,-0.5f,0.0f,1.0f };
-}
+
 
 void GraphicsRenderer::Viewport() {
 	viewport = {};
@@ -222,25 +187,12 @@ void GraphicsRenderer::ScissorRect() {
 	scissorRect.bottom = kCliantHeight;
 }
 
-void GraphicsRenderer::DrawCall() {
-	directX12->GetCommandList()->RSSetViewports(1, &viewport);	//Viewportを設定
-	directX12->GetCommandList()->RSSetScissorRects(1, &scissorRect);	//Scirssorを設定
-	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directX12->GetCommandList()->SetGraphicsRootSignature(rootSignature);
-	directX12->GetCommandList()->SetPipelineState(graphicsPipelineState);	//PSOを設定
-	directX12->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
-	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
-	directX12->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
-	directX12->GetCommandList()->DrawInstanced(3, 1, 0, 0);
-}
 
-void GraphicsRenderer::Update() {
-	DrawCall();
-}
+
+
 
 void GraphicsRenderer::Release() {
-	vertexResource->Release();
+	triangle->Release();
 	graphicsPipelineState->Release();
 	if (errorBlob) {
 		errorBlob->Release();
@@ -252,8 +204,8 @@ void GraphicsRenderer::Release() {
 
 void GraphicsRenderer::Init(DirectX12* directX12) {
 	Dxc();
-	CreateRootSignature(directX12);
-	InputLayout();
+	/*CreateRootSignature(directX12);*/
+	/*InputLayout();
 	BlendState();
 	ResterizerState();
 	BuildShader();
@@ -262,5 +214,14 @@ void GraphicsRenderer::Init(DirectX12* directX12) {
 	CreateVertexBufferView();
 	WriteDataToResource();
 	Viewport();
-	ScissorRect();
+	ScissorRect();*/
+}
+
+void GraphicsRenderer::DrawCall() {
+	directX12->GetCommandList()->RSSetViewports(1, &viewport);	//Viewportを設定
+	directX12->GetCommandList()->RSSetScissorRects(1, &scissorRect);	//Scirssorを設定
+	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
+	directX12->GetCommandList()->SetGraphicsRootSignature(rootSignature);
+	directX12->GetCommandList()->SetPipelineState(graphicsPipelineState);	//PSOを設定
+	
 }

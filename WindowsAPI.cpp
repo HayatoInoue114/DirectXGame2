@@ -2,17 +2,6 @@
 
 
 
-WindowsAPI::WindowsAPI()
-{
-	wc = {};
-	wrc = {};
-	
-}
-
-WindowsAPI::~WindowsAPI()
-{
-}
-
 void WindowsAPI::Init() {
 	WindowClass();
 	WindowSize();
@@ -22,7 +11,7 @@ void WindowsAPI::Init() {
 
 
 
-LRESULT WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT CALLBACK WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	//メッセージに応じてゲーム固有の処理を行う
 	switch (msg)
 	{

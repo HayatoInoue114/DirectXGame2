@@ -16,8 +16,6 @@ public:
 
 
 
-	WindowsAPI();
-	~WindowsAPI();
 
 	void Init();
 
@@ -27,21 +25,19 @@ public:
 	void WindowSize();
 	void WindowCreate();
 
-	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 
 	HWND GetHwnd() const { return hwnd; }
 
 private:
 	//ウインドウクラスの設定
-	WNDCLASS wc;
+	WNDCLASS wc{};
 	
 	//ウインドウサイズを表す構造体にクライアント領域を入れる
 	RECT wrc;
 
-	HWND hwnd;
-
-	/*DirectX12* directX12 = new DirectX12;*/
+	HWND hwnd = {};
 };
 
 

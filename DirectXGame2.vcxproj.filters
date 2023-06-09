@@ -43,6 +43,12 @@
     <Filter Include="ヘッダー ファイル\GameManager">
       <UniqueIdentifier>{4a7189fd-b318-4cfb-8f4d-14de7a7c66d2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Triangle">
+      <UniqueIdentifier>{d7089c41-725c-4588-bdc8-63c4399679ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Triangle">
+      <UniqueIdentifier>{266ffc38-ba75-4ce5-b9db-92acb61ea79e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -60,8 +66,11 @@
     <ClCompile Include="FormatString.cpp">
       <Filter>ソース ファイル\FormatString</Filter>
     </ClCompile>
-    <ClCompile Include="GameRoop.cpp">
+    <ClCompile Include="GameManager.cpp">
       <Filter>ソース ファイル\GameManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Triangle.cpp">
+      <Filter>ソース ファイル\Triangle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -84,8 +93,11 @@
     <ClInclude Include="FormatString.h">
       <Filter>ヘッダー ファイル\FormatString</Filter>
     </ClInclude>
-    <ClInclude Include="GameRoop.h">
+    <ClInclude Include="GameManager.h">
       <Filter>ヘッダー ファイル\GameManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>ヘッダー ファイル\Triangle</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

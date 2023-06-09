@@ -3,21 +3,9 @@
 
 
 
-DirectX12::DirectX12()
-{
-	hr = {};
-	device = {};
-	dxgiFactory = nullptr;
-	useAdapter = nullptr;
-
-}
-
-DirectX12::~DirectX12()
-{
-}
-
 void DirectX12::DXGIFactory() {
-	
+	dxgiFactory = nullptr;
+
 	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(hr));
 }
@@ -26,7 +14,7 @@ void DirectX12::Adapter() {
 	//良い順にアダプタを頼む
 	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i) {
 		//アダプター情報を取得する
-		DXGI_ADAPTER_DESC3 adapterDesc{};
+		adapterDesc = {};
 		hr = useAdapter->GetDesc3(&adapterDesc);
 		assert(SUCCEEDED(hr));//取得できないのは一大事
 		//ソフトウェアアダプタでなければ採用!
@@ -43,6 +31,7 @@ void DirectX12::Adapter() {
 }
 
 void DirectX12::D3D12Device() {
+	device = nullptr;
 	
 		//機能レベルとログ出力用の文字列
 		D3D_FEATURE_LEVEL featureLevels[] = {
@@ -69,14 +58,22 @@ void DirectX12::D3D12Device() {
 }
 
 void DirectX12::Command() {
+	commandQueue = nullptr;
+	commandQueueDesc = {};
+
+
 	hr = device->CreateCommandQueue(&commandQueueDesc,
 		IID_PPV_ARGS(&commandQueue));
 	//コマンドキューが生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
 
+	commandAllocator = nullptr;
+
 	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
 	//コマンドアロケータの生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
+
+	commandList = nullptr;
 
 	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, nullptr,
 		IID_PPV_ARGS(&commandList));
@@ -84,7 +81,9 @@ void DirectX12::Command() {
 	assert(SUCCEEDED(hr));
 }
 
-void DirectX12::SwapChain(WindowsAPI* windowsAPI) {
+void DirectX12::SwapChain() {
+	swapChain = nullptr;
+	swapChainDesc = {};
 
 	swapChainDesc.Width = kCliantWidth;		//画面の横。ウインドウのクライアント領域を同じものにしておく
 	swapChainDesc.Height = kCliantHeight;	//画面の高さ。ウインドウのクライアント領域を同じものにしておく
@@ -94,11 +93,13 @@ void DirectX12::SwapChain(WindowsAPI* windowsAPI) {
 	swapChainDesc.BufferCount = 2;	//ダブルバッファ
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;	//モニタにうつしたら、中身を破棄
 	//コマンドキュー、ウインドウハンドル、設定を渡して生成する
-	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, windowsAPI->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
+	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, windowsAPI_->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
 }
 
 void DirectX12::Descriptor() {
+	rtvDescriptorHeap = nullptr;
+	rtvDescriptorHeapDesc = {};
 	
 	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	//レンダーターゲットビュー用
 	rtvDescriptorHeapDesc.NumDescriptors = 2;	//ダブルバッファように二つ、多くても別に構わない
@@ -132,21 +133,23 @@ void DirectX12::Descriptor() {
 
 }
 
-void DirectX12::CommandList() {
-	//これから書き込むバックバッファのインデックスを取得
+void DirectX12::GetBackBuffer() {
+	
+		//これから書き込むバックバッファのインデックスを取得
 		backBufferIndex = swapChain->GetCurrentBackBufferIndex();
-
-		Barrier();
-
-		//描画先のRTVを設定する
-		commandList->OMSetRenderTargets(1, &rtvHandle[backBufferIndex], false, nullptr);
-
-		//指定した色で画面全体をクリアする
-		float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色、RGBAの順
-		commandList->ClearRenderTargetView(rtvHandle[backBufferIndex], clearColor, 0, nullptr);
-			
-		ScreenDisplay();
 }
+
+void DirectX12::RTV() {
+	//描画先のRTVを設定する
+	commandList->OMSetRenderTargets(1, &rtvHandle[backBufferIndex], false, nullptr);
+
+	//指定した色で画面全体をクリアする
+	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色、RGBAの順
+	commandList->ClearRenderTargetView(rtvHandle[backBufferIndex], clearColor, 0, nullptr);
+
+}
+
+
 
 void DirectX12::CommandKick() {
 	//GPUにコマンドリストの実行を行わせる
@@ -155,12 +158,18 @@ void DirectX12::CommandKick() {
 		//GPUとSの画面の交換を行うよう通知する
 		swapChain->Present(1, 0);
 
-		//次のフレーム用のコマンドリストを準備
-		hr = commandAllocator->Reset();
-		assert(SUCCEEDED(hr));
-		hr = commandList->Reset(commandAllocator, nullptr);
-		assert(SUCCEEDED(hr));
 
+
+		
+
+}
+
+void DirectX12::NextFlameCommandList() {
+	//次のフレーム用のコマンドリストを準備
+	hr = commandAllocator->Reset();
+	assert(SUCCEEDED(hr));
+	hr = commandList->Reset(commandAllocator, nullptr);
+	assert(SUCCEEDED(hr));
 }
 
 //void DirectX12::DebugLayer() {
@@ -243,7 +252,8 @@ void DirectX12::Fence() {
 	fence = nullptr;
 	fenceValue = 0;
 	
-	hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	HRESULT hr = device->GetDeviceRemovedReason();
 	assert(SUCCEEDED(hr));
 
 	//FenceのSignalを待つためのイベントを作成する
@@ -292,27 +302,44 @@ void DirectX12::Release() {
 		device->Release();
 		useAdapter->Release();
 		dxgiFactory->Release();
-	
+		CloseWindow(windowsAPI_->GetHwnd());
 }
 
 void DirectX12::Init(WindowsAPI* windowsAPI) {
+	windowsAPI_ = windowsAPI;
+	windowsAPI->Init();
 	DXGIFactory();
 	Adapter();
 	D3D12Device();
 
 	Error();
 	Command();
-	SwapChain(windowsAPI);
+	SwapChain();
 	Descriptor();
 	Fence();
 }
 
 void DirectX12::Update() {
 	//ゲームの処理
-	CommandList();
+	
 	Signal();
 	CommandKick();
 
 
 	ResourceLeakCheck();
+}
+
+void DirectX12::PreDraw() {
+	GetBackBuffer();
+	Barrier();
+	RTV();
+
+}
+
+void DirectX12::PostDraw() {
+	ScreenDisplay();
+	CommandConfirm();
+	CommandKick();
+	Signal();
+	NextFlameCommandList();
 }

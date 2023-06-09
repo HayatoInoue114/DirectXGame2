@@ -16,8 +16,8 @@ class WindowsAPI;
 class DirectX12
 {
 public:
-	DirectX12();
-	~DirectX12();
+
+	void Init(WindowsAPI* windowsAPI);
 
 	void DXGIFactory();
 
@@ -27,11 +27,21 @@ public:
 
 	void Command();
 
-	void SwapChain(WindowsAPI* windowsAPI);
+	void SwapChain();
 
 	void Descriptor();
 
-	void Init(WindowsAPI* windowsAPI);
+	/*void RTV();*/
+
+	/// <summary>
+	/// 描画前処理
+	/// </summary>
+	void PreDraw();
+
+	/// <summary>
+	/// 描画後処理
+	/// </summary>
+	void PostDraw();
 	
 	/*void DebugLayer();*/
 
@@ -55,18 +65,24 @@ public:
 
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
 public:
-	void CommandList();
+	void GetBackBuffer();
+
+	void RTV();
 
 	void CommandKick();
 
 	void Signal();
 
+	void NextFlameCommandList();
+
 private:
+	WindowsAPI* windowsAPI_;
+
 	HRESULT hr;
 	ID3D12Device* device;
 	IDXGIFactory7* dxgiFactory;
 
-	
+	DXGI_ADAPTER_DESC3 adapterDesc;
 
 	//使用するアダプタ用の変数。最初にnullptrを入れておく
 	IDXGIAdapter4* useAdapter;
@@ -81,35 +97,33 @@ private:
 	//コマンドリストを生成する
 	ID3D12GraphicsCommandList* commandList;
 
-	WindowsAPI* windowsAPI;
-
 	//スワップチェーンを生成する
-	IDXGISwapChain4* swapChain = nullptr;
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
+	IDXGISwapChain4* swapChain;
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc;
 
 	//ディスクリプターヒープの生成
-	ID3D12DescriptorHeap* rtvDescriptorHeap = nullptr;
-	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc{};
+	ID3D12DescriptorHeap* rtvDescriptorHeap;
+	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc;
 
 	//RTVの設定
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc;
 
 	//ディスクリプタの先頭を取得する
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle{};
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
 
 	//RTVを２つ作るのでディスクリプタ２つ用意
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle[2];
 
 	
-	UINT backBufferIndex{};
+	UINT backBufferIndex;
 	
 	ID3D12Resource* swapChainResource[2];
 	//TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier{};
+	D3D12_RESOURCE_BARRIER barrier;
 	
 	//初期値0でFenceを作る
-	ID3D12Fence* fence = nullptr;
-	uint64_t fenceValue = 0;
+	ID3D12Fence* fence;
+	uint64_t fenceValue;
 
 	//FenceのSignalを待つためのイベントを作成する
 	HANDLE fenceEvent;

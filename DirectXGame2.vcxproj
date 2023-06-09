@@ -52,6 +52,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -72,6 +73,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -87,9 +89,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="DirectX12.cpp" />
     <ClCompile Include="FormatString.cpp" />
-    <ClCompile Include="GameRoop.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="WindowsAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -109,8 +112,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClInclude Include="DirectX12.h" />
     <ClInclude Include="FormatString.h" />
-    <ClInclude Include="GameRoop.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="GraphicsRenderer.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="WindowsAPI.h" />
   </ItemGroup>

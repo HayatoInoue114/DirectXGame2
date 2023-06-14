@@ -11,10 +11,9 @@ class WindowsAPI;
 class GameManager
 {
 public:
+	GameManager();
+	~GameManager();
 	
-	DirectX12* directX12_ = new DirectX12;
-	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
-	Triangle* triangle_ = new Triangle;
 
 	/*void PreInit(GraphicsRenderer* graphicsRenderer);*/
 	void Init(DirectX12* directX12, WindowsAPI* windowsAPI);
@@ -36,6 +35,10 @@ private:
 	Vector4 dataLeft_;
 	Vector4 dataTop_;
 	Vector4 dataRight_;
+
+	DirectX12* directX12_ = new DirectX12;
+	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
+	Triangle* triangle_ = new Triangle;
 
 	/*DirectX12* directX12;
 	GraphicsRenderer* graphicsRenderer;

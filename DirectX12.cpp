@@ -6,16 +6,17 @@
 void DirectX12::DXGIFactory() {
 	dxgiFactory = nullptr;
 
-	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
+	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(hr));
 }
 
 void DirectX12::Adapter() {
+	useAdapter = nullptr;
 	//良い順にアダプタを頼む
 	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i) {
 		//アダプター情報を取得する
 		adapterDesc = {};
-		hr = useAdapter->GetDesc3(&adapterDesc);
+		HRESULT hr = useAdapter->GetDesc3(&adapterDesc);
 		assert(SUCCEEDED(hr));//取得できないのは一大事
 		//ソフトウェアアダプタでなければ採用!
 		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
@@ -33,28 +34,26 @@ void DirectX12::Adapter() {
 void DirectX12::D3D12Device() {
 	device = nullptr;
 	
-		//機能レベルとログ出力用の文字列
-		D3D_FEATURE_LEVEL featureLevels[] = {
-			D3D_FEATURE_LEVEL_12_2,D3D_FEATURE_LEVEL_12_1,D3D_FEATURE_LEVEL_12_0
-		};
-		const char* featureLevelStrings[] = { "12.2","12.1","12.0" };
-		//高い順の生成できるか試していく
-		for (size_t i = 0; i < _countof(featureLevels); ++i) {
-			//採用したアダプターでデバイスを生成
-			hr = D3D12CreateDevice(useAdapter, featureLevels[i], IID_PPV_ARGS(&device));
-			//指定した機能レベルでデバイスが生成できたかを確認
-			if (SUCCEEDED(hr)) {
-				//生成できたのでログ出力を行ってループを抜ける
-				Log(std::format("featureLevel : {}\n",featureLevelStrings[i]));
-				break;
-			}
+	//機能レベルとログ出力用の文字列
+	D3D_FEATURE_LEVEL featureLevels[] = {
+		D3D_FEATURE_LEVEL_12_2,D3D_FEATURE_LEVEL_12_1,D3D_FEATURE_LEVEL_12_0
+	};
+	const char* featureLevelStrings[] = { "12.2","12.1","12.0" };
+	//高い順の生成できるか試していく
+	for (size_t i = 0; i < _countof(featureLevels); ++i) {
+		//採用したアダプターでデバイスを生成
+		HRESULT hr = D3D12CreateDevice(useAdapter, featureLevels[i], IID_PPV_ARGS(&device));
+		//指定した機能レベルでデバイスが生成できたかを確認
+		if (SUCCEEDED(hr)) {
+			//生成できたのでログ出力を行ってループを抜ける
+			Log(std::format("featureLevel : {}\n",featureLevelStrings[i]));
+			break;
 		}
+	}
 	
-		//デバイスの生成がうまくいかなかったので起動できない
-		assert(device != nullptr);
-		Log("Complete create D3D12Device!!!\n");//初期化完了のログを出す
-
-		Error();
+	//デバイスの生成がうまくいかなかったので起動できない
+	assert(device != nullptr);
+	Log("Complete create D3D12Device!!!\n");//初期化完了のログを出す
 }
 
 void DirectX12::Command() {
@@ -62,7 +61,7 @@ void DirectX12::Command() {
 	commandQueueDesc = {};
 
 
-	hr = device->CreateCommandQueue(&commandQueueDesc,
+	HRESULT hr = device->CreateCommandQueue(&commandQueueDesc,
 		IID_PPV_ARGS(&commandQueue));
 	//コマンドキューが生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
@@ -93,17 +92,17 @@ void DirectX12::SwapChain() {
 	swapChainDesc.BufferCount = 2;	//ダブルバッファ
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;	//モニタにうつしたら、中身を破棄
 	//コマンドキュー、ウインドウハンドル、設定を渡して生成する
-	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, windowsAPI_->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
+	HRESULT hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, windowsAPI_->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
 }
 
-void DirectX12::Descriptor() {
+void DirectX12::DescriptorHeap() {
 	rtvDescriptorHeap = nullptr;
 	rtvDescriptorHeapDesc = {};
 	
 	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	//レンダーターゲットビュー用
 	rtvDescriptorHeapDesc.NumDescriptors = 2;	//ダブルバッファように二つ、多くても別に構わない
-	hr = device->CreateDescriptorHeap(&rtvDescriptorHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
+	HRESULT hr = device->CreateDescriptorHeap(&rtvDescriptorHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
 	//ディスクリプターヒープが作れなかったので起動できない
 	assert(SUCCEEDED(hr));
 
@@ -116,7 +115,7 @@ void DirectX12::Descriptor() {
 	hr = swapChain->GetBuffer(1, IID_PPV_ARGS(&swapChainResource[1]));
 	assert(SUCCEEDED(hr));
 
-	
+	rtvDesc = {};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;	//出力結果をSRGBを交換して書き込む
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;	//２dテクスチャとして書き込む
 	//ディスクリプタの先頭を取得する
@@ -134,9 +133,8 @@ void DirectX12::Descriptor() {
 }
 
 void DirectX12::GetBackBuffer() {
-	
-		//これから書き込むバックバッファのインデックスを取得
-		backBufferIndex = swapChain->GetCurrentBackBufferIndex();
+	//これから書き込むバックバッファのインデックスを取得
+	backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 }
 
 void DirectX12::RTV() {
@@ -146,27 +144,21 @@ void DirectX12::RTV() {
 	//指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色、RGBAの順
 	commandList->ClearRenderTargetView(rtvHandle[backBufferIndex], clearColor, 0, nullptr);
-
 }
 
 
 
 void DirectX12::CommandKick() {
 	//GPUにコマンドリストの実行を行わせる
-		ID3D12CommandList* commandLists[] = { commandList };
-		commandQueue->ExecuteCommandLists(1, commandLists);
-		//GPUとSの画面の交換を行うよう通知する
-		swapChain->Present(1, 0);
-
-
-
-		
-
+	ID3D12CommandList* commandLists[] = { commandList };
+	commandQueue->ExecuteCommandLists(1, commandLists);
+	//GPUとSの画面の交換を行うよう通知する
+	swapChain->Present(1, 0);	
 }
 
 void DirectX12::NextFlameCommandList() {
 	//次のフレーム用のコマンドリストを準備
-	hr = commandAllocator->Reset();
+	HRESULT hr = commandAllocator->Reset();
 	assert(SUCCEEDED(hr));
 	hr = commandList->Reset(commandAllocator, nullptr);
 	assert(SUCCEEDED(hr));
@@ -217,33 +209,34 @@ void DirectX12::Error() {
 }
 
 void DirectX12::Barrier() {
-	
-			//今回のバリアはTransition
-			barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-			//Noneしておく
-			barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-			//バリアを張る対象のリソース。現在のバックバッファに対して行う
-			barrier.Transition.pResource = swapChainResource[backBufferIndex];
-			//遷移前（現在）のResourceState
-			barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-			//遷移後のResourceState
-			barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-			//TransitionBarrierを張る
-			commandList->ResourceBarrier(1, &barrier);
+	barrier = {};
+
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。現在のバックバッファに対して行う
+	barrier.Transition.pResource = swapChainResource[backBufferIndex];
+	//遷移前（現在）のResourceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	//遷移後のResourceState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//TransitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
 }
 
 void DirectX12::ScreenDisplay() {
 	//画面に描く処理は全て終わり、画面に映すので、状態を遷移
-			//今回はRenderTargetからPresentにする
-			barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-			barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-			//TransitionBarrierを張る
-			commandList->ResourceBarrier(1, &barrier);
+	//今回はRenderTargetからPresentにする
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	//TransitionBarrierを張る
+	commandList->ResourceBarrier(1, &barrier);
 }
 
 void DirectX12::CommandConfirm() {
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
-	hr = commandList->Close();
+	HRESULT hr = commandList->Close();
 	assert(SUCCEEDED(hr));
 }
 
@@ -252,8 +245,8 @@ void DirectX12::Fence() {
 	fence = nullptr;
 	fenceValue = 0;
 	
-	device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
-	HRESULT hr = device->GetDeviceRemovedReason();
+	HRESULT hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	/*hr = device->GetDeviceRemovedReason();*/
 	assert(SUCCEEDED(hr));
 
 	//FenceのSignalを待つためのイベントを作成する
@@ -315,7 +308,7 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 	Error();
 	Command();
 	SwapChain();
-	Descriptor();
+	DescriptorHeap();
 	Fence();
 }
 
@@ -333,7 +326,6 @@ void DirectX12::PreDraw() {
 	GetBackBuffer();
 	Barrier();
 	RTV();
-
 }
 
 void DirectX12::PostDraw() {

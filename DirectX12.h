@@ -29,7 +29,7 @@ public:
 
 	void SwapChain();
 
-	void Descriptor();
+	void DescriptorHeap();
 
 	/*void RTV();*/
 
@@ -77,8 +77,6 @@ public:
 
 private:
 	WindowsAPI* windowsAPI_;
-
-	HRESULT hr;
 	ID3D12Device* device;
 	IDXGIFactory7* dxgiFactory;
 

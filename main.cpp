@@ -1,5 +1,5 @@
-//#include "GameManager.h"
-#include"DirectX12.h"
+#include "GameManager.h"
+
 
 
 
@@ -8,12 +8,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	
 	WindowsAPI* windowsAPI = new WindowsAPI();
 	DirectX12* directX12 = new DirectX12;
-	directX12->Init(windowsAPI);
 	
-	/*GameManager* gameManager = new GameManager;
-	gameManager->Init(gameManager->directX12_,windowsAPI);
+	GameManager* gameManager = new GameManager;
+	gameManager->Init(directX12,windowsAPI);
 	
-	gameManager->VariableInit();*/
+	gameManager->VariableInit();
 
 	MSG msg{};
 	//Windowにメッセージが来てたら最優先で処理させる
@@ -24,17 +23,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DispatchMessage(&msg);
 		}
 		else {
-			////ゲームの処理
-			//gameManager->BeginFrame();
+			//ゲームの処理
+			gameManager->BeginFrame();
 
-			//gameManager->Update();
+			gameManager->Update();
 
-			//gameManager->Draw();
+			gameManager->Draw();
 
-			//gameManager->EndFrame();
-			directX12->PreDraw();
-
-			directX12->PostDraw();
+			gameManager->EndFrame();
 			
 		}
 	}

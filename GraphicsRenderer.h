@@ -22,7 +22,7 @@ public:
 		IDxcIncludeHandler* includeHandler
 	);
 
-	void CreateRootSignature();
+	void CreateRootSignature(DirectX12* directX12);
 
 	void InputLayout();
 
@@ -32,10 +32,10 @@ public:
 
 	void BuildShader();
 
-	void CreatePSO();
+	void CreatePSO(DirectX12* directX12);
 
 	
-	void DrawCall();
+	void DrawCall(DirectX12 *directX12);
 	
 
 	void Viewport();

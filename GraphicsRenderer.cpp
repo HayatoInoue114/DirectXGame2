@@ -83,7 +83,7 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 	return shaderBlob;
 }
 
-void GraphicsRenderer::CreateRootSignature() {
+void GraphicsRenderer::CreateRootSignature(DirectX12* directX12) {
 	HRESULT hr;
 	descriptiomnRootSignature = {};
 	descriptiomnRootSignature.Flags =
@@ -137,7 +137,7 @@ void GraphicsRenderer::BuildShader() {
 	assert(pixelShaderBlob != nullptr);
 }
 
-void GraphicsRenderer::CreatePSO() {
+void GraphicsRenderer::CreatePSO(DirectX12* directX12) {
 	HRESULT hr;
 	graphicsPipelineStateDesc = {};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature;//RootSignature
@@ -217,7 +217,7 @@ void GraphicsRenderer::Init(DirectX12* directX12) {
 	ScissorRect();*/
 }
 
-void GraphicsRenderer::DrawCall() {
+void GraphicsRenderer::DrawCall(DirectX12 *directX12) {
 	directX12->GetCommandList()->RSSetViewports(1, &viewport);	//Viewportを設定
 	directX12->GetCommandList()->RSSetScissorRects(1, &scissorRect);	//Scirssorを設定
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要

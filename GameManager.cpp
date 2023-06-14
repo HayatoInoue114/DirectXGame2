@@ -1,9 +1,14 @@
 #include "GameManager.h"
 
-//void GameManager::PreInit(GraphicsRenderer* graphicsRenderer) {
-//	graphicsRenderer->Dxc();
-//	graphicsRenderer->CreateRootSignature(directX12);
-//}
+GameManager::GameManager() {
+	dataLeft_ = { -0.5f,-0.5f,0.0f,1.0f };
+	dataTop_ = { 0.0f,0.5f,0.0f,1.0f };
+	dataRight_ = { 0.5f,-0.5f,0.0f,1.0f };
+}
+
+GameManager::~GameManager() {
+
+}
 
 void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI) 
 {
@@ -12,15 +17,15 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 	directX12_->Init(windowsAPI);
 
 	graphicsRenderer_->Dxc();
-	graphicsRenderer_->CreateRootSignature();
+	graphicsRenderer_->CreateRootSignature(directX12_);
 	graphicsRenderer_->InputLayout();
 	graphicsRenderer_->BlendState();
 	graphicsRenderer_->ResterizerState();
 	graphicsRenderer_->BuildShader();
-	graphicsRenderer_->CreatePSO();
-	triangle_->CreateVertexResource();
-	triangle_->CreateVertexBufferView();
-	triangle_->WriteDataToResource();
+	graphicsRenderer_->CreatePSO(directX12_);
+
+	triangle_->Initialize(directX12_);
+
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
 
@@ -42,7 +47,7 @@ void GameManager::Release() {
 
 void GameManager::BeginFrame() {
 	directX12_->PreDraw();
-	graphicsRenderer_->DrawCall();
+	graphicsRenderer_->DrawCall(directX12_);
 }
 
 void GameManager::EndFrame() {
@@ -58,9 +63,7 @@ void GameManager::Draw() {
 }
 
 void GameManager::VariableInit() {
-	dataLeft_ = { -0.5f,-0.5f,0.0f,1.0f };
-	dataTop_ = { 0.0f,0.5f,0.0f,1.0f };
-	dataRight_ = { 0.5f,-0.5f,0.0f,1.0f };
+	
 
 	triangle_ = new Triangle;
 	triangle_->Initialize(directX12_);

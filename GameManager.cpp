@@ -1,18 +1,14 @@
 #include "GameManager.h"
 
-GameManager::GameManager() {
-	dataLeft_ = { -0.5f,-0.5f,0.0f,1.0f };
-	dataTop_ = { 0.0f,0.5f,0.0f,1.0f };
-	dataRight_ = { 0.5f,-0.5f,0.0f,1.0f };
-}
 
-GameManager::~GameManager() {
-
-}
 
 void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI) 
 {
+	for (int i = 0; i < MAXTRIANGLE; i++) {
+		triangle_[i] = new Triangle;
+	}
 	
+
 	directX12_ = directX12;
 	directX12_->Init(windowsAPI);
 
@@ -24,7 +20,9 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 	graphicsRenderer_->BuildShader();
 	graphicsRenderer_->CreatePSO(directX12_);
 
-	triangle_->Initialize(directX12_);
+	for (int i = 0; i < MAXTRIANGLE; i++) {
+		triangle_[i]->Initialize(directX12_);
+	}
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
@@ -39,8 +37,6 @@ void GameManager::Update() {
 void GameManager::Release() {
 	directX12_->Release();
 	graphicsRenderer_->Release();
-
-	
 }
 
 
@@ -59,12 +55,30 @@ void GameManager::Finalize() {
 }
 
 void GameManager::Draw() {
-	triangle_->Draw(dataLeft_,dataTop_,dataRight_);
+	for (int i = 0; i < MAXTRIANGLE; i++) {
+		triangle_[i]->Draw(triangleData[i].Left_, triangleData[i].Top_, triangleData[i].Right_);
+	}
+	
 }
 
 void GameManager::VariableInit() {
 	
+	for (int i = 0; i < MAXTRIANGLE; i++) {
+		triangleData[i].Left_ = { -0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
+		triangleData[i].Top_ = { 0.0f,0.5f + i * 0.1f,0.0f,1.0f };
+		triangleData[i].Right_ = { 0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
+	}
 
-	triangle_ = new Triangle;
-	triangle_->Initialize(directX12_);
+	/*triangleData[0].Left_ = { -1.0f,-0.5f,0.0f,1.0f };
+	triangleData[0].Top_ = { -0.5f,0.5f,0.0f,1.0f };
+	triangleData[0].Right_ = { 0.0f,-0.5f,0.0f,1.0f };
+
+	triangleData[1].Left_ = { 0.0f,-0.5f,0.0f,1.0f };
+	triangleData[1].Top_ = { 0.5f,0.5f,0.0f,1.0f };
+	triangleData[1].Right_ = { 1.0f,-0.5f,0.0f,1.0f };*/
+
+	for (int i = 0; i < MAXTRIANGLE; i++) {
+		triangle_[i] = new Triangle;
+		triangle_[i]->Initialize(directX12_);
+	}
 }

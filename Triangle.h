@@ -20,7 +20,7 @@ public:
 
 	void Draw(Vector4 left, Vector4 top, Vector4 right);
 private:
-	DirectX12* directX;
+	DirectX12* directX12_;
 
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties;

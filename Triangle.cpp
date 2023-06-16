@@ -1,7 +1,7 @@
 #include "Triangle.h"
 
 void Triangle::Initialize(DirectX12* directX12) {
-	directX = directX12;
+	directX12_ = directX12;
 	CreateVertexResource();
 	CreateVertexBufferView();
 	WriteDataToResource();
@@ -23,7 +23,7 @@ void Triangle::CreateVertexResource() {
 	//バッファの場合はこれにする決まり
 	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	vertexResource = nullptr;
-	hr = directX->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
+	hr = directX12_->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
 		&vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
 		IID_PPV_ARGS(&vertexResource));
 	assert(SUCCEEDED(hr));
@@ -56,9 +56,9 @@ void Triangle::Draw(Vector4 left ,Vector4 top,Vector4 right) {
 	//右下
 	vertexData[2] = right;
 
-	directX->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
+	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
-	directX->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
-	directX->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }

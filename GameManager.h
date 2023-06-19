@@ -43,7 +43,7 @@ private:
 
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
-	Triangle* triangle_[MAXTRIANGLE];
+	Triangle** triangle_ = new Triangle* [MAXTRIANGLE];
 
 	/*DirectX12* directX12;
 	GraphicsRenderer* graphicsRenderer;

@@ -7,7 +7,7 @@ class DirectX12;
 class GraphicsRenderer 
 {
 public:
-	void Init(DirectX12* directX12);
+	/*void Init(DirectX12* directX12);*/
 
 	void Dxc();
 
@@ -41,7 +41,11 @@ public:
 	void Viewport();
 	void ScissorRect();
 
-	
+	void RootParameter();
+
+	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
+
+	void CreateMaterialResource();
 
 	void Release();
 private:
@@ -58,7 +62,7 @@ private:
 	IDxcBlob* shaderBlob;
 
 	//RootSignature作成
-	D3D12_ROOT_SIGNATURE_DESC descriptiomnRootSignature{};
+	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
 	//シリアライズしてバイナリにする
 	ID3DBlob* signatureBlob;
 	ID3DBlob* errorBlob;
@@ -82,15 +86,17 @@ private:
 	//実際に生成
 	ID3D12PipelineState* graphicsPipelineState;
 
-	
-
-
-
-	
-
 	//ビューポート
 	D3D12_VIEWPORT viewport;
 	//シザー矩形
 	D3D12_RECT scissorRect;
+
+	//RootParameter作成。
+	D3D12_ROOT_PARAMETER rootParameters[1];
+
+	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
+	ID3D12Resource* materialResource;
+	//マテリアルにデータを書き込む
+	Vector4* materialData;
 };
 

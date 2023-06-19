@@ -41,11 +41,9 @@ public:
 	void Viewport();
 	void ScissorRect();
 
-	void RootParameter();
+	/*void RootParameter();*/
 
-	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
-
-	void CreateMaterialResource();
+	
 
 	void Release();
 private:
@@ -94,9 +92,6 @@ private:
 	//RootParameter作成。
 	D3D12_ROOT_PARAMETER rootParameters[1];
 
-	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	ID3D12Resource* materialResource;
-	//マテリアルにデータを書き込む
-	Vector4* materialData;
+	
 };
 

@@ -270,6 +270,43 @@ void DirectX12::Signal() {
 	}
 }
 
+void DirectX12::CreateMaterialResource() {
+	materialResource = CreateBufferResource(device, sizeof(Vector4));
+	materialData = nullptr;
+	//書き込むためのアドレスを取得
+	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
+	//今回は赤を書き込んでみる
+	*materialData = Vector4(1.0f, 1.0f, 0.0f, 1.0f);
+}
+
+void DirectX12::SetCBV() {
+	commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
+}
+
+ID3D12Resource* DirectX12::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
+	HRESULT hr;
+	uploadHeapProperties = {};
+	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;//UploadHeapを使う
+	vertexResourceDesc = {};
+	//バッファリソース。テクスチャの場合はまた別の設定をする
+	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	vertexResourceDesc.Width = sizeInBytes * 3;//リソースのサイズ。今回はVector４を３頂点分
+	//バッファの場合はこれらは1にする決まり
+	vertexResourceDesc.Height = 1;
+	vertexResourceDesc.DepthOrArraySize = 1;
+	vertexResourceDesc.MipLevels = 1;
+	vertexResourceDesc.SampleDesc.Count = 1;
+	//バッファの場合はこれにする決まり
+	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+	vertexResource = nullptr;
+	hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
+		&vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+		IID_PPV_ARGS(&vertexResource));
+	assert(SUCCEEDED(hr));
+
+	return vertexResource;
+}
+
 void DirectX12::ResourceLeakCheck() {
 	//リソースリークチェック
 	
@@ -295,6 +332,8 @@ void DirectX12::Release() {
 		device->Release();
 		useAdapter->Release();
 		dxgiFactory->Release();
+		vertexResource->Release();
+		materialResource->Release();
 		CloseWindow(windowsAPI_->GetHwnd());
 }
 

@@ -64,6 +64,8 @@ public:
 	ID3D12Device* GetDevice() { return device; }
 
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
+
+	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 public:
 	void GetBackBuffer();
 

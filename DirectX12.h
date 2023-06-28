@@ -129,5 +129,9 @@ private:
 	HANDLE fenceEvent;
 
 	IDXGIDebug1* debug;
+
+	
+	
+	
 };
 

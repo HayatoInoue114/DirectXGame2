@@ -11,7 +11,7 @@ class Triangle
 public:
 	void Initialize(DirectX12* directX12);
 
-	/*void CreateVertexResource();*/
+	void CreateVertexResource();
 
 	void CreateVertexBufferView();
 

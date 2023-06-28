@@ -5,7 +5,6 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
-
 class Triangle
 {
 public:
@@ -25,20 +24,21 @@ public:
 private:
 	DirectX12* directX12_;
 
-
+	//頂点リソース用のヒープの設定
+	D3D12_HEAP_PROPERTIES uploadHeapProperties;
+	//頂点リソースの設定
+	D3D12_RESOURCE_DESC vertexResourceDesc;
+	//実際に頂点リソースを作る
+	ID3D12Resource* vertexResource;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 
 	//頂点リソースにデータを書き込む
 	Vector4* vertexData;
 
-	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	ID3D12Resource* materialResource;
-	//マテリアルにデータを書き込む
-	Vector4* materialData;
+	ID3D12Resource* materialResource_;
 
-	//実際に頂点リソースを作る
-	ID3D12Resource* vertexResource;
+	Vector4* materialData_;
 };
 
 

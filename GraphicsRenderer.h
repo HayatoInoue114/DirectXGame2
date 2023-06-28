@@ -59,8 +59,7 @@ private:
 	IDxcBlobUtf8* shaderError;
 	IDxcBlob* shaderBlob;
 
-	//RootSignature作成
-	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
+	
 	//シリアライズしてバイナリにする
 	ID3DBlob* signatureBlob;
 	ID3DBlob* errorBlob;
@@ -89,8 +88,7 @@ private:
 	//シザー矩形
 	D3D12_RECT scissorRect;
 
-	//RootParameter作成。
-	D3D12_ROOT_PARAMETER rootParameters[1];
+	
 
 	
 };

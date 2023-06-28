@@ -36,6 +36,9 @@ private:
 	ID3D12Resource* materialResource;
 	//マテリアルにデータを書き込む
 	Vector4* materialData;
+
+	//実際に頂点リソースを作る
+	ID3D12Resource* vertexResource;
 };
 
 

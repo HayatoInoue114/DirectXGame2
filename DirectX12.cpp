@@ -323,7 +323,6 @@ void DirectX12::Release() {
 		device->Release();
 		useAdapter->Release();
 		dxgiFactory->Release();
-		vertexResource->Release();
 		CloseWindow(windowsAPI_->GetHwnd());
 }
 

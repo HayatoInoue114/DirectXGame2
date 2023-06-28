@@ -37,6 +37,9 @@ void GameManager::Update() {
 void GameManager::Release() {
 	directX12_->Release();
 	graphicsRenderer_->Release();
+	for (int i = 0; i < MAXTRIANGLE; i++) {
+		triangle_[i]->Release();
+	}
 }
 
 

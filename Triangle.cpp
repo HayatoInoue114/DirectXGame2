@@ -2,14 +2,15 @@
 
 void Triangle::Initialize(DirectX12* directX12) {
 	directX12_ = directX12;
-	CreateVertexResource();
+	/*CreateVertexResource();*/
+	CreateMaterialResource();
 	CreateVertexBufferView();
 	WriteDataToResource();
 }
 
-void Triangle::CreateVertexResource() {
-	directX12_->CreateMaterialResource();
-}
+//void Triangle::CreateVertexResource() {
+//	directX12_->CreateMaterialResource();
+//}
 
 void Triangle::CreateVertexBufferView() {
 	vertexBufferView = {};
@@ -27,7 +28,16 @@ void Triangle::WriteDataToResource() {
 }
 
 void Triangle::Release() {
-	
+	materialResource->Release();
+}
+
+void Triangle::CreateMaterialResource() {
+	materialResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4));
+	materialData = nullptr;
+	//書き込むためのアドレスを取得
+	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
+	//今回は赤を書き込んでみる
+	*materialData = Vector4(1.0f, 1.0f, 0.0f, 1.0f);
 }
 
 void Triangle::Draw(Vector4 left ,Vector4 top,Vector4 right) {
@@ -42,7 +52,7 @@ void Triangle::Draw(Vector4 left ,Vector4 top,Vector4 right) {
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//マテリアルCBufferの場所を設定
-	directX12_->SetCBV();
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
 	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }

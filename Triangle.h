@@ -11,13 +11,15 @@ class Triangle
 public:
 	void Initialize(DirectX12* directX12);
 
-	void CreateVertexResource();
+	/*void CreateVertexResource();*/
 
 	void CreateVertexBufferView();
 
 	void WriteDataToResource();
 
 	void Release();
+
+	void CreateMaterialResource();
 
 	void Draw(Vector4 left, Vector4 top, Vector4 right);
 private:
@@ -30,7 +32,10 @@ private:
 	//頂点リソースにデータを書き込む
 	Vector4* vertexData;
 
-
+	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
+	ID3D12Resource* materialResource;
+	//マテリアルにデータを書き込む
+	Vector4* materialData;
 };
 
 

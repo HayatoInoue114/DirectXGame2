@@ -64,9 +64,6 @@ public:
 
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 
-	void CreateMaterialResource();
-
-	void SetCBV();
 
 	ID3D12Device* GetDevice() { return device; }
 
@@ -137,10 +134,7 @@ private:
 
 	IDXGIDebug1* debug;
 
-	//マテリアル用のリソースを作る。今回はcolor1つ分のサイズを用意する
-	ID3D12Resource* materialResource;
-	//マテリアルにデータを書き込む
-	Vector4* materialData;
+	
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties;
 	//頂点リソースの設定

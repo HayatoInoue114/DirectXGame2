@@ -270,18 +270,6 @@ void DirectX12::Signal() {
 	}
 }
 
-void DirectX12::CreateMaterialResource() {
-	materialResource = CreateBufferResource(device, sizeof(Vector4));
-	materialData = nullptr;
-	//書き込むためのアドレスを取得
-	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialData));
-	//今回は赤を書き込んでみる
-	*materialData = Vector4(1.0f, 1.0f, 0.0f, 1.0f);
-}
-
-void DirectX12::SetCBV() {
-	commandList->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
-}
 
 ID3D12Resource* DirectX12::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;
@@ -333,7 +321,6 @@ void DirectX12::Release() {
 		useAdapter->Release();
 		dxgiFactory->Release();
 		vertexResource->Release();
-		materialResource->Release();
 		CloseWindow(windowsAPI_->GetHwnd());
 }
 

@@ -85,9 +85,19 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 
 void GraphicsRenderer::CreateRootSignature(DirectX12* directX12) {
 	HRESULT hr;
-	descriptiomnRootSignature = {};
+	//RootSignature作成
+	D3D12_ROOT_SIGNATURE_DESC descriptiomnRootSignature = {};
 	descriptiomnRootSignature.Flags =
 		D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+	//RootParameter作成。複数設定できるので配列。今回は結果1つだけなので長さ1の配列
+	D3D12_ROOT_PARAMETER rootParameters[1] = {};
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[0].Descriptor.ShaderRegister = 0;
+	descriptiomnRootSignature.pParameters = rootParameters;
+	descriptiomnRootSignature.NumParameters = _countof(rootParameters);
+
 	signatureBlob = nullptr;
 	errorBlob = nullptr;
 	hr = D3D12SerializeRootSignature(&descriptiomnRootSignature,

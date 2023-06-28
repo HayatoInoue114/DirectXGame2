@@ -18,6 +18,8 @@ public:
 
 	void Release();
 
+	void CreateMaterialResource();
+
 	void Draw(Vector4 left, Vector4 top, Vector4 right);
 private:
 	DirectX12* directX12_;
@@ -34,7 +36,9 @@ private:
 	//頂点リソースにデータを書き込む
 	Vector4* vertexData;
 
+	ID3D12Resource* materialResource_;
 
+	Vector4* materialData_;
 };
 
 

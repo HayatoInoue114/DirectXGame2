@@ -57,8 +57,7 @@ private:
 	IDxcBlobUtf8* shaderError;
 	IDxcBlob* shaderBlob;
 
-	//RootSignature作成
-	D3D12_ROOT_SIGNATURE_DESC descriptiomnRootSignature{};
+	
 	//シリアライズしてバイナリにする
 	ID3DBlob* signatureBlob;
 	ID3DBlob* errorBlob;

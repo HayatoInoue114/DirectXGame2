@@ -4,6 +4,7 @@
 #include <cassert>
 #include "FormatString.h"
 #include <dxgidebug.h>
+#include "Vector4.h"
 
 #include "WindowsAPI.h"
 
@@ -60,6 +61,9 @@ public:
 	void ResourceLeakCheck();
 
 	void Release();
+
+	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
+
 
 	ID3D12Device* GetDevice() { return device; }
 

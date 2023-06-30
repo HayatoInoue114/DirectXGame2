@@ -103,7 +103,7 @@ void GraphicsRenderer::CreateRootSignature(DirectX12* directX12) {
 
 	signatureBlob = nullptr;
 	errorBlob = nullptr;
-	hr = D3D12SerializeRootSignature(&descriptiomnRootSignature,
+	hr = D3D12SerializeRootSignature(&descriptionRootSignature,
 		D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 	if (FAILED(hr)) {
 		Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
@@ -200,7 +200,11 @@ void GraphicsRenderer::ScissorRect() {
 	scissorRect.bottom = kCliantHeight;
 }
 
-
+//void GraphicsRenderer::RootParameter() {
+//	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+//
+//	
+//}
 
 
 
@@ -213,22 +217,23 @@ void GraphicsRenderer::Release() {
 	rootSignature->Release();
 	pixelShaderBlob->Release();
 	vertexShaderBlob->Release();
+	
 }
 
-void GraphicsRenderer::Init(DirectX12* directX12) {
-	Dxc();
-	/*CreateRootSignature(directX12);*/
-	/*InputLayout();
-	BlendState();
-	ResterizerState();
-	BuildShader();
-	CreatePSO(directX12);
-	CreateVertexResource(directX12);
-	CreateVertexBufferView();
-	WriteDataToResource();
-	Viewport();
-	ScissorRect();*/
-}
+//void GraphicsRenderer::Init(DirectX12* directX12) {
+//	Dxc();
+//	/*CreateRootSignature(directX12);*/
+//	/*InputLayout();
+//	BlendState();
+//	ResterizerState();
+//	BuildShader();
+//	CreatePSO(directX12);
+//	CreateVertexResource(directX12);
+//	CreateVertexBufferView();
+//	WriteDataToResource();
+//	Viewport();
+//	ScissorRect();*/
+//}
 
 void GraphicsRenderer::DrawCall(DirectX12 *directX12) {
 	directX12->GetCommandList()->RSSetViewports(1, &viewport);	//Viewportを設定

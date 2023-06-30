@@ -7,7 +7,7 @@ class DirectX12;
 class GraphicsRenderer 
 {
 public:
-	void Init(DirectX12* directX12);
+	/*void Init(DirectX12* directX12);*/
 
 	void Dxc();
 
@@ -40,6 +40,8 @@ public:
 
 	void Viewport();
 	void ScissorRect();
+
+	/*void RootParameter();*/
 
 	
 
@@ -81,15 +83,13 @@ private:
 	//実際に生成
 	ID3D12PipelineState* graphicsPipelineState;
 
-	
-
-
-
-	
-
 	//ビューポート
 	D3D12_VIEWPORT viewport;
 	//シザー矩形
 	D3D12_RECT scissorRect;
+
+	
+
+	
 };
 

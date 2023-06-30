@@ -68,6 +68,8 @@ void Triangle::Draw(Vector4 left ,Vector4 top,Vector4 right) {
 	//右下
 	vertexData[2] = right;
 
+	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

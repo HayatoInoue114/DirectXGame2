@@ -13,13 +13,7 @@ class WindowsAPI
 {
 public:
 
-
-
-
-
 	void Init();
-
-	
 
 	void WindowClass();
 	void WindowSize();

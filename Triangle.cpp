@@ -5,7 +5,11 @@ void Triangle::Initialize(DirectX12* directX12) {
 	CreateVertexResource();
 	CreateMaterialResource();
 	CreateVertexBufferView();
+	CreateTransformationMatrixResource();
 	WriteDataToResource();
+
+	//Transform変数を作る
+	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 }
 
 void Triangle::CreateVertexResource() {
@@ -29,6 +33,17 @@ void Triangle::CreateMaterialResource() {
 	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
+void Triangle::CreateTransformationMatrixResource() {
+	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
+	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Matrix4x4));
+	//データを書き込む
+	wvpData_ = nullptr;
+	//書き込むためのアドレスを取得
+	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpData_));
+	//単位行列を書き込んでおく
+	*wvpData_ = MakeIdentity4x4();
+}
+
 void Triangle::WriteDataToResource() {
 	//書き込むためのアドレスを取得
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
@@ -37,6 +52,12 @@ void Triangle::WriteDataToResource() {
 void Triangle::Release() {
 	vertexResource->Release();
 	materialResource_->Release();
+}
+
+void Triangle::Update() {
+	transform_.rotate.y += 0.03f;
+	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	*wvpData_ = worldMatrix_;
 }
 
 void Triangle::Draw(Vector4 left ,Vector4 top,Vector4 right) {
@@ -51,6 +72,8 @@ void Triangle::Draw(Vector4 left ,Vector4 top,Vector4 right) {
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	//wvp用のCBufferの場所を設定
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
 	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }

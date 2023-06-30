@@ -2,6 +2,7 @@
 #include "DirectX12.h"
 #include <dxcapi.h>
 #include "Vector4.h"
+#include "MT.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -19,6 +20,10 @@ public:
 	void Release();
 
 	void CreateMaterialResource();
+
+	void CreateTransformationMatrixResource();
+	
+	void Update();
 
 	void Draw(Vector4 left, Vector4 top, Vector4 right);
 private:
@@ -39,6 +44,13 @@ private:
 	ID3D12Resource* materialResource_;
 
 	Vector4* materialData_;
+
+	ID3D12Resource* wvpResource_;
+	Matrix4x4* wvpData_;
+
+	Transform transform_;
+	Matrix4x4 worldMatrix_;
+	
 };
 
 

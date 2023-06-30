@@ -49,6 +49,12 @@
     <Filter Include="ヘッダー ファイル\Triangle">
       <UniqueIdentifier>{266ffc38-ba75-4ce5-b9db-92acb61ea79e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\MT">
+      <UniqueIdentifier>{bbd1e86c-982d-4f35-a47f-5fdcf744f99e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\MT">
+      <UniqueIdentifier>{9b245589-b8b3-49e4-915e-9743dc0bdfaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -71,6 +77,9 @@
     </ClCompile>
     <ClCompile Include="Triangle.cpp">
       <Filter>ソース ファイル\Triangle</Filter>
+    </ClCompile>
+    <ClCompile Include="MT.cpp">
+      <Filter>ソース ファイル\MT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="Triangle.h">
       <Filter>ヘッダー ファイル\Triangle</Filter>
+    </ClInclude>
+    <ClInclude Include="MT.h">
+      <Filter>ヘッダー ファイル\MT</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

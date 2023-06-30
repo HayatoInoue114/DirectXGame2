@@ -4,7 +4,7 @@
 #include "WindowsAPI.h"
 #include "Triangle.h"
 
-#define MAXTRIANGLE 1 //三角形の最大数
+#define MAXTRIANGLE 10 //三角形の最大数
 
 class DirectX12;
 class GraphicsRenderer;
@@ -44,6 +44,8 @@ private:
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
 	Triangle* triangle_[MAXTRIANGLE];
+
+
 
 	/*DirectX12* directX12;
 	GraphicsRenderer* graphicsRenderer;

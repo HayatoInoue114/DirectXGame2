@@ -26,12 +26,12 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
-
 }
 
 void GameManager::Update() {
-	
-	
+	for (int i = 0; i < MAXTRIANGLE; i++) {
+		triangle_[i]->Update();
+	}
 }
 
 void GameManager::Release() {
@@ -71,14 +71,6 @@ void GameManager::VariableInit() {
 		triangleData[i].Top_ = { 0.0f,0.5f + i * 0.1f,0.0f,1.0f };
 		triangleData[i].Right_ = { 0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
 	}
-
-	/*triangleData[0].Left_ = { -1.0f,-0.5f,0.0f,1.0f };
-	triangleData[0].Top_ = { -0.5f,0.5f,0.0f,1.0f };
-	triangleData[0].Right_ = { 0.0f,-0.5f,0.0f,1.0f };
-
-	triangleData[1].Left_ = { 0.0f,-0.5f,0.0f,1.0f };
-	triangleData[1].Top_ = { 0.5f,0.5f,0.0f,1.0f };
-	triangleData[1].Right_ = { 1.0f,-0.5f,0.0f,1.0f };*/
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i] = new Triangle;

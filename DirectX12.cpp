@@ -100,6 +100,9 @@ void DirectX12::DescriptorHeap() {
 	rtvDescriptorHeap = nullptr;
 	rtvDescriptorHeapDesc = {};
 
+	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	//レンダーターゲットビュー用
+	rtvDescriptorHeapDesc.NumDescriptors = 2;	//ダブルバッファように二つ、多くても別に構わない
+	/*rtvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);*/
 	HRESULT hr = device->CreateDescriptorHeap(&rtvDescriptorHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
 	//ディスクリプターヒープが作れなかったので起動できない
 	assert(SUCCEEDED(hr));

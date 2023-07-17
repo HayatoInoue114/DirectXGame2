@@ -68,6 +68,8 @@ public:
 	ID3D12Device* GetDevice() { return device; }
 
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
+
+	ID3D12DescriptorHeap* DescriptorHeapCreate(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 public:
 	void GetBackBuffer();
 

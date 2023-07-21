@@ -8,7 +8,7 @@
 class Triangle
 {
 public:
-	void Initialize(DirectX12* directX12);
+	void Initialize(DirectX12* directX12, Vector4 left, Vector4 top, Vector4 right);
 
 	void CreateVertexResource();
 
@@ -20,7 +20,7 @@ public:
 
 	void CreateMaterialResource();
 
-	void Draw(Vector4 left, Vector4 top, Vector4 right);
+	void Draw();
 private:
 	DirectX12* directX12_;
 

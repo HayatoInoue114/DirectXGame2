@@ -1,11 +1,18 @@
 #include "Triangle.h"
 
-void Triangle::Initialize(DirectX12* directX12) {
+void Triangle::Initialize(DirectX12* directX12, Vector4 left, Vector4 top, Vector4 right) {
 	directX12_ = directX12;
 	CreateVertexResource();
 	CreateMaterialResource();
 	CreateVertexBufferView();
 	WriteDataToResource();
+
+	//左下
+	vertexData[0] = left;
+	//上
+	vertexData[1] = top;
+	//右下
+	vertexData[2] = right;
 }
 
 void Triangle::CreateVertexResource() {
@@ -39,13 +46,8 @@ void Triangle::Release() {
 	materialResource_->Release();
 }
 
-void Triangle::Draw(Vector4 left ,Vector4 top,Vector4 right) {
-	//左下
-	vertexData[0] = left;
-	//上
-	vertexData[1] = top;
-	//右下
-	vertexData[2] = right;
+void Triangle::Draw() {
+	
 
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい

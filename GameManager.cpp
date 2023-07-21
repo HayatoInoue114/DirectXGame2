@@ -21,7 +21,7 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 	graphicsRenderer_->CreatePSO(directX12_);
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Initialize(directX12_);
+		triangle_[i]->Initialize(directX12_, triangleData[i].Left_, triangleData[i].Top_, triangleData[i].Right_);
 	}
 
 	graphicsRenderer_->Viewport();
@@ -56,7 +56,7 @@ void GameManager::Finalize() {
 
 void GameManager::Draw() {
 	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Draw(triangleData[i].Left_, triangleData[i].Top_, triangleData[i].Right_);
+		triangle_[i]->Draw();
 	}
 	
 }
@@ -69,16 +69,8 @@ void GameManager::VariableInit() {
 		triangleData[i].Right_ = { 0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
 	}
 
-	/*triangleData[0].Left_ = { -1.0f,-0.5f,0.0f,1.0f };
-	triangleData[0].Top_ = { -0.5f,0.5f,0.0f,1.0f };
-	triangleData[0].Right_ = { 0.0f,-0.5f,0.0f,1.0f };
-
-	triangleData[1].Left_ = { 0.0f,-0.5f,0.0f,1.0f };
-	triangleData[1].Top_ = { 0.5f,0.5f,0.0f,1.0f };
-	triangleData[1].Right_ = { 1.0f,-0.5f,0.0f,1.0f };*/
-
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i] = new Triangle;
-		triangle_[i]->Initialize(directX12_);
+		triangle_[i]->Initialize(directX12_,triangleData[i].Left_, triangleData[i].Top_, triangleData[i].Right_);
 	}
 }

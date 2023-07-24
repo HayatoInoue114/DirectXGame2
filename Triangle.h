@@ -15,7 +15,7 @@ struct TriangleData
 class Triangle
 {
 public:
-	void Initialize(DirectX12* directX12, Vector4 left, Vector4 top, Vector4 right);
+	void Initialize(DirectX12* directX12, const TriangleData& triangleData);
 
 	void CreateVertexResource();
 

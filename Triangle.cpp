@@ -1,6 +1,6 @@
 #include "Triangle.h"
 
-void Triangle::Initialize(DirectX12* directX12, Vector4 left, Vector4 top, Vector4 right) {
+void Triangle::Initialize(DirectX12* directX12, const TriangleData& triangleData) {
 	directX12_ = directX12;
 	CreateVertexResource();
 	CreateMaterialResource();

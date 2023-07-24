@@ -1,8 +1,5 @@
 #include "GraphicsRenderer.h"
 
-
-
-
 void GraphicsRenderer::Dxc() {
 	HRESULT hr;
 	//dxcCompilerを初期化
@@ -28,7 +25,7 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 	IDxcUtils* dxcUtils,
 	IDxcCompiler3* dxcComiler,
 	IDxcIncludeHandler* includeHandler)
- {
+{
 	HRESULT hr;
 	//これからシェーダーをコンパイルする旨をログに出す
 	Log(ConvertString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
@@ -227,11 +224,11 @@ void GraphicsRenderer::Init(DirectX12* directX12) {
 	ScissorRect();*/
 }
 
-void GraphicsRenderer::DrawCall(DirectX12 *directX12) {
+void GraphicsRenderer::DrawCall(DirectX12* directX12) {
 	directX12->GetCommandList()->RSSetViewports(1, &viewport);	//Viewportを設定
 	directX12->GetCommandList()->RSSetScissorRects(1, &scissorRect);	//Scirssorを設定
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	directX12->GetCommandList()->SetGraphicsRootSignature(rootSignature);
 	directX12->GetCommandList()->SetPipelineState(graphicsPipelineState);	//PSOを設定
-	
+
 }

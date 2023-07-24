@@ -1,17 +1,17 @@
 #include "Triangle.h"
 
-void Triangle::Initialize(DirectX12* directX12, Vector4 left, Vector4 top, Vector4 right) {
+void Triangle::Initialize(DirectX12* directX12, const TriangleData& triangleData) {
 	directX12_ = directX12;
 	CreateVertexResource();
 	CreateVertexBufferView();
 	WriteDataToResource();
 
 	//左下
-	vertexData[0] = left;
+	vertexData[0] = triangleData.Left;
 	//上
-	vertexData[1] = top;
+	vertexData[1] = triangleData.Top;
 	//右下
-	vertexData[2] = right;
+	vertexData[2] = triangleData.Right;
 }
 
 void Triangle::CreateVertexResource() {

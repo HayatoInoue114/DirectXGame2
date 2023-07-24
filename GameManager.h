@@ -13,15 +13,11 @@ class WindowsAPI;
 class GameManager
 {
 public:
-	
-	
-
-	/*void PreInit(GraphicsRenderer* graphicsRenderer);*/
 	void Init(DirectX12* directX12, WindowsAPI* windowsAPI);
-	void Update();
-	void Release();
 
-	
+	void Update();
+
+	void Release();
 
 	void BeginFrame();
 
@@ -33,20 +29,12 @@ public:
 
 	void VariableInit();
 private:
-	struct TriangleData
-	{
-		Vector4 Left_;
-		Vector4 Top_;
-		Vector4 Right_;
-	};
 	TriangleData triangleData[MAXTRIANGLE];
 
 	DirectX12* directX12_ = new DirectX12;
-	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
-	Triangle* triangle_[MAXTRIANGLE];
 
-	/*DirectX12* directX12;
-	GraphicsRenderer* graphicsRenderer;
-	WindowsAPI* windowsAPI;*/
+	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
+
+	Triangle* triangle_[MAXTRIANGLE];
 };
 

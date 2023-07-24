@@ -1,8 +1,5 @@
 #include "DirectX12.h"
 
-
-
-
 void DirectX12::DXGIFactory() {
 	dxgiFactory = nullptr;
 

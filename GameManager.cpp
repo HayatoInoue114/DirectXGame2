@@ -23,7 +23,6 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
-
 }
 
 void GameManager::Update() {
@@ -33,8 +32,6 @@ void GameManager::Release() {
 	directX12_->Release();
 	graphicsRenderer_->Release();
 }
-
-
 
 void GameManager::BeginFrame() {
 	directX12_->PreDraw();
@@ -53,7 +50,6 @@ void GameManager::Draw() {
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Draw();
 	}
-
 }
 
 void GameManager::VariableInit() {

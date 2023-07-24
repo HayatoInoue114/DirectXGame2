@@ -5,6 +5,13 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
+struct TriangleData
+{
+	Vector4 Left;
+	Vector4 Top;
+	Vector4 Right;
+};
+
 class Triangle
 {
 public:

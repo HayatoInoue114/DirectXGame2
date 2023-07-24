@@ -33,8 +33,6 @@ private:
 
 	//頂点リソースにデータを書き込む
 	Vector4* vertexData;
-
-
 };
 
 

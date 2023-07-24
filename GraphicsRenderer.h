@@ -4,11 +4,9 @@
 
 class DirectX12;
 
-class GraphicsRenderer 
+class GraphicsRenderer
 {
 public:
-	void Init(DirectX12* directX12);
-
 	void Dxc();
 
 	IDxcBlob* CompileShader(
@@ -34,14 +32,11 @@ public:
 
 	void CreatePSO(DirectX12* directX12);
 
-	
-	void DrawCall(DirectX12 *directX12);
-	
+	void DrawCall(DirectX12* directX12);
 
 	void Viewport();
-	void ScissorRect();
 
-	
+	void ScissorRect();
 
 	void Release();
 private:
@@ -81,12 +76,6 @@ private:
 
 	//実際に生成
 	ID3D12PipelineState* graphicsPipelineState;
-
-	
-
-
-
-	
 
 	//ビューポート
 	D3D12_VIEWPORT viewport;

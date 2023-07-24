@@ -13,15 +13,11 @@ class WindowsAPI;
 class GameManager
 {
 public:
-	
-	
-
-	/*void PreInit(GraphicsRenderer* graphicsRenderer);*/
 	void Init(DirectX12* directX12, WindowsAPI* windowsAPI);
-	void Update();
-	void Release();
 
-	
+	void Update();
+
+	void Release();
 
 	void BeginFrame();
 

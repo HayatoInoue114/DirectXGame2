@@ -202,21 +202,6 @@ void GraphicsRenderer::Release() {
 	vertexShaderBlob->Release();
 }
 
-void GraphicsRenderer::Init(DirectX12* directX12) {
-	Dxc();
-	/*CreateRootSignature(directX12);*/
-	/*InputLayout();
-	BlendState();
-	ResterizerState();
-	BuildShader();
-	CreatePSO(directX12);
-	CreateVertexResource(directX12);
-	CreateVertexBufferView();
-	WriteDataToResource();
-	Viewport();
-	ScissorRect();*/
-}
-
 void GraphicsRenderer::DrawCall(DirectX12 *directX12) {
 	directX12->GetCommandList()->RSSetViewports(1, &viewport);	//Viewportを設定
 	directX12->GetCommandList()->RSSetScissorRects(1, &scissorRect);	//Scirssorを設定

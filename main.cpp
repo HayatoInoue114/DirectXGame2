@@ -5,13 +5,13 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	
+
 	WindowsAPI* windowsAPI = new WindowsAPI();
 	DirectX12* directX12 = new DirectX12;
-	
+
 	GameManager* gameManager = new GameManager;
-	gameManager->Init(directX12,windowsAPI);
-	
+	gameManager->Init(directX12, windowsAPI);
+
 	gameManager->VariableInit();
 
 	MSG msg{};
@@ -31,7 +31,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			gameManager->Draw();
 
 			gameManager->EndFrame();
-			
+
 		}
 	}
 

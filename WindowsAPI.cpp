@@ -1,15 +1,10 @@
 #include "WindowsAPI.h"
 
-
-
 void WindowsAPI::Init() {
 	WindowClass();
 	WindowSize();
 	WindowCreate();
 }
-
-
-
 
 LRESULT CALLBACK WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	//メッセージに応じてゲーム固有の処理を行う
@@ -27,8 +22,6 @@ LRESULT CALLBACK WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 }
 
 void WindowsAPI::WindowClass() {
-	
-
 	//ウインドウプロシージャ	
 	wc.lpfnWndProc = WindowProc;
 	//ウインドウクラス名（なんでもいい）

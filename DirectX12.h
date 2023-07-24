@@ -42,7 +42,7 @@ public:
 	/// 描画後処理
 	/// </summary>
 	void PostDraw();
-	
+
 	/*void DebugLayer();*/
 
 	void Error();
@@ -114,13 +114,13 @@ private:
 	//RTVを２つ作るのでディスクリプタ２つ用意
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle[2];
 
-	
+
 	UINT backBufferIndex;
-	
+
 	ID3D12Resource* swapChainResource[2];
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier;
-	
+
 	//初期値0でFenceを作る
 	ID3D12Fence* fence;
 	uint64_t fenceValue;
@@ -130,8 +130,8 @@ private:
 
 	IDXGIDebug1* debug;
 
-	
-	
-	
+
+
+
 };
 

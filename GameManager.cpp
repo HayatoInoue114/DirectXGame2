@@ -20,7 +20,7 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 	graphicsRenderer_->CreatePSO(directX12_);
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Initialize(directX12_);
+		triangle_[i]->Initialize(directX12_,triangleData[i]);
 	}
 
 	graphicsRenderer_->Viewport();
@@ -65,7 +65,7 @@ void GameManager::Finalize() {
 
 void GameManager::Draw() {
 	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Draw(triangleData[i].Left_, triangleData[i].Top_, triangleData[i].Right_);
+		triangle_[i]->Draw();
 	}
 	
 }
@@ -80,6 +80,6 @@ void GameManager::VariableInit() {
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i] = new Triangle;
-		triangle_[i]->Initialize(directX12_);
+		triangle_[i]->Initialize(directX12_,triangleData[i]);
 	}
 }

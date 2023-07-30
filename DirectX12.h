@@ -5,6 +5,7 @@
 #include "FormatString.h"
 #include <dxgidebug.h>
 #include "Vector4.h"
+#include "ImGuiManager.h"
 
 #include "WindowsAPI.h"
 

@@ -314,6 +314,18 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 	SwapChain();
 	DescriptorHeap();
 	Fence();
+
+	//ImGuiの初期化
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(windowsAPI_->GetHwnd());
+	ImGui_ImplDX12_Init(device,
+		swapChainDesc.BufferCount,
+		rtvDesc.Format,
+		srvDescriptorHeap,
+		srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+		srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 }
 
 void DirectX12::Update() {

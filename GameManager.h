@@ -3,6 +3,7 @@
 #include "GraphicsRenderer.h"
 #include "WindowsAPI.h"
 #include "Triangle.h"
+#include "ImGuiManager.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
 

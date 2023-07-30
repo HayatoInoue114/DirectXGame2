@@ -33,7 +33,7 @@ void DirectX12::Adapter() {
 
 void DirectX12::D3D12Device() {
 	device = nullptr;
-	
+
 	//機能レベルとログ出力用の文字列
 	D3D_FEATURE_LEVEL featureLevels[] = {
 		D3D_FEATURE_LEVEL_12_2,D3D_FEATURE_LEVEL_12_1,D3D_FEATURE_LEVEL_12_0
@@ -46,11 +46,11 @@ void DirectX12::D3D12Device() {
 		//指定した機能レベルでデバイスが生成できたかを確認
 		if (SUCCEEDED(hr)) {
 			//生成できたのでログ出力を行ってループを抜ける
-			Log(std::format("featureLevel : {}\n",featureLevelStrings[i]));
+			Log(std::format("featureLevel : {}\n", featureLevelStrings[i]));
 			break;
 		}
 	}
-	
+
 	//デバイスの生成がうまくいかなかったので起動できない
 	assert(device != nullptr);
 	Log("Complete create D3D12Device!!!\n");//初期化完了のログを出す
@@ -97,8 +97,9 @@ void DirectX12::SwapChain() {
 }
 
 void DirectX12::DescriptorHeap() {
-	rtvDescriptorHeap = nullptr;
+	rtvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
 	rtvDescriptorHeapDesc = {};
+	srvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, true);
 
 	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	//レンダーターゲットビュー用
 	rtvDescriptorHeapDesc.NumDescriptors = 2;	//ダブルバッファように二つ、多くても別に構わない
@@ -121,7 +122,7 @@ void DirectX12::DescriptorHeap() {
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;	//２dテクスチャとして書き込む
 	//ディスクリプタの先頭を取得する
 	rtvStartHandle = rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	
+
 	//まず１つ目を作る。１つ目は最初のところに作る。作る場所をこちらで指定してあげる必要がある
 	rtvHandle[0] = rtvStartHandle;
 	device->CreateRenderTargetView(swapChainResource[0], &rtvDesc, rtvHandle[0]);
@@ -129,7 +130,7 @@ void DirectX12::DescriptorHeap() {
 	rtvHandle[1].ptr = rtvHandle[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	//２つ目を作る
 	device->CreateRenderTargetView(swapChainResource[1], &rtvDesc, rtvHandle[1]);
-	
+
 
 }
 
@@ -154,7 +155,7 @@ void DirectX12::CommandKick() {
 	ID3D12CommandList* commandLists[] = { commandList };
 	commandQueue->ExecuteCommandLists(1, commandLists);
 	//GPUとSの画面の交換を行うよう通知する
-	swapChain->Present(1, 0);	
+	swapChain->Present(1, 0);
 }
 
 void DirectX12::NextFlameCommandList() {
@@ -178,7 +179,7 @@ void DirectX12::NextFlameCommandList() {
 //}
 
 void DirectX12::Error() {
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	ID3D12InfoQueue* infoQueue = nullptr;
 	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
 		//やばいエラー時に止まる
@@ -187,7 +188,7 @@ void DirectX12::Error() {
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
 		//警告時に止まる
 		//infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
-		
+
 		//抑制するメッセージのID
 		D3D12_MESSAGE_ID denyIds[] = {
 			//windows11でのDXGいデバッグレイヤーとDX12デバッグレイヤーの相互作用バグによるエラーメッセージ
@@ -245,7 +246,7 @@ void DirectX12::Fence() {
 	//初期値0でFenceを作る
 	fence = nullptr;
 	fenceValue = 0;
-	
+
 	HRESULT hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 	/*hr = device->GetDeviceRemovedReason();*/
 	assert(SUCCEEDED(hr));
@@ -275,7 +276,7 @@ void DirectX12::Signal() {
 
 void DirectX12::ResourceLeakCheck() {
 	//リソースリークチェック
-	
+
 	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
 		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
 		debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
@@ -286,19 +287,19 @@ void DirectX12::ResourceLeakCheck() {
 
 void DirectX12::Release() {
 	CloseHandle(fenceEvent);
-		fence->Release();
-		
-		rtvDescriptorHeap->Release();
-		swapChainResource[0]->Release();
-		swapChainResource[1]->Release();
-		swapChain->Release();
-		commandList->Release();
-		commandAllocator->Release();
-		commandQueue->Release();
-		device->Release();
-		useAdapter->Release();
-		dxgiFactory->Release();
-		CloseWindow(windowsAPI_->GetHwnd());
+	fence->Release();
+
+	rtvDescriptorHeap->Release();
+	swapChainResource[0]->Release();
+	swapChainResource[1]->Release();
+	swapChain->Release();
+	commandList->Release();
+	commandAllocator->Release();
+	commandQueue->Release();
+	device->Release();
+	useAdapter->Release();
+	dxgiFactory->Release();
+	CloseWindow(windowsAPI_->GetHwnd());
 }
 
 void DirectX12::Init(WindowsAPI* windowsAPI) {
@@ -317,7 +318,7 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 
 void DirectX12::Update() {
 	//ゲームの処理
-	
+
 	Signal();
 	CommandKick();
 

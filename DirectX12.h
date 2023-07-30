@@ -134,7 +134,7 @@ private:
 
 	IDXGIDebug1* debug;
 
-	
+	ID3D12DescriptorHeap* srvDescriptorHeap;
 	
 	
 };

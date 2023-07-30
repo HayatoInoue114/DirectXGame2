@@ -1,12 +1,19 @@
 #include "Triangle.h"
 
-void Triangle::Initialize(DirectX12* directX12) {
+void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	directX12_ = directX12;
 	CreateVertexResource();
 	CreateMaterialResource();
 	CreateVertexBufferView();
 	CreateTransformationMatrixResource();
 	WriteDataToResource();
+
+	//左下
+	vertexData[0] = triangleData.Left_;
+	//上
+	vertexData[1] = triangleData.Top_;
+	//右下
+	vertexData[2] = triangleData.Right_;
 
 	//Transform変数を作る
 	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
@@ -60,13 +67,8 @@ void Triangle::Update() {
 	*wvpData_ = worldMatrix_;
 }
 
-void Triangle::Draw(Vector4 left ,Vector4 top,Vector4 right) {
-	//左下
-	vertexData[0] = left;
-	//上
-	vertexData[1] = top;
-	//右下
-	vertexData[2] = right;
+void Triangle::Draw() {
+	
 
 	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 

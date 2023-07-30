@@ -6,10 +6,17 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
+struct TriangleData
+{
+	Vector4 Left_;
+	Vector4 Top_;
+	Vector4 Right_;
+};
+
 class Triangle
 {
 public:
-	void Initialize(DirectX12* directX12);
+	void Initialize(DirectX12* directX12,TriangleData triangleData);
 
 	void CreateVertexResource();
 
@@ -25,7 +32,7 @@ public:
 	
 	void Update();
 
-	void Draw(Vector4 left, Vector4 top, Vector4 right);
+	void Draw();
 private:
 	DirectX12* directX12_;
 

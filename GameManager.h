@@ -34,6 +34,7 @@ public:
 
 	void VariableInit();
 private:
+	TriangleData triangleData[MAXTRIANGLE];
 
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;

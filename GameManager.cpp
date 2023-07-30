@@ -8,7 +8,6 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 		triangle_[i] = new Triangle;
 	}
 	
-
 	directX12_ = directX12;
 	directX12_->Init(windowsAPI);
 
@@ -29,9 +28,13 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 }
 
 void GameManager::Update() {
+	ImGui::ShowDemoWindow();
+
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Update();
 	}
+
+	ImGui::Render();
 }
 
 void GameManager::Release() {

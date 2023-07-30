@@ -148,6 +148,15 @@ void DirectX12::RTV() {
 	commandList->ClearRenderTargetView(rtvHandle[backBufferIndex], clearColor, 0, nullptr);
 }
 
+void DirectX12::SetImGuiDescriptorHeap() {
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap };
+	commandList->SetDescriptorHeaps(1, descriptorHeaps);
+}
+
+void DirectX12::PushImGuiDrawCommand() {
+	//実際のcommandListのImGuiの描画コマンドを積む
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+}
 
 
 void DirectX12::CommandKick() {
@@ -330,7 +339,7 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 
 void DirectX12::Update() {
 	//ゲームの処理
-
+	PushImGuiDrawCommand();
 	Signal();
 	CommandKick();
 
@@ -342,6 +351,7 @@ void DirectX12::PreDraw() {
 	GetBackBuffer();
 	Barrier();
 	RTV();
+	SetImGuiDescriptorHeap();
 }
 
 void DirectX12::PostDraw() {

@@ -63,6 +63,10 @@ public:
 
 	void Release();
 
+	void SetImGuiDescriptorHeap();
+
+	void PushImGuiDrawCommand();
+
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 
 
@@ -136,7 +140,7 @@ private:
 	IDXGIDebug1* debug;
 
 	ID3D12DescriptorHeap* srvDescriptorHeap;
-	
+
 	
 };
 

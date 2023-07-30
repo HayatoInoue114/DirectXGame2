@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <cstdint>
+#include "ImGuiManager.h"
 //#include "DirectX12.h"
 
 //クライアント領域のサイズ

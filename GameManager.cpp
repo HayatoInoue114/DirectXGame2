@@ -45,6 +45,9 @@ void GameManager::Release() {
 
 
 void GameManager::BeginFrame() {
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 	directX12_->PreDraw();
 	graphicsRenderer_->DrawCall(directX12_);
 }

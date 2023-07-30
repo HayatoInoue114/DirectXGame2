@@ -337,15 +337,14 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 		srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 }
 
-void DirectX12::Update() {
-	//ゲームの処理
-	PushImGuiDrawCommand();
-	Signal();
-	CommandKick();
-
-
-	ResourceLeakCheck();
-}
+//void DirectX12::Update() {
+//	//ゲームの処理
+//	Signal();
+//	CommandKick();
+//
+//
+//	ResourceLeakCheck();
+//}
 
 void DirectX12::PreDraw() {
 	GetBackBuffer();
@@ -355,6 +354,7 @@ void DirectX12::PreDraw() {
 }
 
 void DirectX12::PostDraw() {
+	PushImGuiDrawCommand();
 	ScreenDisplay();
 	CommandConfirm();
 	CommandKick();

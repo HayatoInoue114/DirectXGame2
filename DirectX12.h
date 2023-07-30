@@ -57,7 +57,7 @@ public:
 
 	void Fence();
 
-	void Update();
+	/*void Update();*/
 
 	void ResourceLeakCheck();
 

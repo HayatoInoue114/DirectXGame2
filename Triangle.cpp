@@ -60,8 +60,8 @@ void Triangle::Release() {
 	materialResource_->Release();
 }
 
-void Triangle::Update(Vector4 color) {
-	transform_.rotate.y += 0.0f;
+void Triangle::Update(Transform transform, Vector4 color) {
+	transform_ = transform;
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	*wvpData_ = worldMatrix_;
 	//色の指定

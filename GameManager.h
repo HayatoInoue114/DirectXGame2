@@ -40,8 +40,13 @@ private:
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
 	Triangle** triangle_ = new Triangle* [MAXTRIANGLE];
 
-	float colorVolume[3] = {};
-	Vector4 color = {1.0f,0.0f,0.0f,1.0f};
+	float colorVolume_[3] = {};
+	Vector4 color_ = {1.0f,0.0f,0.0f,1.0f};
+
+	Transform transform_;
+	float scale_[3] = {1.0f,1.0f,0.0f};
+	float rotate_[3] = {};
+	float translate_[3] = {0.0f,0.0f,0.0f};
 
 	/*DirectX12* directX12;
 	GraphicsRenderer* graphicsRenderer;

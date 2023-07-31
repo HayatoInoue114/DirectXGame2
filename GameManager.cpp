@@ -20,7 +20,7 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 	graphicsRenderer_->CreatePSO(directX12_);
 
 	for (int i = 0; i < 3; i++) {
-		colorVolume[i] = 0;
+		colorVolume_[i] = 0;
 	}
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {
@@ -32,13 +32,16 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 }
 
 void GameManager::Update() {
-	ImGui::ColorEdit3("TriangleColor", colorVolume);
-	ImGui::SliderFloat3("TriangleColor", colorVolume, 0.0f, 1.0f);
+	ImGui::ColorEdit3("TriangleColor", colorVolume_);
+	ImGui::SliderFloat3("TriangleColor", colorVolume_, 0.0f, 1.0f);
+	ImGui::SliderFloat3("TriangleScale", scale_, -5, 5);
+	ImGui::SliderFloat3("TriangleRotate", rotate_, -5, 5);
+	ImGui::SliderFloat3("TriangleTranslate", translate_, -1, 1);
 	
-	color = { colorVolume[0],colorVolume[1],colorVolume[2],1.0f };
-
+	color_ = { colorVolume_[0],colorVolume_[1],colorVolume_[2],1.0f };
+	transform_ = { {scale_[0],scale_[1],scale_[2]},{rotate_[0],rotate_[1],rotate_[2]},{translate_[0],translate_[1],translate_[2]} };
 	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Update(color);
+		triangle_[i]->Update(transform_,color_);
 	}
 
 	ImGui::Render();

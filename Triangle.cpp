@@ -37,7 +37,6 @@ void Triangle::CreateMaterialResource() {
 	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
 void Triangle::CreateTransformationMatrixResource() {
@@ -61,16 +60,15 @@ void Triangle::Release() {
 	materialResource_->Release();
 }
 
-void Triangle::Update() {
-	transform_.rotate.y += 0.03f;
+void Triangle::Update(Vector4 color) {
+	transform_.rotate.y += 0.0f;
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	*wvpData_ = worldMatrix_;
+	//色の指定
+	*materialData_ = color;
 }
 
 void Triangle::Draw() {
-	
-
-	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい

@@ -19,8 +19,12 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 	graphicsRenderer_->BuildShader();
 	graphicsRenderer_->CreatePSO(directX12_);
 
+	for (int i = 0; i < 3; i++) {
+		colorVolume[i] = 0;
+	}
+
 	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Initialize(directX12_,triangleData[i]);
+		triangle_[i]->Initialize(directX12_, triangleData[i]);
 	}
 
 	graphicsRenderer_->Viewport();
@@ -28,10 +32,13 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 }
 
 void GameManager::Update() {
-	ImGui::ShowDemoWindow();
+	ImGui::ColorEdit3("TriangleColor", colorVolume);
+	ImGui::SliderFloat3("TriangleColor", colorVolume, 0.0f, 1.0f);
+	
+	color = { colorVolume[0],colorVolume[1],colorVolume[2],1.0f };
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Update();
+		triangle_[i]->Update(color);
 	}
 
 	ImGui::Render();

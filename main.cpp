@@ -4,7 +4,7 @@
 
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-
+	CoInitializeEx(0, COINIT_MULTITHREADED);
 	
 	WindowsAPI* windowsAPI = new WindowsAPI();
 	DirectX12* directX12 = new DirectX12;
@@ -37,6 +37,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 
 	gameManager->Finalize();
+	CoUninitialize();
 	return 0;
 }
 

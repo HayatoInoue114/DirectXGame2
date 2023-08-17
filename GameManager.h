@@ -5,7 +5,7 @@
 #include "Triangle.h"
 #include "ImGuiManager.h"
 
-#define MAXTRIANGLE 5 //三角形の最大数
+#define MAXTRIANGLE 2 //三角形の最大数
 
 class DirectX12;
 class GraphicsRenderer;

@@ -78,7 +78,7 @@ private:
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc;
 
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[1];
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[2];
 
 	//実際に生成
 	ID3D12PipelineState* graphicsPipelineState;

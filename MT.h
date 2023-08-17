@@ -2,6 +2,12 @@
 #include<math.h>
 #include<cmath>
 
+struct Vector2
+{
+	float x;
+	float y;
+};
+
 /// <summary>
 /// 4x4行列
 /// </summary>

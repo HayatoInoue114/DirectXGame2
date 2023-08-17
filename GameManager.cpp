@@ -86,6 +86,10 @@ void GameManager::VariableInit() {
 		triangleData[i].Left_ = { -0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
 		triangleData[i].Top_ = { 0.0f,0.5f + i * 0.1f,0.0f,1.0f };
 		triangleData[i].Right_ = { 0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
+
+		triangleData[0].texcoord = { 0.0f,1.0f };
+		triangleData[1].texcoord = { 0.5f,0.0f };
+		triangleData[2].texcoord = { 1.0f,1.0f };
 	}
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {

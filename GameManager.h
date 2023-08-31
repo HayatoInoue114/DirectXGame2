@@ -5,7 +5,7 @@
 #include "Triangle.h"
 #include "ImGuiManager.h"
 
-#define MAXTRIANGLE 2 //三角形の最大数
+#define MAXTRIANGLE 1 //三角形の最大数
 
 class DirectX12;
 class GraphicsRenderer;
@@ -47,9 +47,5 @@ private:
 	float scale_[3] = {1.0f,1.0f,0.0f};
 	float rotate_[3] = {};
 	float translate_[3] = {0.0f,0.0f,0.0f};
-
-	/*DirectX12* directX12;
-	GraphicsRenderer* graphicsRenderer;
-	WindowsAPI* windowsAPI;*/
 };
 

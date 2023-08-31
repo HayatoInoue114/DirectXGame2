@@ -76,6 +76,8 @@ void Triangle::Draw() {
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
+	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
+	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2,)
+	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }

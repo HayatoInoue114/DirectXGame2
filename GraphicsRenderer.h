@@ -4,10 +4,9 @@
 
 class DirectX12;
 
-class GraphicsRenderer 
+class GraphicsRenderer
 {
 public:
-	/*void Init(DirectX12* directX12);*/
 
 	void Dxc();
 
@@ -34,16 +33,11 @@ public:
 
 	void CreatePSO(DirectX12* directX12);
 
-	
-	void DrawCall(DirectX12 *directX12);
-	
+	void DrawCall(DirectX12* directX12);
 
 	void Viewport();
+
 	void ScissorRect();
-
-	/*void RootParameter();*/
-
-	
 
 	void Release();
 private:
@@ -59,7 +53,7 @@ private:
 	IDxcBlobUtf8* shaderError;
 	IDxcBlob* shaderBlob;
 
-	
+
 	//シリアライズしてバイナリにする
 	ID3DBlob* signatureBlob;
 	ID3DBlob* errorBlob;
@@ -88,8 +82,8 @@ private:
 	//シザー矩形
 	D3D12_RECT scissorRect;
 
-	
+	D3D12_DESCRIPTOR_RANGE descriptorRange[1];
 
-	
+	D3D12_STATIC_SAMPLER_DESC staticSamplers[1];
 };
 

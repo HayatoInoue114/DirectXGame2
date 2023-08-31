@@ -17,4 +17,3 @@ VertexShaderOutput main(VertexShaderInput input) {
 	output.texcoord = input.texcoord;
 	return output;
 }
-

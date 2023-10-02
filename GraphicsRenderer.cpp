@@ -38,7 +38,7 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 	//読めなかったら止める
 	assert(SUCCEEDED(hr));
 	//読み込んだファイルの内容を設定する
-	DxcBuffer shaderSourceBuffer;
+	DxcBuffer shaderSourceBuffer = {};
 	shaderSourceBuffer.Ptr = shaderSource->GetBufferPointer();
 	shaderSourceBuffer.Size = shaderSource->GetBufferSize();
 	shaderSourceBuffer.Encoding = DXC_CP_UTF8;//UTF8の文字コードであることを通知

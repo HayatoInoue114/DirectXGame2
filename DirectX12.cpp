@@ -350,9 +350,9 @@ void DirectX12::PreDraw() {
 	GetBackBuffer();
 	Barrier();
 	RTV();
-	SetImGuiDescriptorHeap();
 	LoadAndTransferTexture();
 	CreateSRV();
+	SetImGuiDescriptorHeap();
 }
 
 void DirectX12::PostDraw() {

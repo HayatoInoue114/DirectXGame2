@@ -1,7 +1,5 @@
 #include "GameManager.h"
 
-
-
 void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI) 
 {
 	for (int i = 0; i < MAXTRIANGLE; i++) {

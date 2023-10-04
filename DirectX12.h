@@ -6,6 +6,7 @@
 #include <dxgidebug.h>
 #include "Vector4.h"
 #include "ImGuiManager.h"
+#include "externals/DirectXTex/DirectXTex.h"
 
 #include "WindowsAPI.h"
 
@@ -77,6 +78,15 @@ public:
 	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
 	ID3D12DescriptorHeap* GetSRVDescriptorHeap() { return srvDescriptorHeap; }
+
+	void LoadAndTransferTexture();
+	ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
+	void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
+	void CreateSRV();
+
+	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() {
+		return textureSrvHandleGPU;
+	}
 public:
 	void GetBackBuffer();
 
@@ -143,6 +153,14 @@ private:
 
 	ID3D12DescriptorHeap* srvDescriptorHeap;
 
-	
+	DirectX::TexMetadata metadata;
+
+	ID3D12Resource* textureResource;
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU;
+
+	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
 };
 

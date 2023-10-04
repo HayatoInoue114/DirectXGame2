@@ -7,10 +7,6 @@
 
 #define MAXTRIANGLE 1 //三角形の最大数
 
-class DirectX12;
-class GraphicsRenderer;
-class WindowsAPI;
-
 class GameManager
 {
 public:

@@ -81,13 +81,14 @@ void GameManager::Draw() {
 void GameManager::VariableInit() {
 	
 	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangleData[i].Left_ = { -0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
-		triangleData[i].Top_ = { 0.0f,0.5f + i * 0.1f,0.0f,1.0f };
-		triangleData[i].Right_ = { 0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
+		triangleData[i].Left.position = { -0.5f,-0.5f,0.0f,1.0f };
+		triangleData[i].Left.texcoord = { 0.0f,1.0f };
 
-		triangleData[0].texcoord = { 0.0f,1.0f };
-		triangleData[1].texcoord = { 0.5f,0.0f };
-		triangleData[2].texcoord = { 1.0f,1.0f };
+		triangleData[i].Top = { 0.0f,0.5f,0.0f,1.0f };
+		triangleData[i].Top.texcoord = { 0.5f,0.0f };
+
+		triangleData[i].Right = { 0.5f,-0.5f,0.0f,1.0f };
+		triangleData[i].Right.texcoord = { 1.0f,1.0f };
 	}
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {

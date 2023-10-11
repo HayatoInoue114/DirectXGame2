@@ -6,18 +6,19 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
-struct TriangleData
-{
-	Vector4 Left_;
-	Vector4 Top_;
-	Vector4 Right_;
-	Vector2 texcoord;
-};
+
 
 struct VertexData
 {
 	Vector4 position;
 	Vector2 texcoord;
+};
+
+struct TriangleData
+{
+	VertexData Left;
+	VertexData Top;
+	VertexData Right;
 };
 
 class Triangle

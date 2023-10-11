@@ -139,7 +139,7 @@ void DirectX12::GetBackBuffer() {
 	backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 }
 
-void DirectX12::RTV() {
+void DirectX12::ClearRTV() {
 	//描画先のRTVを設定する
 	commandList->OMSetRenderTargets(1, &rtvHandle[backBufferIndex], false, nullptr);
 
@@ -175,17 +175,17 @@ void DirectX12::NextFlameCommandList() {
 	assert(SUCCEEDED(hr));
 }
 
-//void DirectX12::DebugLayer() {
-//	#ifdef _DEBUG
-//	ID3D12Debug1* debugControllar = nullptr;
-//	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugControllar)))) {
-//		//デバッグレイヤーを有効化する
-//		debugControllar->EnableDebugLayer();
-//		//さらにGPU側でもチェックを行うようにする
-//		debugControllar->SetEnableGPUBasedValidation(TRUE);
-//	}
-//#endif // _DEBUG
-//}
+void DirectX12::DebugLayer() {
+	#ifdef _DEBUG
+	ID3D12Debug1* debugControllar = nullptr;
+	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugControllar)))) {
+		//デバッグレイヤーを有効化する
+		debugControllar->EnableDebugLayer();
+		//さらにGPU側でもチェックを行うようにする
+		debugControllar->SetEnableGPUBasedValidation(TRUE);
+	}
+#endif // _DEBUG
+}
 
 void DirectX12::Error() {
 #ifdef _DEBUG
@@ -316,14 +316,15 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 	windowsAPI->Init();
 	DXGIFactory();
 	Adapter();
+	DebugLayer();
 	D3D12Device();
 
 	Error();
 	Command();
 	SwapChain();
 	DescriptorHeap();
-	Fence();
 
+	
 	//ImGuiの初期化
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -335,6 +336,11 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 		srvDescriptorHeap,
 		srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
 		srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	Fence();
+
+	LoadAndTransferTexture();
+	CreateSRV();
+
 }
 
 //void DirectX12::Update() {
@@ -349,9 +355,7 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 void DirectX12::PreDraw() {
 	GetBackBuffer();
 	Barrier();
-	RTV();
-	LoadAndTransferTexture();
-	CreateSRV();
+	ClearRTV();
 	SetImGuiDescriptorHeap();
 }
 
@@ -401,6 +405,7 @@ ID3D12DescriptorHeap* DirectX12::CreateDescriptorHeap(ID3D12Device* device, D3D1
 	assert(SUCCEEDED(hr));
 	return descriptorHeap;
 }
+
 
 DirectX::ScratchImage LoadTexture(const std::string& filePath) {
 	//テクスチャファイルを呼んでプログラムで扱えるようにする
@@ -472,6 +477,7 @@ void DirectX12::CreateSRV() {
 	srvDesc = {};
 	srvDesc.Format = metadata.format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
 	//SRVを作成するDescriptorHeapの場所を決める

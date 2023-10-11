@@ -2,6 +2,9 @@
 
 void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	directX12_ = directX12;
+
+	vertexData = nullptr;
+
 	CreateVertexResource();
 	CreateMaterialResource();
 	CreateVertexBufferView();
@@ -9,11 +12,14 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	WriteDataToResource();
 
 	//左下
-	vertexData[0].position = triangleData.Left_;
+	vertexData[0].position = triangleData.Left.position;
+	vertexData[0].texcoord = triangleData.Left.texcoord;
 	//上
-	vertexData[1].position = triangleData.Top_;
+	vertexData[1].position = triangleData.Top.position;
+	vertexData[1].texcoord = triangleData.Top.texcoord;
 	//右下
-	vertexData[2].position = triangleData.Right_;
+	vertexData[2].position = triangleData.Right.position;
+	vertexData[2].texcoord = triangleData.Right.texcoord;
 
 	//Transform変数を作る
 	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };

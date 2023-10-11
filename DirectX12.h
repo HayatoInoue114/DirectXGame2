@@ -46,7 +46,7 @@ public:
 	/// </summary>
 	void PostDraw();
 	
-	/*void DebugLayer();*/
+	void DebugLayer();
 
 	void Error();
 
@@ -90,7 +90,7 @@ public:
 public:
 	void GetBackBuffer();
 
-	void RTV();
+	void ClearRTV();
 
 	void CommandKick();
 

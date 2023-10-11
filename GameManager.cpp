@@ -84,10 +84,10 @@ void GameManager::VariableInit() {
 		triangleData[i].Left.position = { -0.5f,-0.5f,0.0f,1.0f };
 		triangleData[i].Left.texcoord = { 0.0f,1.0f };
 
-		triangleData[i].Top = { 0.0f,0.5f,0.0f,1.0f };
+		triangleData[i].Top.position = { 0.0f,0.5f,0.0f,1.0f };
 		triangleData[i].Top.texcoord = { 0.5f,0.0f };
 
-		triangleData[i].Right = { 0.5f,-0.5f,0.0f,1.0f };
+		triangleData[i].Right.position = { 0.5f,-0.5f,0.0f,1.0f };
 		triangleData[i].Right.texcoord = { 1.0f,1.0f };
 	}
 

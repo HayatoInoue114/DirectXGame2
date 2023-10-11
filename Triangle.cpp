@@ -3,8 +3,6 @@
 void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	directX12_ = directX12;
 
-	vertexData = nullptr;
-
 	CreateVertexResource();
 	CreateMaterialResource();
 	CreateVertexBufferView();
@@ -26,7 +24,7 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 }
 
 void Triangle::CreateVertexResource() {
-	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4) * 3);
+	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 3);
 }
 
 void Triangle::CreateVertexBufferView() {
@@ -34,9 +32,9 @@ void Triangle::CreateVertexBufferView() {
 	//リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
+	vertexBufferView.SizeInBytes = sizeof(VertexData) * 3;
 	//1頂点当たりのサイズ
-	vertexBufferView.StrideInBytes = sizeof(Vector4);
+	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
 void Triangle::CreateMaterialResource() {

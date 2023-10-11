@@ -18,10 +18,14 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 	graphicsRenderer_->CreatePSO(directX12_);
 
 	for (int i = 0; i < 3; i++) {
-		colorVolume_[i] = 0;
+		colorVolume_[i] = 1.0f;
+		scale_[i] = 1.0f;
+		rotate_[i] = 0.0f;
+		translate_[i] = 0.0f;
 	}
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {
+		triangle_[i] = new Triangle;
 		triangle_[i]->Initialize(directX12_, triangleData[i]);
 	}
 
@@ -91,8 +95,8 @@ void GameManager::VariableInit() {
 		triangleData[i].Right.texcoord = { 1.0f,1.0f };
 	}
 
-	for (int i = 0; i < MAXTRIANGLE; i++) {
+	/*for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i] = new Triangle;
 		triangle_[i]->Initialize(directX12_,triangleData[i]);
-	}
+	}*/
 }

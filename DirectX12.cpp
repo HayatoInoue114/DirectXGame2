@@ -4,35 +4,35 @@
 
 
 void DirectX12::DXGIFactory() {
-	dxgiFactory = nullptr;
+	dxgiFactory_ = nullptr;
 
-	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
+	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory_));
 	assert(SUCCEEDED(hr));
 }
 
 void DirectX12::Adapter() {
-	useAdapter = nullptr;
+	useAdapter_ = nullptr;
 	//良い順にアダプタを頼む
-	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i) {
+	for (UINT i = 0; dxgiFactory_->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter_)) != DXGI_ERROR_NOT_FOUND; ++i) {
 		//アダプター情報を取得する
-		adapterDesc = {};
-		HRESULT hr = useAdapter->GetDesc3(&adapterDesc);
+		adapterDesc_ = {};
+		HRESULT hr = useAdapter_->GetDesc3(&adapterDesc_);
 		assert(SUCCEEDED(hr));//取得できないのは一大事
 		//ソフトウェアアダプタでなければ採用!
-		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
+		if (!(adapterDesc_.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
 			//採用したアダプタの情報をログに出力。wstringの方なので注意
-			Log(ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
+			Log(ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc_.Description)));
 			break;
 		}
-		useAdapter = nullptr;//ソフトウェアアダプタの場合は見なかったことにする
+		useAdapter_ = nullptr;//ソフトウェアアダプタの場合は見なかったことにする
 	}
 
 	//適切なアダプタが見つからなかったので起動できない
-	assert(useAdapter != nullptr);
+	assert(useAdapter_ != nullptr);
 }
 
 void DirectX12::D3D12Device() {
-	device = nullptr;
+	device_ = nullptr;
 
 	//機能レベルとログ出力用の文字列
 	D3D_FEATURE_LEVEL featureLevels[] = {
@@ -42,7 +42,7 @@ void DirectX12::D3D12Device() {
 	//高い順の生成できるか試していく
 	for (size_t i = 0; i < _countof(featureLevels); ++i) {
 		//採用したアダプターでデバイスを生成
-		HRESULT hr = D3D12CreateDevice(useAdapter, featureLevels[i], IID_PPV_ARGS(&device));
+		HRESULT hr = D3D12CreateDevice(useAdapter_, featureLevels[i], IID_PPV_ARGS(&device_));
 		//指定した機能レベルでデバイスが生成できたかを確認
 		if (SUCCEEDED(hr)) {
 			//生成できたのでログ出力を行ってループを抜ける
@@ -52,126 +52,126 @@ void DirectX12::D3D12Device() {
 	}
 
 	//デバイスの生成がうまくいかなかったので起動できない
-	assert(device != nullptr);
+	assert(device_ != nullptr);
 	Log("Complete create D3D12Device!!!\n");//初期化完了のログを出す
 }
 
 void DirectX12::Command() {
-	commandQueue = nullptr;
-	commandQueueDesc = {};
+	commandQueue_ = nullptr;
+	commandQueueDesc_ = {};
 
 
-	HRESULT hr = device->CreateCommandQueue(&commandQueueDesc,
-		IID_PPV_ARGS(&commandQueue));
+	HRESULT hr = device_->CreateCommandQueue(&commandQueueDesc_,
+		IID_PPV_ARGS(&commandQueue_));
 	//コマンドキューが生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
 
-	commandAllocator = nullptr;
+	commandAllocator_ = nullptr;
 
-	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
+	hr = device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator_));
 	//コマンドアロケータの生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
 
-	commandList = nullptr;
+	commandList_ = nullptr;
 
-	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, nullptr,
-		IID_PPV_ARGS(&commandList));
+	hr = device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator_, nullptr,
+		IID_PPV_ARGS(&commandList_));
 	//コマンドリストの生成がうまくいかなかったので起動できない
 	assert(SUCCEEDED(hr));
 }
 
 void DirectX12::SwapChain() {
-	swapChain = nullptr;
-	swapChainDesc = {};
+	swapChain_ = nullptr;
+	swapChainDesc_ = {};
 
-	swapChainDesc.Width = kCliantWidth;		//画面の横。ウインドウのクライアント領域を同じものにしておく
-	swapChainDesc.Height = kCliantHeight;	//画面の高さ。ウインドウのクライアント領域を同じものにしておく
-	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	//色の形式
-	swapChainDesc.SampleDesc.Count = 1;	//マルチサンプルしない
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	//描画のターゲットとして利用する
-	swapChainDesc.BufferCount = 2;	//ダブルバッファ
-	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;	//モニタにうつしたら、中身を破棄
+	swapChainDesc_.Width = kCliantWidth;		//画面の横。ウインドウのクライアント領域を同じものにしておく
+	swapChainDesc_.Height = kCliantHeight;	//画面の高さ。ウインドウのクライアント領域を同じものにしておく
+	swapChainDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM;	//色の形式
+	swapChainDesc_.SampleDesc.Count = 1;	//マルチサンプルしない
+	swapChainDesc_.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;	//描画のターゲットとして利用する
+	swapChainDesc_.BufferCount = 2;	//ダブルバッファ
+	swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;	//モニタにうつしたら、中身を破棄
 	//コマンドキュー、ウインドウハンドル、設定を渡して生成する
-	HRESULT hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, windowsAPI_->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
+	HRESULT hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_, windowsAPI_->GetHwnd(), &swapChainDesc_, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain_));
 	assert(SUCCEEDED(hr));
 }
 
 void DirectX12::DescriptorHeap() {
-	rtvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
-	rtvDescriptorHeapDesc = {};
-	srvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, true);
+	rtvDescriptorHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
+	rtvDescriptorHeapDesc_ = {};
+	srvDescriptorHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, true);
 
-	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	//レンダーターゲットビュー用
-	rtvDescriptorHeapDesc.NumDescriptors = 2;	//ダブルバッファように二つ、多くても別に構わない
+	rtvDescriptorHeapDesc_.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	//レンダーターゲットビュー用
+	rtvDescriptorHeapDesc_.NumDescriptors = 2;	//ダブルバッファように二つ、多くても別に構わない
 	/*rtvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);*/
-	HRESULT hr = device->CreateDescriptorHeap(&rtvDescriptorHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
+	HRESULT hr = device_->CreateDescriptorHeap(&rtvDescriptorHeapDesc_, IID_PPV_ARGS(&rtvDescriptorHeap_));
 	//ディスクリプターヒープが作れなかったので起動できない
 	assert(SUCCEEDED(hr));
 
 	//SwapChainからResourceを引っ張ってくる
-	swapChainResource[0] = { nullptr };
-	swapChainResource[1] = { nullptr };
-	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResource[0]));
+	swapChainResource_[0] = { nullptr };
+	swapChainResource_[1] = { nullptr };
+	hr = swapChain_->GetBuffer(0, IID_PPV_ARGS(&swapChainResource_[0]));
 	//うまく取得できなければ起動できない
 	assert(SUCCEEDED(hr));
-	hr = swapChain->GetBuffer(1, IID_PPV_ARGS(&swapChainResource[1]));
+	hr = swapChain_->GetBuffer(1, IID_PPV_ARGS(&swapChainResource_[1]));
 	assert(SUCCEEDED(hr));
 
-	rtvDesc = {};
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;	//出力結果をSRGBを交換して書き込む
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;	//２dテクスチャとして書き込む
+	rtvDesc_ = {};
+	rtvDesc_.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;	//出力結果をSRGBを交換して書き込む
+	rtvDesc_.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;	//２dテクスチャとして書き込む
 	//ディスクリプタの先頭を取得する
-	rtvStartHandle = rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	rtvStartHandle_ = rtvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 
 	//まず１つ目を作る。１つ目は最初のところに作る。作る場所をこちらで指定してあげる必要がある
-	rtvHandle[0] = rtvStartHandle;
-	device->CreateRenderTargetView(swapChainResource[0], &rtvDesc, rtvHandle[0]);
+	rtvHandle_[0] = rtvStartHandle_;
+	device_->CreateRenderTargetView(swapChainResource_[0], &rtvDesc_, rtvHandle_[0]);
 	//２つ目のディスクリプタハンドルを得る（自力で)
-	rtvHandle[1].ptr = rtvHandle[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	rtvHandle_[1].ptr = rtvHandle_[0].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	//２つ目を作る
-	device->CreateRenderTargetView(swapChainResource[1], &rtvDesc, rtvHandle[1]);
+	device_->CreateRenderTargetView(swapChainResource_[1], &rtvDesc_, rtvHandle_[1]);
 
 
 }
 
 void DirectX12::GetBackBuffer() {
 	//これから書き込むバックバッファのインデックスを取得
-	backBufferIndex = swapChain->GetCurrentBackBufferIndex();
+	backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
 }
 
 void DirectX12::ClearRTV() {
 	//描画先のRTVを設定する
-	commandList->OMSetRenderTargets(1, &rtvHandle[backBufferIndex], false, nullptr);
+	commandList_->OMSetRenderTargets(1, &rtvHandle_[backBufferIndex_], false, nullptr);
 
 	//指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色、RGBAの順
-	commandList->ClearRenderTargetView(rtvHandle[backBufferIndex], clearColor, 0, nullptr);
+	commandList_->ClearRenderTargetView(rtvHandle_[backBufferIndex_], clearColor, 0, nullptr);
 }
 
 void DirectX12::SetImGuiDescriptorHeap() {
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap };
-	commandList->SetDescriptorHeaps(1, descriptorHeaps);
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap_ };
+	commandList_->SetDescriptorHeaps(1, descriptorHeaps);
 }
 
 void DirectX12::PushImGuiDrawCommand() {
 	//実際のcommandListのImGuiの描画コマンドを積む
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList_);
 }
 
 
 void DirectX12::CommandKick() {
 	//GPUにコマンドリストの実行を行わせる
-	ID3D12CommandList* commandLists[] = { commandList };
-	commandQueue->ExecuteCommandLists(1, commandLists);
+	ID3D12CommandList* commandLists[] = { commandList_ };
+	commandQueue_->ExecuteCommandLists(1, commandLists);
 	//GPUとSの画面の交換を行うよう通知する
-	swapChain->Present(1, 0);
+	swapChain_->Present(1, 0);
 }
 
 void DirectX12::NextFlameCommandList() {
 	//次のフレーム用のコマンドリストを準備
-	HRESULT hr = commandAllocator->Reset();
+	HRESULT hr = commandAllocator_->Reset();
 	assert(SUCCEEDED(hr));
-	hr = commandList->Reset(commandAllocator, nullptr);
+	hr = commandList_->Reset(commandAllocator_, nullptr);
 	assert(SUCCEEDED(hr));
 }
 
@@ -190,7 +190,7 @@ void DirectX12::DebugLayer() {
 void DirectX12::Error() {
 #ifdef _DEBUG
 	ID3D12InfoQueue* infoQueue = nullptr;
-	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+	if (SUCCEEDED(device_->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
 		//やばいエラー時に止まる
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
 		//エラー時に止まる
@@ -220,64 +220,64 @@ void DirectX12::Error() {
 }
 
 void DirectX12::Barrier() {
-	barrier = {};
+	barrier_ = {};
 
 	//今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	//Noneしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = swapChainResource[backBufferIndex];
+	barrier_.Transition.pResource = swapChainResource_[backBufferIndex_];
 	//遷移前（現在）のResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 	//遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	//TransitionBarrierを張る
-	commandList->ResourceBarrier(1, &barrier);
+	commandList_->ResourceBarrier(1, &barrier_);
 }
 
 void DirectX12::ScreenDisplay() {
 	//画面に描く処理は全て終わり、画面に映すので、状態を遷移
 	//今回はRenderTargetからPresentにする
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 	//TransitionBarrierを張る
-	commandList->ResourceBarrier(1, &barrier);
+	commandList_->ResourceBarrier(1, &barrier_);
 }
 
 void DirectX12::CommandConfirm() {
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
-	HRESULT hr = commandList->Close();
+	HRESULT hr = commandList_->Close();
 	assert(SUCCEEDED(hr));
 }
 
 void DirectX12::Fence() {
 	//初期値0でFenceを作る
-	fence = nullptr;
-	fenceValue = 0;
+	fence_ = nullptr;
+	fenceValue_ = 0;
 
-	HRESULT hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	HRESULT hr = device_->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
 	/*hr = device->GetDeviceRemovedReason();*/
 	assert(SUCCEEDED(hr));
 
 	//FenceのSignalを待つためのイベントを作成する
-	fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	assert(fenceEvent != nullptr);
+	fenceEvent_ = CreateEvent(NULL, FALSE, FALSE, NULL);
+	assert(fenceEvent_ != nullptr);
 }
 
 void DirectX12::Signal() {
 	//Fenceの値を更新
-	fenceValue++;
+	fenceValue_++;
 	//GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
-	commandQueue->Signal(fence, fenceValue);
+	commandQueue_->Signal(fence_, fenceValue_);
 
 	//Fenceの値が出したSignal値にたどり着いているか確認する
 	//GetCompletedValueの初期値はFence作成時に渡した初期値
-	if (fence->GetCompletedValue() < fenceValue) {
+	if (fence_->GetCompletedValue() < fenceValue_) {
 		//指定したSignalにたどり着いていないので、たどり着くまで待つようにイベントを設定する
-		fence->SetEventOnCompletion(fenceValue, fenceEvent);
+		fence_->SetEventOnCompletion(fenceValue_, fenceEvent_);
 		//イベントを待つ
-		WaitForSingleObject(fenceEvent, INFINITE);
+		WaitForSingleObject(fenceEvent_, INFINITE);
 	}
 }
 
@@ -286,28 +286,28 @@ void DirectX12::Signal() {
 void DirectX12::ResourceLeakCheck() {
 	//リソースリークチェック
 
-	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
-		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-		debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
-		debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
-		debug->Release();
+	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug_)))) {
+		debug_->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+		debug_->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
+		debug_->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
+		debug_->Release();
 	}
 }
 
 void DirectX12::Release() {
-	CloseHandle(fenceEvent);
-	fence->Release();
+	CloseHandle(fenceEvent_);
+	fence_->Release();
 
-	rtvDescriptorHeap->Release();
-	swapChainResource[0]->Release();
-	swapChainResource[1]->Release();
-	swapChain->Release();
-	commandList->Release();
-	commandAllocator->Release();
-	commandQueue->Release();
-	device->Release();
-	useAdapter->Release();
-	dxgiFactory->Release();
+	rtvDescriptorHeap_->Release();
+	swapChainResource_[0]->Release();
+	swapChainResource_[1]->Release();
+	swapChain_->Release();
+	commandList_->Release();
+	commandAllocator_->Release();
+	commandQueue_->Release();
+	device_->Release();
+	useAdapter_->Release();
+	dxgiFactory_->Release();
 	CloseWindow(windowsAPI_->GetHwnd());
 }
 
@@ -330,12 +330,12 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(windowsAPI_->GetHwnd());
-	ImGui_ImplDX12_Init(device,
-		swapChainDesc.BufferCount,
-		rtvDesc.Format,
-		srvDescriptorHeap,
-		srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
-		srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+	ImGui_ImplDX12_Init(device_,
+		swapChainDesc_.BufferCount,
+		rtvDesc_.Format,
+		srvDescriptorHeap_,
+		srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart(),
+		srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart());
 	Fence();
 
 	LoadAndTransferTexture();
@@ -467,27 +467,27 @@ void DirectX12::UploadTextureData(ID3D12Resource* texture, const DirectX::Scratc
 
 void DirectX12::LoadAndTransferTexture() {
 	DirectX::ScratchImage mipImages = LoadTexture("Resources/uvChecker.png");
-	metadata = mipImages.GetMetadata();
-	textureResource = CreateTextureResource(device, metadata);
-	UploadTextureData(textureResource, mipImages);
+	metadata_ = mipImages.GetMetadata();
+	textureResource_ = CreateTextureResource(device_, metadata_);
+	UploadTextureData(textureResource_, mipImages);
 }
 
 void DirectX12::CreateSRV() {
 	//metaDataをもとにSRVの設定
-	srvDesc = {};
-	srvDesc.Format = metadata.format;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
+	srvDesc_ = {};
+	srvDesc_.Format = metadata_.format;
+	srvDesc_.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc_.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc_.Texture2D.MipLevels = UINT(metadata_.mipLevels);
 
 	//SRVを作成するDescriptorHeapの場所を決める
-	textureSrvHandleCPU = srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	textureSrvHandleGPU = srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
+	textureSrvHandleCPU_ = srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	textureSrvHandleGPU_ = srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart();
 
 	//先頭はImGuiが使っているのでその次を使う
-	textureSrvHandleCPU.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	textureSrvHandleGPU.ptr += device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	textureSrvHandleCPU_.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	textureSrvHandleGPU_.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	//SRVの生成
-	device->CreateShaderResourceView(textureResource, &srvDesc, textureSrvHandleCPU);
+	device_->CreateShaderResourceView(textureResource_, &srvDesc_, textureSrvHandleCPU_);
 }

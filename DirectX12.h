@@ -71,13 +71,13 @@ public:
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 
 
-	ID3D12Device* GetDevice() { return device; }
+	ID3D12Device* GetDevice() { return device_; }
 
-	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
+	ID3D12GraphicsCommandList* GetCommandList() { return commandList_; }
 
 	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
-	ID3D12DescriptorHeap* GetSRVDescriptorHeap() { return srvDescriptorHeap; }
+	ID3D12DescriptorHeap* GetSRVDescriptorHeap() { return srvDescriptorHeap_; }
 
 	void LoadAndTransferTexture();
 	ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
@@ -85,7 +85,7 @@ public:
 	void CreateSRV();
 
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() {
-		return textureSrvHandleGPU;
+		return textureSrvHandleGPU_;
 	}
 public:
 	void GetBackBuffer();
@@ -99,68 +99,68 @@ public:
 	void NextFlameCommandList();
 
 private:
-	WindowsAPI* windowsAPI_;
-	ID3D12Device* device;
-	IDXGIFactory7* dxgiFactory;
+	WindowsAPI* windowsAPI_{};
+	ID3D12Device* device_{};
+	IDXGIFactory7* dxgiFactory_{};
 
-	DXGI_ADAPTER_DESC3 adapterDesc;
+	DXGI_ADAPTER_DESC3 adapterDesc_{};
 
 	//使用するアダプタ用の変数。最初にnullptrを入れておく
-	IDXGIAdapter4* useAdapter;
+	IDXGIAdapter4* useAdapter_{};
 
 	//コマンドキューを生成する
-	ID3D12CommandQueue* commandQueue;
-	D3D12_COMMAND_QUEUE_DESC commandQueueDesc;
+	ID3D12CommandQueue* commandQueue_{};
+	D3D12_COMMAND_QUEUE_DESC commandQueueDesc_{};
 
 	//コマンドアロケータを生成する
-	ID3D12CommandAllocator* commandAllocator;
+	ID3D12CommandAllocator* commandAllocator_{};
 
 	//コマンドリストを生成する
-	ID3D12GraphicsCommandList* commandList;
+	ID3D12GraphicsCommandList* commandList_{};
 
 	//スワップチェーンを生成する
-	IDXGISwapChain4* swapChain;
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc;
+	IDXGISwapChain4* swapChain_{};
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc_{};
 
 	//ディスクリプターヒープの生成
-	ID3D12DescriptorHeap* rtvDescriptorHeap;
-	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc;
+	ID3D12DescriptorHeap* rtvDescriptorHeap_{};
+	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc_{};
 
 	//RTVの設定
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc;
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc_{};
 
 	//ディスクリプタの先頭を取得する
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_{};
 
 	//RTVを２つ作るのでディスクリプタ２つ用意
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle[2];
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_[2]{};
 
 	
-	UINT backBufferIndex;
+	UINT backBufferIndex_{};
 	
-	ID3D12Resource* swapChainResource[2];
+	ID3D12Resource* swapChainResource_[2]{};
 	//TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier;
+	D3D12_RESOURCE_BARRIER barrier_{};
 	
 	//初期値0でFenceを作る
-	ID3D12Fence* fence;
-	uint64_t fenceValue;
+	ID3D12Fence* fence_{};
+	uint64_t fenceValue_{};
 
 	//FenceのSignalを待つためのイベントを作成する
-	HANDLE fenceEvent;
+	HANDLE fenceEvent_{};
 
-	IDXGIDebug1* debug;
+	IDXGIDebug1* debug_{};
 
-	ID3D12DescriptorHeap* srvDescriptorHeap;
+	ID3D12DescriptorHeap* srvDescriptorHeap_{};
 
-	DirectX::TexMetadata metadata;
+	DirectX::TexMetadata metadata_{};
 
-	ID3D12Resource* textureResource;
+	ID3D12Resource* textureResource_{};
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc_{};
 
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU;
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU_{};
 
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
+	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_{};
 };
 

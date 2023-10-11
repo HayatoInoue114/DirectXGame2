@@ -18,8 +18,6 @@ public:
 	void Update();
 	void Release();
 
-	
-
 	void BeginFrame();
 
 	void EndFrame();
@@ -30,7 +28,7 @@ public:
 
 	void VariableInit();
 private:
-	TriangleData triangleData[MAXTRIANGLE];
+	TriangleData triangleData[MAXTRIANGLE] = {};
 
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
@@ -39,7 +37,7 @@ private:
 	float colorVolume_[3] = {};
 	Vector4 color_ = {1.0f,0.0f,0.0f,1.0f};
 
-	Transform transform_;
+	Transform transform_ = {};
 	float scale_[3] = { 1.0f,1.0f,0.0f };
 	float rotate_[3] = { 0.0f,0.0f,0.0f };
 	float translate_[3] = { 0.0f,0.0f,0.0f };

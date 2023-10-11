@@ -10,10 +10,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	DirectX12* directX12 = new DirectX12;
 	GameManager* gameManager = new GameManager;
 
+	gameManager->VariableInit();
 
 	gameManager->Init(directX12,windowsAPI);
-	
-	gameManager->VariableInit();
 
 	MSG msg{};
 	//Windowにメッセージが来てたら最優先で処理させる
@@ -248,12 +247,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 //	assert(SUCCEEDED(hr));
 //
 //	//使用するアダプタ用の変数。最初にnullptrを入れておく
-//	IDXGIAdapter4* useAdapter = nullptr;
+//	IDXGIAdapter4* useAdapter_ = nullptr;
 //	//良い順にアダプタを頼む
-//	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i) {
+//	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter_)) != DXGI_ERROR_NOT_FOUND; ++i) {
 //		//アダプター情報を取得する
 //		DXGI_ADAPTER_DESC3 adapterDesc{};
-//		hr = useAdapter->GetDesc3(&adapterDesc);
+//		hr = useAdapter_->GetDesc3(&adapterDesc);
 //		assert(SUCCEEDED(hr));//取得できないのは一大事
 //		//ソフトウェアアダプタでなければ採用!
 //		if (!(adapterDesc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
@@ -261,11 +260,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 //			Log(ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc.Description)));
 //			break;
 //		}
-//		useAdapter = nullptr;//ソフトウェアアダプタの場合は見なかったことにする
+//		useAdapter_ = nullptr;//ソフトウェアアダプタの場合は見なかったことにする
 //	}
 //
 //	//適切なアダプタが見つからなかったので起動できない
-//	assert(useAdapter != nullptr);
+//	assert(useAdapter_ != nullptr);
 //
 //	ID3D12Device* device = nullptr;
 //	//機能レベルとログ出力用の文字列
@@ -276,7 +275,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 //	//高い順の生成できるか試していく
 //	for (size_t i = 0; i < _countof(featureLevels); ++i) {
 //		//採用したアダプターでデバイスを生成
-//		hr = D3D12CreateDevice(useAdapter, featureLevels[i], IID_PPV_ARGS(&device));
+//		hr = D3D12CreateDevice(useAdapter_, featureLevels[i], IID_PPV_ARGS(&device));
 //		//指定した機能レベルでデバイスが生成できたかを確認
 //		if (SUCCEEDED(hr)) {
 //			//生成できたのでログ出力を行ってループを抜ける
@@ -676,7 +675,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 //	commandAllocator->Release();
 //	commandQueue->Release();
 //	device->Release();
-//	useAdapter->Release();
+//	useAdapter_->Release();
 //	dxgiFactory->Release();
 //
 //	

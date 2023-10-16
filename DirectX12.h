@@ -80,13 +80,20 @@ public:
 	ID3D12DescriptorHeap* GetSRVDescriptorHeap() { return srvDescriptorHeap_; }
 
 	void LoadAndTransferTexture();
+
 	ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
+
 	void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
+
 	void CreateSRV();
 
-	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() {
-		return textureSrvHandleGPU_;
-	}
+	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
+
+	ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
+
+	void CreateDepthStencilResource();
+
+	void CreateDSV();
 public:
 	void GetBackBuffer();
 
@@ -162,5 +169,10 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU_{};
 
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_{};
+
+	ID3D12Resource* depthStencilResource;
+
+	ID3D12DescriptorHeap* dsvDescriptorHeap{};
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
 };
 

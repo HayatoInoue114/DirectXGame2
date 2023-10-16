@@ -249,3 +249,10 @@ void GraphicsRenderer::DrawCall(DirectX12 *directX12) {
 	directX12->GetCommandList()->SetPipelineState(graphicsPipelineState);	//PSOを設定
 	
 }
+
+void GraphicsRenderer::DepthStencilState() {
+	depthStencilDesc = {};
+
+	//Depthの機能を有効化する
+
+}

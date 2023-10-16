@@ -40,6 +40,8 @@ public:
 	void ScissorRect();
 
 	void Release();
+
+	void DepthStencilState();
 private:
 	DirectX12* directX12;
 	Triangle* triangle;
@@ -85,5 +87,7 @@ private:
 	D3D12_DESCRIPTOR_RANGE descriptorRange[1];
 
 	D3D12_STATIC_SAMPLER_DESC staticSamplers[1];
+
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 };
 

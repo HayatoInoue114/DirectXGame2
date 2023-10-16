@@ -19,12 +19,22 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	vertexData[2].position = triangleData.Right.position;
 	vertexData[2].texcoord = triangleData.Right.texcoord;
 
+	//左下2
+	vertexData[3].position = { -0.5f,-0.5f,0.5f,1.0f };
+	vertexData[3].texcoord = { 0.0f,1.0f };
+	//上2
+	vertexData[4].position = { 0.0f,0.0f,0.0f,1.0f };
+	vertexData[4].texcoord = { 0.5f,0.0f };
+	//右下2
+	vertexData[5].position = { 0.5f,-0.5f,-0.5f,1.0f };
+	vertexData[5].texcoord = { 1.0f,1.0f };
+
 	//Transform変数を作る
 	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 }
 
 void Triangle::CreateVertexResource() {
-	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 3);
+	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 6);
 }
 
 void Triangle::CreateVertexBufferView() {
@@ -32,7 +42,7 @@ void Triangle::CreateVertexBufferView() {
 	//リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(VertexData) * 3;
+	vertexBufferView.SizeInBytes = sizeof(VertexData) * 6;
 	//1頂点当たりのサイズ
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
@@ -83,5 +93,5 @@ void Triangle::Draw() {
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, directX12_->GetTextureSrvHandleGPU());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
-	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }

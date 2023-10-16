@@ -47,7 +47,7 @@ private:
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties;
 	//頂点リソースの設定
-	D3D12_RESOURCE_DESC vertexResourceDesc;
+	D3D12_RESOURCE_DESC vertexresourceDesc;
 	//実際に頂点リソースを作る
 	ID3D12Resource* vertexResource;
 	//頂点バッファビューを作成する

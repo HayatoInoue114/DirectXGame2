@@ -321,7 +321,7 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 	SwapChain();
 	DescriptorHeap();
 	CreateDepthStencilResource();
-
+	CreateDSV();
 	
 	//ImGuiの初期化
 	IMGUI_CHECKVERSION();
@@ -338,7 +338,7 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 
 	LoadAndTransferTexture();
 	CreateSRV();
-	CreateDSV();
+	
 }
 
 //void DirectX12::Update() {
@@ -537,6 +537,7 @@ void DirectX12::CreateDSV() {
 	dsvDescriptorHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
 	//DSVの設定
+	dsvDesc_ = {};
 	dsvDesc_.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本的にはResourceに合わせる
 	dsvDesc_.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
 	//DSVHeapの先頭にDSVを作る

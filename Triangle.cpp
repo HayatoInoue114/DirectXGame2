@@ -28,9 +28,6 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	//右下2
 	vertexData[5].position = { 0.5f,-0.5f,-0.5f,1.0f };
 	vertexData[5].texcoord = { 1.0f,1.0f };
-
-	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 }
 
 void Triangle::CreateVertexResource() {

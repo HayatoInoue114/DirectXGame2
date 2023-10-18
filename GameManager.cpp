@@ -9,14 +9,7 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 	directX12_ = directX12;
 	directX12_->Init(windowsAPI);
 
-	graphicsRenderer_->Dxc();
-	graphicsRenderer_->CreateRootSignature(directX12_);
-	graphicsRenderer_->InputLayout();
-	graphicsRenderer_->BlendState();
-	graphicsRenderer_->ResterizerState();
-	graphicsRenderer_->BuildShader();
-	graphicsRenderer_->DepthStencilState();
-	graphicsRenderer_->CreatePSO(directX12_);
+	graphicsRenderer_->Initialize(directX12_);
 
 	for (int i = 0; i < 3; i++) {
 		colorVolume_[i] = 1.0f;
@@ -43,6 +36,7 @@ void GameManager::Update() {
 	
 	color_ = { colorVolume_[0],colorVolume_[1],colorVolume_[2],1.0f };
 	transform_ = { {scale_[0],scale_[1],scale_[2]},{rotate_[0],rotate_[1],rotate_[2]},{translate_[0],translate_[1],translate_[2]} };
+	rotate_[1] += 0.02f;
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Update(transform_,color_);
 	}

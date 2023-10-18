@@ -8,6 +8,8 @@ class GraphicsRenderer
 {
 public:
 
+	void Initialize(DirectX12* directX12);
+
 	void Dxc();
 
 	IDxcBlob* CompileShader(

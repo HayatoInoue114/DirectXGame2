@@ -231,6 +231,17 @@ void GraphicsRenderer::ScissorRect() {
 	scissorRect.bottom = kCliantHeight;
 }
 
+void GraphicsRenderer::Initialize(DirectX12* directX12) {
+	Dxc();
+	CreateRootSignature(directX12);
+	InputLayout();
+	BlendState();
+	ResterizerState();
+	BuildShader();
+	DepthStencilState();
+	CreatePSO(directX12);
+}
+
 void GraphicsRenderer::Release() {
 	triangle->Release();
 	graphicsPipelineState->Release();
@@ -240,7 +251,6 @@ void GraphicsRenderer::Release() {
 	rootSignature->Release();
 	pixelShaderBlob->Release();
 	vertexShaderBlob->Release();
-	
 }
 
 void GraphicsRenderer::DrawCall(DirectX12 *directX12) {
@@ -249,7 +259,6 @@ void GraphicsRenderer::DrawCall(DirectX12 *directX12) {
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 	directX12->GetCommandList()->SetGraphicsRootSignature(rootSignature);
 	directX12->GetCommandList()->SetPipelineState(graphicsPipelineState);	//PSOを設定
-	
 }
 
 void GraphicsRenderer::DepthStencilState() {

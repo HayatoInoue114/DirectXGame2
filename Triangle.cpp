@@ -28,6 +28,9 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	//右下2
 	vertexData[5].position = { 0.5f,-0.5f,-0.5f,1.0f };
 	vertexData[5].texcoord = { 1.0f,1.0f };
+
+	//Transform変数を作る
+	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 }
 
 void Triangle::CreateVertexResource() {
@@ -66,6 +69,17 @@ void Triangle::WriteDataToResource() {
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 }
 
+void Triangle::CreateWVPMatrix() {
+	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
+
+	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	viewMatrix_ = Inverse(cameramatrix_);
+	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
+	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
+	*wvpData_ = worldViewProjectionMatrix_;
+}
+
 void Triangle::Release() {
 	vertexResource->Release();
 	materialResource_->Release();
@@ -73,8 +87,7 @@ void Triangle::Release() {
 
 void Triangle::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
-	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	*wvpData_ = worldMatrix_;
+	CreateWVPMatrix();
 	//色の指定
 	*materialData_ = color;
 }

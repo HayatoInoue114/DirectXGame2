@@ -7,10 +7,9 @@ void Sprite::Initialize(DirectX12* directX12) {
 	CreateVertexBufferView();
 	SetVertexData();
 	CreateTransformationMatrixResource();
-	CalculateAndSetWVPMatrix();
-
 	//Transform変数を作る
 	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	CalculateAndSetWVPMatrix();
 }
 
 void Sprite::Update(Transform& transform, Vector4& color) {
@@ -19,15 +18,6 @@ void Sprite::Update(Transform& transform, Vector4& color) {
 	*transformationMatrixDataSprite_ = worldMatrixSprite_;
 	//色の指定
 	//*materialData_ = color;
-}
-
-void Sprite::Draw() {
-	//Spriteの描画。変更が必要なものだけを変更する
-	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferViewSprite_); // VBVを設定
-	//TransformationMatrixCBufferの場所を設定
-	directX12_->GetCommandList()->SetComputeRootConstantBufferView(1, transformationMatrixResourceSprite_->GetGPUVirtualAddress());
-	//描画！(DrawCall/ドローコール)
-	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }
 
 void Sprite::CreateVertexResource() {
@@ -60,9 +50,9 @@ void Sprite::SetVertexData() {
 	vertexDataSprite_[2].position = { 640.0f, 360.0f, 0.0f, 1.0f };// 右下
 	vertexDataSprite_[2].texcoord = { 1.0f,1.0f };
 	//2枚目の三角形
-	vertexDataSprite_[0].position = { 0.0f, 0.0f, 0.0f, 1.0f };// 左下
+	vertexDataSprite_[0].position = { 0.0f, 0.0f, 0.0f, 1.0f };// 左上
 	vertexDataSprite_[0].texcoord = { 0.0f,0.0f };
-	vertexDataSprite_[1].position = { 640.0f, 0.0f, 0.0f, 1.0f };// 左上
+	vertexDataSprite_[1].position = { 640.0f, 0.0f, 0.0f, 1.0f };// 右上
 	vertexDataSprite_[1].texcoord = { 1.0f,0.0f };
 	vertexDataSprite_[2].position = { 640.0f, 360.0f, 0.0f, 1.0f };// 右下
 	vertexDataSprite_[2].texcoord = { 1.0f,1.0f };
@@ -85,4 +75,13 @@ void Sprite::CalculateAndSetWVPMatrix() {
 	projectionMatrixSprite_ = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kCliantHeight), 0.0f, 100.0f);
 	worldViewProjectionMatrixSprite_ = Multiply(worldMatrixSprite_, Multiply(viewMatrixSprite_, projectionMatrixSprite_));
 	*transformationMatrixDataSprite_ = worldViewProjectionMatrixSprite_;
+}
+
+void Sprite::Draw() {
+	//Spriteの描画。変更が必要なものだけを変更する
+	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferViewSprite_); // VBVを設定
+	//TransformationMatrixCBufferの場所を設定
+	directX12_->GetCommandList()->SetComputeRootConstantBufferView(1, transformationMatrixResourceSprite_->GetGPUVirtualAddress());
+	//描画！(DrawCall/ドローコール)
+	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }

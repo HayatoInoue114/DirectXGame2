@@ -6,7 +6,6 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	CreateVertexResource();
 	CreateMaterialResource();
 	CreateVertexBufferView();
-	CreateWVPMatrix();
 	CreateTransformationMatrixResource();
 	WriteDataToResource();
 
@@ -72,11 +71,13 @@ void Triangle::WriteDataToResource() {
 
 void Triangle::CreateWVPMatrix() {
 	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
-	worldMatrix_ = worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+
+	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 	viewMatrix_ = Inverse(cameramatrix_);
 	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
-	*transformationMatrixData_ = worldViewProjectionMatrix_;
+	*wvpData_ = worldViewProjectionMatrix_;
 }
 
 void Triangle::Release() {
@@ -86,7 +87,7 @@ void Triangle::Release() {
 
 void Triangle::Update(Transform transform, Vector4 color) {
 	transform_ = transform;
-	*wvpData_ = worldViewProjectionMatrix_;
+	CreateWVPMatrix();
 	//色の指定
 	*materialData_ = color;
 }

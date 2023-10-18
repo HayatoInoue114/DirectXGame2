@@ -95,3 +95,4 @@ void Triangle::Draw() {
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }
+

@@ -94,6 +94,8 @@ public:
 	void CreateDepthStencilResource();
 
 	void CreateDSV();
+
+	void SetRenderTargets();
 public:
 	void GetBackBuffer();
 
@@ -105,6 +107,7 @@ public:
 
 	void NextFlameCommandList();
 
+	void ClearDepthBuffer();
 private:
 	WindowsAPI* windowsAPI_{};
 	ID3D12Device* device_{};
@@ -170,9 +173,11 @@ private:
 
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_{};
 
-	ID3D12Resource* depthStencilResource;
+	ID3D12Resource* depthStencilResource_{};
 
-	ID3D12DescriptorHeap* dsvDescriptorHeap{};
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc{};
+	ID3D12DescriptorHeap* dsvDescriptorHeap_{};
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc_{};
+
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_{};
 };
 

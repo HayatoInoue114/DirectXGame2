@@ -41,6 +41,8 @@ public:
 	void Update(Transform transform,Vector4 color);
 
 	void Draw();
+
+	
 private:
 	DirectX12* directX12_;
 
@@ -65,6 +67,7 @@ private:
 
 	Transform transform_;
 	Matrix4x4 worldMatrix_;
+	
 	
 };
 

@@ -1,8 +1,5 @@
 #include "DirectX12.h"
 
-
-
-
 void DirectX12::DXGIFactory() {
 	dxgiFactory_ = nullptr;
 
@@ -341,7 +338,7 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 
 	LoadAndTransferTexture();
 	CreateSRV();
-
+	CreateDSV();
 }
 
 //void DirectX12::Update() {
@@ -357,6 +354,8 @@ void DirectX12::PreDraw() {
 	GetBackBuffer();
 	Barrier();
 	ClearRTV();
+	SetRenderTargets();
+	ClearDepthBuffer();
 	SetImGuiDescriptorHeap();
 }
 
@@ -530,16 +529,26 @@ ID3D12Resource* DirectX12::CreateDepthStencilTextureResource(ID3D12Device* devic
 
 void DirectX12::CreateDepthStencilResource() {
 	//DepthStencilTextureをウインドウのサイズで作成
-	depthStencilResource = CreateDepthStencilTextureResource(device_, kCliantWidth, kCliantHeight);
+	depthStencilResource_ = CreateDepthStencilTextureResource(device_, kCliantWidth, kCliantHeight);
 }
 
 void DirectX12::CreateDSV() {
-	dsvDescriptorHeap = {};
-	dsvDescriptorHeap = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
+	dsvDescriptorHeap_ = {};
+	dsvDescriptorHeap_ = CreateDescriptorHeap(device_, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
 	//DSVの設定
-	dsvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本的にはResourceに合わせる
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
+	dsvDesc_.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本的にはResourceに合わせる
+	dsvDesc_.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
 	//DSVHeapの先頭にDSVを作る
-	device_->CreateDepthStencilView(depthStencilResource, &dsvDesc, dsvDescriptorHeap->GetCPUDescriptorHandleForHeapStart());
+	device_->CreateDepthStencilView(depthStencilResource_, &dsvDesc_, dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart());
+}
+
+void DirectX12::SetRenderTargets() {
+	dsvHandle_ = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	commandList_->OMSetRenderTargets(1, &rtvHandle_[backBufferIndex_], false, &dsvHandle_);
+}
+
+void DirectX12::ClearDepthBuffer() {
+	//指定した深度で画面全体をクリアする
+	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }

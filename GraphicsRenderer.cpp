@@ -1,8 +1,5 @@
 #include "GraphicsRenderer.h"
 
-
-
-
 void GraphicsRenderer::Dxc() {
 	HRESULT hr;
 	//dxcCompilerを初期化
@@ -203,6 +200,11 @@ void GraphicsRenderer::CreatePSO(DirectX12* directX12) {
 	//どのように画面に色を打ち込むかの設定（気にしなくてよい）
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
+	//DepthStencilの設定
+	graphicsPipelineStateDesc.DepthStencilState = depthStencilDesc;
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
 	graphicsPipelineState = nullptr;
 	hr = directX12->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc,
 		IID_PPV_ARGS(&graphicsPipelineState));
@@ -252,7 +254,10 @@ void GraphicsRenderer::DrawCall(DirectX12 *directX12) {
 
 void GraphicsRenderer::DepthStencilState() {
 	depthStencilDesc = {};
-
 	//Depthの機能を有効化する
-
+	depthStencilDesc.DepthEnable = true;
+	//書き込みをします
+	depthStencilDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	//比較関数はLessEqual。つまり、近ければ描画される
+	depthStencilDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }

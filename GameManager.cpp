@@ -15,6 +15,7 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 	graphicsRenderer_->BlendState();
 	graphicsRenderer_->ResterizerState();
 	graphicsRenderer_->BuildShader();
+	graphicsRenderer_->DepthStencilState();
 	graphicsRenderer_->CreatePSO(directX12_);
 
 	for (int i = 0; i < 3; i++) {

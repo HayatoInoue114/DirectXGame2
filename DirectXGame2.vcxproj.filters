@@ -67,6 +67,12 @@
     <Filter Include="ヘッダー ファイル\Sprite">
       <UniqueIdentifier>{64c2e71c-f11e-4333-baf3-87e1fd362ce9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Sphere">
+      <UniqueIdentifier>{6939d3ea-8670-44bd-955d-44dd55374a2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Sphere">
+      <UniqueIdentifier>{6e470425-8ee2-44e5-a59e-372463493378}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -119,6 +125,9 @@
     </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>ソース ファイル\Sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="Sphere.cpp">
+      <Filter>ソース ファイル\Sphere</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,6 +188,9 @@
     </ClInclude>
     <ClInclude Include="Sprite.h">
       <Filter>ヘッダー ファイル\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="Sphere.h">
+      <Filter>ヘッダー ファイル\Sphere</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

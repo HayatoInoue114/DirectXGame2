@@ -14,8 +14,8 @@ void Sprite::Initialize(DirectX12* directX12) {
 
 void Sprite::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
-	worldMatrixSprite_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	*transformationMatrixDataSprite_ = worldMatrixSprite_;
+	/*worldMatrixSprite_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	*transformationMatrixDataSprite_ = worldMatrixSprite_;*/
 	//色の指定
 	//*materialData_ = color;
 }

@@ -4,8 +4,10 @@
 #include "WindowsAPI.h"
 #include "Triangle.h"
 #include "ImGuiManager.h"
+#include "Sprite.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
+#define MAXSPRITE 1 //スプライトの最大数
 
 class GameManager
 {
@@ -33,6 +35,7 @@ private:
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
 	Triangle** triangle_ = new Triangle* [MAXTRIANGLE];
+	Sprite** sprite_ = new Sprite * [MAXSPRITE];
 
 	float colorVolume_[3] = {};
 	Vector4 color_ = {1.0f,0.0f,0.0f,1.0f};

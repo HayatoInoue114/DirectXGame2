@@ -71,7 +71,7 @@ void Triangle::Release() {
 	materialResource_->Release();
 }
 
-void Triangle::Update(Transform transform, Vector4 color) {
+void Triangle::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	*wvpData_ = worldMatrix_;

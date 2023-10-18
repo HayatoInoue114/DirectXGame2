@@ -6,8 +6,6 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
-
-
 struct VertexData
 {
 	Vector4 position;
@@ -38,7 +36,7 @@ public:
 
 	void CreateTransformationMatrixResource();
 	
-	void Update(Transform transform,Vector4 color);
+	void Update(Transform& transform,Vector4& color);
 
 	void Draw();
 

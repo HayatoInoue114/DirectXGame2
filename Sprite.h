@@ -11,7 +11,7 @@ class Sprite
 public:
 	void Initialize(DirectX12* directX12);
 
-	void Update(Transform& transform, Vector4& color);
+	void Update(Transform& transform);
 
 	void Draw();
 
@@ -53,5 +53,9 @@ private:
 	Matrix4x4 projectionMatrixSprite_{};
 
 	Matrix4x4 worldViewProjectionMatrixSprite_{};
+
+	Transform cameraTransform_{};
+
+	Matrix4x4 cameramatrix_{};
 };
 

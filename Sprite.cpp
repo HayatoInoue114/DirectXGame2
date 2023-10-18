@@ -8,16 +8,7 @@ void Sprite::Initialize(DirectX12* directX12) {
 	SetVertexData();
 	CreateTransformationMatrixResource();
 	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
-	CalculateAndSetWVPMatrix();
-}
-
-void Sprite::Update(Transform& transform, Vector4& color) {
-	transform_ = transform;
-	/*worldMatrixSprite_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	*transformationMatrixDataSprite_ = worldMatrixSprite_;*/
-	//色の指定
-	//*materialData_ = color;
+	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,.0f} };
 }
 
 void Sprite::CreateVertexResource() {
@@ -70,18 +61,30 @@ void Sprite::CreateTransformationMatrixResource() {
 }
 
 void Sprite::CalculateAndSetWVPMatrix() {
+	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
+
 	worldMatrixSprite_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 	viewMatrixSprite_ = MakeIdentity4x4();
 	projectionMatrixSprite_ = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kCliantHeight), 0.0f, 100.0f);
 	worldViewProjectionMatrixSprite_ = Multiply(worldMatrixSprite_, Multiply(viewMatrixSprite_, projectionMatrixSprite_));
 	*transformationMatrixDataSprite_ = worldViewProjectionMatrixSprite_;
+
+	//projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
+}
+
+void Sprite::Update(Transform& transform) {
+	transform_ = transform;
+	CalculateAndSetWVPMatrix();
+	//色の指定
+	//*materialData_ = color;
 }
 
 void Sprite::Draw() {
 	//Spriteの描画。変更が必要なものだけを変更する
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferViewSprite_); // VBVを設定
 	//TransformationMatrixCBufferの場所を設定
-	directX12_->GetCommandList()->SetComputeRootConstantBufferView(1, transformationMatrixResourceSprite_->GetGPUVirtualAddress());
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResourceSprite_->GetGPUVirtualAddress());
 	//描画！(DrawCall/ドローコール)
 	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }

@@ -20,10 +20,12 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 		triangle_[i]->Initialize(directX12_, triangleData[i]);
 	}
 
-	for (int i = 0; i < MAXSPRITE; i++) {
+	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i] = new Sprite;
 		sprite_[i]->Initialize(directX12_);
-	}
+	}*/
+
+	sprite_->Initialize(directX12);
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
@@ -38,15 +40,16 @@ void GameManager::Update() {
 	
 	color_ = { colorVolume_[0],colorVolume_[1],colorVolume_[2],1.0f };
 	transform_ = { {scale_[0],scale_[1],scale_[2]},{rotate_[0],rotate_[1],rotate_[2]},{translate_[0],translate_[1],translate_[2]} };
-	rotate_[1] += 0.02f;
+	rotate_[1] += 0.0f;
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Update(transform_,color_);
 	}
 
-	for (int i = 0; i < MAXSPRITE; i++) {
-		sprite_[i]->Update(transform_, color_);
-	}
+	sprite_->Update(transform_);
+	/*for (int i = 0; i < MAXSPRITE; i++) {
+		sprite_[i]->Update(transform_);
+	}*/
 	
 
 	ImGui::Render();
@@ -61,6 +64,7 @@ void GameManager::Release() {
 	//for (int i = 0; i < MAXSPRITE; i++) {
 	//	sprite_[i]->Release();
 	//}
+
 }
 
 
@@ -85,10 +89,10 @@ void GameManager::Draw() {
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Draw();
 	}
-	for (int i = 0; i < MAXSPRITE; i++) {
+	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Draw();
-	}
-	
+	}*/
+	sprite_->Draw();
 }
 
 void GameManager::VariableInit() {

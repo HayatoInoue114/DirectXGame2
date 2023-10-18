@@ -69,6 +69,11 @@ void Triangle::WriteDataToResource() {
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 }
 
+void Triangle::CreateWVPMatrix() {
+	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
+	projectionMatix_ = 
+}
+
 void Triangle::Release() {
 	vertexResource->Release();
 	materialResource_->Release();

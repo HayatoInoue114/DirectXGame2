@@ -42,7 +42,7 @@ public:
 
 	void Draw();
 
-	
+	void CreateWVPMatrix();
 private:
 	DirectX12* directX12_;
 
@@ -67,8 +67,20 @@ private:
 
 	Transform transform_;
 	Matrix4x4 worldMatrix_;
+
+	Transform cameraTransform_;
 	
-	
+	Matrix4x4 projectionMatrix_;
+
+	Matrix4x4 worldmatrix_;
+
+	Matrix4x4 cameramatrix_;
+
+	Matrix4x4 viewMatrix_;
+
+	Matrix4x4 projectionMatix_;
+
+	Matrix4x4 worldViewProjectionMatrix_;
 };
 
 

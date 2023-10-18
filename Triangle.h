@@ -79,6 +79,8 @@ private:
 	Matrix4x4 projectionMatix_;
 
 	Matrix4x4 worldViewProjectionMatrix_;
+
+	Matrix4x4* transformationMatrixData_{};
 };
 
 

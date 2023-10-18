@@ -72,8 +72,6 @@ private:
 	
 	Matrix4x4 projectionMatrix_;
 
-	Matrix4x4 worldmatrix_;
-
 	Matrix4x4 cameramatrix_;
 
 	Matrix4x4 viewMatrix_;

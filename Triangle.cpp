@@ -71,7 +71,11 @@ void Triangle::WriteDataToResource() {
 
 void Triangle::CreateWVPMatrix() {
 	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
-	projectionMatix_ = 
+	worldMatrix_ = worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	viewMatrix_ = Inverse(cameramatrix_);
+	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
+	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
+	
 }
 
 void Triangle::Release() {
@@ -81,7 +85,6 @@ void Triangle::Release() {
 
 void Triangle::Update(Transform transform, Vector4 color) {
 	transform_ = transform;
-	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	*wvpData_ = worldMatrix_;
 	//色の指定
 	*materialData_ = color;

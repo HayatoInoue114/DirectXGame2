@@ -20,6 +20,11 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 		triangle_[i]->Initialize(directX12_, triangleData[i]);
 	}
 
+	for (int i = 0; i < MAXSPHERE; i++) {
+		sphere_[i] = new Sphere;
+		sphere_[i]->Initialize(directX12_);
+	}
+
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i] = new Sprite;
 		sprite_[i]->Initialize(directX12_);
@@ -46,6 +51,10 @@ void GameManager::Update() {
 		triangle_[i]->Update(transform_,color_);
 	}
 
+	for (int i = 0; i < MAXSPHERE; i++) {
+		sphere_[i]->Update(transform_, color_);
+	}
+
 	sprite_->Update(transform_);
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Update(transform_);
@@ -60,6 +69,9 @@ void GameManager::Release() {
 	graphicsRenderer_->Release();
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Release();
+	}
+	for (int i = 0; i < MAXSPHERE; i++) {
+		sphere_[i]->Release();
 	}
 	//for (int i = 0; i < MAXSPRITE; i++) {
 	//	sprite_[i]->Release();
@@ -88,6 +100,9 @@ void GameManager::Finalize() {
 void GameManager::Draw() {
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Draw();
+	}
+	for (int i = 0; i < MAXSPHERE; i++) {
+		sphere_[i]->Draw();
 	}
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Draw();

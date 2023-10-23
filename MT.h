@@ -69,10 +69,10 @@ Matrix4x4 MakeOrthographicMatrix(float left, float right, float top, float botto
 //3.ビューポート変換行列
 Matrix4x4 MakeViewportMatrix(float left, float top, float width, float height, float minDepth, float maxDepth);
 
-struct Sphere
-{
-	Vector3 center;
-	float radius;
-};
+//struct Sphere
+//{
+//	Vector3 center;
+//	float radius;
+//};
 
 //void DrawSphere(const Sphere& sphere, const Matrix4x4& viewProjectionMatrix, const Matrix4x4& viewportMatrix, uint32_t color);

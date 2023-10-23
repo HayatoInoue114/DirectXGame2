@@ -3,14 +3,9 @@
 #include <dxcapi.h>
 #include "Vector4.h"
 #include "MT.h"
+#include "Vertexdata.h"
 
 #pragma comment(lib,"dxcompiler.lib")
-
-struct VertexData
-{
-	Vector4 position;
-	Vector2 texcoord;
-};
 
 struct TriangleData
 {

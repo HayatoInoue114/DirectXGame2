@@ -41,12 +41,12 @@ void Sprite::SetVertexData() {
 	vertexDataSprite_[2].position = { 640.0f, 360.0f, 0.0f, 1.0f };// 右下
 	vertexDataSprite_[2].texcoord = { 1.0f,1.0f };
 	//2枚目の三角形
-	vertexDataSprite_[0].position = { 0.0f, 0.0f, 0.0f, 1.0f };// 左上
-	vertexDataSprite_[0].texcoord = { 0.0f,0.0f };
-	vertexDataSprite_[1].position = { 640.0f, 0.0f, 0.0f, 1.0f };// 右上
-	vertexDataSprite_[1].texcoord = { 1.0f,0.0f };
-	vertexDataSprite_[2].position = { 640.0f, 360.0f, 0.0f, 1.0f };// 右下
-	vertexDataSprite_[2].texcoord = { 1.0f,1.0f };
+	vertexDataSprite_[3].position = { 0.0f, 0.0f, 0.0f, 1.0f };// 左上
+	vertexDataSprite_[3].texcoord = { 0.0f,0.0f };
+	vertexDataSprite_[4].position = { 640.0f, 0.0f, 0.0f, 1.0f };// 右上
+	vertexDataSprite_[4].texcoord = { 1.0f,0.0f };
+	vertexDataSprite_[5].position = { 640.0f, 360.0f, 0.0f, 1.0f };// 右下
+	vertexDataSprite_[5].texcoord = { 1.0f,1.0f };
 }
 
 void Sprite::CreateTransformationMatrixResource() {
@@ -61,10 +61,10 @@ void Sprite::CreateTransformationMatrixResource() {
 }
 
 void Sprite::CalculateAndSetWVPMatrix() {
-	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
+	//cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
 
 	worldMatrixSprite_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	//cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 	viewMatrixSprite_ = MakeIdentity4x4();
 	projectionMatrixSprite_ = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kCliantHeight), 0.0f, 100.0f);
 	worldViewProjectionMatrixSprite_ = Multiply(worldMatrixSprite_, Multiply(viewMatrixSprite_, projectionMatrixSprite_));

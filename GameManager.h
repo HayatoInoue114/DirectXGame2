@@ -5,9 +5,11 @@
 #include "Triangle.h"
 #include "ImGuiManager.h"
 #include "Sprite.h"
+#include "Sphere.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
 #define MAXSPRITE 1 //スプライトの最大数
+#define MAXSPHERE 1 //球の最大数
 
 class GameManager
 {
@@ -37,6 +39,7 @@ private:
 	Triangle** triangle_ = new Triangle* [MAXTRIANGLE];
 	//Sprite** sprite_ = new Sprite * [MAXSPRITE];
 	Sprite* sprite_ = new Sprite;
+	Sphere** sphere_ = new Sphere* [MAXSPHERE];
 
 	float colorVolume_[3] = {};
 	Vector4 color_ = {1.0f,0.0f,0.0f,1.0f};

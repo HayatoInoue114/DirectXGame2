@@ -61,10 +61,10 @@ void Sprite::CreateTransformationMatrixResource() {
 }
 
 void Sprite::CalculateAndSetWVPMatrix() {
-	//cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
+	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
 
 	worldMatrixSprite_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	//cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 	viewMatrixSprite_ = MakeIdentity4x4();
 	projectionMatrixSprite_ = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kCliantHeight), 0.0f, 100.0f);
 	worldViewProjectionMatrixSprite_ = Multiply(worldMatrixSprite_, Multiply(viewMatrixSprite_, projectionMatrixSprite_));

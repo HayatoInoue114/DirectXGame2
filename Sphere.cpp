@@ -72,7 +72,7 @@ void Sphere::Initialize(DirectX12* directX12) {
 }
 
 void Sphere::CreateVertexResource() {
-	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 6);
+	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * vertexIndex_);
 }
 
 void Sphere::CreateVertexBufferView() {
@@ -80,7 +80,7 @@ void Sphere::CreateVertexBufferView() {
 	//リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(VertexData) * 6;
+	vertexBufferView.SizeInBytes = sizeof(VertexData) * vertexIndex_;
 	//1頂点当たりのサイズ
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }

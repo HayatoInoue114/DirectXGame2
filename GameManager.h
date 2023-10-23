@@ -39,7 +39,8 @@ private:
 	Triangle** triangle_ = new Triangle* [MAXTRIANGLE];
 	//Sprite** sprite_ = new Sprite * [MAXSPRITE];
 	Sprite* sprite_ = new Sprite;
-	Sphere** sphere_ = new Sphere* [MAXSPHERE];
+	//Sphere** sphere_ = new Sphere* [MAXSPHERE];
+	Sphere* sphere_ = new Sphere;
 
 	float colorVolume_[3] = {};
 	Vector4 color_ = {1.0f,0.0f,0.0f,1.0f};

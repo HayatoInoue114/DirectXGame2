@@ -5,6 +5,7 @@
 #include "MT.h"
 #include "Vertexdata.h"
 #include "Material.h"
+#include "TransformationMatrix.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -35,30 +36,32 @@ private:
 
 	DirectX12* directX12_;
 
-	ID3D12Resource* vertexResourceSprite_{};
+	ID3D12Resource* vertexResource_{};
 
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferViewSprite_{};
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
 	VertexData* vertexDataSprite_{};
 
-	ID3D12Resource* transformationMatrixResourceSprite_{};
+	ID3D12Resource* transformationMatrixResource_{};
 
-	Matrix4x4* transformationMatrixDataSprite_{};
+	TransformationMatrix* transformationMatrixData_{};
 
 	Transform transform_;
 
-	Matrix4x4 worldMatrixSprite_{};
+	Matrix4x4 worldMatrix_{};
 
-	Matrix4x4 viewMatrixSprite_{};
+	Matrix4x4 viewMatrix_{};
 
-	Matrix4x4 projectionMatrixSprite_{};
+	Matrix4x4 projectionMatrix_{};
 
-	Matrix4x4 worldViewProjectionMatrixSprite_{};
+	Matrix4x4 worldViewprojectionMatrix_{};
 
 	Transform cameraTransform_{};
 
 	Matrix4x4 cameramatrix_{};
 
 	ID3D12Resource* materialResource_{};
+
+	ID3D12Resource* indexResourceSprite_{};
 };
 

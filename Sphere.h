@@ -16,6 +16,10 @@ class Sphere
 public:
 	void Initialize(DirectX12* directX12, Light* light);
 
+	void Update(Transform& transform, Vector4& color);
+
+	void Draw();
+
 	void CreateVertexResource();
 
 	void CreateVertexBufferView();
@@ -27,10 +31,6 @@ public:
 	void CreateMaterialResource();
 
 	void CreateTransformationMatrixResource();
-
-	void Update(Transform& transform, Vector4& color);
-
-	void Draw();
 
 	void CreateWVPMatrix();
 private:

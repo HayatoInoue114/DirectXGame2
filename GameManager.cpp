@@ -57,7 +57,7 @@ void GameManager::Update() {
 		sphere_[i]->Update(transform_, color_);
 	}*/
 
-	//sphere_->Update(transform_,color_);
+	sphere_->Update(transform_,color_);
 
 	sprite_->Update(transform_);
 	/*for (int i = 0; i < MAXSPRITE; i++) {
@@ -103,9 +103,9 @@ void GameManager::Finalize() {
 }
 
 void GameManager::Draw() {
-	for (int i = 0; i < MAXTRIANGLE; i++) {
+	/*for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Draw();
-	}
+	}*/
 	/*for (int i = 0; i < MAXSPHERE; i++) {
 		sphere_[i]->Draw();
 	}*/
@@ -113,7 +113,7 @@ void GameManager::Draw() {
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Draw();
 	}*/
-	sprite_->Draw();
+	//sprite_->Draw();
 }
 
 void GameManager::VariableInit() {

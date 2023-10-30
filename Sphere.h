@@ -70,5 +70,7 @@ private:
 	const uint32_t kSubdivision = 16;
 	// 頂点数
 	uint32_t vertexIndex_ = kSubdivision * kSubdivision * 6;
+
+	bool useMonsterBall = true;
 };
 

@@ -49,5 +49,7 @@ private:
 	float scale_[3] = { 1.0f,1.0f,0.0f };
 	float rotate_[3] = { 0.0f,0.0f,0.0f };
 	float translate_[3] = { 0.0f,0.0f,0.0f };
+
+	
 };
 

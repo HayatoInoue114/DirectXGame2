@@ -45,6 +45,7 @@ void GameManager::Update() {
 	ImGui::SliderFloat3("TriangleRotate", rotate_, -5, 5);
 	ImGui::SliderFloat3("TriangleTranslate", translate_, -1, 1);
 	
+
 	color_ = { colorVolume_[0],colorVolume_[1],colorVolume_[2],1.0f };
 	transform_ = { {scale_[0],scale_[1],scale_[2]},{rotate_[0],rotate_[1],rotate_[2]},{translate_[0],translate_[1],translate_[2]} };
 	rotate_[1] += 0.0f;
@@ -102,6 +103,7 @@ void GameManager::Finalize() {
 	directX12_->ResourceLeakCheck();
 }
 
+///////////////////////////////////////////////////////////////Draw//////////////////////////////////
 void GameManager::Draw() {
 	/*for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Draw();
@@ -115,6 +117,8 @@ void GameManager::Draw() {
 	}*/
 	//sprite_->Draw();
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 void GameManager::VariableInit() {
 	

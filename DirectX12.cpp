@@ -336,9 +336,10 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 		srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart());
 	Fence();
 
+	InitializeDescriptorSize();
+
 	LoadAndTransferTexture();
 	CreateSRV();
-	
 }
 
 //void DirectX12::Update() {
@@ -470,6 +471,11 @@ void DirectX12::LoadAndTransferTexture() {
 	metadata_ = mipImages.GetMetadata();
 	textureResource_ = CreateTextureResource(device_, metadata_);
 	UploadTextureData(textureResource_, mipImages);
+
+	DirectX::ScratchImage mipImages2 = LoadTexture("Resources/monsterBall.png");
+	metadata2_ = mipImages2.GetMetadata();
+	textureResource2_ = CreateTextureResource(device_, metadata2_);
+	UploadTextureData(textureResource2_, mipImages2);
 }
 
 void DirectX12::CreateSRV() {
@@ -479,6 +485,12 @@ void DirectX12::CreateSRV() {
 	srvDesc_.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc_.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc_.Texture2D.MipLevels = UINT(metadata_.mipLevels);
+
+	srvDesc2_ = {};
+	srvDesc2_.Format = metadata2_.format;
+	srvDesc2_.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc2_.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc2_.Texture2D.MipLevels = UINT(metadata2_.mipLevels);
 
 	//SRVを作成するDescriptorHeapの場所を決める
 	textureSrvHandleCPU_ = srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
@@ -490,6 +502,11 @@ void DirectX12::CreateSRV() {
 
 	//SRVの生成
 	device_->CreateShaderResourceView(textureResource_, &srvDesc_, textureSrvHandleCPU_);
+
+	textureSrvHandleCPU2_ = GetCPUDescriptorHandle(srvDescriptorHeap_, descriptorSizeSRV_, 2);
+	textureSrvHandleGPU2_ = GetGPUDescriptorHandle(srvDescriptorHeap_, descriptorSizeSRV_, 2);
+	
+	device_->CreateShaderResourceView(textureResource2_, &srvDesc2_, textureSrvHandleCPU2_);
 }
 
 ID3D12Resource* DirectX12::CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height) {
@@ -552,4 +569,22 @@ void DirectX12::SetRenderTargets() {
 void DirectX12::ClearDepthBuffer() {
 	//指定した深度で画面全体をクリアする
 	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+}
+
+void DirectX12::InitializeDescriptorSize() {
+	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DirectX12::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	handleCPU.ptr += (descriptorSize * index);
+	return handleCPU;
+}
+
+D3D12_GPU_DESCRIPTOR_HANDLE DirectX12::GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
+	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+	handleGPU.ptr += (descriptorSize * index);
+	return handleGPU;
 }

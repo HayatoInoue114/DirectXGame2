@@ -72,6 +72,8 @@ private:
 	Matrix4x4 projectionMatix_;
 
 	Matrix4x4 worldViewProjectionMatrix_;
+
+	bool useMonsterBall = true;
 };
 
 

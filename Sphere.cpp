@@ -25,26 +25,33 @@ void Sphere::Initialize(DirectX12* directX12) {
 			uint32_t start = (latIndex * kSubdivision + lonIndex) * 6;
 			float lon = lonIndex * kLonEvery;
 
-			// a(基準点)
+			// 基準点a
 			vertexData_[start].position.x = cosf(lat) * cosf(lon);
 			vertexData_[start].position.y = sinf(lat);
 			vertexData_[start].position.z = cosf(lat) * sinf(lon);
 			vertexData_[start].position.w = 1.0f;
 			vertexData_[start].texcoord = { float(lonIndex) / float(kSubdivision) ,1.0f - float(latIndex) / float(kSubdivision) };
-
+			vertexData_[start].normal.x = vertexData_[start].position.x;
+			vertexData_[start].normal.y = vertexData_[start].position.y;
+			vertexData_[start].normal.z = vertexData_[start].position.z;
 			// b
 			vertexData_[start + 1].position.x = cosf(lat + kLatEvery) * cosf(lon);
 			vertexData_[start + 1].position.y = sinf(lat + kLatEvery);
 			vertexData_[start + 1].position.z = cosf(lat + kLatEvery) * sinf(lon);
 			vertexData_[start + 1].position.w = 1.0f;
 			vertexData_[start + 1].texcoord = { vertexData_[start].texcoord.x,vertexData_[start].texcoord.y - (1.0f / kSubdivision) };
-
+			vertexData_[start + 1].normal.x = vertexData_[start + 1].position.x;
+			vertexData_[start + 1].normal.y = vertexData_[start + 1].position.y;
+			vertexData_[start + 1].normal.z = vertexData_[start + 1].position.z;
 			// c
 			vertexData_[start + 2].position.x = cosf(lat) * cosf(lon + kLonEvery);
 			vertexData_[start + 2].position.y = sinf(lat);
 			vertexData_[start + 2].position.z = cosf(lat) * sinf(lon + kLonEvery);
 			vertexData_[start + 2].position.w = 1.0f;
 			vertexData_[start + 2].texcoord = { vertexData_[start].texcoord.x + (1.0f / (float)kSubdivision),vertexData_[start].texcoord.y };
+			vertexData_[start + 2].normal.x = vertexData_[start + 2].position.x;
+			vertexData_[start + 2].normal.y = vertexData_[start + 2].position.y;
+			vertexData_[start + 2].normal.z = vertexData_[start + 2].position.z;
 
 
 			// b
@@ -53,20 +60,27 @@ void Sphere::Initialize(DirectX12* directX12) {
 			vertexData_[start + 3].position.z = cosf(lat + kLatEvery) * sinf(lon);
 			vertexData_[start + 3].position.w = 1.0f;
 			vertexData_[start + 3].texcoord = { vertexData_[start].texcoord.x,vertexData_[start].texcoord.y - (1.0f / (float)kSubdivision) };
-
+			vertexData_[start + 3].normal.x = vertexData_[start + 3].position.x;
+			vertexData_[start + 3].normal.y = vertexData_[start + 3].position.y;
+			vertexData_[start + 3].normal.z = vertexData_[start + 3].position.z;
 			// d
 			vertexData_[start + 4].position.x = cosf(lat + kLatEvery) * cosf(lon + kLonEvery);
 			vertexData_[start + 4].position.y = sinf(lat + kLatEvery);
 			vertexData_[start + 4].position.z = cosf(lat + kLatEvery) * sinf(lon + kLonEvery);
 			vertexData_[start + 4].position.w = 1.0f;
 			vertexData_[start + 4].texcoord = { vertexData_[start].texcoord.x + (1.0f / (float)kSubdivision),vertexData_[start].texcoord.y - (1.0f / (float)kSubdivision) };
-
+			vertexData_[start + 4].normal.x = vertexData_[start + 4].position.x;
+			vertexData_[start + 4].normal.y = vertexData_[start + 4].position.y;
+			vertexData_[start + 4].normal.z = vertexData_[start + 4].position.z;
 			// c
 			vertexData_[start + 5].position.x = cosf(lat) * cosf(lon + kLonEvery);
 			vertexData_[start + 5].position.y = sinf(lat);
 			vertexData_[start + 5].position.z = cosf(lat) * sinf(lon + kLonEvery);
 			vertexData_[start + 5].position.w = 1.0f;
 			vertexData_[start + 5].texcoord = { vertexData_[start].texcoord.x + (1.0f / (float)kSubdivision),vertexData_[start].texcoord.y };
+			vertexData_[start + 5].normal.x = vertexData_[start + 5].position.x;
+			vertexData_[start + 5].normal.y = vertexData_[start + 5].position.y;
+			vertexData_[start + 5].normal.z = vertexData_[start + 5].position.z;
 		}
 	}
 }

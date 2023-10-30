@@ -73,6 +73,15 @@
     <Filter Include="ヘッダー ファイル\Sphere">
       <UniqueIdentifier>{6e470425-8ee2-44e5-a59e-372463493378}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Structs">
+      <UniqueIdentifier>{3720472d-ad94-4dbe-bccd-ac9c65ee8eab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Light">
+      <UniqueIdentifier>{4fdef1a8-4898-4d93-85a3-158422fc1c8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Light">
+      <UniqueIdentifier>{93512fa9-f520-48c2-b8c1-6764bd75f3b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -128,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="Sphere.cpp">
       <Filter>ソース ファイル\Sphere</Filter>
+    </ClCompile>
+    <ClCompile Include="Light.cpp">
+      <Filter>ソース ファイル\Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +203,18 @@
     </ClInclude>
     <ClInclude Include="Sphere.h">
       <Filter>ヘッダー ファイル\Sphere</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>ヘッダー ファイル\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformationMatrix.h">
+      <Filter>ヘッダー ファイル\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>ヘッダー ファイル\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>ヘッダー ファイル\Light</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

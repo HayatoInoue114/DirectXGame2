@@ -1,7 +1,9 @@
 #include "Sphere.h"
+#include "Light.h"
 
-void Sphere::Initialize(DirectX12* directX12) {
+void Sphere::Initialize(DirectX12* directX12, Light* light) {
 	directX12_ = directX12;
+	light_ = light;
 
 	//Transform変数を作る
 	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
@@ -83,6 +85,11 @@ void Sphere::Initialize(DirectX12* directX12) {
 			vertexData_[start + 5].normal.z = vertexData_[start + 5].position.z;
 		}
 	}
+
+	// 色の設定
+	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
+	// Lightingを有効にする
+	materialData_->enableLighting = true;
 }
 
 void Sphere::CreateVertexResource() {
@@ -100,20 +107,21 @@ void Sphere::CreateVertexBufferView() {
 }
 
 void Sphere::CreateMaterialResource() {
-	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4));
+	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }
 
 void Sphere::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Matrix4x4));
+	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(TransformationMatrix));
 	//データを書き込む
 	wvpData_ = nullptr;
 	//書き込むためのアドレスを取得
 	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpData_));
 	//単位行列を書き込んでおく
-	*wvpData_ = MakeIdentity4x4();
+	wvpData_->WVP = MakeIdentity4x4();
+	wvpData_->World = MakeIdentity4x4();
 }
 
 void Sphere::WriteDataToResource() {
@@ -129,7 +137,8 @@ void Sphere::CreateWVPMatrix() {
 	viewMatrix_ = Inverse(cameramatrix_);
 	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
-	*wvpData_ = worldViewProjectionMatrix_;
+	wvpData_->WVP = worldViewProjectionMatrix_;
+	wvpData_->World = worldMatrix_;
 }
 
 void Sphere::Release() {
@@ -141,7 +150,7 @@ void Sphere::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();
 	//色の指定
-	*materialData_ = color;
+	materialData_->color = color;
 	ImGui::Checkbox("useMonsterBallSphere", &useMonsterBall);
 }
 
@@ -155,6 +164,8 @@ void Sphere::Draw() {
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall ? directX12_->GetTextureSrvHandleGPU2() : directX12_->GetTextureSrvHandleGPU());
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, light_->GetDirectionalLightResource()->GetGPUVirtualAddress());
+
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	directX12_->GetCommandList()->DrawInstanced(vertexIndex_, 1, 0, 0);
 }

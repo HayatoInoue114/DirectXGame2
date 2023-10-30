@@ -89,7 +89,7 @@ void Triangle::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();
 	//色の指定
-	*materialData_ = color;
+	materialData_->color = color;
 	ImGui::Checkbox("useMonsterBallTriangle", &useMonsterBall);
 }
 

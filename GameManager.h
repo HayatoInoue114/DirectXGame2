@@ -6,6 +6,7 @@
 #include "ImGuiManager.h"
 #include "Sprite.h"
 #include "Sphere.h"
+#include "Light.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
 #define MAXSPRITE 1 //スプライトの最大数
@@ -50,6 +51,6 @@ private:
 	float rotate_[3] = { 0.0f,0.0f,0.0f };
 	float translate_[3] = { 0.0f,0.0f,0.0f };
 
-	
+	Light* light_ = new Light;
 };
 

@@ -4,11 +4,17 @@ void Sprite::Initialize(DirectX12* directX12) {
 	directX12_ = directX12;
 
 	CreateVertexResource();
+	CreateMaterialResource();
 	CreateVertexBufferView();
 	SetVertexData();
 	CreateTransformationMatrixResource();
 	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,.0f} };
+	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+
+	// 色の設定
+	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
+	// Lightingを有効にする
+	materialData_->enableLighting = false;
 }
 
 void Sprite::CreateVertexResource() {
@@ -79,18 +85,34 @@ void Sprite::CalculateAndSetWVPMatrix() {
 	//projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 }
 
-void Sprite::Update(Transform& transform) {
+void Sprite::CreateMaterialResource() {
+	//Sprite用のマテリアルリソースを作る
+	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
+	materialData_ = nullptr;
+	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
+
+}
+
+void Sprite::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
 	CalculateAndSetWVPMatrix();
 	//色の指定
-	//*materialData_ = color;
+	//materialData_->color = color;
 }
 
 void Sprite::Draw() {
 	//Spriteの描画。変更が必要なものだけを変更する
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferViewSprite_); // VBVを設定
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	//wvp用のCBufferの場所を設定
+	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//TransformationMatrixCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResourceSprite_->GetGPUVirtualAddress());
 	//描画！(DrawCall/ドローコール)
 	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }
+
+//void Sprite::Release() {
+//	vertexResource->Release();
+//	materialResource_->Release();
+//}

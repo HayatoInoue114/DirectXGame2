@@ -4,6 +4,7 @@
 #include "Vector4.h"
 #include "MT.h"
 #include "Vertexdata.h"
+#include "Material.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -12,7 +13,7 @@ class Sprite
 public:
 	void Initialize(DirectX12* directX12);
 
-	void Update(Transform& transform);
+	void Update(Transform& transform, Vector4& color);
 
 	void Draw();
 
@@ -25,7 +26,12 @@ public:
 	void CreateTransformationMatrixResource();
 
 	void CalculateAndSetWVPMatrix();
+
+	void CreateMaterialResource();
+
+	//void Release();
 private:
+	Material* materialData_{};
 
 	DirectX12* directX12_;
 
@@ -52,5 +58,7 @@ private:
 	Transform cameraTransform_{};
 
 	Matrix4x4 cameramatrix_{};
+
+	ID3D12Resource* materialResource_{};
 };
 

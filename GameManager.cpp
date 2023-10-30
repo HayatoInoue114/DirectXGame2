@@ -8,6 +8,8 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 
 	graphicsRenderer_->Initialize(directX12_);
 
+	light_->Initialize(directX12_);
+
 	for (int i = 0; i < 3; i++) {
 		colorVolume_[i] = 1.0f;
 		scale_[i] = 1.0f;
@@ -25,7 +27,7 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 		sphere_[i]->Initialize(directX12_);
 	}*/
 
-	sphere_->Initialize(directX12_);
+	sphere_->Initialize(directX12_,light_);
 
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i] = new Sprite;
@@ -44,7 +46,17 @@ void GameManager::Update() {
 	ImGui::SliderFloat3("TriangleScale", scale_, -5, 5);
 	ImGui::SliderFloat3("TriangleRotate", rotate_, -5, 5);
 	ImGui::SliderFloat3("TriangleTranslate", translate_, -1, 1);
-	
+	ImGui::Begin("CommonSettings");
+	if (ImGui::BeginTabBar("CommonTabBar"))
+	{
+		// ライトのImGui
+		if (ImGui::BeginTabItem("Half Lambert")) {
+			light_->AdjustParameter();
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
 
 	color_ = { colorVolume_[0],colorVolume_[1],colorVolume_[2],1.0f };
 	transform_ = { {scale_[0],scale_[1],scale_[2]},{rotate_[0],rotate_[1],rotate_[2]},{translate_[0],translate_[1],translate_[2]} };
@@ -60,7 +72,7 @@ void GameManager::Update() {
 
 	sphere_->Update(transform_,color_);
 
-	sprite_->Update(transform_);
+	sprite_->Update(transform_,color_);
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Update(transform_);
 	}*/
@@ -82,7 +94,6 @@ void GameManager::Release() {
 	//for (int i = 0; i < MAXSPRITE; i++) {
 	//	sprite_[i]->Release();
 	//}
-
 }
 
 
@@ -115,7 +126,7 @@ void GameManager::Draw() {
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Draw();
 	}*/
-	//sprite_->Draw();
+	sprite_->Draw();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

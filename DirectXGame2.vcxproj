@@ -99,6 +99,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="ImGuiManager.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MT.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -121,6 +122,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="DirectX12.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
@@ -134,9 +136,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GraphicsRenderer.h" />
     <ClInclude Include="ImGuiManager.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="MT.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TransformationMatrix.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="WindowsAPI.h" />

@@ -4,6 +4,7 @@
 #include "Vector4.h"
 #include "MT.h"
 #include "Vertexdata.h"
+#include "Material.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -37,6 +38,8 @@ public:
 
 	void CreateWVPMatrix();
 private:
+	Material* materialData_;
+
 	DirectX12* directX12_;
 
 	//頂点リソース用のヒープの設定
@@ -53,7 +56,7 @@ private:
 
 	ID3D12Resource* materialResource_;
 
-	Vector4* materialData_;
+	/*Vector4* materialData_;*/
 
 	ID3D12Resource* wvpResource_;
 	Matrix4x4* wvpData_;

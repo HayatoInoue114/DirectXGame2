@@ -4,13 +4,17 @@
 #include "Vector4.h"
 #include "MT.h"
 #include "Vertexdata.h"
+#include "Material.h"
+#include "TransformationMatrix.h"
+
+class Light;
 
 #pragma comment(lib,"dxcompiler.lib")
 
 class Sphere
 {
 public:
-	void Initialize(DirectX12* directX12);
+	void Initialize(DirectX12* directX12, Light* light);
 
 	void CreateVertexResource();
 
@@ -30,6 +34,10 @@ public:
 
 	void CreateWVPMatrix();
 private:
+	Material* materialData_{};
+
+	Light* light_;
+
 	DirectX12* directX12_;
 
 	//頂点リソース用のヒープの設定
@@ -46,10 +54,10 @@ private:
 
 	ID3D12Resource* materialResource_;
 
-	Vector4* materialData_;
+	/*Vector4* materialData_;*/
 
 	ID3D12Resource* wvpResource_;
-	Matrix4x4* wvpData_;
+	TransformationMatrix* wvpData_;
 
 	Transform transform_;
 	Matrix4x4 worldMatrix_;

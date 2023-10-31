@@ -24,8 +24,8 @@ struct PixelShaderOutput {
 
 PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
-	float32_t4 transformdUV = mul
-	float32_t4 textureColor = gTexture.Sample(gSampler, input.texcoord);
+	float3 transformdUV = mul(float32_t3(input.texcoord,1.0f),gMaterial.uvTransform);
+	float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
 
 	if (gMaterial.enableLighting != 0) {// LIghtingする場合
 		//half lambert

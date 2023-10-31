@@ -85,11 +85,7 @@ void Sphere::Initialize(DirectX12* directX12, Light* light) {
 			vertexData_[start + 5].normal.z = vertexData_[start + 5].position.z;
 		}
 	}
-
-	// 色の設定
-	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
-	// Lightingを有効にする
-	materialData_->enableLighting = true;
+	SetMaterialData();
 }
 
 void Sphere::CreateVertexResource() {
@@ -141,6 +137,21 @@ void Sphere::CreateWVPMatrix() {
 	wvpData_->World = worldMatrix_;
 }
 
+void Sphere::SetMaterialData() {
+	// 色の設定
+	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
+	// Lightingを有効にする
+	materialData_->enableLighting = true;
+	//UVTransformを単位行列で初期化
+	materialData_->uvTransform = MakeIdentity4x4();
+	//uvTransform用の変数
+	uvTransform_ = {
+		{1.0f,1.0f,1.0f},
+		{0.0f,0.0f,0.0f},
+		{0.0f,0.0f,0.0f}
+	};
+}
+
 void Sphere::Release() {
 	vertexResource->Release();
 	materialResource_->Release();
@@ -151,10 +162,15 @@ void Sphere::Update(Transform& transform, Vector4& color) {
 	CreateWVPMatrix();
 	//色の指定
 	materialData_->color = color;
-	ImGui::Checkbox("useMonsterBallSphere", &useMonsterBall);
+	ImGuiAdjustParameter();
 }
 
 void Sphere::Draw() {
+	//パラメータからUVTransform用の行列を生成する
+	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
+	materialData_->uvTransform = uvTransformMatrix_;
 
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
@@ -163,10 +179,23 @@ void Sphere::Draw() {
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
-	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall ? directX12_->GetTextureSrvHandleGPU2() : directX12_->GetTextureSrvHandleGPU());
+	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall_ ? directX12_->GetTextureSrvHandleGPU2() : directX12_->GetTextureSrvHandleGPU());
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, light_->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	directX12_->GetCommandList()->DrawInstanced(vertexIndex_, 1, 0, 0);
+}
+
+void Sphere::ImGuiAdjustParameter() {
+	ImGui::Text("Sphere");
+	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
+	ImGui::Checkbox("useMonsterBall", &useMonsterBall_);
+	ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
+	ImGui::SliderFloat3("Scale", &transform_.scale.x, -5, 5);
+	ImGui::SliderFloat3("Rotate", &transform_.rotate.x, -5, 5);
+	ImGui::Text("UVTransform");
+	ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
+	ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
+	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
 }
 

@@ -107,3 +107,11 @@ void Triangle::Draw() {
 	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }
 
+void Triangle::ImGuiAdjustParameter() {
+	/*ImGui::ColorEdit3("TriangleColor", &color_);
+	ImGui::SliderFloat3("TriangleColor", &colorVolume_, 0.0f, 1.0f);
+	ImGui::SliderFloat3("TriangleScale", &scale_, -5, 5);
+	ImGui::SliderFloat3("TriangleRotate", &rotate_, -5, 5);
+	ImGui::SliderFloat3("TriangleTranslate", &translate_, -1, 1);*/
+}
+

@@ -37,6 +37,8 @@ public:
 	void Draw();
 
 	void CreateWVPMatrix();
+
+	void ImGuiAdjustParameter();
 private:
 	Material* materialData_;
 

@@ -33,6 +33,10 @@ public:
 	void CreateTransformationMatrixResource();
 
 	void CreateWVPMatrix();
+
+	void SetMaterialData();
+
+	void ImGuiAdjustParameter();
 private:
 	Material* materialData_{};
 
@@ -79,6 +83,10 @@ private:
 	// 頂点数
 	uint32_t vertexIndex_ = kSubdivision * kSubdivision * 6;
 
-	bool useMonsterBall = true;
+	bool useMonsterBall_ = true;
+
+	Transform uvTransform_{};
+
+	Matrix4x4 uvTransformMatrix_{};
 };
 

@@ -32,6 +32,9 @@ public:
 
 	void CreateIndex();
 
+	void SetMaterialData();
+
+	void ImGuiAdjustParameter();
 	//void Release();
 private:
 	Material* materialData_{};
@@ -42,7 +45,7 @@ private:
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
-	VertexData* vertexDataSprite_{};
+	VertexData* vertexData_{};
 
 	ID3D12Resource* transformationMatrixResource_{};
 
@@ -68,6 +71,10 @@ private:
 	
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
-	uint32_t* indexData_{};
+	uint32_t* indexData_ = nullptr;
+
+	Transform uvTransform_{};
+
+	Matrix4x4 uvTransformMatrix_{};
 };
 

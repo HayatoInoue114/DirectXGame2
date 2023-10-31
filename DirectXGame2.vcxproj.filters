@@ -88,6 +88,12 @@
     <Filter Include="ヘッダー ファイル\Model">
       <UniqueIdentifier>{a906c55c-71cc-453b-a769-cf9115c86cff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\MaterialData">
+      <UniqueIdentifier>{423cde4e-328a-47a4-970b-7e844c3e4287}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\MaterialData">
+      <UniqueIdentifier>{b40bc014-b3f4-4772-9263-f0c5b2e10d70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -149,6 +155,9 @@
     </ClCompile>
     <ClCompile Include="Model.cpp">
       <Filter>ソース ファイル\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialData.cpp">
+      <Filter>ソース ファイル\MaterialData</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,6 +239,9 @@
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>ヘッダー ファイル\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialData.h">
+      <Filter>ヘッダー ファイル\MaterialData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 struct Material {
 	float32_t4 color;
 	int32_t enableLighting;
+	float32_t3x3 uvTransform;
 };
 
 struct DirectionalLight
@@ -23,6 +24,7 @@ struct PixelShaderOutput {
 
 PixelShaderOutput main(VertexShaderOutput input) {
 	PixelShaderOutput output;
+	float32_t4 transformdUV = mul
 	float32_t4 textureColor = gTexture.Sample(gSampler, input.texcoord);
 
 	if (gMaterial.enableLighting != 0) {// LIghtingする場合

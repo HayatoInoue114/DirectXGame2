@@ -18,6 +18,13 @@ struct Matrix4x4 {
 };
 
 /// <summary>
+/// 3x3行列
+/// </summary>
+struct Matrix3x3 {
+	float m[3][3];
+};
+
+/// <summary>
 /// 3次元ベクトル
 /// </summary>
 struct Vector3 {

@@ -7,6 +7,7 @@
 #include "Sprite.h"
 #include "Sphere.h"
 #include "Light.h"
+#include "Model.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
 #define MAXSPRITE 1 //スプライトの最大数
@@ -34,6 +35,8 @@ public:
 	void VariableInit();
 private:
 	TriangleData triangleData[MAXTRIANGLE] = {};
+
+	Model* model_ = new Model;
 
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;

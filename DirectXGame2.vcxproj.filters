@@ -82,6 +82,12 @@
     <Filter Include="ヘッダー ファイル\Light">
       <UniqueIdentifier>{93512fa9-f520-48c2-b8c1-6764bd75f3b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Model">
+      <UniqueIdentifier>{cadbebde-9578-48fb-8531-289c16ef9602}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\Model">
+      <UniqueIdentifier>{a906c55c-71cc-453b-a769-cf9115c86cff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -140,6 +146,9 @@
     </ClCompile>
     <ClCompile Include="Light.cpp">
       <Filter>ソース ファイル\Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +224,12 @@
     </ClInclude>
     <ClInclude Include="Light.h">
       <Filter>ヘッダー ファイル\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelData.h">
+      <Filter>ヘッダー ファイル\Structs</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

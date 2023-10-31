@@ -34,7 +34,9 @@ void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI)
 		sprite_[i]->Initialize(directX12_);
 	}*/
 
-	sprite_->Initialize(directX12);
+	sprite_->Initialize(directX12_);
+
+	model_->Initialize(directX12_, light_);
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
@@ -76,7 +78,7 @@ void GameManager::Update() {
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Update(transform_);
 	}*/
-	
+	model_->Update(transform_, color_);
 
 	ImGui::Render();
 }
@@ -91,6 +93,8 @@ void GameManager::Release() {
 		sphere_[i]->Release();
 	}*/
 	sphere_->Release();
+
+	model_->Release();
 	//for (int i = 0; i < MAXSPRITE; i++) {
 	//	sprite_[i]->Release();
 	//}
@@ -122,11 +126,13 @@ void GameManager::Draw() {
 	/*for (int i = 0; i < MAXSPHERE; i++) {
 		sphere_[i]->Draw();
 	}*/
-	sphere_->Draw();
+	//sphere_->Draw();
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Draw();
 	}*/
-	sprite_->Draw();
+	//sprite_->Draw();
+
+	model_->Draw();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

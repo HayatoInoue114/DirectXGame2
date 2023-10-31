@@ -42,7 +42,7 @@ private:
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
-	VertexData* vertexDataSprite_{};
+	VertexData* vertexData_{};
 
 	ID3D12Resource* transformationMatrixResource_{};
 
@@ -68,6 +68,6 @@ private:
 	
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 
-	uint32_t* indexData_{};
+	uint32_t* indexData_ = nullptr;
 };
 

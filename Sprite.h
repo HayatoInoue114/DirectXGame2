@@ -30,6 +30,8 @@ public:
 
 	void CreateMaterialResource();
 
+	void CreateIndex();
+
 	//void Release();
 private:
 	Material* materialData_{};
@@ -62,6 +64,10 @@ private:
 
 	ID3D12Resource* materialResource_{};
 
-	ID3D12Resource* indexResourceSprite_{};
+	ID3D12Resource* indexResource_{};
+	
+	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
+
+	uint32_t* indexData_{};
 };
 

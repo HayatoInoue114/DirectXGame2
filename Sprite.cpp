@@ -8,6 +8,7 @@ void Sprite::Initialize(DirectX12* directX12) {
 	CreateVertexBufferView();
 	SetVertexData();
 	CreateTransformationMatrixResource();
+	CreateIndex();
 	//Transform変数を作る
 	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 
@@ -95,6 +96,24 @@ void Sprite::CreateMaterialResource() {
 
 }
 
+void Sprite::CreateIndex() {
+	indexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(uint32_t) * 6);
+
+	indexBufferView_ = {};
+	//リソースの先頭アドレスから使う
+	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
+	//使用するリソースのサイズはインデックス6つ分のサイズ
+	indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6;
+	//インデックスはuint32_tとする
+	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
+
+	//インデックスリソースにデータを書き込む
+	indexData_ = nullptr;
+	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
+	indexData_[0] = 0; indexData_[1] = 1; indexData_[2] = 2;
+	indexData_[3] = 1; indexData_[4] = 3; indexData_[5] = 2;
+}
+
 void Sprite::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
 	CalculateAndSetWVPMatrix();
@@ -110,6 +129,8 @@ void Sprite::Draw() {
 	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//TransformationMatrixCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+	//IBVを設定
+	directX12_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 	//描画！(DrawCall/ドローコール)
 	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }

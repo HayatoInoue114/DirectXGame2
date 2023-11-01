@@ -1,14 +1,19 @@
 #include "GameManager.h"
 
-void GameManager::Init(DirectX12* directX12, WindowsAPI* windowsAPI) 
+void GameManager::Initialize() 
 {
 	
-	directX12_ = directX12;
-	directX12_->Init(windowsAPI);
+	directX12_ = DirectX12::GetInstance();
+	directX12_->GetInstance()->Init(WindowsAPI::GetInstance());
 
-	graphicsRenderer_->Initialize(directX12_);
+	graphicsRenderer_ = GraphicsRenderer::GetInstance();
+	graphicsRenderer_->GetInstance()->Initialize(DirectX12::GetInstance());
 
-	light_->Initialize(directX12_);
+	light_ = Light::Getinstance();
+	light_->Getinstance()->Initialize(DirectX12::GetInstance());
+	
+	textureManager_ = TextureManager::GetInstance();
+	textureManager_->GetInstance()->Initialize();
 
 	for (int i = 0; i < 3; i++) {
 		colorVolume_[i] = 1.0f;
@@ -127,7 +132,7 @@ void GameManager::Draw() {
 	}*/
 	//sprite_->Draw();
 
-	model_->Draw();
+	model_->Draw(0);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

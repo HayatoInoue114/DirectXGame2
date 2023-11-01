@@ -38,43 +38,43 @@ public:
 
 	void ImGuiAdjustParameter();
 private:
-	Material* materialData_;
+	Material* materialData_{};
 
-	DirectX12* directX12_;
+	DirectX12* directX12_{};
 
 	//頂点リソース用のヒープの設定
-	D3D12_HEAP_PROPERTIES uploadHeapProperties;
+	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
 	//頂点リソースの設定
-	D3D12_RESOURCE_DESC vertexresourceDesc;
+	D3D12_RESOURCE_DESC vertexresourceDesc{};
 	//実際に頂点リソースを作る
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_{};
 	//頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
 
 	//頂点リソースにデータを書き込む
-	VertexData* vertexData;
+	VertexData* vertexData{};
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_{};
 
 	/*Vector4* materialData_;*/
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
-	Matrix4x4* wvpData_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_{};
+	Matrix4x4* wvpData_{};
 
-	Transform transform_;
-	Matrix4x4 worldMatrix_;
+	Transform transform_{};
+	Matrix4x4 worldMatrix_{};
 
-	Transform cameraTransform_;
+	Transform cameraTransform_{};
 	
-	Matrix4x4 projectionMatrix_;
+	Matrix4x4 projectionMatrix_{};
 
-	Matrix4x4 cameramatrix_;
+	Matrix4x4 cameramatrix_{};
 
-	Matrix4x4 viewMatrix_;
+	Matrix4x4 viewMatrix_{};
 
-	Matrix4x4 projectionMatix_;
+	Matrix4x4 projectionMatix_{};
 
-	Matrix4x4 worldViewProjectionMatrix_;
+	Matrix4x4 worldViewProjectionMatrix_{};
 
 	bool useMonsterBall = true;
 };

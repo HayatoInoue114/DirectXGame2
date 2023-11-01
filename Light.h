@@ -7,6 +7,8 @@ class DirectX12;
 class Light
 {
 public:
+	static Light* Getinstance();
+
 	ID3D12Resource* GetDirectionalLightResource() { return directionalLightResource_; }
 
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);

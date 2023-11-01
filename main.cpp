@@ -2,14 +2,12 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	CoInitializeEx(0, COINIT_MULTITHREADED);
-	
-	WindowsAPI* windowsAPI = new WindowsAPI();
-	DirectX12* directX12 = new DirectX12;
+
 	GameManager* gameManager = new GameManager;
 
 	gameManager->VariableInit();
 
-	gameManager->Init(directX12,windowsAPI);
+	gameManager->Initialize();
 
 	MSG msg{};
 	//Windowにメッセージが来てたら最優先で処理させる

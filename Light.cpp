@@ -2,6 +2,12 @@
 #include <assert.h>
 #include "DirectX12.h"
 
+Light* Light::Getinstance() {
+	static Light instance;
+
+	return &instance;
+}
+
 ID3D12Resource* Light::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;
 	//頂点リソース用のヒープの設定

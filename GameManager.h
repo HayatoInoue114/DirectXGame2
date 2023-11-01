@@ -8,6 +8,7 @@
 #include "Sphere.h"
 #include "Light.h"
 #include "Model.h"
+#include "TextureManager.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
 #define MAXSPRITE 1 //スプライトの最大数
@@ -20,7 +21,7 @@ public:
 	
 
 	/*void PreInit(GraphicsRenderer* graphicsRenderer);*/
-	void Init(DirectX12* directX12, WindowsAPI* windowsAPI);
+	void Initialize();
 	void Update();
 	void Release();
 
@@ -38,8 +39,10 @@ private:
 
 	Model* model_ = new Model;
 
-	DirectX12* directX12_ = new DirectX12;
-	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
+	TextureManager* textureManager_{};
+
+	DirectX12* directX12_{};
+	GraphicsRenderer* graphicsRenderer_{};
 	Triangle** triangle_ = new Triangle* [MAXTRIANGLE];
 	//Sprite** sprite_ = new Sprite * [MAXSPRITE];
 	Sprite* sprite_ = new Sprite;
@@ -54,6 +57,6 @@ private:
 	float rotate_[3] = { 0.0f,0.0f,0.0f };
 	float translate_[3] = { 0.0f,0.0f,0.0f };
 
-	Light* light_ = new Light;
+	Light* light_{};
 };
 

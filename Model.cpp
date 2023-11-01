@@ -179,7 +179,7 @@ void Model::Update(Transform& transform, Vector4& color) {
 	ImGuiAdjustParameter();
 }
 
-void Model::Draw() {
+void Model::Draw(uint32_t textureNum) {
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
@@ -193,7 +193,7 @@ void Model::Draw() {
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
-	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, directX12_->GetTextureSrvHandleGPU());
+	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum]);
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, light_->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。

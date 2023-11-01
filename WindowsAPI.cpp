@@ -1,15 +1,16 @@
 #include "WindowsAPI.h"
 
+WindowsAPI* WindowsAPI::GetInstance() {
+	static WindowsAPI instance;
 
+	return &instance;
+}
 
 void WindowsAPI::Init() {
 	WindowClass();
 	WindowSize();
 	WindowCreate();
 }
-
-
-
 
 LRESULT CALLBACK WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
@@ -30,7 +31,7 @@ LRESULT CALLBACK WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPAR
 }
 
 void WindowsAPI::WindowClass() {
-	
+
 
 	//ウインドウプロシージャ	
 	wc.lpfnWndProc = WindowProc;

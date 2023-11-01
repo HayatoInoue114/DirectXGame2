@@ -1,5 +1,12 @@
 #include "GraphicsRenderer.h"
 
+GraphicsRenderer* GraphicsRenderer::GetInstance() {
+	static GraphicsRenderer instance;
+
+	return &instance;
+}
+
+
 void GraphicsRenderer::Dxc() {
 	HRESULT hr;
 	//dxcCompilerを初期化

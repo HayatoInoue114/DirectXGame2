@@ -97,6 +97,12 @@
     <Filter Include="ヘッダー ファイル\ResourceObject">
       <UniqueIdentifier>{e2fa70a0-1df5-46d5-9e73-6ad708d18271}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\TextureManager">
+      <UniqueIdentifier>{af644f3b-76ca-450c-94fa-c05103960c0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\TextureManager">
+      <UniqueIdentifier>{8ac60a1b-1763-48e9-ad62-641756b66788}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -161,6 +167,9 @@
     </ClCompile>
     <ClCompile Include="MaterialData.cpp">
       <Filter>ソース ファイル\MaterialData</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>ソース ファイル\TextureManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -248,6 +257,9 @@
     </ClInclude>
     <ClInclude Include="ResourceObject.h">
       <Filter>ヘッダー ファイル\ResourceObject</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>ヘッダー ファイル\TextureManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

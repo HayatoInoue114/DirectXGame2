@@ -8,6 +8,7 @@
 #include "Light.h"
 #include "Material.h"
 #include "TransformationMatrix.h"
+#include "TextureManager.h"
 
 class Model
 {
@@ -16,7 +17,7 @@ public:
 
 	void Update(Transform& transform, Vector4& color);
 
-	void Draw();
+	void Draw(uint32_t textureNum);
 
 	void CreatevertexResource();
 

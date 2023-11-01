@@ -106,6 +106,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="MT.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="WindowsAPI.cpp" />
   </ItemGroup>
@@ -147,6 +148,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="ResourceObject.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Sprite.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="TransformationMatrix.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Vector4.h" />

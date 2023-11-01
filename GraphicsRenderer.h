@@ -1,7 +1,7 @@
 #pragma 
 #include "DirectX12.h"
-#include "Triangle.h"
 #include <wrl.h>
+#include <dxcapi.h>
 
 class DirectX12;
 
@@ -48,7 +48,6 @@ public:
 	void DepthStencilState();
 private:
 	DirectX12* directX12_{};
-	Triangle* triangle_{};
 
 	IDxcUtils* dxcUtils_{};
 	IDxcCompiler3* dxcCompiler_{};

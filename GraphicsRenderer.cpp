@@ -177,6 +177,8 @@ void GraphicsRenderer::BlendState() {
 	//全ての色要素を書き込む
 	blendDesc_.RenderTarget[0].RenderTargetWriteMask =
 		D3D12_COLOR_WRITE_ENABLE_ALL;
+	blendDesc_.RenderTarget[0].BlendEnable = true;
+	blendDesc_.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
 }
 
 void GraphicsRenderer::ResterizerState() {

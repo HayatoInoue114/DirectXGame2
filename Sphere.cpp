@@ -89,13 +89,13 @@ void Sphere::Initialize(DirectX12* directX12, Light* light) {
 }
 
 void Sphere::CreateVertexResource() {
-	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * vertexIndex_);
+	vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(VertexData) * vertexIndex_);
 }
 
 void Sphere::CreateVertexBufferView() {
 	vertexBufferView = {};
 	//リソースの先頭のアドレスから使う
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+	vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点３つ分のサイズ
 	vertexBufferView.SizeInBytes = sizeof(VertexData) * vertexIndex_;
 	//1頂点当たりのサイズ
@@ -103,14 +103,14 @@ void Sphere::CreateVertexBufferView() {
 }
 
 void Sphere::CreateMaterialResource() {
-	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
+	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(Material));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }
 
 void Sphere::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(TransformationMatrix));
+	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(TransformationMatrix));
 	//データを書き込む
 	wvpData_ = nullptr;
 	//書き込むためのアドレスを取得
@@ -122,7 +122,7 @@ void Sphere::CreateTransformationMatrixResource() {
 
 void Sphere::WriteDataToResource() {
 	//書き込むためのアドレスを取得
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 }
 
 void Sphere::CreateWVPMatrix() {
@@ -150,11 +150,6 @@ void Sphere::SetMaterialData() {
 		{0.0f,0.0f,0.0f},
 		{0.0f,0.0f,0.0f}
 	};
-}
-
-void Sphere::Release() {
-	vertexResource->Release();
-	materialResource_->Release();
 }
 
 void Sphere::Update(Transform& transform, Vector4& color) {

@@ -1,6 +1,7 @@
 #pragma 
 #include "DirectX12.h"
 #include "Triangle.h"
+#include <wrl.h>
 
 class DirectX12;
 
@@ -23,7 +24,7 @@ public:
 		IDxcIncludeHandler* includeHandler
 	);
 
-	void CreateRootSignature(DirectX12* directX12);
+	void CreateRootSignature();
 
 	void InputLayout();
 
@@ -33,9 +34,9 @@ public:
 
 	void BuildShader();
 
-	void CreatePSO(DirectX12* directX12);
+	void CreatePSO();
 
-	void DrawCall(DirectX12* directX12);
+	void DrawCall();
 
 	void Viewport();
 
@@ -45,51 +46,51 @@ public:
 
 	void DepthStencilState();
 private:
-	DirectX12* directX12;
-	Triangle* triangle;
+	DirectX12* directX12_;
+	Triangle* triangle_;
 
-	IDxcUtils* dxcUtils;
-	IDxcCompiler3* dxcCompiler;
-	IDxcIncludeHandler* includeHandler;
+	IDxcUtils* dxcUtils_;
+	IDxcCompiler3* dxcCompiler_;
+	IDxcIncludeHandler* includeHandler_;
 
-	IDxcBlobEncoding* shaderSource;
-	IDxcResult* shaderResult;
-	IDxcBlobUtf8* shaderError;
-	IDxcBlob* shaderBlob;
+	IDxcBlobEncoding* shaderSource_;
+	IDxcResult* shaderResult_;
+	IDxcBlobUtf8* shaderError_;
+	IDxcBlob* shaderBlob_;
 
 
 	//シリアライズしてバイナリにする
-	ID3DBlob* signatureBlob;
-	ID3DBlob* errorBlob;
+	ID3DBlob* signatureBlob_;
+	ID3DBlob* errorBlob_;
 	//バイナリを元に生成
-	ID3D12RootSignature* rootSignature;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_{};
 
-	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc;
+	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc_;
 
 	//BlendStateの設定
-	D3D12_BLEND_DESC blendDesc;
+	D3D12_BLEND_DESC blendDesc_;
 	//RasiterzerStateの設定
-	D3D12_RASTERIZER_DESC rasterizerDesc;
+	D3D12_RASTERIZER_DESC rasterizerDesc_;
 
-	IDxcBlob* vertexShaderBlob;
-	IDxcBlob* pixelShaderBlob;
+	IDxcBlob* vertexShaderBlob_;
+	IDxcBlob* pixelShaderBlob_;
 
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc;
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc_;
 
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3];
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[3];
 
 	//実際に生成
-	ID3D12PipelineState* graphicsPipelineState;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_{};
 
 	//ビューポート
-	D3D12_VIEWPORT viewport;
+	D3D12_VIEWPORT viewport_;
 	//シザー矩形
-	D3D12_RECT scissorRect;
+	D3D12_RECT scissorRect_;
 
-	D3D12_DESCRIPTOR_RANGE descriptorRange[1];
+	D3D12_DESCRIPTOR_RANGE descriptorRange_[1];
 
-	D3D12_STATIC_SAMPLER_DESC staticSamplers[1];
+	D3D12_STATIC_SAMPLER_DESC staticSamplers_[1];
 
-	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc_{};
 };
 

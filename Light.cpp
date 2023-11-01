@@ -30,7 +30,7 @@ ID3D12Resource* Light::CreateBufferResource(ID3D12Device* device, size_t sizeInB
 }
 
 void Light::CreateDirectionalResource() {
-	directionalLightResource_ = CreateBufferResource(directX12_->GetDevice(), sizeof(DirectionalLight));
+	directionalLightResource_ = CreateBufferResource(directX12_->GetDevice().Get(), sizeof(DirectionalLight));
 	// マテリアルにデータを書き込む
 	directionalLightData_ = nullptr;
 	// 書き込むためのアドレスを取得

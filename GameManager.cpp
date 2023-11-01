@@ -86,14 +86,9 @@ void GameManager::Update() {
 void GameManager::Release() {
 	directX12_->Release();
 	graphicsRenderer_->Release();
-	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Release();
-	}
 	/*for (int i = 0; i < MAXSPHERE; i++) {
 		sphere_[i]->Release();
 	}*/
-	sphere_->Release();
-
 	model_->Release();
 	//for (int i = 0; i < MAXSPRITE; i++) {
 	//	sprite_[i]->Release();
@@ -107,7 +102,7 @@ void GameManager::BeginFrame() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	directX12_->PreDraw();
-	graphicsRenderer_->DrawCall(directX12_);
+	graphicsRenderer_->DrawCall();
 }
 
 void GameManager::EndFrame() {

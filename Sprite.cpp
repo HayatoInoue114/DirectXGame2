@@ -14,7 +14,7 @@ void Sprite::Initialize(DirectX12* directX12) {
 
 void Sprite::CreateVertexResource() {
 	//Sprite用の頂点リソースを作る
-	vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 6);
+	vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(VertexData) * 6);
 }
 
 void Sprite::CreateVertexBufferView() {
@@ -54,7 +54,7 @@ void Sprite::SetVertexData() {
 
 void Sprite::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	transformationMatrixResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(TransformationMatrix));
+	transformationMatrixResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(TransformationMatrix));
 	//データを書き込む
 	transformationMatrixData_ = nullptr;
 	//書き込むためのアドレスを取得
@@ -81,14 +81,14 @@ void Sprite::CalculateAndSetWVPMatrix() {
 
 void Sprite::CreateMaterialResource() {
 	//Sprite用のマテリアルリソースを作る
-	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
+	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(Material));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 
 }
 
 void Sprite::CreateIndex() {
-	indexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(uint32_t) * 6);
+	indexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(uint32_t) * 6);
 
 	indexBufferView_ = {};
 	//リソースの先頭アドレスから使う
@@ -124,7 +124,7 @@ void Sprite::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
 	CalculateAndSetWVPMatrix();
 	//色の指定
-	//materialData_->color = color;
+	materialData_->color = color;
 	ImGuiAdjustParameter();
 }
 
@@ -160,8 +160,3 @@ void Sprite::ImGuiAdjustParameter() {
 	ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
 	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
 }
-
-//void Sprite::Release() {
-//	vertexResource->Release();
-//	materialResource_->Release();
-//}

@@ -26,8 +26,6 @@ public:
 
 	void WriteDataToResource();
 
-	void Release();
-
 	void CreateMaterialResource();
 
 	void CreateTransformationMatrixResource();
@@ -49,18 +47,18 @@ private:
 	//頂点リソースの設定
 	D3D12_RESOURCE_DESC vertexresourceDesc;
 	//実際に頂点リソースを作る
-	ID3D12Resource* vertexResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 
 	//頂点リソースにデータを書き込む
 	VertexData* vertexData;
 
-	ID3D12Resource* materialResource_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 
 	/*Vector4* materialData_;*/
 
-	ID3D12Resource* wvpResource_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 	Matrix4x4* wvpData_;
 
 	Transform transform_;

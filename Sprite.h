@@ -35,23 +35,22 @@ public:
 	void SetMaterialData();
 
 	void ImGuiAdjustParameter();
-	//void Release();
 private:
 	Material* materialData_{};
 
-	DirectX12* directX12_;
+	DirectX12* directX12_{};
 
-	ID3D12Resource* vertexResource_{};
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_{};
 
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
 	VertexData* vertexData_{};
 
-	ID3D12Resource* transformationMatrixResource_{};
+	Microsoft::WRL::ComPtr<ID3D12Resource> transformationMatrixResource_{};
 
 	TransformationMatrix* transformationMatrixData_{};
 
-	Transform transform_;
+	Transform transform_{};
 
 	Matrix4x4 worldMatrix_{};
 
@@ -65,9 +64,9 @@ private:
 
 	Matrix4x4 cameramatrix_{};
 
-	ID3D12Resource* materialResource_{};
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 
-	ID3D12Resource* indexResource_{};
+	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource_{};
 	
 	D3D12_INDEX_BUFFER_VIEW indexBufferView_{};
 

@@ -34,13 +34,13 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 }
 
 void Triangle::CreateVertexResource() {
-	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 6);
+	vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(VertexData) * 6);
 }
 
 void Triangle::CreateVertexBufferView() {
 	vertexBufferView = {};
 	//リソースの先頭のアドレスから使う
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+	vertexBufferView.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点３つ分のサイズ
 	vertexBufferView.SizeInBytes = sizeof(VertexData) * 6;
 	//1頂点当たりのサイズ
@@ -48,14 +48,14 @@ void Triangle::CreateVertexBufferView() {
 }
 
 void Triangle::CreateMaterialResource() {
-	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4));
+	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(Vector4));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }
 
 void Triangle::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Matrix4x4));
+	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(Matrix4x4));
 	//データを書き込む
 	wvpData_ = nullptr;
 	//書き込むためのアドレスを取得
@@ -66,7 +66,7 @@ void Triangle::CreateTransformationMatrixResource() {
 
 void Triangle::WriteDataToResource() {
 	//書き込むためのアドレスを取得
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 }
 
 void Triangle::CreateWVPMatrix() {
@@ -78,11 +78,6 @@ void Triangle::CreateWVPMatrix() {
 	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
 	*wvpData_ = worldViewProjectionMatrix_;
-}
-
-void Triangle::Release() {
-	vertexResource->Release();
-	materialResource_->Release();
 }
 
 void Triangle::Update(Transform& transform, Vector4& color) {

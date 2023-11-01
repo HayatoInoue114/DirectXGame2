@@ -28,6 +28,7 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 		else if (identifier == "vt") {
 			Vector2 texcoord;
 			s >> texcoord.x >> texcoord.y;
+			texcoord.y = 1.0f - texcoord.y;
 			texcoords.push_back(texcoord);
 		}
 		else if (identifier == "vn") {
@@ -160,7 +161,7 @@ void Model::SetMaterialData() {
 
 void Model::CreateModel() {
 	//モデル読み込み
-	modelData_ = LoadObjFile("resources", "plane");
+	modelData_ = LoadObjFile("resources", "axis");
 	//頂点リソースを作る
 	vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * modelData_.vertices.size());
 }

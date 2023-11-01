@@ -94,6 +94,9 @@
     <Filter Include="ソース ファイル\MaterialData">
       <UniqueIdentifier>{b40bc014-b3f4-4772-9263-f0c5b2e10d70}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\ResourceObject">
+      <UniqueIdentifier>{e2fa70a0-1df5-46d5-9e73-6ad708d18271}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -242,6 +245,9 @@
     </ClInclude>
     <ClInclude Include="MaterialData.h">
       <Filter>ヘッダー ファイル\MaterialData</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceObject.h">
+      <Filter>ヘッダー ファイル\ResourceObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

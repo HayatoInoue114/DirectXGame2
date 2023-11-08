@@ -10,6 +10,7 @@
 #include <wrl.h>
 #include "ModelData.h"
 #include "DirectX12.h"
+#include "TransformationMatrix.h"
 
 #include "WindowsAPI.h"
 
@@ -52,7 +53,7 @@ public:
 	D3D12_GPU_DESCRIPTOR_HANDLE* GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
 private:
 
-	static const uint32_t kMaxImages = TEXTURENUM;
+	static const uint32_t kMaxImages = 10;
 
 	DirectX::ScratchImage mipImages_[kMaxImages]{};
 

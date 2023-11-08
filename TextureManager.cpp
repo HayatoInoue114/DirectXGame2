@@ -88,10 +88,16 @@ void TextureManager::LoadAndTransferTexture() {
 	// metaDataをもとにSRVの設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc[kMaxImages]{};
 	for (uint32_t i = 0; i < kMaxImages; i++) {
-		srvDesc[i].Format = metadata_[i].format;
+		//srvDesc[i].Format = metadata_[i].format;
+		srvDesc[i].Format = DXGI_FORMAT_UNKNOWN;
 		srvDesc[i].Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		srvDesc[i].ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		srvDesc[i].Texture2D.MipLevels = UINT(metadata_[i].mipLevels);
+		//srvDesc[i].ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		srvDesc[i].ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+		//srvDesc[i].Texture2D.MipLevels = UINT(metadata_[i].mipLevels);
+		srvDesc[i].Buffer.FirstElement = 0;
+		srvDesc[i].Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+		srvDesc[i].Buffer.NumElements = kMaxImages;
+		srvDesc[i].Buffer.StructureByteStride = sizeof(TransformationMatrix);
 		// SRVを作成するDescriptorHeapの場所を決める
 		textureSrvHandleCPU_[i] = GetCPUDescriptorHandle(DirectX12::GetInstance()->GetSrvDescriptorHeap(), descriptorSizeSRV_[i], i + 1);
 		textureSrvHandleGPU_[i] = GetGPUDescriptorHandle(DirectX12::GetInstance()->GetSrvDescriptorHeap(), descriptorSizeSRV_[i], i + 1);

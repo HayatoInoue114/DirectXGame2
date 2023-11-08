@@ -1,8 +1,6 @@
 #include "Sprite.h"
 
-void Sprite::Initialize(DirectX12* directX12) {
-	directX12_ = directX12;
-
+void Sprite::Initialize() {
 	CreateVertexResource();
 	CreateMaterialResource();
 	CreateVertexBufferView();
@@ -14,7 +12,7 @@ void Sprite::Initialize(DirectX12* directX12) {
 
 void Sprite::CreateVertexResource() {
 	//Sprite用の頂点リソースを作る
-	vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(VertexData) * 6);
+	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * 6);
 }
 
 void Sprite::CreateVertexBufferView() {
@@ -54,7 +52,7 @@ void Sprite::SetVertexData() {
 
 void Sprite::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	transformationMatrixResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(TransformationMatrix));
+	transformationMatrixResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(TransformationMatrix));
 	//データを書き込む
 	transformationMatrixData_ = nullptr;
 	//書き込むためのアドレスを取得
@@ -81,14 +79,14 @@ void Sprite::CalculateAndSetWVPMatrix() {
 
 void Sprite::CreateMaterialResource() {
 	//Sprite用のマテリアルリソースを作る
-	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(Material));
+	materialResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(Material));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 
 }
 
 void Sprite::CreateIndex() {
-	indexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(uint32_t) * 6);
+	indexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(uint32_t) * 6);
 
 	indexBufferView_ = {};
 	//リソースの先頭アドレスから使う
@@ -136,17 +134,17 @@ void Sprite::Draw() {
 	materialData_->uvTransform = uvTransformMatrix_;
 
 	//Spriteの描画。変更が必要なものだけを変更する
-	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
+	DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 	//IBVを設定
-	directX12_->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
+	DirectX12::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView_);
 
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//TransformationMatrixCBufferの場所を設定
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
 	//描画！(DrawCall/ドローコール)
-	directX12_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	DirectX12::GetInstance()->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
 void Sprite::ImGuiAdjustParameter() {

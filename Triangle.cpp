@@ -1,7 +1,6 @@
 #include "Triangle.h"
 
-void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
-	directX12_ = directX12;
+void Triangle::Initialize(TriangleData triangleData) {
 
 	CreateVertexResource();
 	CreateMaterialResource();
@@ -34,7 +33,7 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 }
 
 void Triangle::CreateVertexResource() {
-	vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(VertexData) * 6);
+	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * 6);
 }
 
 void Triangle::CreateVertexBufferView() {
@@ -48,14 +47,14 @@ void Triangle::CreateVertexBufferView() {
 }
 
 void Triangle::CreateMaterialResource() {
-	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(Vector4));
+	materialResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(Vector4));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }
 
 void Triangle::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(Matrix4x4));
+	wvpResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(Matrix4x4));
 	//データを書き込む
 	wvpData_ = nullptr;
 	//書き込むためのアドレスを取得
@@ -85,21 +84,21 @@ void Triangle::Update(Transform& transform, Vector4& color) {
 	CreateWVPMatrix();
 	//色の指定
 	materialData_->color = color;
-	ImGui::Checkbox("useMonsterBallTriangle", &useMonsterBall);
+	//ImGui::Checkbox("useMonsterBallTriangle", &useMonsterBall);
 }
 
 void Triangle::Draw() {
 
-	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
+	DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
-	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
-	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall ? directX12_->GetTextureSrvHandleGPU2() : directX12_->GetTextureSrvHandleGPU());
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall ? DirectX12::GetInstance()->GetTextureSrvHandleGPU2() : DirectX12::GetInstance()->GetTextureSrvHandleGPU());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
-	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
+	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }
 
 void Triangle::ImGuiAdjustParameter() {

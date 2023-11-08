@@ -18,7 +18,7 @@ struct TriangleData
 class Triangle
 {
 public:
-	void Initialize(DirectX12* directX12,TriangleData triangleData);
+	void Initialize(TriangleData triangleData);
 
 	void CreateVertexResource();
 
@@ -39,8 +39,6 @@ public:
 	void ImGuiAdjustParameter();
 private:
 	Material* materialData_{};
-
-	DirectX12* directX12_{};
 
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties{};

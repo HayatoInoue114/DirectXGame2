@@ -14,7 +14,7 @@ class Light;
 class Sphere
 {
 public:
-	void Initialize(DirectX12* directX12, Light* light);
+	void Initialize();
 
 	void Update(Transform& transform, Vector4& color);
 
@@ -37,10 +37,6 @@ public:
 	void ImGuiAdjustParameter();
 private:
 	Material* materialData_{};
-
-	Light* light_{};
-
-	DirectX12* directX12_{};
 
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties{};

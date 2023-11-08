@@ -82,14 +82,6 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSRVDescriptorHeap() { return srvDescriptorHeap_; }
 
-	//void LoadAndTransferTexture();
-
-	//ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
-
-	//void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
-
-	//void CreateSRV();
-
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU2() { return textureSrvHandleGPU2_; }
 
@@ -102,10 +94,6 @@ public:
 	void SetRenderTargets();
 
 	void InitializeDescriptorSize();
-
-	//D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	//D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() { return srvDescriptorHeap_.Get(); }
 public:
@@ -160,7 +148,8 @@ private:
 	
 	UINT backBufferIndex_{};
 	
-	ID3D12Resource* swapChainResource_[2]{};
+	Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResource_[2]{};
+
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier_{};
 	

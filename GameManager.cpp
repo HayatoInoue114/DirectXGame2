@@ -7,7 +7,7 @@ void GameManager::Initialize()
 	directX12_->GetInstance()->Init(WindowsAPI::GetInstance());
 
 	graphicsRenderer_ = GraphicsRenderer::GetInstance();
-	graphicsRenderer_->GetInstance()->Initialize(DirectX12::GetInstance());
+	graphicsRenderer_->GetInstance()->Initialize();
 
 	light_ = Light::Getinstance();
 	light_->Getinstance()->Initialize(DirectX12::GetInstance());
@@ -24,7 +24,7 @@ void GameManager::Initialize()
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i] = new Triangle;
-		triangle_[i]->Initialize(directX12_, triangleData[i]);
+		triangle_[i]->Initialize(triangleData[i]);
 	}
 
 	/*for (int i = 0; i < MAXSPHERE; i++) {
@@ -32,16 +32,16 @@ void GameManager::Initialize()
 		sphere_[i]->Initialize(directX12_);
 	}*/
 
-	sphere_->Initialize(directX12_,light_);
+	sphere_->Initialize();
 
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i] = new Sprite;
 		sprite_[i]->Initialize(directX12_);
 	}*/
 
-	sprite_->Initialize(directX12_);
+	sprite_->Initialize();
 
-	model_->Initialize(directX12_, light_);
+	model_->Initialize();
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
@@ -91,13 +91,6 @@ void GameManager::Update() {
 void GameManager::Release() {
 	directX12_->Release();
 	graphicsRenderer_->Release();
-	/*for (int i = 0; i < MAXSPHERE; i++) {
-		sphere_[i]->Release();
-	}*/
-	model_->Release();
-	//for (int i = 0; i < MAXSPRITE; i++) {
-	//	sprite_[i]->Release();
-	//}
 }
 
 

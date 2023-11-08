@@ -100,6 +100,11 @@ void GraphicsRenderer::CreateRootSignature() {
 	descriptorRange_[0].NumDescriptors = 1;
 	descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; //SRVを使う
 	descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; //Offsetを自動計算
+	descriptorRangeForInstancing_[0] = {};
+	descriptorRangeForInstancing_[0].BaseShaderRegister = 0; //0から始まる
+	descriptorRangeForInstancing_[0].NumDescriptors = 1;
+	descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; //SRVを使う
+	descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; //Offsetを自動計算
 
 	//RootParameter作成。複数設定できるので配列。
 	D3D12_ROOT_PARAMETER rootParameters[4] = {};
@@ -108,9 +113,10 @@ void GraphicsRenderer::CreateRootSignature() {
 	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 	rootParameters[0].Descriptor.ShaderRegister = 0;
 
-	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	rootParameters[1].Descriptor.ShaderRegister = 0;
+	rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_; //Tableの中身の配列を指定
+	rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_); //Tableで利用する数
 
 	rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //DescriptorTableを使う
 	rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
@@ -146,7 +152,7 @@ void GraphicsRenderer::CreateRootSignature() {
 		assert(false);
 	}
 	rootSignature_ = nullptr;
-	hr = directX12_->GetDevice()->CreateRootSignature(0, signatureBlob_->GetBufferPointer(),
+	hr = DirectX12::GetInstance()->GetDevice()->CreateRootSignature(0, signatureBlob_->GetBufferPointer(),
 		signatureBlob_->GetBufferSize(), IID_PPV_ARGS(rootSignature_.GetAddressOf()));
 	assert(SUCCEEDED(hr));
 }
@@ -179,6 +185,11 @@ void GraphicsRenderer::BlendState() {
 		D3D12_COLOR_WRITE_ENABLE_ALL;
 	blendDesc_.RenderTarget[0].BlendEnable = true;
 	blendDesc_.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc_.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc_.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	blendDesc_.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+	blendDesc_.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+	blendDesc_.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 }
 
 void GraphicsRenderer::ResterizerState() {
@@ -191,10 +202,10 @@ void GraphicsRenderer::ResterizerState() {
 
 void GraphicsRenderer::BuildShader() {
 	//Shaderをコンパイルする
-	vertexShaderBlob_ = CompileShader(L"Object3d.VS.hlsl", L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+	vertexShaderBlob_ = CompileShader(L"Particle.VS.hlsl", L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(vertexShaderBlob_ != nullptr);
 
-	pixelShaderBlob_ = CompileShader(L"Object3d.PS.hlsl", L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+	pixelShaderBlob_ = CompileShader(L"Particle.PS.hlsl", L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(pixelShaderBlob_ != nullptr);
 }
 
@@ -215,7 +226,7 @@ void GraphicsRenderer::CreatePSO() {
 	//利用するトポロジ（形状）のタイプ。三角形
 	graphicsPipelineStateDesc_.PrimitiveTopologyType =
 		D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-	//どのように画面に色を打ち込むかの設定（気にしなくてよい）
+	//どのように画面に色を打ち込むかの設定
 	graphicsPipelineStateDesc_.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc_.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
@@ -224,7 +235,7 @@ void GraphicsRenderer::CreatePSO() {
 	graphicsPipelineStateDesc_.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
 	graphicsPipelineState_ = nullptr;
-	hr = directX12_->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc_,
+	hr = DirectX12::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc_,
 		IID_PPV_ARGS(&graphicsPipelineState_));
 	assert(SUCCEEDED(hr));
 }
@@ -249,8 +260,7 @@ void GraphicsRenderer::ScissorRect() {
 	scissorRect_.bottom = kCliantHeight;
 }
 
-void GraphicsRenderer::Initialize(DirectX12* directX12) {
-	directX12_ = directX12;
+void GraphicsRenderer::Initialize() {
 	Dxc();
 	CreateRootSignature();
 	InputLayout();
@@ -270,11 +280,11 @@ void GraphicsRenderer::Release() {
 }
 
 void GraphicsRenderer::DrawCall() {
-	directX12_->GetCommandList()->RSSetViewports(1, &viewport_);	//Viewportを設定
-	directX12_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);	//Scirssorを設定
+	DirectX12::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);	//Viewportを設定
+	DirectX12::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);	//Scirssorを設定
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directX12_->GetCommandList()->SetGraphicsRootSignature(rootSignature_.Get());
-	directX12_->GetCommandList()->SetPipelineState(graphicsPipelineState_.Get());	//PSOを設定
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_.Get());
+	DirectX12::GetInstance()->GetCommandList()->SetPipelineState(graphicsPipelineState_.Get());	//PSOを設定
 }
 
 void GraphicsRenderer::DepthStencilState() {
@@ -283,6 +293,6 @@ void GraphicsRenderer::DepthStencilState() {
 	depthStencilDesc_.DepthEnable = true;
 	//書き込みをします
 	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-	//比較関数はLessEqual。つまり、近ければ描画される
+	//比較関数はLessEqual。近ければ描画される
 	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }

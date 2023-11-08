@@ -12,7 +12,7 @@
 class Sprite
 {
 public:
-	void Initialize(DirectX12* directX12);
+	void Initialize();
 
 	void Update(Transform& transform, Vector4& color);
 
@@ -37,8 +37,6 @@ public:
 	void ImGuiAdjustParameter();
 private:
 	Material* materialData_{};
-
-	DirectX12* directX12_{};
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_{};
 

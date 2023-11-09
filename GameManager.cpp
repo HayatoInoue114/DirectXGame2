@@ -70,16 +70,16 @@ void GameManager::Update() {
 	rotate_[1] += 0.0f;
 
 	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Update(transform_,color_);
+		//triangle_[i]->Update(transform_,color_);
 	}
 
 	/*for (int i = 0; i < MAXSPHERE; i++) {
 		sphere_[i]->Update(transform_, color_);
 	}*/
 
-	sphere_->Update(transform_,color_);
+	//sphere_->Update(transform_,color_);
 
-	sprite_->Update(transform_,color_);
+	//sprite_->Update(transform_,color_);
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Update(transform_);
 	}*/

@@ -175,7 +175,7 @@ void Model::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();
 	//色の指定
-	materialData_->color = color;
+	//materialData_->color = color;
 	ImGuiAdjustParameter();
 }
 
@@ -210,5 +210,6 @@ void Model::ImGuiAdjustParameter() {
 	ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
 	ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
 	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
+	ImGui::ColorEdit4("ModelColor", &materialData_->color.x, 1);
 }
 

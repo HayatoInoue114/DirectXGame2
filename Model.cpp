@@ -166,11 +166,6 @@ void Model::CreateModel() {
 	vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
 }
 
-void Model::Release() {
-	vertexResource_->Release();
-	materialResource_->Release();
-}
-
 void Model::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();

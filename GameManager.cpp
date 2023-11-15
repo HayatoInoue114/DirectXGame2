@@ -50,6 +50,7 @@ void GameManager::Initialize()
 }
 
 void GameManager::Update() {
+#pragma region ImGui(もういらないかも)
 	ImGui::ColorEdit3("TriangleColor", colorVolume_);
 	ImGui::SliderFloat3("TriangleColor", colorVolume_, 0.0f, 1.0f);
 	ImGui::SliderFloat3("TriangleScale", scale_, -5, 5);
@@ -70,10 +71,12 @@ void GameManager::Update() {
 	color_ = { colorVolume_[0],colorVolume_[1],colorVolume_[2],1.0f };
 	transform_ = { {scale_[0],scale_[1],scale_[2]},{rotate_[0],rotate_[1],rotate_[2]},{translate_[0],translate_[1],translate_[2]} };
 	rotate_[1] += 0.0f;
+#pragma endregion ImGui
 
-	for (int i = 0; i < MAXTRIANGLE; i++) {
-		//triangle_[i]->Update(transform_,color_);
-	}
+#pragma region Update
+	/*for (int i = 0; i < MAXTRIANGLE; i++) {
+		triangle_[i]->Update(transform_,color_);
+	}*/
 
 	/*for (int i = 0; i < MAXSPHERE; i++) {
 		sphere_[i]->Update(transform_, color_);
@@ -87,6 +90,8 @@ void GameManager::Update() {
 	}*/
 	model_->Update(transform_, color_);
 
+#pragma endregion Update
+
 	ImGui::Render();
 }
 
@@ -96,7 +101,6 @@ void GameManager::Release() {
 	/*for (int i = 0; i < MAXSPHERE; i++) {
 		sphere_[i]->Release();
 	}*/
-	model_->Release();
 	//for (int i = 0; i < MAXSPRITE; i++) {
 	//	sprite_[i]->Release();
 	//}

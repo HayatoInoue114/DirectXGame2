@@ -14,7 +14,7 @@ class Sprite
 public:
 	void Initialize(DirectX12* directX12);
 
-	void Update(Transform& transform, Vector4& color);
+	void Update();
 
 	void Draw();
 
@@ -35,7 +35,31 @@ public:
 	void SetMaterialData();
 
 	void ImGuiAdjustParameter();
+
+	// セッター
+	void SetTransform(const Transform& transform) { transform_ = transform; }
+	void SetColor(const Vector4& color) { materialData_->color = color; }
+	void SetAnchorPoint(const Vector3& anchorpoint) { anchorPoint_ = anchorpoint; }
+	void SetisFlipX(bool isFlipX) { isFlipX_ = isFlipX; }
+	void SetisFlipY(bool isFlipY) { isFlipY_ = isFlipY; }
+	void SetisInvisible(bool isInvisible) { isInvisible_ = isInvisible; }
+
+	// ゲッター
+	const Transform& GetTransform() const { return transform_; }
+	const Vector4& GetColor() const { return materialData_->color; }
+	const Vector3& GetAnchorpoint() const { return anchorPoint_; }
+	bool GetisFlipX() const { return isFlipX_; }
+	bool GetisFlipY() const { return isFlipY_; }
+	bool GetisInvisible() const { return isInvisible_; }
+
 private:
+	enum VERTEX {
+		LB,
+		LT,
+		RT,
+		RB
+	};
+
 	Material* materialData_{};
 
 	DirectX12* directX12_{};
@@ -75,5 +99,16 @@ private:
 	Transform uvTransform_{};
 
 	Matrix4x4 uvTransformMatrix_{};
+
+	Vector3 anchorPoint_{};
+
+	//左右フリップ
+	bool isFlipX_ = false;
+
+	//上下フリップ
+	bool isFlipY_ = false;
+
+	//非表示フラグ
+	bool isInvisible_ = false;
 };
 

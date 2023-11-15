@@ -36,6 +36,9 @@ struct Vector3 {
 /// <summary>
 /// オブジェクトの位置・姿勢情報
 /// </summary>
+/// <param name="Scale">スケール</param>
+/// <param name="rotate">回転</param>
+/// <param name="translate">座標</param>
 struct Transform
 {
 	Vector3 scale;

@@ -35,21 +35,21 @@ void Sprite::SetVertexData() {
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
 	// 左下
-	vertexData_[0].position = { 0.0f, 360.0f, 0.0f, 1.0f };
-	vertexData_[0].texcoord = { 0.0f,1.0f };
-	vertexData_[0].normal = { 0.0f,0.0f,-1.0f };
+	vertexData_[LB].position = { 0.0f, 360.0f, 0.0f, 1.0f };
+	vertexData_[LB].texcoord = { 0.0f,1.0f };
+	vertexData_[LB].normal = { 0.0f,0.0f,-1.0f };
 	// 左上
-	vertexData_[1].position = { 0.0f, 0.0f, 0.0f, 1.0f };
-	vertexData_[1].texcoord = { 0.0f,0.0f };
-	vertexData_[1].normal = { 0.0f,0.0f,-1.0f };
+	vertexData_[LT].position = { 0.0f, 0.0f, 0.0f, 1.0f };
+	vertexData_[LT].texcoord = { 0.0f,0.0f };
+	vertexData_[LT].normal = { 0.0f,0.0f,-1.0f };
 	// 右下
-	vertexData_[2].position = { 640.0f, 360.0f, 0.0f, 1.0f };
-	vertexData_[2].texcoord = { 1.0f,1.0f };
-	vertexData_[2].normal = { 0.0f,0.0f,-1.0f };
+	vertexData_[RT].position = { 640.0f, 360.0f, 0.0f, 1.0f };
+	vertexData_[RT].texcoord = { 1.0f,1.0f };
+	vertexData_[RT].normal = { 0.0f,0.0f,-1.0f };
 	// 右上
-	vertexData_[3].position = { 640.0f, 0.0f, 0.0f, 1.0f };
-	vertexData_[3].texcoord = { 1.0f,0.0f };
-	vertexData_[3].normal = { 0.0f,0.0f,-1.0f };
+	vertexData_[RB].position = { 640.0f, 0.0f, 0.0f, 1.0f };
+	vertexData_[RB].texcoord = { 1.0f,0.0f };
+	vertexData_[RB].normal = { 0.0f,0.0f,-1.0f };
 }
 
 void Sprite::CreateTransformationMatrixResource() {
@@ -120,15 +120,27 @@ void Sprite::SetMaterialData() {
 	};
 }
 
-void Sprite::Update(Transform& transform, Vector4& color) {
-	transform_ = transform;
+void Sprite::Update() {
+	float left = (0.0f - anchorPoint_.x) * transform_.scale.x;
+	float right = (1.0f - anchorPoint_.x) * transform_.scale.x;
+	float top = (0.0f - anchorPoint_.y) * transform_.scale.y;
+	float bottom = (1.0f - anchorPoint_.y) * transform_.scale.y;
+
+	vertexData_[LB].position = { left, bottom, 0.0f, 1.0f };
+	vertexData_[LT].position = { left, top, 0.0f, 1.0f };
+	vertexData_[RT].position = { right, top, 0.0f, 1.0f };
+	vertexData_[RB].position = { right, bottom, 0.0f, 1.0f };
+
 	CalculateAndSetWVPMatrix();
 	//色の指定
-	materialData_->color = color;
+
 	ImGuiAdjustParameter();
 }
 
 void Sprite::Draw() {
+	if (isInvisible_) {
+		return;
+	}
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));

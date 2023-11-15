@@ -171,6 +171,9 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>ソース ファイル\TextureManager</Filter>
     </ClCompile>
+    <ClCompile Include="SpriteCommon.cpp">
+      <Filter>ソース ファイル\Sprite</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Object3d.VS.hlsl" />
@@ -260,6 +263,9 @@
     </ClInclude>
     <ClInclude Include="TextureManager.h">
       <Filter>ヘッダー ファイル\TextureManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteCommon.h">
+      <Filter>ヘッダー ファイル\Sprite</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

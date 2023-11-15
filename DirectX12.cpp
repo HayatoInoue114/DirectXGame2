@@ -284,6 +284,36 @@ void DirectX12::Signal() {
 	}
 }
 
+void DirectX12::InitializeFixFPS() {
+	//現在時間を記録する
+	reference_ = std::chrono::steady_clock::now();
+}
+
+void DirectX12::UpdateFixFPS() {
+	// 1/60秒ぴったりの時間
+	const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
+	// 1/60秒よりわずかに短い時間
+	const std::chrono::microseconds kminCheckTime(uint64_t(1000000 / 65.0f));
+
+	//現在時間を取得する
+	std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
+	//前回記録からの経過時間を取得する
+	std::chrono::microseconds elased =
+		std::chrono::duration_cast<std::chrono::microseconds>(now - reference_);
+
+	// 1/60秒(よりわずかに短い時間)経っていない場合
+	if (elased < kminCheckTime) {
+		// 1/60秒経過するまで微小なスリープを繰り返す
+		while (std::chrono::steady_clock::now() - reference_ < kMinTime) {
+			// 1マイクロ秒スリープ
+			std::this_thread::sleep_for(std::chrono::microseconds(1));
+		}
+	}
+
+	//現在の時間を記録する
+	reference_ = std::chrono::steady_clock::now();
+}
+
 
 
 void DirectX12::ResourceLeakCheck() {
@@ -302,6 +332,10 @@ void DirectX12::Release() {
 }
 
 void DirectX12::Init(WindowsAPI* windowsAPI) {
+	//システムタイマーの精度を上げる
+	timeBeginPeriod(1);
+
+	InitializeFixFPS();
 	windowsAPI_ = windowsAPI;
 	windowsAPI->Init();
 	DXGIFactory();
@@ -358,6 +392,7 @@ void DirectX12::PostDraw() {
 	ScreenDisplay();
 	CommandConfirm();
 	CommandKick();
+	UpdateFixFPS();
 	Signal();
 	NextFlameCommandList();
 }

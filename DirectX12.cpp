@@ -369,15 +369,6 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 	CreateSRV();*/
 }
 
-//void DirectX12::Update() {
-//	//ゲームの処理
-//	Signal();
-//	CommandKick();
-//
-//
-//	ResourceLeakCheck();
-//}
-
 void DirectX12::PreDraw() {
 	GetBackBuffer();
 	Barrier();

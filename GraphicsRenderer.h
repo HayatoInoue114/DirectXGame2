@@ -87,7 +87,9 @@ private:
 	//シザー矩形
 	D3D12_RECT scissorRect_{};
 
-	D3D12_DESCRIPTOR_RANGE descriptorRange_[1]{};
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForVertex_[1]{};
+
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForPixel_[1]{};
 
 	D3D12_STATIC_SAMPLER_DESC staticSamplers_[1]{};
 

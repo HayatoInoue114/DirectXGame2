@@ -2,7 +2,7 @@
 
 void GameManager::Initialize() 
 {
-	
+#pragma region 基盤システムの初期化
 	directX12_ = DirectX12::GetInstance();
 	directX12_->GetInstance()->Init(WindowsAPI::GetInstance());
 
@@ -14,6 +14,8 @@ void GameManager::Initialize()
 	
 	textureManager_ = TextureManager::GetInstance();
 	textureManager_->GetInstance()->Initialize();
+
+#pragma endregion 基盤システムの初期化
 
 	for (int i = 0; i < 3; i++) {
 		colorVolume_[i] = 1.0f;

@@ -8,12 +8,14 @@
 #include "ImGuiManager.h"
 #include "externals/DirectXTex/DirectXTex.h"
 #include <wrl.h>
+#include <chrono>
 
 #include "WindowsAPI.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
+#pragma comment(lib, "winmm.lib")
 
 class WindowsAPI;
 
@@ -36,6 +38,12 @@ public:
 	void SwapChain();
 
 	void DescriptorHeap();
+
+	//FPS固定化初期化
+	void InitializeFixFPS();
+
+	//FPS固定更新
+	void UpdateFixFPS();
 
 	/*void RTV();*/
 
@@ -202,5 +210,8 @@ private:
 	uint32_t descriptorSizeSRV_{};
 	uint32_t descriptorSizeRTV_{};
 	uint32_t descriptorSizeDSV_{};
+
+	//記録時間(FPS固定用)
+	std::chrono::steady_clock::time_point reference_;
 };
 

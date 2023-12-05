@@ -1,4 +1,4 @@
-#include "GameManager.h"
+#include "manager/GameManager/GameManager.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	CoInitializeEx(0, COINIT_MULTITHREADED);

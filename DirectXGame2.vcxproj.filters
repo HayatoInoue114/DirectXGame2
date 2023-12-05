@@ -108,25 +108,25 @@
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="DirectX12.cpp">
+    <ClCompile Include="base\DirectX12\DirectX12.cpp">
       <Filter>ソース ファイル\DirectX12</Filter>
     </ClCompile>
-    <ClCompile Include="WindowsAPI.cpp">
+    <ClCompile Include="base\WindowsAPI\WindowsAPI.cpp">
       <Filter>ソース ファイル\WindowsAPI</Filter>
     </ClCompile>
-    <ClCompile Include="GraphicsRenderer.cpp">
+    <ClCompile Include="base\GraphicsRenderer\GraphicsRenderer.cpp">
       <Filter>ソース ファイル\GraphicsRenderer</Filter>
     </ClCompile>
-    <ClCompile Include="FormatString.cpp">
+    <ClCompile Include="utility\FormatString\FormatString.cpp">
       <Filter>ソース ファイル\FormatString</Filter>
     </ClCompile>
-    <ClCompile Include="GameManager.cpp">
+    <ClCompile Include="manager\GameManager\GameManager.cpp">
       <Filter>ソース ファイル\GameManager</Filter>
     </ClCompile>
-    <ClCompile Include="Triangle.cpp">
+    <ClCompile Include="object\Traiangle\Triangle.cpp">
       <Filter>ソース ファイル\Triangle</Filter>
     </ClCompile>
-    <ClCompile Include="MT.cpp">
+    <ClCompile Include="math\MT\MT.cpp">
       <Filter>ソース ファイル\MT</Filter>
     </ClCompile>
     <ClCompile Include="externals\imgui\imgui.cpp">
@@ -150,55 +150,52 @@
     <ClCompile Include="externals\imgui\imgui_widgets.cpp">
       <Filter>ソース ファイル\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiManager.cpp">
-      <Filter>ソース ファイル\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="Sprite.cpp">
+    <ClCompile Include="object\Sprite\Sprite.cpp">
       <Filter>ソース ファイル\Sprite</Filter>
     </ClCompile>
-    <ClCompile Include="Sphere.cpp">
+    <ClCompile Include="object\Sphere\Sphere.cpp">
       <Filter>ソース ファイル\Sphere</Filter>
     </ClCompile>
-    <ClCompile Include="Light.cpp">
+    <ClCompile Include="components\Light\Light.cpp">
       <Filter>ソース ファイル\Light</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp">
+    <ClCompile Include="object\Model\Model.cpp">
       <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
-    <ClCompile Include="MaterialData.cpp">
+    <ClCompile Include="structure\MaterialData\MaterialData.cpp">
       <Filter>ソース ファイル\MaterialData</Filter>
     </ClCompile>
-    <ClCompile Include="TextureManager.cpp">
+    <ClCompile Include="manager\TextureManager\TextureManager.cpp">
       <Filter>ソース ファイル\TextureManager</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteCommon.cpp">
+    <ClCompile Include="object\Sprite\SpriteCommon\SpriteCommon.cpp">
       <Filter>ソース ファイル\Sprite</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Object3d.VS.hlsl" />
-    <FxCompile Include="Object3d.PS.hlsl" />
+    <FxCompile Include="ShaderFile\Object3d.VS.hlsl" />
+    <FxCompile Include="ShaderFile\Object3d.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectX12.h">
+    <ClInclude Include="base\DirectX12\DirectX12.h">
       <Filter>ヘッダー ファイル\DirectX12</Filter>
     </ClInclude>
-    <ClInclude Include="WindowsAPI.h">
+    <ClInclude Include="base\WindowsAPI\WindowsAPI.h">
       <Filter>ヘッダー ファイル\WindowsAPI</Filter>
     </ClInclude>
-    <ClInclude Include="GraphicsRenderer.h">
+    <ClInclude Include="base\GraphicsRenderer\GraphicsRenderer.h">
       <Filter>ヘッダー ファイル\GraphicsRenderer</Filter>
     </ClInclude>
-    <ClInclude Include="FormatString.h">
+    <ClInclude Include="utility\FormatString\FormatString.h">
       <Filter>ヘッダー ファイル\FormatString</Filter>
     </ClInclude>
-    <ClInclude Include="GameManager.h">
+    <ClInclude Include="manager\GameManager\GameManager.h">
       <Filter>ヘッダー ファイル\GameManager</Filter>
     </ClInclude>
-    <ClInclude Include="Triangle.h">
+    <ClInclude Include="object\Traiangle\Triangle.h">
       <Filter>ヘッダー ファイル\Triangle</Filter>
     </ClInclude>
-    <ClInclude Include="MT.h">
+    <ClInclude Include="math\MT\MT.h">
       <Filter>ヘッダー ファイル\MT</Filter>
     </ClInclude>
     <ClInclude Include="externals\imgui\imgui.h">
@@ -213,7 +210,7 @@
     <ClInclude Include="externals\imgui\imgui_internal.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuiManager.h">
+    <ClInclude Include="manager\ImGuiManager\ImGuiManager.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="externals\imgui\imstb_rectpack.h">
@@ -225,53 +222,56 @@
     <ClInclude Include="externals\imgui\imstb_truetype.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Vector4.h">
+    <ClInclude Include="math\Vector4.h">
       <Filter>ヘッダー ファイル\MT</Filter>
     </ClInclude>
     <ClInclude Include="externals\imgui\imconfig.h">
       <Filter>ヘッダー ファイル\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Sprite.h">
+    <ClInclude Include="object\Sprite\Sprite.h">
       <Filter>ヘッダー ファイル\Sprite</Filter>
     </ClInclude>
-    <ClInclude Include="Sphere.h">
+    <ClInclude Include="object\Sphere\Sphere.h">
       <Filter>ヘッダー ファイル\Sphere</Filter>
     </ClInclude>
-    <ClInclude Include="Material.h">
+    <ClInclude Include="structure\Material\Material.h">
       <Filter>ヘッダー ファイル\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="TransformationMatrix.h">
+    <ClInclude Include="math\TransformationMatrix.h">
       <Filter>ヘッダー ファイル\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="DirectionalLight.h">
+    <ClInclude Include="components\DirectionalLight\DirectionalLight.h">
       <Filter>ヘッダー ファイル\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="Light.h">
+    <ClInclude Include="components\Light\Light.h">
       <Filter>ヘッダー ファイル\Light</Filter>
     </ClInclude>
-    <ClInclude Include="ModelData.h">
+    <ClInclude Include="structure\ModelData\ModelData.h">
       <Filter>ヘッダー ファイル\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="Model.h">
+    <ClInclude Include="object\Model\Model.h">
       <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
-    <ClInclude Include="MaterialData.h">
+    <ClInclude Include="structure\MaterialData\MaterialData.h">
       <Filter>ヘッダー ファイル\MaterialData</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceObject.h">
+    <ClInclude Include="object\ResourceObject\ResourceObject.h">
       <Filter>ヘッダー ファイル\ResourceObject</Filter>
     </ClInclude>
-    <ClInclude Include="TextureManager.h">
+    <ClInclude Include="manager\TextureManager\TextureManager.h">
       <Filter>ヘッダー ファイル\TextureManager</Filter>
     </ClInclude>
-    <ClInclude Include="SpriteCommon.h">
+    <ClInclude Include="object\Sprite\SpriteCommon\SpriteCommon.h">
       <Filter>ヘッダー ファイル\Sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="structure\VertexData\VertexData.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Object3d.hlsli" />
+    <None Include="ShaderFile\Object3d.hlsli" />
   </ItemGroup>
 </Project>

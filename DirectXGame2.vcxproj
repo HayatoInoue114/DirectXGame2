@@ -87,7 +87,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DirectX12.cpp" />
+    <ClCompile Include="base\DirectX12\DirectX12.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="externals\imgui\imgui_draw.cpp" />
@@ -95,30 +95,29 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="FormatString.cpp" />
-    <ClCompile Include="GameManager.cpp" />
-    <ClCompile Include="GraphicsRenderer.cpp" />
-    <ClCompile Include="ImGuiManager.cpp" />
-    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="utility\FormatString\FormatString.cpp" />
+    <ClCompile Include="manager\GameManager\GameManager.cpp" />
+    <ClCompile Include="base\GraphicsRenderer\GraphicsRenderer.cpp" />
+    <ClCompile Include="components\Light\Light.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MaterialData.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="MT.cpp" />
-    <ClCompile Include="Sphere.cpp" />
-    <ClCompile Include="Sprite.cpp" />
-    <ClCompile Include="SpriteCommon.cpp" />
-    <ClCompile Include="TextureManager.cpp" />
-    <ClCompile Include="Triangle.cpp" />
-    <ClCompile Include="WindowsAPI.cpp" />
+    <ClCompile Include="structure\MaterialData\MaterialData.cpp" />
+    <ClCompile Include="object\Model\Model.cpp" />
+    <ClCompile Include="math\MT\MT.cpp" />
+    <ClCompile Include="object\Sphere\Sphere.cpp" />
+    <ClCompile Include="object\Sprite\Sprite.cpp" />
+    <ClCompile Include="object\Sprite\SpriteCommon\SpriteCommon.cpp" />
+    <ClCompile Include="manager\TextureManager\TextureManager.cpp" />
+    <ClCompile Include="object\Traiangle\Triangle.cpp" />
+    <ClCompile Include="base\WindowsAPI\WindowsAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Object3d.PS.hlsl">
+    <FxCompile Include="ShaderFile\Object3d.PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
-    <FxCompile Include="Object3d.VS.hlsl">
+    <FxCompile Include="ShaderFile\Object3d.VS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -126,8 +125,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectionalLight.h" />
-    <ClInclude Include="DirectX12.h" />
+    <ClInclude Include="components\DirectionalLight\DirectionalLight.h" />
+    <ClInclude Include="base\DirectX12\DirectX12.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
     <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
@@ -136,25 +135,26 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
-    <ClInclude Include="FormatString.h" />
-    <ClInclude Include="GameManager.h" />
-    <ClInclude Include="GraphicsRenderer.h" />
-    <ClInclude Include="ImGuiManager.h" />
-    <ClInclude Include="Light.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="MaterialData.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="ModelData.h" />
-    <ClInclude Include="MT.h" />
-    <ClInclude Include="ResourceObject.h" />
-    <ClInclude Include="Sphere.h" />
-    <ClInclude Include="Sprite.h" />
-    <ClInclude Include="SpriteCommon.h" />
-    <ClInclude Include="TextureManager.h" />
-    <ClInclude Include="TransformationMatrix.h" />
-    <ClInclude Include="Triangle.h" />
-    <ClInclude Include="Vector4.h" />
-    <ClInclude Include="WindowsAPI.h" />
+    <ClInclude Include="structure\VertexData\VertexData.h" />
+    <ClInclude Include="utility\FormatString\FormatString.h" />
+    <ClInclude Include="manager\GameManager\GameManager.h" />
+    <ClInclude Include="base\GraphicsRenderer\GraphicsRenderer.h" />
+    <ClInclude Include="manager\ImGuiManager\ImGuiManager.h" />
+    <ClInclude Include="components\Light\Light.h" />
+    <ClInclude Include="structure\Material\Material.h" />
+    <ClInclude Include="structure\MaterialData\MaterialData.h" />
+    <ClInclude Include="object\Model\Model.h" />
+    <ClInclude Include="structure\ModelData\ModelData.h" />
+    <ClInclude Include="math\MT\MT.h" />
+    <ClInclude Include="object\ResourceObject\ResourceObject.h" />
+    <ClInclude Include="object\Sphere\Sphere.h" />
+    <ClInclude Include="object\Sprite\Sprite.h" />
+    <ClInclude Include="object\Sprite\SpriteCommon\SpriteCommon.h" />
+    <ClInclude Include="manager\TextureManager\TextureManager.h" />
+    <ClInclude Include="math\TransformationMatrix.h" />
+    <ClInclude Include="object\Traiangle\Triangle.h" />
+    <ClInclude Include="math\Vector4.h" />
+    <ClInclude Include="base\WindowsAPI\WindowsAPI.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
@@ -165,7 +165,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Object3d.hlsli" />
+    <None Include="ShaderFile\Object3d.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

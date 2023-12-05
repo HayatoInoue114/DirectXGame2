@@ -92,5 +92,7 @@ private:
 	D3D12_STATIC_SAMPLER_DESC staticSamplers_[1]{};
 
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc_{};
+
+	descriptorRangeForInstancing_
 };
 

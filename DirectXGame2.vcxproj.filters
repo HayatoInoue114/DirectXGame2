@@ -175,8 +175,8 @@
   <ItemGroup>
     <FxCompile Include="ShaderFile\Object3d.VS.hlsl" />
     <FxCompile Include="ShaderFile\Object3d.PS.hlsl" />
-    <FxCompile Include="ShaderFile\VertexShader.hlsl" />
-    <FxCompile Include="ShaderFile\PixelShader.hlsl" />
+    <FxCompile Include="ShaderFile\Particle.VS.hlsl" />
+    <FxCompile Include="ShaderFile\Particle.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\DirectX12\DirectX12.h">

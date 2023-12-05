@@ -47,6 +47,7 @@ public:
 
 	void DepthStencilState();
 private:
+	DirectX12* directX12_;
 	IDxcUtils* dxcUtils_{};
 	IDxcCompiler3* dxcCompiler_{};
 	IDxcIncludeHandler* includeHandler_{};

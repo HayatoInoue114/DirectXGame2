@@ -40,6 +40,8 @@ public:
 
 	void CreateModel();
 
+	void CreateInstance();
+
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
 private:
 	//モデル読み込み

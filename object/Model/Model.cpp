@@ -159,6 +159,25 @@ void Model::SetMaterialData() {
 	};
 }
 
+void Model::CreateInstance() {
+	instancingResource_ = CreateBufferResource(DirectX12::GetInstance()->GetDevice(), sizeof(TransformationMatrix) * MAXINSTANCE);
+
+	//書き込むためのアドレスを取得
+	instancingData_ = nullptr;
+	instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&instancingData_));
+	//単位行列を書き込んでおく
+	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+		instancingData_[index].WVP = MakeIdentity4x4();
+		instancingData_[index].World = MakeIdentity4x4();
+	}
+
+	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+		transforms_[index] = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, {index * 0.1f,index * 0.1f,index * 0.1f} };
+	}
+
+
+}
+
 void Model::CreateModel() {
 	//モデル読み込み
 	modelData_ = LoadObjFile("resources", "axis");

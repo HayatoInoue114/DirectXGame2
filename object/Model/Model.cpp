@@ -11,7 +11,7 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 	std::ifstream file(directoryPath + "/" + filename + ".obj"); // ファイルを開く
 	assert(file.is_open()); // とりあえず聞けなかったら止める
 
-	while (std::getline(file,line))
+	while (std::getline(file, line))
 	{
 		std::string identifier;
 		std::istringstream s(line);
@@ -19,33 +19,33 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 
 		//identifierに応じた報酬
 		if (identifier == "v") {
-			Vector4 position;
+			Vector4 position{};
 			s >> position.x >> position.y >> position.z;
-			position.x *= -1.0f;
+			position.z *= -1.0f;
 			position.w = 1.0f;
 			positions.push_back(position);
 		}
 		else if (identifier == "vt") {
-			Vector2 texcoord;
+			Vector2 texcoord{};
 			s >> texcoord.x >> texcoord.y;
 			texcoord.y = 1.0f - texcoord.y;
 			texcoords.push_back(texcoord);
 		}
 		else if (identifier == "vn") {
-			Vector3 normal;
+			Vector3 normal{};
 			s >> normal.x >> normal.y >> normal.z;
 			normal.x *= -1.0f;
 			normals.push_back(normal);
 		}
 		else if (identifier == "f") {
-			VertexData triangle[3];
+			VertexData triangle[3]{};
 			//面は三角形限定。その他は未対応
 			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
 				std::string vertexDefinition;
 				s >> vertexDefinition;
 				//頂点の要素へのIndexは「位置/UV/法線」で格納されているので、分解してIndexを取得する
 				std::istringstream v(vertexDefinition);
-				uint32_t elementIndices[3];
+				uint32_t elementIndices[3]{};
 				for (int32_t element = 0; element < 3; ++element) {
 					std::string index;
 					std::getline(v, index, '/');// /区切りでインデックスを読んでいく
@@ -74,9 +74,34 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 	return modelData;
 }
 
-void Model::Initialize(DirectX12* directX12, Light* light) {
-	directX12_ = directX12;
-	light_ = light;
+Microsoft::WRL::ComPtr<ID3D12Resource> Model::CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes) {
+	HRESULT hr;
+	// 頂点リソース用のヒープの設定
+	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
+	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD; // UploadHeapを使う
+	// 頂点リソースの設定
+	D3D12_RESOURCE_DESC vertexResourceDesc{};
+	// バッファソース。テクスチャの場合はまた別の設定をする
+	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+	vertexResourceDesc.Width = sizeInBytes; // リソースのサイズ。今回はVector4を3頂点分
+	// バッファの場合はこれからは1にする決まり
+	vertexResourceDesc.Height = 1;
+	vertexResourceDesc.DepthOrArraySize = 1;
+	vertexResourceDesc.MipLevels = 1;
+	vertexResourceDesc.SampleDesc.Count = 1;
+	// バッファの場合はこれにする決まり
+	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
+	// 実際に頂点リソースを作る
+	hr = device.Get()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
+		&vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
+	assert(SUCCEEDED(hr));
+
+	return vertexResource;
+}
+
+void Model::Initialize() {
 
 	//Transform変数を作る
 	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
@@ -85,11 +110,12 @@ void Model::Initialize(DirectX12* directX12, Light* light) {
 	CreateModel();
 	CreateMaterialResource();
 	CreateVertexBufferView();
-	CreateTransformationMatrixResource();
-	
+	//CreateTransformationMatrixResource();
+	CreateInstance();
+
 	WriteDataToResource();
 
-	
+
 	SetMaterialData();
 }
 
@@ -108,14 +134,14 @@ void Model::CreateVertexBufferView() {
 }
 
 void Model::CreateMaterialResource() {
-	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(Material));
+	materialResource_ = CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(Material));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }
 
 void Model::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(TransformationMatrix));
+	wvpResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(TransformationMatrix));
 	//データを書き込む
 	wvpData_ = nullptr;
 	//書き込むためのアドレスを取得
@@ -133,15 +159,25 @@ void Model::WriteDataToResource() {
 }
 
 void Model::CreateWVPMatrix() {
+	//カメラ
 	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
-
-	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+
+
+	//
+	/*worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	viewMatrix_ = Inverse(cameramatrix_);
 	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
 	wvpData_->WVP = worldViewProjectionMatrix_;
-	wvpData_->World = worldMatrix_;
+	wvpData_->World = worldMatrix_;*/
+
+	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+		Matrix4x4 worldMatrix = MakeAffineMatrix(transforms_[index].scale, transforms_[index].rotate, transforms_[index].translate);
+		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
+		instancingData_[index].WVP = worldViewProjectionMatrix;
+		instancingData_[index].World = worldMatrix;
+	}
 }
 
 void Model::SetMaterialData() {
@@ -157,6 +193,13 @@ void Model::SetMaterialData() {
 		{0.0f,0.0f,0.0f},
 		{0.0f,0.0f,0.0f}
 	};
+}
+
+void Model::CreateModel() {
+	//モデル読み込み
+	modelData_ = LoadObjFile("resources", "Plane");
+	//頂点リソースを作る
+	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
 }
 
 void Model::CreateInstance() {
@@ -178,13 +221,6 @@ void Model::CreateInstance() {
 
 }
 
-void Model::CreateModel() {
-	//モデル読み込み
-	modelData_ = LoadObjFile("resources", "axis");
-	//頂点リソースを作る
-	vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
-}
-
 void Model::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();
@@ -200,18 +236,18 @@ void Model::Draw(uint32_t textureNum) {
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
 
-	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
+	DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
-	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, instancingResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
-	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum]);
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, light_->GetDirectionalLightResource()->GetGPUVirtualAddress());
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum]);
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
-	directX12_->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), MAXINSTANCE, 0, 0);
 }
 
 void Model::ImGuiAdjustParameter() {

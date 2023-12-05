@@ -47,8 +47,6 @@ public:
 
 	void DepthStencilState();
 private:
-	DirectX12* directX12_{};
-
 	IDxcUtils* dxcUtils_{};
 	IDxcCompiler3* dxcCompiler_{};
 	IDxcIncludeHandler* includeHandler_{};
@@ -75,6 +73,9 @@ private:
 	IDxcBlob* vertexShaderBlob_{};
 	IDxcBlob* pixelShaderBlob_{};
 
+	IDxcBlob* particleVertexShaderBlob_{};
+	IDxcBlob* particlePixelShaderBlob_{};
+
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc_{};
 
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[3]{};
@@ -88,11 +89,10 @@ private:
 	D3D12_RECT scissorRect_{};
 
 	D3D12_DESCRIPTOR_RANGE descriptorRange_[1]{};
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing_[1]{};
 
 	D3D12_STATIC_SAMPLER_DESC staticSamplers_[1]{};
 
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc_{};
-
-	descriptorRangeForInstancing_
 };
 

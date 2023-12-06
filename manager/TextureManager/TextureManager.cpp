@@ -1,4 +1,5 @@
 #include "TextureManager.h"
+#include "../../object/Model/Model.h"
 
 TextureManager* TextureManager::GetInstance() {
 	static TextureManager instance;
@@ -100,6 +101,13 @@ void TextureManager::LoadAndTransferTexture() {
 	}
 
 }
+
+void TextureManager::CreateResouce() {
+
+}
+
+
+
 
 //Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes) {
 //	HRESULT hr;

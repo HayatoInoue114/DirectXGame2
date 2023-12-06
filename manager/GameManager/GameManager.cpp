@@ -43,7 +43,7 @@ void GameManager::Initialize()
 
 	sprite_->Initialize(directX12_);
 
-	model_->Initialize(directX12_, light_);
+	model_->Initialize();
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();

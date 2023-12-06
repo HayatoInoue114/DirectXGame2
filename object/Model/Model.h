@@ -13,10 +13,12 @@
 #include "../../manager/TextureManager/TextureManager.h"
 #include "../../structure/ModelData/ModelData.h"
 
+#define MAXINSTANCE 10 // インスタンス数
+
 class Model
 {
 public:
-	void Initialize(DirectX12* directX12, Light* light);
+	void Initialize();
 
 	void Update(Transform& transform, Vector4& color);
 
@@ -42,25 +44,27 @@ public:
 
 	void CreateInstance();
 
+	void CreateSRV();
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
+
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 private:
 	//モデル読み込み
 	ModelData modelData_{};
 
 	Material* materialData_{};
 
-	Light* light_{};
-
-	DirectX12* directX12_{};
-
 	//頂点リソース用のヒープの設定
-	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
+	D3D12_HEAP_PROPERTIES uploadHeapProperties_{};
 	//頂点リソースの設定
-	D3D12_RESOURCE_DESC vertexResource_Desc{};
+	D3D12_RESOURCE_DESC vertexResourceDesc_{};
 	//実際に頂点リソースを作る
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource_{};
 	//頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView_{};
 
 	//頂点リソースにデータを書き込む
 	VertexData* vertexData_{};
@@ -88,5 +92,17 @@ private:
 	Transform uvTransform_{};
 
 	Matrix4x4 uvTransformMatrix_{};
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
+
+	TransformationMatrix* instancingData_{};
+
+	Transform transforms_[MAXINSTANCE]{};
+
+	uint32_t descriptorSizeSRV_{};
+
+	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_{};
+
+	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_{};
 };
 

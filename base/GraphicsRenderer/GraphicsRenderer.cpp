@@ -196,10 +196,10 @@ void GraphicsRenderer::ResterizerState() {
 
 void GraphicsRenderer::BuildShader() {
 	//Shaderをコンパイルする
-	vertexShaderBlob_ = CompileShader(L"Object3d.VS.hlsl", L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+	vertexShaderBlob_ = CompileShader(L"./ShaderFile/Object3d.VS.hlsl", L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(vertexShaderBlob_ != nullptr);
 
-	pixelShaderBlob_ = CompileShader(L"Object3d.PS.hlsl", L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+	pixelShaderBlob_ = CompileShader(L"./ShaderFile/Object3d.PS.hlsl", L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
 	assert(pixelShaderBlob_ != nullptr);
 }
 

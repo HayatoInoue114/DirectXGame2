@@ -87,6 +87,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="components\Audio\3DAudio\Audio3D.cpp" />
     <ClCompile Include="base\DirectX12\DirectX12.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
@@ -137,6 +138,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="components\Audio\3DAudio\Audio3D.h" />
     <ClInclude Include="components\DirectionalLight\DirectionalLight.h" />
     <ClInclude Include="base\DirectX12\DirectX12.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
@@ -148,6 +150,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="structure\VertexData\VertexData.h" />
+    <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h" />
     <ClInclude Include="utility\FormatString\FormatString.h" />
     <ClInclude Include="manager\GameManager\GameManager.h" />
     <ClInclude Include="base\GraphicsRenderer\GraphicsRenderer.h" />

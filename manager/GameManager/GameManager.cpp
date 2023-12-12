@@ -84,7 +84,7 @@ void GameManager::Update() {
 
 	//sphere_->Update(transform_,color_);
 
-	//sprite_->Update(transform_,color_);
+	//sprite_->Update();
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Update(transform_);
 	}*/

@@ -171,6 +171,9 @@
     <ClCompile Include="object\Sprite\SpriteCommon\SpriteCommon.cpp">
       <Filter>ソース ファイル\Sprite</Filter>
     </ClCompile>
+    <ClCompile Include="components\Audio\3DAudio\Audio3D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShaderFile\Object3d.VS.hlsl" />
@@ -267,6 +270,12 @@
       <Filter>ヘッダー ファイル\Sprite</Filter>
     </ClInclude>
     <ClInclude Include="structure\VertexData\VertexData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="components\Audio\3DAudio\Audio3D.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

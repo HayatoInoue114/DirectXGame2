@@ -174,9 +174,12 @@ void Model::CreateWVPMatrix() {
 	wvpData_->WVP = worldViewProjectionMatrix_;
 	wvpData_->World = worldMatrix_;*/
 
+	viewMatrix_ = Inverse(cameramatrix_);
+	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
+
 	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
 		Matrix4x4 worldMatrix = MakeAffineMatrix(transforms_[index].scale, transforms_[index].rotate, transforms_[index].translate);
-		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
+		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix_, projectionMatix_));
 		instancingData_[index].WVP = worldViewProjectionMatrix;
 		instancingData_[index].World = worldMatrix;
 	}
@@ -249,7 +252,10 @@ void Model::Update(Transform& transform, Vector4& color) {
 }
 
 void Model::Draw(uint32_t textureNum) {
-	//パラメータからUVTransform用の行列を生成する
+	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+		
+	}
+
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
@@ -268,6 +274,8 @@ void Model::Draw(uint32_t textureNum) {
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), MAXINSTANCE, 0, 0);
+	//パラメータからUVTransform用の行列を生成する
+	
 
 	//DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
 

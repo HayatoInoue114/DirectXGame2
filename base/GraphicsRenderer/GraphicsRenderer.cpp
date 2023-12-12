@@ -138,7 +138,6 @@ void GraphicsRenderer::CreateRootSignature() {
 
 		rootParameters_[1][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 		rootParameters_[1][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		rootParameters_[1][1].Descriptor.ShaderRegister = 0;
 		rootParameters_[1][1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
 		rootParameters_[1][1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 	

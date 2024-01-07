@@ -24,25 +24,25 @@ void GameManager::Initialize()
 		translate_[i] = 0.0f;
 	}
 
-	for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i] = new Triangle;
-		triangle_[i]->Initialize(directX12_, triangleData[i]);
-	}
+	//for (int i = 0; i < MAXTRIANGLE; i++) {
+	//	triangle_[i] = new Triangle;
+	//	triangle_[i]->Initialize(directX12_, triangleData[i]);
+	//}
 
 	/*for (int i = 0; i < MAXSPHERE; i++) {
 		sphere_[i] = new Sphere;
 		sphere_[i]->Initialize(directX12_);
 	}*/
 
-	sphere_->Initialize(directX12_,light_);
+	//sphere_->Initialize(directX12_,light_);
 
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i] = new Sprite;
 		sprite_[i]->Initialize(directX12_);
 	}*/
 
-	sprite_->Initialize(directX12_);
-
+	//sprite_->Initialize(directX12_);
+	model_ = std::make_unique<Model>();
 	model_->Initialize();
 
 	graphicsRenderer_->Viewport();

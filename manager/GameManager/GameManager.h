@@ -9,6 +9,7 @@
 #include "../../components/Light/Light.h"
 #include "../../object/Model/Model.h"
 #include "../../manager/TextureManager/TextureManager.h"
+#include "../../object/Particle/Particle.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
 #define MAXSPRITE 1 //スプライトの最大数
@@ -37,17 +38,19 @@ public:
 private:
 	TriangleData triangleData[MAXTRIANGLE] = {};
 
-	Model* model_ = new Model;
+	std::unique_ptr<Model> model_;
+
+	std::unique_ptr<Particle> particle_;
 
 	TextureManager* textureManager_{};
 
 	DirectX12* directX12_{};
 	GraphicsRenderer* graphicsRenderer_{};
-	Triangle** triangle_ = new Triangle* [MAXTRIANGLE];
+	//Triangle** triangle_ = new Triangle* [MAXTRIANGLE];
 	//Sprite** sprite_ = new Sprite * [MAXSPRITE];
-	Sprite* sprite_ = new Sprite;
+	//Sprite* sprite_ = new Sprite;
 	//Sphere** sphere_ = new Sphere* [MAXSPHERE];
-	Sphere* sphere_ = new Sphere;
+	//Sphere* sphere_ = new Sphere;
 
 	float colorVolume_[3] = {};
 	Vector4 color_ = {1.0f,0.0f,0.0f,1.0f};

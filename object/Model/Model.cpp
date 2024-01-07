@@ -202,7 +202,7 @@ void Model::SetMaterialData() {
 
 void Model::CreateModel() {
 	//モデル読み込み
-	modelData_ = LoadObjFile("resources", "Plane");
+	modelData_ = LoadObjFile("resources", "plane");
 	//頂点リソースを作る
 	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
 }

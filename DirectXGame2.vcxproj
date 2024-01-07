@@ -96,6 +96,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="object\Particle\Particle.cpp" />
     <ClCompile Include="utility\FormatString\FormatString.cpp" />
     <ClCompile Include="manager\GameManager\GameManager.cpp" />
     <ClCompile Include="base\GraphicsRenderer\GraphicsRenderer.cpp" />
@@ -149,6 +150,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="object\Particle\particle.h" />
     <ClInclude Include="structure\VertexData\VertexData.h" />
     <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h" />
     <ClInclude Include="utility\FormatString\FormatString.h" />

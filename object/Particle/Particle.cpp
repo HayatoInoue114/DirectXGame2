@@ -1,7 +1,7 @@
-#include "Model.h"
+#include "Particle.h"
 #include <assert.h>
 
-ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
+ModelData Particle::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
 	ModelData modelData; // 構築するModelData
 	std::vector<Vector4> positions; // 位置
 	std::vector<Vector3> normals; // 法線
@@ -74,7 +74,7 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 	return modelData;
 }
 
-Microsoft::WRL::ComPtr<ID3D12Resource> Model::CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes) {
+Microsoft::WRL::ComPtr<ID3D12Resource> Particle::CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes) {
 	HRESULT hr;
 	// 頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
@@ -101,7 +101,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> Model::CreateBufferResource(const Microso
 	return vertexResource;
 }
 
-void Model::Initialize() {
+void Particle::Initialize() {
 
 	//Transform変数を作る
 	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
@@ -121,11 +121,11 @@ void Model::Initialize() {
 	SetMaterialData();
 }
 
-void Model::CreatevertexResource() {
+void Particle::CreatevertexResource() {
 	//vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * vertexIndex_);
 }
 
-void Model::CreateVertexBufferView() {
+void Particle::CreateVertexBufferView() {
 	vertexBufferView_ = {};
 	//リソースの先頭のアドレスから使う
 	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
@@ -135,13 +135,13 @@ void Model::CreateVertexBufferView() {
 	vertexBufferView_.StrideInBytes = sizeof(VertexData);
 }
 
-void Model::CreateMaterialResource() {
+void Particle::CreateMaterialResource() {
 	materialResource_ = CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(Material));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }
 
-void Model::CreateTransformationMatrixResource() {
+void Particle::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
 	wvpResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(TransformationMatrix));
 	//データを書き込む
@@ -153,14 +153,14 @@ void Model::CreateTransformationMatrixResource() {
 	wvpData_->World = MakeIdentity4x4();
 }
 
-void Model::WriteDataToResource() {
+void Particle::WriteDataToResource() {
 	//書き込むためのアドレスを取得
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 	//頂点データをリソースにコピー
 	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
 }
 
-void Model::CreateWVPMatrix() {
+void Particle::CreateWVPMatrix() {
 	//カメラ
 	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
 	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
@@ -185,7 +185,7 @@ void Model::CreateWVPMatrix() {
 	}
 }
 
-void Model::SetMaterialData() {
+void Particle::SetMaterialData() {
 	// 色の設定
 	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 	// Lightingを有効にする
@@ -200,14 +200,14 @@ void Model::SetMaterialData() {
 	};
 }
 
-void Model::CreateModel() {
+void Particle::CreateModel() {
 	//モデル読み込み
 	modelData_ = LoadObjFile("resources", "plane");
 	//頂点リソースを作る
 	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
 }
 
-void Model::CreateInstance() {
+void Particle::CreateInstance() {
 	instancingResource_ = CreateBufferResource(DirectX12::GetInstance()->GetDevice(), sizeof(TransformationMatrix) * MAXINSTANCE);
 
 	//書き込むためのアドレスを取得
@@ -226,7 +226,7 @@ void Model::CreateInstance() {
 
 }
 
-void Model::CreateSRV() {
+void Particle::CreateSRV() {
 	descriptorSizeSRV_ = DirectX12::GetInstance()->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
@@ -243,7 +243,7 @@ void Model::CreateSRV() {
 }
 
 
-void Model::Update(Transform& transform, Vector4& color) {
+void Particle::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();
 	//色の指定
@@ -251,8 +251,10 @@ void Model::Update(Transform& transform, Vector4& color) {
 	ImGuiAdjustParameter();
 }
 
-void Model::Draw(uint32_t textureNum) {
-
+void Particle::Draw(uint32_t textureNum) {
+	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+		
+	}
 
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
@@ -289,7 +291,7 @@ void Model::Draw(uint32_t textureNum) {
 	//DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 }
 
-void Model::ImGuiAdjustParameter() {
+void Particle::ImGuiAdjustParameter() {
 	ImGui::Text("Sphere");
 	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
 	ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);

@@ -51,7 +51,6 @@ public:
 	void DepthStencilState();
 private:
 	DirectX12* directX12;
-	Triangle* triangle;
 
 	IDxcUtils* dxcUtils;
 	IDxcCompiler3* dxcCompiler;

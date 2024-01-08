@@ -114,7 +114,7 @@ void GraphicsRenderer::CreateRootSignature() {
 		rootParameters_[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters_[i][0].Descriptor.ShaderRegister = 0;
 
-		if (i != 1) {
+		if (i == 0) {
 			// worldTransform
 			rootParameters_[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters_[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;

@@ -186,7 +186,7 @@ void Model::Draw(uint32_t textureNum) {
 	//wvp用のCBufferの場所を設定
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, DirectX12::GetInstance()->GetTextureSrvHandleGPU());
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum]);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。

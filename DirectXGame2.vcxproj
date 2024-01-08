@@ -89,6 +89,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="components\Audio\3DAudio\Audio3D.cpp" />
     <ClCompile Include="base\DirectX12\DirectX12.cpp" />
+    <ClCompile Include="math\WorldTransform\WorldTransform.cpp" />
+    <ClCompile Include="Project\Bullet\PlayerBullet\PlayerBullet.cpp" />
+    <ClCompile Include="Project\Bullet\EnemyBullet\EnemyBullet.cpp" />
+    <ClCompile Include="Project\Enemy\Enemy.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
     <ClCompile Include="externals\imgui\imgui_demo.cpp" />
     <ClCompile Include="externals\imgui\imgui_draw.cpp" />
@@ -96,6 +100,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Input\Input.cpp" />
+    <ClCompile Include="Project\Player\Player.cpp" />
+    <ClCompile Include="scene\GameScene\GameScene.cpp" />
     <ClCompile Include="object\Particle\Particle.cpp" />
     <ClCompile Include="utility\FormatString\FormatString.cpp" />
     <ClCompile Include="manager\GameManager\GameManager.cpp" />
@@ -111,6 +118,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="manager\TextureManager\TextureManager.cpp" />
     <ClCompile Include="object\Traiangle\Triangle.cpp" />
     <ClCompile Include="base\WindowsAPI\WindowsAPI.cpp" />
+    <ClCompile Include="ViewProjection\ViewProjection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShaderFile\Particle.PS.hlsl">
@@ -142,6 +150,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="components\Audio\3DAudio\Audio3D.h" />
     <ClInclude Include="components\DirectionalLight\DirectionalLight.h" />
     <ClInclude Include="base\DirectX12\DirectX12.h" />
+    <ClInclude Include="Project\Bullet\PlayerBullet\PlayerBullet.h" />
+    <ClInclude Include="Project\Bullet\EnemyBullet\EnemyBullet.h" />
+    <ClInclude Include="math\WorldTransform\WorldTransform.h" />
+    <ClInclude Include="Project\Enemy\Enemy.h" />
     <ClInclude Include="externals\imgui\imconfig.h" />
     <ClInclude Include="externals\imgui\imgui.h" />
     <ClInclude Include="externals\imgui\imgui_impl_dx12.h" />
@@ -150,6 +162,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="Input\Input.h" />
+    <ClInclude Include="Project\Player\Player.h" />
+    <ClInclude Include="scene\GameScene\GameScene.h" />
     <ClInclude Include="object\Particle\particle.h" />
     <ClInclude Include="structure\VertexData\VertexData.h" />
     <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h" />
@@ -168,10 +183,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="object\Sprite\Sprite.h" />
     <ClInclude Include="object\Sprite\SpriteCommon\SpriteCommon.h" />
     <ClInclude Include="manager\TextureManager\TextureManager.h" />
-    <ClInclude Include="math\TransformationMatrix.h" />
     <ClInclude Include="object\Traiangle\Triangle.h" />
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="base\WindowsAPI\WindowsAPI.h" />
+    <ClInclude Include="ViewProjection\ViewProjection.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

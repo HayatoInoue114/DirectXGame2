@@ -48,6 +48,19 @@ struct Transform
 };
 
 /// <summary>
+/// オブジェクトの位置・姿勢情報
+/// </summary>
+/// <param name="Scale">スケール</param>
+/// <param name="rotate">回転</param>
+/// <param name="translate">座標</param>
+struct WorldTransform
+{
+	Vector3 scale;
+	Vector3 rotate;
+	Vector3 translate;
+};
+
+/// <summary>
 /// 単位行列の作成
 /// </summary>
 Matrix4x4 MakeIdentity4x4();
@@ -70,6 +83,8 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 float InverseNum(const Matrix4x4& m, int a, int b, int c, int d, int e, int f, int g, int h);
 float InverseNum2(const Matrix4x4& m, int a, int b, int c, int d, int e, int f);
 
+// 転置行列
+Matrix4x4 Transpose(const Matrix4x4& m);
 //逆行列
 Matrix4x4 Inverse(const Matrix4x4& m);
 

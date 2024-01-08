@@ -10,6 +10,7 @@
 #include "../../object/Model/Model.h"
 #include "../../manager/TextureManager/TextureManager.h"
 #include "../../object/Particle/Particle.h"
+#include "../../Input/Input.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
 #define MAXSPRITE 1 //スプライトの最大数

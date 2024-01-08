@@ -26,6 +26,8 @@ public:
 
 	HWND GetHwnd() const { return hwnd; }
 
+	WNDCLASS GetWc() const { return wc; }
+
 private:
 	//ウインドウクラスの設定
 	WNDCLASS wc{};

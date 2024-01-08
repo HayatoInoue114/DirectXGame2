@@ -15,6 +15,8 @@ void GameManager::Initialize()
 	textureManager_ = TextureManager::GetInstance();
 	textureManager_->GetInstance()->Initialize();
 
+	Input::Initialize();
+
 #pragma endregion 基盤システムの初期化
 
 	for (int i = 0; i < 3; i++) {
@@ -23,23 +25,6 @@ void GameManager::Initialize()
 		rotate_[i] = 0.0f;
 		translate_[i] = 0.0f;
 	}
-
-	//for (int i = 0; i < MAXTRIANGLE; i++) {
-	//	triangle_[i] = new Triangle;
-	//	triangle_[i]->Initialize(directX12_, triangleData[i]);
-	//}
-
-	/*for (int i = 0; i < MAXSPHERE; i++) {
-		sphere_[i] = new Sphere;
-		sphere_[i]->Initialize(directX12_);
-	}*/
-
-	//sphere_->Initialize(directX12_,light_);
-
-	/*for (int i = 0; i < MAXSPRITE; i++) {
-		sprite_[i] = new Sprite;
-		sprite_[i]->Initialize(directX12_);
-	}*/
 
 	//sprite_->Initialize(directX12_);
 	model_ = std::make_unique<Model>();
@@ -74,20 +59,9 @@ void GameManager::Update() {
 #pragma endregion ImGui
 
 #pragma region Update
-	/*for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Update(transform_,color_);
-	}*/
 
-	/*for (int i = 0; i < MAXSPHERE; i++) {
-		sphere_[i]->Update(transform_, color_);
-	}*/
-
-	//sphere_->Update(transform_,color_);
-
-	//sprite_->Update();
-	/*for (int i = 0; i < MAXSPRITE; i++) {
-		sprite_[i]->Update(transform_);
-	}*/
+	Input::Update();
+	
 	model_->Update(transform_, color_);
 
 #pragma endregion Update
@@ -98,12 +72,7 @@ void GameManager::Update() {
 void GameManager::Release() {
 	directX12_->Release();
 	graphicsRenderer_->Release();
-	/*for (int i = 0; i < MAXSPHERE; i++) {
-		sphere_[i]->Release();
-	}*/
-	//for (int i = 0; i < MAXSPRITE; i++) {
-	//	sprite_[i]->Release();
-	//}
+
 }
 
 
@@ -126,17 +95,6 @@ void GameManager::Finalize() {
 
 ///////////////////////////////////////////////////////////////Draw//////////////////////////////////
 void GameManager::Draw() {
-	/*for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Draw();
-	}*/
-	/*for (int i = 0; i < MAXSPHERE; i++) {
-		sphere_[i]->Draw();
-	}*/
-	//sphere_->Draw();
-	/*for (int i = 0; i < MAXSPRITE; i++) {
-		sprite_[i]->Draw();
-	}*/
-	//sprite_->Draw();
 
 	model_->Draw(UVCHECKER);
 }

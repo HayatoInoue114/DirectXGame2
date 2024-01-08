@@ -43,11 +43,11 @@ public:
 
 	void CreateModel();
 
-	void CreateInstance();
+	/*void CreateInstance();
 
 	void CreateSRV();
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
+	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);*/
 
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
 
@@ -107,5 +107,7 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_{};
 
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_{};
+
+	uint32_t modelName_;
 };
 

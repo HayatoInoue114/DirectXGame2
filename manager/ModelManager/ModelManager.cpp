@@ -7,34 +7,37 @@ ModelManager* ModelManager::GetInstance() {
 }
 
 void ModelManager::Initialize() {
-	modelData_[CUBE] = LoadObjFile("engine/resources", "block.obj");
-	modelData_[SPHERE] = LoadObjFile("engine/resources/Skydome", "skydome.obj");
+	modelData_[CUBE] = LoadObjFile("../resources", "block");
+	modelData_[SPHERE] = LoadObjFile("resources", "skydome");
+	modelData_[SKYDOME] = LoadObjFile("resources", "skydome");
 }
 
 ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
-	ModelData modelData;
-	std::vector<Vector4> positions;
-	std::vector<Vector3> normals;
-	std::vector<Vector2> texcoords;
-	std::string line;
-	// ファイルを開く
-	std::ifstream file(directoryPath + "/" + filename);
-	assert(file.is_open());
+	ModelData modelData; // 構築するModelData
+	std::vector<Vector4> positions; // 位置
+	std::vector<Vector3> normals; // 法線
+	std::vector<Vector2> texcoords; // テクスチャ座標
+	std::string line; // ファイルから呼んだ1行を格納するもの
 
-	while (std::getline(file, line)) {
+	std::ifstream file(directoryPath + "/" + filename + ".obj"); // ファイルを開く
+	assert(file.is_open()); // とりあえず聞けなかったら止める
+
+	while (std::getline(file, line))
+	{
 		std::string identifier;
 		std::istringstream s(line);
-		s >> identifier;
-		// 頂点情報を読む
+		s >> identifier; // 先頭の識別子を読む
+
+		//identifierに応じた報酬
 		if (identifier == "v") {
 			Vector4 position;
 			s >> position.x >> position.y >> position.z;
-			position.z *= -1.0f;
+			position.x *= -1.0f;
 			position.w = 1.0f;
 			positions.push_back(position);
 		}
 		else if (identifier == "vt") {
-			Vector2 texcoord{};
+			Vector2 texcoord;
 			s >> texcoord.x >> texcoord.y;
 			texcoord.y = 1.0f - texcoord.y;
 			texcoords.push_back(texcoord);
@@ -42,40 +45,40 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 		else if (identifier == "vn") {
 			Vector3 normal;
 			s >> normal.x >> normal.y >> normal.z;
-			normal.z *= -1.0f;
+			normal.x *= -1.0f;
 			normals.push_back(normal);
 		}
 		else if (identifier == "f") {
 			VertexData triangle[3];
+			//面は三角形限定。その他は未対応
 			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
 				std::string vertexDefinition;
 				s >> vertexDefinition;
-				// 頂点要素へのIndexを取得
+				//頂点の要素へのIndexは「位置/UV/法線」で格納されているので、分解してIndexを取得する
 				std::istringstream v(vertexDefinition);
 				uint32_t elementIndices[3];
 				for (int32_t element = 0; element < 3; ++element) {
 					std::string index;
-					// /区切りで読んでいく
-					std::getline(v, index, '/');
+					std::getline(v, index, '/');// /区切りでインデックスを読んでいく
 					elementIndices[element] = std::stoi(index);
 				}
-				// 要素へのIndexから、実際の値を取得して、頂点を構築する
 				Vector4 position = positions[elementIndices[0] - 1];
 				Vector2 texcoord = texcoords[elementIndices[1] - 1];
 				Vector3 normal = normals[elementIndices[2] - 1];
-				VertexData vertex = { position, texcoord, normal };
+				VertexData vertex = { position,texcoord,normal };
 				modelData.vertices.push_back(vertex);
 				triangle[faceVertex] = { position,texcoord,normal };
 			}
+			//頂点を逆順で登録することで、回り順を逆にする
 			modelData.vertices.push_back(triangle[2]);
 			modelData.vertices.push_back(triangle[1]);
 			modelData.vertices.push_back(triangle[0]);
 		}
 		else if (identifier == "mtllib") {
-			// materilTemplateLibraryファイルの名前を取得
+			//materialTemplateLibraryファイルの名前を取得する
 			std::string materialFilename;
 			s >> materialFilename;
-			// 基本的にobjファイルと同一階層にmtlは存在させるので、ディレクトリ名とファイル名を渡す
+			//基本的にobjファイルと同一階層にmtlは存在させるので,ディレクトリ名とファイル名を渡す
 			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
 		}
 	}

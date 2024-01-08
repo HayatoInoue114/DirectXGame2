@@ -176,7 +176,7 @@ Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t t
 {
 	Sprite* sprite = new Sprite;
 	sprite->SetSize(size);
-	sprite->SetPosition(position);
+	sprite->SetPosition({position.x,position.y});
 	sprite->SetColor(color);
 	textureNum_ = textureNum;
 	sprite->Initialize();
@@ -187,7 +187,9 @@ Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t t
 void Sprite::Initialize() {
 	directX12_ = DirectX12::GetInstance();
 
-	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
+	cameraTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	cameraTransform_.rotation_ = {};
+	cameraTransform_.translation_ = { 0.0f,0.0f,-10.0f, };
 	//Transform変数を作る
 	worldTransform_.Initialize();
 
@@ -255,7 +257,7 @@ void Sprite::CreateTransformationMatrixResource() {
 void Sprite::CalculateAndSetWVPMatrix() {
 
 	worldMatrix_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale_, cameraTransform_.rotation_, cameraTransform_.translation_);
 	viewMatrix_ = MakeIdentity4x4();
 	projectionMatrix_ = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kCliantHeight), 0.0f, 100.0f);
 	worldViewprojectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatrix_));
@@ -299,11 +301,9 @@ void Sprite::SetMaterialData() {
 	//UVTransformを単位行列で初期化
 	materialData_->uvTransform = MakeIdentity4x4();
 	//uvTransform用の変数
-	uvTransform_ = {
-		{1.0f,1.0f,1.0f},
-		{0.0f,0.0f,0.0f},
-		{0.0f,0.0f,0.0f}
-	};
+	uvTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	uvTransform_.rotation_ = {};
+	uvTransform_.translation_ = {};
 }
 
 void Sprite::Update() {
@@ -330,9 +330,9 @@ void Sprite::Draw(WorldTransform& worldTransform) {
 		return;
 	}
 	//パラメータからUVTransform用の行列を生成する
-	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
+	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale_);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotation_.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translation_));
 	materialData_->uvTransform = uvTransformMatrix_;
 
 	//Spriteの描画。変更が必要なものだけを変更する
@@ -358,6 +358,7 @@ void Sprite::ImGuiAdjustParameter() {
 	ImGui::SliderFloat3("Scale", &worldTransform_.scale_.x, -5, 5);
 	ImGui::SliderFloat3("Rotate", &worldTransform_.rotation_.x, -5, 5);
 	ImGui::Text("UVTransform");
-	ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
-	ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
-	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
+	ImGui::DragFloat2("UVTranslate", &uvTransform_.translation_.x, 0.01f, -10.0f, 10.0f);
+	ImGui::DragFloat2("UVScale", &uvTransform_.scale_.x, 0.01f, -10.0f, 10.0f);
+	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotation_.z);
+}

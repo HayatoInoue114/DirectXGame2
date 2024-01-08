@@ -94,7 +94,7 @@ private:
 
 	Matrix4x4 worldViewprojectionMatrix_{};
 
-	Transform cameraTransform_{};
+	WorldTransform cameraTransform_{};
 
 	Matrix4x4 cameramatrix_{};
 
@@ -106,7 +106,7 @@ private:
 
 	uint32_t* indexData_ = nullptr;
 
-	Transform uvTransform_{};
+	WorldTransform uvTransform_{};
 
 	Matrix4x4 uvTransformMatrix_{};
 

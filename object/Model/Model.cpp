@@ -77,7 +77,8 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 Model* Model::CreateModelFromObj(int modelName) {
 	Model* model = new Model();
 	// モデルの読み込み
-	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
+	modelName_ = modelName;
+	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName_];
 
 	model->Initialize();
 	return model;
@@ -168,7 +169,7 @@ void Model::SetMaterialData() {
 
 void Model::CreateModel() {
 	//モデル読み込み
-	modelData_ = LoadObjFile("resources", "axis");
+	//modelData_ = LoadObjFile("resources", "axis");
 	//頂点リソースを作る
 	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
 

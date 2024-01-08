@@ -13,6 +13,9 @@
 #include "../../Input/Input.h"
 #include "../../ViewProjection/ViewProjection.h"
 #include "../../math/WorldTransform/WorldTransform.h"
+#include "../ModelManager/ModelManager.h"
+
+#include "../../scene/GameScene/GameScene.h"
 
 #include "../../Project/Player/Player.h"
 #include "../../Project/Enemy/Enemy.h"
@@ -52,6 +55,10 @@ private:
 	std::unique_ptr<Sprite> sprite_;
 
 	TextureManager* textureManager_{};
+
+	ModelManager* modelManager_{};
+
+	GameScene* gameScene_{};
 
 	DirectX12* directX12_{};
 	GraphicsRenderer* graphicsRenderer_{};

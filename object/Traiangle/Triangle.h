@@ -5,6 +5,7 @@
 #include "../../math/MT/MT.h"
 #include "../../structure/VertexData/VertexData.h"
 #include "../../structure/Material/Material.h"
+#include "../../math/WorldTransform/WorldTransform.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -30,7 +31,7 @@ public:
 
 	void CreateTransformationMatrixResource();
 	
-	void Update(Transform& transform,Vector4& color);
+	void Update(WorldTransform& transform,Vector4& color);
 
 	void Draw();
 
@@ -61,10 +62,10 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_{};
 	Matrix4x4* wvpData_{};
 
-	Transform transform_{};
+	WorldTransform transform_{};
 	Matrix4x4 worldMatrix_{};
 
-	Transform cameraTransform_{};
+	WorldTransform cameraTransform_{};
 	
 	Matrix4x4 projectionMatrix_{};
 

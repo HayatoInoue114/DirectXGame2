@@ -20,7 +20,7 @@ class Particle
 public:
 	void Initialize();
 
-	void Update(Transform& transform, Vector4& color);
+	void Update(WorldTransform& transform, Vector4& color);
 
 	void Draw(uint32_t textureNum);
 
@@ -74,10 +74,10 @@ private:
 	ID3D12Resource* wvpResource_{};
 	TransformationMatrix* wvpData_{};
 
-	Transform transform_{};
+	WorldTransform transform_{};
 	Matrix4x4 worldMatrix_{};
 
-	Transform cameraTransform_{};
+	WorldTransform cameraTransform_{};
 
 	Matrix4x4 projectionMatrix_{};
 
@@ -89,7 +89,7 @@ private:
 
 	Matrix4x4 worldViewProjectionMatrix_{};
 
-	Transform uvTransform_{};
+	WorldTransform uvTransform_{};
 
 	Matrix4x4 uvTransformMatrix_{};
 
@@ -97,7 +97,7 @@ private:
 
 	TransformationMatrix* instancingData_{};
 
-	Transform transforms_[MAXINSTANCE]{};
+	WorldTransform transforms_[MAXINSTANCE]{};
 
 	uint32_t descriptorSizeSRV_{};
 

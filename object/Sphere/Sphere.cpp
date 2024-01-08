@@ -8,7 +8,7 @@ void Sphere::Initialize(DirectX12* directX12, Light* light) {
 	light_ = light;
 
 	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	transform_.Initialize();
 
 	CreateVertexResource();
 	CreateMaterialResource();
@@ -128,10 +128,12 @@ void Sphere::WriteDataToResource() {
 }
 
 void Sphere::CreateWVPMatrix() {
-	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
+	cameraTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	cameraTransform_.rotation_ = {};
+	cameraTransform_.translation_ = { 0.0f,0.0f,-10.0f, };
 
-	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	worldMatrix_ = MakeAffineMatrix(transform_.scale_, transform_.rotation_, transform_.translation_);
+	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale_, cameraTransform_.rotation_, cameraTransform_.translation_);
 	viewMatrix_ = Inverse(cameramatrix_);
 	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
@@ -147,14 +149,12 @@ void Sphere::SetMaterialData() {
 	//UVTransformを単位行列で初期化
 	materialData_->uvTransform = MakeIdentity4x4();
 	//uvTransform用の変数
-	uvTransform_ = {
-		{1.0f,1.0f,1.0f},
-		{0.0f,0.0f,0.0f},
-		{0.0f,0.0f,0.0f}
-	};
+	uvTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	uvTransform_.rotation_ = {};
+	uvTransform_.translation_ = {};
 }
 
-void Sphere::Update(Transform& transform, Vector4& color) {
+void Sphere::Update(WorldTransform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();
 	//色の指定
@@ -164,9 +164,9 @@ void Sphere::Update(Transform& transform, Vector4& color) {
 
 void Sphere::Draw() {
 	//パラメータからUVTransform用の行列を生成する
-	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
+	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale_);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotation_.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translation_));
 	materialData_->uvTransform = uvTransformMatrix_;
 
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
@@ -184,7 +184,7 @@ void Sphere::Draw() {
 }
 
 void Sphere::ImGuiAdjustParameter() {
-	ImGui::Text("Sphere");
+	/*ImGui::Text("Sphere");
 	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
 	ImGui::Checkbox("useMonsterBall", &useMonsterBall_);
 	ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
@@ -193,6 +193,6 @@ void Sphere::ImGuiAdjustParameter() {
 	ImGui::Text("UVTransform");
 	ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
 	ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
-	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
+	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);*/
 }
 

@@ -15,6 +15,9 @@ void GameManager::Initialize()
 	textureManager_ = TextureManager::GetInstance();
 	textureManager_->GetInstance()->Initialize();
 
+	modelManager_ = ModelManager::GetInstance();
+	modelManager_->GetInstance()->Initialize();
+
 	Input::Initialize();
 
 #pragma endregion 基盤システムの初期化
@@ -27,12 +30,12 @@ void GameManager::Initialize()
 	}
 
 	//sprite_->Initialize(directX12_);
-	model_ = std::make_unique<Model>();
-	model_->Initialize();
+	//model_ = std::make_unique<Model>();
+	//model_->Initialize();
 
-	sprite_ = std::make_unique<Sprite>();
-	sprite_->SetSize({ 400,100 });
-	sprite_->Initialize();
+	//sprite_ = std::make_unique<Sprite>();
+	//sprite_->SetSize({ 400,100 });
+	//sprite_->Initialize();
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();

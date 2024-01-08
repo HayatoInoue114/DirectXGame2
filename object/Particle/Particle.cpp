@@ -104,7 +104,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> Particle::CreateBufferResource(const Micr
 void Particle::Initialize() {
 
 	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	transform_.Initialize();
 
 	//CreatevertexResource();
 	CreateModel();
@@ -162,8 +162,10 @@ void Particle::WriteDataToResource() {
 
 void Particle::CreateWVPMatrix() {
 	//カメラ
-	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
-	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	cameraTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	cameraTransform_.rotation_ = {};
+	cameraTransform_.translation_ = { 0.0f,0.0f,-10.0f, };
+	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale_, cameraTransform_.rotation_, cameraTransform_.translation_);
 
 
 	//
@@ -178,7 +180,7 @@ void Particle::CreateWVPMatrix() {
 	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 
 	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-		Matrix4x4 worldMatrix = MakeAffineMatrix(transforms_[index].scale, transforms_[index].rotate, transforms_[index].translate);
+		Matrix4x4 worldMatrix = MakeAffineMatrix(transforms_[index].scale_, transforms_[index].rotation_, transforms_[index].translation_);
 		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix_, projectionMatix_));
 		instancingData_[index].WVP = worldViewProjectionMatrix;
 		instancingData_[index].World = worldMatrix;
@@ -193,11 +195,9 @@ void Particle::SetMaterialData() {
 	//UVTransformを単位行列で初期化
 	materialData_->uvTransform = MakeIdentity4x4();
 	//uvTransform用の変数
-	uvTransform_ = {
-		{1.0f,1.0f,1.0f},
-		{0.0f,0.0f,0.0f},
-		{0.0f,0.0f,0.0f}
-	};
+	uvTransform_.scale_ = { 1.0f,1.0f,1.0f };
+	uvTransform_.rotation_ = {};
+	uvTransform_.translation_ = {};
 }
 
 void Particle::CreateModel() {
@@ -220,7 +220,9 @@ void Particle::CreateInstance() {
 	}
 
 	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-		transforms_[index] = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, {index * 0.1f,index * 0.1f,index * 0.1f} };
+		transforms_[index].scale_ = { 1.0f,1.0f,1.0f };
+		transforms_[index].translation_ = { index * 0.1f,index * 0.1f,index * 0.1f };
+		transforms_[index].rotation_ = {};
 	}
 
 
@@ -243,7 +245,7 @@ void Particle::CreateSRV() {
 }
 
 
-void Particle::Update(Transform& transform, Vector4& color) {
+void Particle::Update(WorldTransform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();
 	//色の指定
@@ -256,9 +258,9 @@ void Particle::Draw(uint32_t textureNum) {
 		
 	}
 
-	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
+	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale_);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotation_.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translation_));
 	materialData_->uvTransform = uvTransformMatrix_;
 
 	DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);	//VBVを設定
@@ -294,13 +296,13 @@ void Particle::Draw(uint32_t textureNum) {
 void Particle::ImGuiAdjustParameter() {
 	ImGui::Text("Sphere");
 	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
-	ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
-	ImGui::SliderFloat3("Scale", &transform_.scale.x, -5, 5);
-	ImGui::SliderFloat3("Rotate", &transform_.rotate.x, -5, 5);
+	ImGui::SliderFloat3("Translate", &transform_.translation_.x, -5, 5);
+	ImGui::SliderFloat3("Scale", &transform_.scale_.x, -5, 5);
+	ImGui::SliderFloat3("Rotate", &transform_.rotation_.x, -5, 5);
 	ImGui::Text("UVTransform");
-	ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
-	ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
-	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
+	ImGui::DragFloat2("UVTranslate", &uvTransform_.translation_.x, 0.01f, -10.0f, 10.0f);
+	ImGui::DragFloat2("UVScale", &uvTransform_.scale_.x, 0.01f, -10.0f, 10.0f);
+	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotation_.z);
 	ImGui::ColorEdit4("ModelColor", &materialData_->color.x, 1);
 }
 

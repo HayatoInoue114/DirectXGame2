@@ -30,9 +30,13 @@ void GameManager::Initialize()
 	model_ = std::make_unique<Model>();
 	model_->Initialize();
 
+	sprite_ = std::make_unique<Sprite>();
+	sprite_->Initialize(directX12_);
+
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
 }
+
 
 void GameManager::Update() {
 #pragma region ImGui(もういらないかも)
@@ -64,10 +68,13 @@ void GameManager::Update() {
 	
 	model_->Update(transform_, color_);
 
+	sprite_->Update();
+
 #pragma endregion Update
 
 	ImGui::Render();
 }
+
 
 void GameManager::Release() {
 	directX12_->Release();
@@ -97,6 +104,8 @@ void GameManager::Finalize() {
 void GameManager::Draw() {
 
 	model_->Draw(UVCHECKER);
+
+	sprite_->Draw();
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -8,10 +8,10 @@
 #include "../../math/MT/MT.h"
 #include "../../structure/VertexData/VertexData.h"
 #include "../../structure/Material/Material.h"
-#include "../../math/TransformationMatrix.h"
 #include "../../components/Light/Light.h"
 #include "../../manager/TextureManager/TextureManager.h"
 #include "../../structure/ModelData/ModelData.h"
+#include "../../math/WorldTransform/WorldTransform.h"
 
 #define MAXINSTANCE 10 // インスタンス数
 

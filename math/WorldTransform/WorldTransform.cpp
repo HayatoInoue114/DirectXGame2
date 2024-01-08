@@ -1,37 +1,32 @@
 #include "WorldTransform.h"
 
 void WorldTransform::Initialize() {
-
-	matWorld = MakeIdentity4x4();
-
+	matWorld_ = MakeIdentity4x4();
+	CreateConstBuffer();
+	Map();
+	TransferMatrix();
 }
 
-void WorldTransform::TransferMatrix(Microsoft::WRL::ComPtr<ID3D12Resource>& wvpResource, ViewProjection& view) {
-
-	TransformationMatrix* wvp = {};
-	matWorld = Multiply(matWorld, Multiply(view.matView, view.matProjection));
-	wvpResource->Map(0, nullptr, reinterpret_cast<void**>(&wvp));
-	wvp->WVP = matWorld;
-	wvp->World = worldMatrix;
-
+void WorldTransform::CreateConstBuffer() {
+	constBuff_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(ConstBufferDataWorldTransform));
 }
 
-void WorldTransform::STransferMatrix(Microsoft::WRL::ComPtr<ID3D12Resource>& wvpResource, ViewProjection& view)
-{
-	TransformationMatrix* wvp = {};
-	sMatWorld = Multiply(matWorld, Multiply(view.sMatView, view.sMatProjection));
-	wvpResource->Map(0, nullptr, reinterpret_cast<void**>(&wvp));
-	wvp->WVP = sMatWorld;
-	wvp->World = worldMatrix;
+void WorldTransform::Map() {
+	constBuff_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&constMap));
+}
+
+void WorldTransform::TransferMatrix() {
+	constMap->matWorld = matWorld_;
+	constMap->WorldInverseTranspose = Inverse(Transpose(matWorld_));
 }
 
 void WorldTransform::UpdateMatrix() {
+	matWorld_ = MakeAffineMatrix(scale_, rotation_, translation_);
 
-	matWorld = MakeAffineMatrix(scale, rotate, translate);
-	worldMatrix = MakeAffineMatrix(scale, rotate, translate);
-
-	if (parent) {
-		matWorld = Multiply(matWorld, parent->matWorld);
+	// 親子関係の計算
+	if (parent_) {
+		matWorld_ = Multiply(matWorld_, parent_->matWorld_);
 	}
 
+	TransferMatrix();
 }

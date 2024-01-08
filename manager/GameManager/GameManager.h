@@ -43,6 +43,8 @@ private:
 
 	std::unique_ptr<Particle> particle_;
 
+	std::unique_ptr<Sprite> sprite_;
+
 	TextureManager* textureManager_{};
 
 	DirectX12* directX12_{};

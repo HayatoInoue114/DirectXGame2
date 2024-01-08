@@ -114,22 +114,38 @@ void GraphicsRenderer::CreateRootSignature() {
 		rootParameters_[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters_[i][0].Descriptor.ShaderRegister = 0;
 
-		if (i == 0) {
-			// worldTransform
-			rootParameters_[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters_[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters_[i][1].Descriptor.ShaderRegister = 0;
 
-			rootParameters_[i][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters_[i][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters_[i][2].DescriptorTable.pDescriptorRanges = descriptorRange_;
-			rootParameters_[i][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+		// worldTransform
+		rootParameters_[0][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters_[0][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		rootParameters_[0][1].Descriptor.ShaderRegister = 0;
 
-			// viewProjection
-			rootParameters_[i][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters_[i][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters_[i][4].Descriptor.ShaderRegister = 1;
-		}
+		rootParameters_[0][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParameters_[0][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters_[0][2].DescriptorTable.pDescriptorRanges = descriptorRange_;
+		rootParameters_[0][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+
+		// viewProjection
+		/*rootParameters_[0][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters_[0][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		rootParameters_[0][4].Descriptor.ShaderRegister = 1;*/
+
+		//if (i == 0) {
+		//	// worldTransform
+		//	rootParameters_[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		//	rootParameters_[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		//	rootParameters_[i][1].Descriptor.ShaderRegister = 0;
+
+		//	rootParameters_[i][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		//	rootParameters_[i][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		//	rootParameters_[i][2].DescriptorTable.pDescriptorRanges = descriptorRange_;
+		//	rootParameters_[i][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+
+		//	// viewProjection
+		//	rootParameters_[i][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		//	rootParameters_[i][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		//	rootParameters_[i][4].Descriptor.ShaderRegister = 1;
+		//}
 
 		rootParameters_[i][3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters_[i][3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;

@@ -11,6 +11,12 @@
 #include "../../manager/TextureManager/TextureManager.h"
 #include "../../object/Particle/Particle.h"
 #include "../../Input/Input.h"
+#include "../../ViewProjection/ViewProjection.h"
+#include "../../math/WorldTransform/WorldTransform.h"
+
+#include "../../Project/Player/Player.h"
+#include "../../Project/Enemy/Enemy.h"
+#include "../../Project/TimedCall/TimedCall.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
 #define MAXSPRITE 1 //スプライトの最大数
@@ -58,7 +64,7 @@ private:
 	float colorVolume_[3] = {};
 	Vector4 color_ = {1.0f,0.0f,0.0f,1.0f};
 
-	Transform transform_ = {};
+	WorldTransform transform_ = {};
 	float scale_[3] = { 1.0f,1.0f,0.0f };
 	float rotate_[3] = { 0.0f,0.0f,0.0f };
 	float translate_[3] = { 0.0f,0.0f,0.0f };

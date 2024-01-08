@@ -1,18 +1,36 @@
 #include "ViewProjection.h"
 
 void ViewProjection::Initialize() {
+	CreateConstBuffer();
+	Map();
+	UpdateMatrix();
+	TransferMatrix();
+}
 
-	matView = MakeIdentity4x4();
-	matProjection = MakeIdentity4x4();
-	sMatProjection = MakeIdentity4x4();
+void ViewProjection::CreateConstBuffer() {
+	constBuff_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(ConstBufferDataViewProjection));
+}
+
+void ViewProjection::Map() {
+	constBuff_.Get()->Map(0, nullptr, reinterpret_cast<void**>(&constMap));
 }
 
 void ViewProjection::UpdateMatrix() {
+	UpdateViewMatrix();
+	UpdateProjectionMatrix();
+	TransferMatrix();
+}
 
-	matView = Inverse(MakeAffineMatrix(scale, rotate, translate));
-	matProjection = MakePerspectiveFovMatrix(fov, aspectRatio, nearZ, farZ);
+void ViewProjection::TransferMatrix() {
+	constMap->view = matView;
+	constMap->projection = matProjection;
+}
 
-	sMatView = MakeIdentity4x4();
-	sMatProjection = MakeOrthographicMatrix(0.0f, 0.0f, 1280.0f, 720.0f, 0.0f, 100.0f);
+void ViewProjection::UpdateViewMatrix() {
+	Matrix4x4 cameraMatrix = MakeAffineMatrix({ 1.0f,1.0f,1.0f }, rotation_, translation_);
+	matView = Inverse(cameraMatrix);
+}
 
+void ViewProjection::UpdateProjectionMatrix() {
+	matProjection = MakePerspectiveFovMatrix(fovAngleY, aspectRatio, nearZ, farZ);
 }

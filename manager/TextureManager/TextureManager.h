@@ -19,6 +19,13 @@
 enum TextureName {
 	UVCHECKER,
 	MONSTERBALL,
+	PLAYER,
+	ENEMY,
+	RETICLE,
+	PLAYERBULLET,
+	ENEMYBULLET,
+
+
 	TEXTURENUM
 };
 class TextureManager

@@ -28,5 +28,5 @@ void WorldTransform::UpdateMatrix() {
 		matWorld_ = Multiply(matWorld_, parent_->matWorld_);
 	}
 
-	TransferMatrix();
+	//TransferMatrix();
 }

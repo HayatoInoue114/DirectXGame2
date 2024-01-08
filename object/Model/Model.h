@@ -12,6 +12,7 @@
 #include "../../manager/TextureManager/TextureManager.h"
 #include "../../structure/ModelData/ModelData.h"
 #include "../../math/WorldTransform/WorldTransform.h"
+#include "../../manager/ModelManager/ModelManager.h"
 
 #define MAXINSTANCE 10 // インスタンス数
 
@@ -20,9 +21,9 @@ class Model
 public:
 	void Initialize();
 
-	void Update(Transform& transform, Vector4& color);
+	void Update();
 
-	void Draw(uint32_t textureNum);
+	void Draw(WorldTransform& worldTransform, ViewProjection& viewProjection, uint32_t textureNum);
 
 	void CreatevertexResource();
 
@@ -51,6 +52,8 @@ public:
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
+
+	Model* CreateModelFromObj(int modelName);
 private:
 	//モデル読み込み
 	ModelData modelData_{};
@@ -74,10 +77,12 @@ private:
 	ID3D12Resource* wvpResource_{};
 	TransformationMatrix* wvpData_{};
 
-	Transform transform_{};
+	//Transform transform_{};
+	WorldTransform worldTransform_{};
+
 	Matrix4x4 worldMatrix_{};
 
-	Transform cameraTransform_{};
+	WorldTransform cameraTransform_{};
 
 	Matrix4x4 projectionMatrix_{};
 
@@ -89,15 +94,13 @@ private:
 
 	Matrix4x4 worldViewProjectionMatrix_{};
 
-	Transform uvTransform_{};
+	WorldTransform uvTransform_{};
 
 	Matrix4x4 uvTransformMatrix_{};
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
 
 	TransformationMatrix* instancingData_{};
-
-	Transform transforms_[MAXINSTANCE]{};
 
 	uint32_t descriptorSizeSRV_{};
 

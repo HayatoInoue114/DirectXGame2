@@ -7,17 +7,21 @@
 #include "../../structure/VertexData/VertexData.h"
 #include "../../structure/Material/Material.h"
 #include "../../math/WorldTransform/WorldTransform.h"
+#include "../../manager/TextureManager/TextureManager.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
 class Sprite
 {
 public:
-	void Initialize(DirectX12* directX12);
+	Sprite();
+	~Sprite();
+
+	void Initialize();
 
 	void Update();
 
-	void Draw();
+	void Draw(WorldTransform& worldTransform);
 
 	void CreateVertexResource();
 
@@ -37,28 +41,33 @@ public:
 
 	void ImGuiAdjustParameter();
 
+	Sprite* Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
+
 	// セッター
-	void SetTransform(const Transform& transform) { transform_ = transform; }
+	void SetWorldTransform(const WorldTransform& transform) { worldTransform_ = transform; }
 	void SetColor(const Vector4& color) { materialData_->color = color; }
 	void SetAnchorPoint(const Vector3& anchorpoint) { anchorPoint_ = anchorpoint; }
 	void SetisFlipX(bool isFlipX) { isFlipX_ = isFlipX; }
 	void SetisFlipY(bool isFlipY) { isFlipY_ = isFlipY; }
 	void SetisInvisible(bool isInvisible) { isInvisible_ = isInvisible; }
+	void SetSize(const Vector2& size) { size_ = size; }
+	void SetPosition(const Vector2& position) { worldTransform_.translation_.x = position.x; worldTransform_.translation_.y = position.y; }
 
 	// ゲッター
-	const Transform& GetTransform() const { return transform_; }
+	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 	const Vector4& GetColor() const { return materialData_->color; }
 	const Vector3& GetAnchorpoint() const { return anchorPoint_; }
 	bool GetisFlipX() const { return isFlipX_; }
 	bool GetisFlipY() const { return isFlipY_; }
 	bool GetisInvisible() const { return isInvisible_; }
+	const Vector2& GetPosition() const { return { worldTransform_.translation_.x ,worldTransform_.translation_.y }; }
 
 private:
 	enum VERTEX {
 		LB,
 		LT,
-		RT,
-		RB
+		RB,
+		RT
 	};
 
 	Material* materialData_{};
@@ -75,7 +84,7 @@ private:
 
 	TransformationMatrix* transformationMatrixData_{};
 
-	Transform transform_{};
+	//Transform transform_{};
 
 	Matrix4x4 worldMatrix_{};
 
@@ -101,7 +110,7 @@ private:
 
 	Matrix4x4 uvTransformMatrix_{};
 
-	Vector3 anchorPoint_{};
+	Vector3 anchorPoint_{ 0.5f,0.5f };
 
 	//左右フリップ
 	bool isFlipX_ = false;
@@ -111,5 +120,11 @@ private:
 
 	//非表示フラグ
 	bool isInvisible_ = false;
+
+	Vector2 size_;
+
+	WorldTransform worldTransform_;
+
+	uint32_t textureNum_;
 };
 

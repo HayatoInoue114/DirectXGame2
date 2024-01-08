@@ -3,7 +3,7 @@
 #include "../../math/MT/MT.h"
 #include "../../object/Model/Model.h"
 #include "../Bullet/PlayerBullet/PlayerBullet.h"
-#include "../../math/WorldTransform.h"
+#include "../../math/WorldTransform/WorldTransform.h"
 #include "../../object/Sprite/Sprite.h"
 #include <list>
 
@@ -99,4 +99,8 @@ private:
 
 	// 2Dレティクル用のスプライト
 	Sprite* sprite2DReticle_ = nullptr;
+
+	WorldTransform worldSprite2DReticle_;
+
+	Vector4 reticleColor_{};
 };

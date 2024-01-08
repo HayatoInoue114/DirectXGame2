@@ -31,7 +31,8 @@ void GameManager::Initialize()
 	model_->Initialize();
 
 	sprite_ = std::make_unique<Sprite>();
-	sprite_->Initialize(directX12_);
+	sprite_->SetSize({ 400,100 });
+	sprite_->Initialize();
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
@@ -57,16 +58,18 @@ void GameManager::Update() {
 	}
 	ImGui::End();
 
-	color_ = { colorVolume_[0],colorVolume_[1],colorVolume_[2],1.0f };
+	/*color_ = { colorVolume_[0],colorVolume_[1],colorVolume_[2],1.0f };
 	transform_ = { {scale_[0],scale_[1],scale_[2]},{rotate_[0],rotate_[1],rotate_[2]},{translate_[0],translate_[1],translate_[2]} };
-	rotate_[1] += 0.0f;
+	rotate_[1] += 0.0f;*/
 #pragma endregion ImGui
 
 #pragma region Update
 
 	Input::Update();
 	
-	model_->Update(transform_, color_);
+	model_->Update();
+
+	
 
 	sprite_->Update();
 
@@ -103,9 +106,9 @@ void GameManager::Finalize() {
 ///////////////////////////////////////////////////////////////Draw//////////////////////////////////
 void GameManager::Draw() {
 
-	model_->Draw(UVCHECKER);
+	/*model_->Draw(MONSTERBALL);
 
-	sprite_->Draw();
+	sprite_->Draw(UVCHECKER);*/
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

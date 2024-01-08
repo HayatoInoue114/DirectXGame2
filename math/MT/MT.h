@@ -40,12 +40,12 @@ struct Vector3 {
 /// <param name="Scale">スケール</param>
 /// <param name="rotate">回転</param>
 /// <param name="translate">座標</param>
-struct Transform
-{
-	Vector3 scale;
-	Vector3 rotate;
-	Vector3 translate;
-};
+//struct Transform
+//{
+//	Vector3 scale;
+//	Vector3 rotate;
+//	Vector3 translate;
+//};
 
 /// <summary>
 /// オブジェクトの位置・姿勢情報
@@ -53,12 +53,12 @@ struct Transform
 /// <param name="Scale">スケール</param>
 /// <param name="rotate">回転</param>
 /// <param name="translate">座標</param>
-struct WorldTransform
-{
-	Vector3 scale;
-	Vector3 rotate;
-	Vector3 translate;
-};
+//struct WorldTransform
+//{
+//	Vector3 scale;
+//	Vector3 rotate;
+//	Vector3 translate;
+//};
 
 /// <summary>
 /// 単位行列の作成
@@ -85,6 +85,7 @@ float InverseNum2(const Matrix4x4& m, int a, int b, int c, int d, int e, int f);
 
 // 転置行列
 Matrix4x4 Transpose(const Matrix4x4& m);
+Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 //逆行列
 Matrix4x4 Inverse(const Matrix4x4& m);
 
@@ -111,6 +112,8 @@ float Length(const Vector3& v);
 
 // 内積
 float Dot(const Vector3& v1, const Vector3& v2);
+
+Vector3 TransformNormal(const Vector3& v, const Matrix4x4& m);
 
 //球面線形補間
 Vector3 Slerp(const Vector3& v1, const Vector3& v2, float t);

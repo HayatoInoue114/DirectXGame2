@@ -33,7 +33,7 @@ public:
 
 	void UpdateButtonState(ButtonState& state, bool isPressed);
 
-
+	bool GamePadTrigger(int GAMEPAD_NUM);
 private:
 
 	IDirectInput8* directInput = nullptr;

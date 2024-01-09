@@ -34,7 +34,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	// スプライト生成
 	/*sprite2DReticle_ = new Sprite;
 	sprite2DReticle_ = sprite2DReticle_->Create({ 640, 360, 0 }, { 10,10 }, { 0,0,0,1 }, RETICLE);*/
-	sprite2DReticle_ = Sprite::Create({ 640, 360, 0 }, { 10,10 }, { 0,0,0,1 }, RETICLE);
+	sprite2DReticle_ = Sprite::Create({ 640, 360, 0 }, { 5,5 }, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();
 	worldTransform_.translation_ = { playerPosition };
@@ -241,9 +241,11 @@ void Player::Attack() {
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
+		Model* model = Model::CreateModelFromObj(CUBE);
+
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model_, GetWorldPosition(), velocity);
+		newBullet->Initialize(model, GetWorldPosition(), velocity);
 
 		// 弾を登録する
 		bullets_.push_back(newBullet);
@@ -312,7 +314,8 @@ void Player::SetParent(const WorldTransform* parent) {
 	worldTransform_.parent_ = parent;
 }
 
-void Player::DrawUI() { sprite2DReticle_->Draw(worldSprite2DReticle_); }
+void Player::DrawUI() { 
+	sprite2DReticle_->Draw(worldSprite2DReticle_); }
 
 Vector2 Player::GetCursorPosition() {
 	POINT mousePosition;

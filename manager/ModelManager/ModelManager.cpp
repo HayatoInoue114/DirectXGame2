@@ -11,7 +11,7 @@ void ModelManager::Initialize() {
 	modelData_[SPHERE] = LoadObjFile("resources", "skydome");
 	modelData_[SKYDOME] = LoadObjFile("resources", "skydome");
 	modelData_[PLAYER] = LoadObjFile("resources", "player");
-	//modelData_[SKYDOME] = LoadObjFile("resources", "enemy");
+	modelData_[ENEMY] = LoadObjFile("resources", "enemy");
 }
 
 ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std::string& filename) {

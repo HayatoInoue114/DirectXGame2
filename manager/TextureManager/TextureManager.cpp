@@ -79,6 +79,8 @@ void TextureManager::LoadAndTransferTexture() {
 	mipImages_[PLAYERBULLET] = LoadTexture("resources/ball.png");
 	mipImages_[ENEMYBULLET] = LoadTexture("resources/ball.png");
 	mipImages_[SKYDOMETEX] = LoadTexture("resources/colorGrid.png");
+	mipImages_[CLEAR] = LoadTexture("resources/clear.png");
+	mipImages_[TITLE] = LoadTexture("resources/title.png");
 
 	//Uploadする
 	for (uint32_t i = 0; i < kMaxImages; i++) {

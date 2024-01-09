@@ -72,4 +72,8 @@ void Input::UpdateButtonState(ButtonState& state, bool isPressed)
 }
 
 
-
+bool Input::GamePadTrigger(int GAMEPAD_NUM) {
+	XINPUT_STATE controllerState;
+	XInputGetState(0, &controllerState);
+	return (controllerState.Gamepad.wButtons & GAMEPAD_NUM) == 0;
+}

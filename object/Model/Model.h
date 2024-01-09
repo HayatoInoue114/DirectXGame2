@@ -62,6 +62,7 @@ public:
 	static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 
 	void SetTextureNum(uint32_t num) { modelName_ = num; }
+	void SetColor(const Vector4& color) { materialData_->color = color; }
 private:
 	//モデル読み込み
 	ModelData modelData_{};

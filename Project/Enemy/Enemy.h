@@ -74,7 +74,7 @@ public:
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 
 
-
+	bool isDead;
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_ = {};

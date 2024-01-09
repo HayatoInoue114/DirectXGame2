@@ -20,7 +20,7 @@ class Particle
 public:
 	void Initialize();
 
-	void Update(WorldTransform& transform, Vector4& color);
+	void Update(WorldTransform& transform);
 
 	void Draw(uint32_t textureNum);
 

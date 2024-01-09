@@ -245,7 +245,7 @@ void Particle::CreateSRV() {
 }
 
 
-void Particle::Update(WorldTransform& transform, Vector4& color) {
+void Particle::Update(WorldTransform& transform) {
 	transform_ = transform;
 	CreateWVPMatrix();
 	//色の指定

@@ -1,6 +1,6 @@
 #include "Enemy.h"
 #include "../Player/Player.h"
-#include "../../scene/GameScene/GameScene.h"
+#include "../../scene/GameScene.h"
 
 void (Enemy::* Enemy::situation[])() = { &Enemy::Approach, &Enemy::Leave };
 
@@ -9,6 +9,7 @@ Enemy::Enemy() {
 	/*player_ = new Player();*/
 	deltaVector_ = {};
 	velocity_ = {};
+	isDead = true;
 }
 
 Enemy::~Enemy() {
@@ -23,6 +24,8 @@ void Enemy::Initialize(Model* model, Vector3 position) {
 	model_ = model;
 	// テクスチャ読み込み
 	textureHandle_ = PLAYER;
+
+	isDead = true;
 
 	worldTransform_.Initialize();
 	// 引数で受け取った初期座標をセット
@@ -72,4 +75,6 @@ Vector3 Enemy::GetWorldPosition() {
 	return worldPos;
 }
 
-void Enemy::OnCollision() {}
+void Enemy::OnCollision() {
+	isDead = true;
+}

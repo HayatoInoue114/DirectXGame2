@@ -57,7 +57,7 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 
-	Model* CreateModelFromObj(int modelName);
+	static Model* CreateModelFromObj(int modelName);
 
 	std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 private:

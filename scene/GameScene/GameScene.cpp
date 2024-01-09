@@ -358,8 +358,9 @@ void GameScene::EnemySpawn(Vector3 position) {
 	/*std::unique_ptr<Model> newModel;
 	newModel = std::make_unique<Model>();
 	newModel = newModel->CreateModelFromObjPtr(CUBE);*/
+	Model* newModel = Model::CreateModelFromObj(CUBE);
 	newEnemy->SetPlayer(player_.get());
-	newEnemy->Initialize(enemiesModel_, position);
+	newEnemy->Initialize(newModel, position);
 	newEnemy->SetGameScene(this);
 	enemies_.push_back(newEnemy);
 }

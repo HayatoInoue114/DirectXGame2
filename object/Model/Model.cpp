@@ -85,8 +85,8 @@ Model::~Model() {
 Model* Model::CreateModelFromObj(int modelName) {
 	Model* model = new Model();
 	// モデルの読み込み
-	modelName_ = modelName;
-	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName_];
+	
+	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
 
 	model->Initialize();
 	return model;

@@ -74,8 +74,27 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 	return modelData;
 }
 
+Model::Model() {
+
+}
+
+Model::~Model() {
+
+}
+
 Model* Model::CreateModelFromObj(int modelName) {
 	Model* model = new Model();
+	// モデルの読み込み
+	modelName_ = modelName;
+	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName_];
+
+	model->Initialize();
+	return model;
+}
+
+std::unique_ptr<Model> Model::CreateModelFromObjPtr(int modelName) {
+	std::unique_ptr<Model> model;
+	model = std::make_unique<Model>();
 	// モデルの読み込み
 	modelName_ = modelName;
 	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName_];
@@ -177,7 +196,7 @@ void Model::CreateModel() {
 }
 
 void Model::Update() {
-	ImGuiAdjustParameter();
+	//ImGuiAdjustParameter();
 }
 
 void Model::Draw(WorldTransform& worldTransform,ViewProjection& viewProjection, uint32_t textureNum) {

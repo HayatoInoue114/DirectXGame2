@@ -7,9 +7,9 @@ ModelManager* ModelManager::GetInstance() {
 }
 
 void ModelManager::Initialize() {
-	modelData_[CUBE] = LoadObjFile("../resources", "cube");
-	modelData_[SPHERE] = LoadObjFile("../resources", "skydome");
-	modelData_[SKYDOME] = LoadObjFile("../resources", "skydome");
+	modelData_[CUBE] = LoadObjFile("resources", "cube");
+	modelData_[SPHERE] = LoadObjFile("resources", "skydome");
+	modelData_[SKYDOME] = LoadObjFile("resources", "skydome");
 }
 
 ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std::string& filename) {

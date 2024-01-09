@@ -29,6 +29,9 @@ void GameManager::Initialize()
 		translate_[i] = 0.0f;
 	}
 
+	gameScene_ = new GameScene;
+	gameScene_->Initialize();
+
 	//sprite_->Initialize(directX12_);
 	//model_ = std::make_unique<Model>();
 	//model_->Initialize();
@@ -76,6 +79,7 @@ void GameManager::Update() {
 
 	sprite_->Update();
 
+	gameScene_->Update();
 #pragma endregion Update
 
 	ImGui::Render();
@@ -85,7 +89,7 @@ void GameManager::Update() {
 void GameManager::Release() {
 	directX12_->Release();
 	graphicsRenderer_->Release();
-
+	delete gameScene_;
 }
 
 
@@ -108,6 +112,8 @@ void GameManager::Finalize() {
 
 ///////////////////////////////////////////////////////////////Draw//////////////////////////////////
 void GameManager::Draw() {
+
+	gameScene_->Draw();
 
 	/*model_->Draw(MONSTERBALL);
 

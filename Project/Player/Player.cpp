@@ -32,6 +32,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	reticleColor_ = { 1,1,1,1 };
 
 	// スプライト生成
+	sprite2DReticle_ = new Sprite;
 	sprite2DReticle_ = sprite2DReticle_->Create({ 640, 360, 0 }, { 10,10,}, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();

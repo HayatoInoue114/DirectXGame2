@@ -318,7 +318,7 @@ void Sprite::Update() {
 	vertexData_[RT].position = { right, top, 0.0f, 1.0f };*/
 
 	//CalculateAndSetWVPMatrix();
-	ImGuiAdjustParameter();
+	//ImGuiAdjustParameter();
 
 	
 }

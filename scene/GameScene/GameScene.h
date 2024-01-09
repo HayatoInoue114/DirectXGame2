@@ -105,6 +105,8 @@ private: // メンバ変数
 
 	// 敵
 	std::list<Enemy*> enemies_;
+	std::list<Model*> enemiesModel_;
+	//std::unique_ptr<Model> enemyModel_;
 
 	// 天球
 	std::unique_ptr<Skydome> skydome_;
@@ -126,7 +128,7 @@ private: // メンバ変数
 	int waitTimer_ = 0;
 
 	// 弾を発射する間隔
-	static const uint32_t kFireInterval = 30;
+	static const uint32_t kFireInterval = 1000;
 	// 次元発動のリスト
 	std::list<TimedCall*> timedCalls_;
 };

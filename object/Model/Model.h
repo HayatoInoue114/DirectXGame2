@@ -19,6 +19,10 @@
 class Model
 {
 public:
+	Model();
+
+	~Model();
+
 	void Initialize();
 
 	void Update();
@@ -54,6 +58,8 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 
 	Model* CreateModelFromObj(int modelName);
+
+	std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 private:
 	//モデル読み込み
 	ModelData modelData_{};

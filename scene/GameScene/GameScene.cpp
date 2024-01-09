@@ -33,11 +33,14 @@ void GameScene::Initialize() {
 	// ファイル名を指定してテクスチャを読み込む
 	//textureHandle = TextureManager::Load("godest.png");
 	// 3Dモデルの生成
-	//model = Model::Create();
+
+	model = new Model;
+	model = model->CreateModelFromObj(CUBE);
 
 	worldTransform_.Initialize();
 
 	// 3Dモデルの生成
+	modelSkydome_ = new Model;
 	modelSkydome_ = modelSkydome_->CreateModelFromObj(SKYDOME);
 
 	// ビュープロジェクションの初期化
@@ -65,6 +68,12 @@ void GameScene::Initialize() {
 
 	// 敵の生成
 	/*EnemySpawn({0.5f, 0.0f, 60.0f});*/
+	for (Enemy* enemy : enemies_) {
+		std::unique_ptr<Model> newEnemyModel = std::make_unique<Model>();
+		newEnemyModel = newEnemyModel->CreateModelFromObjPtr(CUBE);
+		enemiesModel_.push_back(newEnemyModel.get());
+	}
+	
 
 	LoadEnemyPopData();
 
@@ -193,7 +202,7 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
-	skydome_->Draw(viewProjection);
+	//skydome_->Draw(viewProjection);
 
 	player_->Draw(viewProjection);
 
@@ -346,8 +355,11 @@ void GameScene::AddEnemyBullet(EnemyBullet* enemhyBullet) {
 
 void GameScene::EnemySpawn(Vector3 position) {
 	Enemy* newEnemy = new Enemy();
+	/*std::unique_ptr<Model> newModel;
+	newModel = std::make_unique<Model>();
+	newModel = newModel->CreateModelFromObjPtr(CUBE);*/
 	newEnemy->SetPlayer(player_.get());
-	newEnemy->Initialize(model, position);
+	newEnemy->Initialize(enemiesModel_, position);
 	newEnemy->SetGameScene(this);
 	enemies_.push_back(newEnemy);
 }
@@ -355,7 +367,7 @@ void GameScene::EnemySpawn(Vector3 position) {
 void GameScene::LoadEnemyPopData() {
 	// ファイルを開く
 	std::ifstream file;
-	file.open("./Resources./csv./enemyPop.csv");
+	file.open("./resources./csv./enemyPop.csv");
 	assert(file.is_open());
 
 	// ファイルの内容を文字列ストリームにコピー
@@ -447,9 +459,14 @@ void GameScene::EnemyFire() {
 
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity_ = TransformNormal(velocity_, worldTransform_.matWorld_);
+
+		std::unique_ptr<Model> newModel;
+		newModel = std::make_unique<Model>();
+		newModel = newModel->CreateModelFromObjPtr(ENEMYBULLET);
+
 		// 弾を生成し、初期化
 		EnemyBullet* newBullet = new EnemyBullet();
-		newBullet->Initialize(model, enemy->GetWorldPosition(), velocity_);
+		newBullet->Initialize(newModel.get(), enemy->GetWorldPosition(), velocity_);
 		// 弾を登録する
 		AddEnemyBullet(newBullet);
 	}

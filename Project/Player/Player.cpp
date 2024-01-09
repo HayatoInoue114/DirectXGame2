@@ -124,18 +124,18 @@ void Player::Update(ViewProjection viewProjection) {
 	worldTransform_.UpdateMatrix();
 
 	// キャラクターの座標を画面表示する処理
-	float num[3] = {
-		worldTransform_.translation_.x, worldTransform_.translation_.y,
-		worldTransform_.translation_.z };
-	ImGui::Begin("Player    DebugCamera : LALT");
-	ImGui::SliderFloat3("Player", num, -30, 30);
-	ImGui::Text("Rotate : A or D");
-	ImGui::Text("Bullet : SPACE");
-	ImGui::End();
+	//float num[3] = {
+	//	worldTransform_.translation_.x, worldTransform_.translation_.y,
+	//	worldTransform_.translation_.z };
+	//ImGui::Begin("Player    DebugCamera : LALT");
+	//ImGui::SliderFloat3("Player", num, -30, 30);
+	//ImGui::Text("Rotate : A or D");
+	//ImGui::Text("Bullet : SPACE");
+	//ImGui::End();
 
-	worldTransform_.translation_.x = num[0];
-	worldTransform_.translation_.y = num[1];
-	worldTransform_.translation_.z = num[2];
+	//worldTransform_.translation_.x = num[0];
+	//worldTransform_.translation_.y = num[1];
+	//worldTransform_.translation_.z = num[2];
 
 	Rotate();
 

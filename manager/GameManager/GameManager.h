@@ -86,5 +86,11 @@ private:
 	int sceneNum_{};
 
 	int preSceneNum_{};
+
+	Sprite* titleSprite_{};
+
+	Sprite* clearSprite_{};
+
+	WorldTransform transform_{};
 };
 

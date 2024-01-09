@@ -8,7 +8,9 @@ GameManager::GameManager() {
 }
 
 GameManager::~GameManager() {
-
+	delete titleScene_;
+	delete gameScene_;
+	delete gameClearScene_;
 }
 
 void GameManager::Initialize() 
@@ -43,12 +45,17 @@ void GameManager::Initialize()
 
 	titleScene_ = new TitleScene();
 	titleScene_->Initialize();
+	titleSprite_ = Sprite::Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, TITLE);
 
 	gameScene_ = new GameScene();
 	gameScene_->Initialize();
 
 	gameClearScene_ = new GameClearScene();
 	gameClearScene_->Initialize();
+
+	clearSprite_ = Sprite::Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, CLEAR);
+
+	transform_.Initialize();
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
@@ -115,6 +122,7 @@ void GameManager::Update() {
 		break;
 	case GAMECLEARSCENE:
 		//gameClearScene_->Update();
+		//clearSprite_->Draw(transform_);
 		if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B)) {
 			titleScene_->Initialize();
 			sceneNum_ = TITLESCENE;
@@ -165,13 +173,13 @@ void GameManager::Draw() {
 	switch (sceneNum_)
 	{
 	case TITLESCENE:
-		titleScene_->Draw();
+		//titleSprite_->Draw(transform_);
 		break;
 	case GAMESCENE:
 		gameScene_->Draw();
 		break;
 	case GAMECLEARSCENE:
-		gameClearScene_->Draw();
+		//clearSprite_->Draw(transform_);
 		break;
 	default:
 		break;

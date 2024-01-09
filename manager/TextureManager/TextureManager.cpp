@@ -73,11 +73,11 @@ void TextureManager::LoadAndTransferTexture() {
 	//ここで.pngを読み込む
 	mipImages_[UVCHECKER] = LoadTexture("resources/uvChecker.png");
 	mipImages_[MONSTERBALL] = LoadTexture("resources/monsterBall.png");
-	mipImages_[PLAYER] = LoadTexture("resources/godest.png");
-	mipImages_[ENEMY] = LoadTexture("resources/title_jiki.png");
+	//mipImages_[PLAYER] = LoadTexture("resources/godest.png");
+	//mipImages_[ENEMY] = LoadTexture("resources/title_jiki.png");
+	mipImages_[RETICLE] = LoadTexture("resources/reticle.png");
 	mipImages_[PLAYERBULLET] = LoadTexture("resources/ball.png");
 	mipImages_[ENEMYBULLET] = LoadTexture("resources/ball.png");
-	mipImages_[RETICLE] = LoadTexture("resources/reticle.png");
 	mipImages_[SKYDOMETEX] = LoadTexture("resources/colorGrid.png");
 
 	//Uploadする

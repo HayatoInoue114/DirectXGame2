@@ -59,7 +59,9 @@ public:
 
 	static Model* CreateModelFromObj(int modelName);
 
-	std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
+	static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
+
+	void SetTextureNum(uint32_t num) { modelName_ = num; }
 private:
 	//モデル読み込み
 	ModelData modelData_{};

@@ -6,6 +6,8 @@ enum ModelName {
 	CUBE,
 	SPHERE,
 	SKYDOME,
+	PLAYER,
+	ENEMY,
 
 	MODELNUM
 };

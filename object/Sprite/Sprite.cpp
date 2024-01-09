@@ -178,8 +178,9 @@ Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t t
 	sprite->SetSize(size);
 	sprite->SetPosition({position.x,position.y});
 	sprite->SetColor(color);
-	textureNum_ = textureNum;
 	sprite->Initialize();
+	sprite->SetTextureNum(textureNum);
+	//textureNum_ = textureNum;
 
 	return sprite;
 }

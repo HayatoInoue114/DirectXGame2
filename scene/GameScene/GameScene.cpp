@@ -55,8 +55,11 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 	Vector3 playerPosition(0, 0, 50.0f);
+
+	textureHandle = PLAYER;
 	// 自キャラの初期化
-	player_->Initialize(model, textureHandle, playerPosition);
+	playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
+	player_->Initialize(playerModel_.get(), textureHandle, playerPosition);
 
 	// デバッグカメラの生成
 	//debugCamera_ = new DebugCamera(1280, 720);
@@ -68,11 +71,6 @@ void GameScene::Initialize() {
 
 	// 敵の生成
 	/*EnemySpawn({0.5f, 0.0f, 60.0f});*/
-	for (Enemy* enemy : enemies_) {
-		std::unique_ptr<Model> newEnemyModel = std::make_unique<Model>();
-		newEnemyModel = newEnemyModel->CreateModelFromObjPtr(CUBE);
-		enemiesModel_.push_back(newEnemyModel.get());
-	}
 	
 
 	LoadEnemyPopData();
@@ -355,9 +353,6 @@ void GameScene::AddEnemyBullet(EnemyBullet* enemhyBullet) {
 
 void GameScene::EnemySpawn(Vector3 position) {
 	Enemy* newEnemy = new Enemy();
-	/*std::unique_ptr<Model> newModel;
-	newModel = std::make_unique<Model>();
-	newModel = newModel->CreateModelFromObjPtr(CUBE);*/
 	Model* newModel = Model::CreateModelFromObj(CUBE);
 	newEnemy->SetPlayer(player_.get());
 	newEnemy->Initialize(newModel, position);
@@ -461,13 +456,12 @@ void GameScene::EnemyFire() {
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity_ = TransformNormal(velocity_, worldTransform_.matWorld_);
 
-		std::unique_ptr<Model> newModel;
-		newModel = std::make_unique<Model>();
-		newModel = newModel->CreateModelFromObjPtr(ENEMYBULLET);
+		Model* newModel = Model::CreateModelFromObj(CUBE);
+
 
 		// 弾を生成し、初期化
 		EnemyBullet* newBullet = new EnemyBullet();
-		newBullet->Initialize(newModel.get(), enemy->GetWorldPosition(), velocity_);
+		newBullet->Initialize(newModel, enemy->GetWorldPosition(), velocity_);
 		// 弾を登録する
 		AddEnemyBullet(newBullet);
 	}

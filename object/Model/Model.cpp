@@ -96,8 +96,8 @@ std::unique_ptr<Model> Model::CreateModelFromObjPtr(int modelName) {
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
 	// モデルの読み込み
-	modelName_ = modelName;
-	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName_];
+	//model->SetTextureNum(modelName);
+	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
 
 	model->Initialize();
 	return model;

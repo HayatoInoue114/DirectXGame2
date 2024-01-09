@@ -41,7 +41,7 @@ public:
 
 	void ImGuiAdjustParameter();
 
-	Sprite* Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
+	static Sprite* Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
 
 	// セッター
 	void SetWorldTransform(const WorldTransform& transform) { worldTransform_ = transform; }
@@ -52,6 +52,7 @@ public:
 	void SetisInvisible(bool isInvisible) { isInvisible_ = isInvisible; }
 	void SetSize(const Vector2& size) { size_ = size; }
 	void SetPosition(const Vector2& position) { worldTransform_.translation_.x = position.x; worldTransform_.translation_.y = position.y; }
+	void SetTextureNum(uint32_t num) { textureNum_ = num; }
 
 	// ゲッター
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
@@ -61,6 +62,7 @@ public:
 	bool GetisFlipY() const { return isFlipY_; }
 	bool GetisInvisible() const { return isInvisible_; }
 	const Vector2& GetPosition() const { return { worldTransform_.translation_.x ,worldTransform_.translation_.y }; }
+	
 
 private:
 	enum VERTEX {

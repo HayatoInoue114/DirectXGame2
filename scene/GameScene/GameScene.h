@@ -90,6 +90,8 @@ private: // メンバ変数
 
 	// 3Dモデルデータ
 	Model* model = nullptr;
+	std::unique_ptr<Model> playerModel_;
+	std::unique_ptr<Model> enemyModel_;
 
 	// ビュープロジェクション
 	ViewProjection viewProjection;
@@ -128,7 +130,7 @@ private: // メンバ変数
 	int waitTimer_ = 0;
 
 	// 弾を発射する間隔
-	static const uint32_t kFireInterval = 1000;
+	static const uint32_t kFireInterval = 100;
 	// 次元発動のリスト
 	std::list<TimedCall*> timedCalls_;
 };

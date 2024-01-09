@@ -7,7 +7,6 @@ enum ModelName {
 	SPHERE,
 	SKYDOME,
 
-
 	MODELNUM
 };
 

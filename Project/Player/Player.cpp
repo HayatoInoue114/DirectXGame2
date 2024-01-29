@@ -223,11 +223,11 @@ void Player::Draw(ViewProjection viewProjection) {
 // }
 
 void Player::Attack() {
-	XINPUT_STATE joyState;
+	XINPUT_STATE joyState{};
 	//ゲームパッド未接続状態なら何もせずに抜ける
-	if (!Input::GetInstance()->GetJoystickState(joyState)) {
-		return;
-	}
+	//if (!Input::GetInstance()->GetJoystickState(joyState)) {
+	//	return;
+	//}
 
 	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
 		// 弾の速度

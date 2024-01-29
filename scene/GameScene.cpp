@@ -1,6 +1,6 @@
 #include "GameScene.h"
 //#include "AxisIndicator.h"
-#include "../../manager/TextureManager/TextureManager.h"
+#include "../manager/TextureManager/TextureManager.h"
 #include <cassert>
 #include <fstream>
 
@@ -11,7 +11,7 @@ GameScene::~GameScene() {
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
-	delete modelSkydome_;
+	//delete modelSkydome_;
 	delete railCamera_;
 	for (EnemyBullet* enemyBullet : enemyBullets_) {
 		delete enemyBullet;
@@ -40,8 +40,8 @@ void GameScene::Initialize() {
 	worldTransform_.Initialize();
 
 	// 3Dモデルの生成
-	modelSkydome_ = new Model;
-	modelSkydome_ = modelSkydome_->CreateModelFromObj(SKYDOME);
+	modelSkydome_ = std::make_unique<Model>();
+	modelSkydome_ = Model::CreateModelFromObjPtr(SKYDOME);
 
 	// ビュープロジェクションの初期化
 	viewProjection.farZ = 500;
@@ -54,12 +54,11 @@ void GameScene::Initialize() {
 
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
-	Vector3 playerPosition(0, 0, 50.0f);
 
 	textureHandle = PLAYER;
 	// 自キャラの初期化
 	playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
-	player_->Initialize(playerModel_.get(), textureHandle, playerPosition);
+	
 
 	// デバッグカメラの生成
 	//debugCamera_ = new DebugCamera(1280, 720);
@@ -86,10 +85,14 @@ void GameScene::Initialize() {
 	//skydome_ = new Skydome();
 	skydome_ = std::make_unique<Skydome>();
 	// 天球の初期化
-	skydome_->Initialize(modelSkydome_);
+	skydome_->Initialize(modelSkydome_.get());
 
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
+
+	Vector3 playerPosition(0, 0, 50.0f);
+
+	player_->Initialize(playerModel_.get(), textureHandle, playerPosition);
 
 	dedCount_ = 0;
 
@@ -107,11 +110,12 @@ void GameScene::Update() {
 		isClear_ = true;
 	}
 
-	viewProjection.UpdateMatrix();
+	
 	// レールカメラの更新
 	railCamera_->Update();
 	viewProjection.matView = railCamera_->GetViewProjection().matView;
 	viewProjection.matProjection = railCamera_->GetViewProjection().matProjection;
+	viewProjection.UpdateMatrix();
 	viewProjection.TransferMatrix();
 
 
@@ -160,6 +164,11 @@ void GameScene::Update() {
 	// 天球の更新
 	skydome_->Update();
 
+	ImGui::Begin("View");
+	ImGui::SliderFloat3("translation", &viewProjection.translation_.x, 10, 10);
+	ImGui::SliderFloat3("rotation", &viewProjection.rotation_.x, 10, 10);
+	ImGui::End();
+
 	// デバッグカメラの更新
 	//	debugCamera_->Update();
 	// #ifdef _DEBUG
@@ -198,6 +207,9 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
+	/// 
+	
+	skydome_->Draw(viewProjection);
 
 	// スプライト描画後処理
 	//Sprite::PostDraw();
@@ -488,7 +500,7 @@ void GameScene::FireAndResetCallback() {
 }
 
 void GameScene::Finalize() {
-	delete model;
+	/*delete model;
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
@@ -499,5 +511,5 @@ void GameScene::Finalize() {
 	}
 	for (TimedCall* timedCall : timedCalls_) {
 		delete timedCall;
-	}
+	}*/
 }

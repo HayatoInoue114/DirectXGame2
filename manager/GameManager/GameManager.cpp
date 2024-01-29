@@ -105,8 +105,7 @@ void GameManager::Update() {
 	{
 	case TITLESCENE:
 		//titleScene_->Update();
-		if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B)) {
-			
+		if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || !input_->PushKeyTrigger(DIK_SPACE)) {
 			gameScene_->Initialize();
 			sceneNum_ = GAMESCENE;
 		}
@@ -123,7 +122,7 @@ void GameManager::Update() {
 	case GAMECLEARSCENE:
 		//gameClearScene_->Update();
 		//clearSprite_->Draw(transform_);
-		if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B)) {
+		if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || !input_->PushKeyTrigger(DIK_SPACE)) {
 			titleScene_->Initialize();
 			sceneNum_ = TITLESCENE;
 		}

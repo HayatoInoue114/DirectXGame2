@@ -46,7 +46,7 @@ bool Input::PushKey(uint8_t keyNum) {
 
 }
 
-bool Input::PushKeyPressed(uint32_t keyNum) {
+bool Input::PushKeyTrigger(uint32_t keyNum) {
 
 	if (Input::GetInstance()->keys[keyNum] == 0x80 && Input::GetInstance()->preKeys[keyNum] == 0x00)
 	{

@@ -1,12 +1,12 @@
 #pragma once
-#include "../../ViewProjection/ViewProjection.h"
-#include "../../math/WorldTransform/WorldTransform.h"
+#include "../ViewProjection/ViewProjection.h"
+#include "../math/WorldTransform/WorldTransform.h"
 
-#include "../../Project/Player/Player.h"
-#include "../../Project/Enemy/Enemy.h"
-#include "../../Project/TimedCall/TimedCall.h"
-#include "../../Project/RailCamera/RailCamera.h"
-#include "../../Project/Skydome/Skydome.h"
+#include "../Project/Player/Player.h"
+#include "../Project/Enemy/Enemy.h"
+#include "../Project/TimedCall/TimedCall.h"
+#include "../Project/RailCamera/RailCamera.h"
+#include "../Project/Skydome/Skydome.h"
 #include "IScene.h"
 
 class Enemy;
@@ -119,7 +119,7 @@ private: // メンバ変数
 	//Skydome* skydome_ = nullptr;
 
 	// 3Dモデル
-	Model* modelSkydome_ = nullptr;
+	std::unique_ptr<Model> modelSkydome_ = nullptr;
 
 	// レールカメラ
 	RailCamera* railCamera_ = nullptr;

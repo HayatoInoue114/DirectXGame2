@@ -18,7 +18,7 @@ public:
 
 	bool PushKey(uint8_t keyNum);
 
-	bool PushKeyPressed(uint32_t keyNum);
+	bool PushKeyTrigger(uint32_t keyNum);
 
 	bool GetJoystickState(XINPUT_STATE& out) const;
 

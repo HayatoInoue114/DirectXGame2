@@ -19,6 +19,10 @@ GameScene::~GameScene() {
 	for (TimedCall* timedCall : timedCalls_) {
 		delete timedCall;
 	}
+	// ビュー(カメラ)の解放
+	viewProjection.constBuff_.ReleaseAndGetAddressOf();
+
+	worldTransform_.constBuff_.ReleaseAndGetAddressOf();
 }
 
 void GameScene::Initialize() {
@@ -44,8 +48,8 @@ void GameScene::Initialize() {
 	modelSkydome_ = modelSkydome_->CreateModelFromObj(SKYDOME);
 
 	// ビュープロジェクションの初期化
-	viewProjection.farZ = 500;
 	viewProjection.Initialize();
+	viewProjection.farZ = 500;
 
 	// レールカメラの生成
 	railCamera_ = new RailCamera();
@@ -114,7 +118,9 @@ void GameScene::Update() {
 	viewProjection.matProjection = railCamera_->GetViewProjection().matProjection;
 	viewProjection.TransferMatrix();
 
-
+	ImGui::Begin("");
+	ImGui::SliderFloat3("view", &viewProjection.translation_.x, 10, 10);
+	ImGui::End();
 
 	// 敵の発生処理
 	UpdateEnemyPopCommands();
@@ -184,6 +190,8 @@ void GameScene::Update() {
 	//		//ビュープロジェクション行列の更新と転送
 	//		viewProjection.UpdateMatrix();
 	//	}
+
+
 }
 
 void GameScene::Draw() {

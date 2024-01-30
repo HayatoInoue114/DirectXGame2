@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "../Player/Player.h"
 #include "../../scene/GameScene.h"
+#include "EnemyState/EnemyState.h"
 
 void (Enemy::* Enemy::situation[])() = { &Enemy::Approach, &Enemy::Leave };
 
@@ -31,6 +32,8 @@ void Enemy::Initialize(Model* model, Vector3 position) {
 	// 引数で受け取った初期座標をセット
 	worldTransform_.translation_ = { position };
 
+	state_ = new EnemyStateApproach();
+
 	state_->Initialize(this);
 }
 
@@ -43,12 +46,14 @@ void Enemy::Leave() {
 }
 
 void Enemy::ChangeState(BaseEnemyState* newState) {
-	/*delete state_;*/
+	delete state_;
 	state_ = newState;
 }
 
 void Enemy::Update() {
 	state_->Update(this);
+
+	
 
 	worldTransform_.UpdateMatrix();
 	worldTransform_.TransferMatrix();

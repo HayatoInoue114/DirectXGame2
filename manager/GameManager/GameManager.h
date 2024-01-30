@@ -49,19 +49,19 @@ public:
 
 	void VariableInit();
 
-	enum Scene
+	/*enum Scene
 	{
 		TITLESCENE,
 		GAMESCENE,
 		GAMECLEARSCENE
-	};
+	};*/
 
 private:
 	std::unique_ptr<Model> model_{};
 
 	std::unique_ptr<Particle> particle_{};
 
-	std::unique_ptr<Sprite> sprite_{};
+	Sprite* sprite_{};
 
 	TextureManager* textureManager_{};
 

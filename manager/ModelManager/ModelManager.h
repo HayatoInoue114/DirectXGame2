@@ -8,6 +8,7 @@ enum ModelName {
 	SKYDOME,
 	PLAYER,
 	ENEMY,
+	TITLE,
 
 	MODELNUM
 };

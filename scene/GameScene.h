@@ -14,7 +14,7 @@ class Enemy;
 /// <summary>
 /// ゲームシーン
 /// </summary>
-class GameScene{
+class GameScene : public IScene{
 
 public: // メンバ関数
 	/// <summary>
@@ -85,6 +85,8 @@ private: // メンバ変数
 	//Audio* audio_ = nullptr;
 
 	WorldTransform worldTransform_;
+
+	Sprite* blackSprite_;
 
 	/// <summary>
 	/// ゲームシーン用

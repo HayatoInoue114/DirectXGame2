@@ -104,6 +104,8 @@ void GameScene::Initialize() {
 
 	isClear_ = false;
 
+	blackSprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, BLACK);
+
 	FireAndResetCallback();
 }
 
@@ -114,18 +116,15 @@ void GameScene::Update() {
 		isClear_ = true;
 	}
 
-	
+	viewProjection.UpdateMatrix();
 	// レールカメラの更新
 	railCamera_->Update();
 	viewProjection.matView = railCamera_->GetViewProjection().matView;
 	viewProjection.matProjection = railCamera_->GetViewProjection().matProjection;
-	viewProjection.UpdateMatrix();
+
 	viewProjection.TransferMatrix();
 
-	ImGui::Begin("");
-	ImGui::SliderFloat3("view", &viewProjection.translation_.x, 10, 10);
-	ImGui::End();
-
+	
 	// 敵の発生処理
 	UpdateEnemyPopCommands();
 
@@ -161,6 +160,8 @@ void GameScene::Update() {
 	});
 
 	for (EnemyBullet* bullet : enemyBullets_) {
+		bullet->SetPlayer(player_.get());
+
 		bullet->Update();
 	}
 
@@ -171,9 +172,12 @@ void GameScene::Update() {
 	skydome_->Update();
 
 	ImGui::Begin("View");
-	ImGui::SliderFloat3("translation", &viewProjection.translation_.x, 10, 10);
+	//ImGui::SliderFloat3("translation", , 10, 10);
 	ImGui::SliderFloat3("rotation", &viewProjection.rotation_.x, 10, 10);
+	ImGui::SliderFloat3("Cameratranslation", &railCamera_->GetWorldTransform().translation_.x, 10, 10);
+	ImGui::SliderFloat3("Camerarotation", &railCamera_->GetWorldTransform().rotation_.x, 10, 10);
 	ImGui::End();
+	
 
 	// デバッグカメラの更新
 	//	debugCamera_->Update();
@@ -254,6 +258,8 @@ void GameScene::Draw() {
 	//Sprite::PreDraw(commandList);
 
 	player_->DrawUI();
+
+	blackSprite_->Draw(worldTransform_);
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
@@ -508,16 +514,22 @@ void GameScene::FireAndResetCallback() {
 }
 
 void GameScene::Finalize() {
-	/*delete model;
+	delete model;
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
-	delete modelSkydome_;
+	//delete modelSkydome_;
 	delete railCamera_;
 	for (EnemyBullet* enemyBullet : enemyBullets_) {
 		delete enemyBullet;
 	}
 	for (TimedCall* timedCall : timedCalls_) {
 		delete timedCall;
-	}*/
+	}
+
+	delete blackSprite_;
+	// ビュー(カメラ)の解放
+	viewProjection.constBuff_.ReleaseAndGetAddressOf();
+
+	worldTransform_.constBuff_.ReleaseAndGetAddressOf();
 }

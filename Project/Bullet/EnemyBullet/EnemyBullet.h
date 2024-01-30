@@ -4,6 +4,8 @@
 #include "../../../math/WorldTransform/WorldTransform.h"
 #include <assert.h>
 
+class Player;
+
 class EnemyBullet {
 public:
 	EnemyBullet();
@@ -37,6 +39,8 @@ public:
 
 	bool IsDead() const { return isDead_; }
 
+	void SetPlayer(Player* player) { player_ = player; }
+
 private:
 	// ワールド変換データ
 	WorldTransform worldTransform_ = {};
@@ -57,4 +61,10 @@ private:
 	int32_t deathTimer_ = kLifeTime;
 	// デスフラグ
 	bool isDead_ = false;
+
+	Player* player_;
+
+	float t_;
+
+	float speed_;
 };

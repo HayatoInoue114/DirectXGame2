@@ -1,7 +1,7 @@
 #pragma once
 #include "IScene.h"
 #include "../Input/Input.h"
-#include "../object/Sprite/Sprite.h"
+#include "../object/Model/Model.h"
 
 class GameManager;
 
@@ -15,7 +15,9 @@ public:
 private:
 	Input* input_{};
 
-	Sprite* sprite_{};
+	std::unique_ptr<Model> sprite_{};
 
 	WorldTransform transform_{};
+
+	ViewProjection viewProjection;
 };

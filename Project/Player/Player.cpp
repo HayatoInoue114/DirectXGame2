@@ -315,7 +315,8 @@ void Player::SetParent(const WorldTransform* parent) {
 }
 
 void Player::DrawUI() { 
-	sprite2DReticle_->Draw(worldSprite2DReticle_); }
+	sprite2DReticle_->Draw(worldSprite2DReticle_); 
+}
 
 Vector2 Player::GetCursorPosition() {
 	POINT mousePosition;

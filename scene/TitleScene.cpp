@@ -6,9 +6,12 @@ void TitleScene::Initialize() {
 	// 入力
 	input_ = Input::GetInstance();
 
-	sprite_ = Sprite::Create({0,0,0},{1,1},{0,0,0,1},TITLE);
+	sprite_ = Model::CreateModelFromObjPtr(TITLE);
 
 	transform_.Initialize();
+	viewProjection.Initialize();
+
+	transform_.scale_ = { 1.0f,0.5f,0.7f };
 }
 
 void TitleScene::Update() {
@@ -24,6 +27,7 @@ void TitleScene::Update() {
 
 void TitleScene::Draw() {
 	//sprite_->Draw(transform_);
+	sprite_->Draw(transform_, viewProjection, TITLESPRITE);
 }
 
 void TitleScene::Finalize() {

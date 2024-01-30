@@ -1,6 +1,12 @@
 #include "EnemyBullet.h"
+#include "../../Player/Player.h"
 
-EnemyBullet::EnemyBullet() { velocity_ = {}; }
+EnemyBullet::EnemyBullet() {
+	velocity_ = {};
+	player_ = {};
+	speed_ = {};
+	t_ = {};
+}
 
 EnemyBullet::~EnemyBullet() {}
 
@@ -23,18 +29,33 @@ void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector
 	// 引数で受け取った速度をメンバ変数に代入
 	velocity_ = velocity;
 
+	t_ = 0.05f;
+
+	speed_ = 0.8f;
+
+}
+
+void EnemyBullet::Update() {
+	// 座標を移動させる（1フレーム分の移動量を足しこむ)
+	Vector3 toPlayer = Subtract(player_->GetWorldPosition(), worldTransform_.translation_);
+
+	//ベクトルを正規化する
+	toPlayer = Normalize(toPlayer);
+	velocity_ = Normalize(velocity_);
+
+	velocity_ = Multiply(Slerp(velocity_, toPlayer, t_),speed_);
+
+	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
+
 	// Y軸周り角度(0y)
 	worldTransform_.rotation_.y = std::atan2(velocity_.x, velocity_.z);
 
 	velocityXZ_ = std::sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
 	// X軸周り角度(0x)
 	worldTransform_.rotation_.x = std::atan2(-velocity_.y, velocityXZ_);
-}
 
-void EnemyBullet::Update() {
-	// 座標を移動させる（1フレーム分の移動量を足しこむ)
-	worldTransform_.translation_ = Add(worldTransform_.translation_, velocity_);
 	worldTransform_.UpdateMatrix();
+
 	// 時間経過でデス
 	if (--deathTimer_ <= 0) {
 		isDead_ = true;

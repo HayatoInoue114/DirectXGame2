@@ -42,6 +42,7 @@ void GameScene::Initialize() {
 	model = model->CreateModelFromObj(CUBE);
 
 	worldTransform_.Initialize();
+	worldTransform_.scale_ = { 10,10,1 };
 
 	// 3Dモデルの生成
 	modelSkydome_ = std::make_unique<Model>();
@@ -104,7 +105,8 @@ void GameScene::Initialize() {
 
 	isClear_ = false;
 
-	blackSprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, BLACK);
+	blackSprite_ = new Sprite;
+	blackSprite_->Create({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, BLACK);
 
 	FireAndResetCallback();
 }

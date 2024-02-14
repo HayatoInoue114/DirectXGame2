@@ -141,6 +141,14 @@ void Sphere::CreateWVPMatrix() {
 	wvpData_->World = worldMatrix_;
 }
 
+void Sphere::CreateCameraForGPUResource() {
+	cameraForGPUResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(CameraForGPU));
+	cameraForGPU_ = nullptr;
+	cameraForGPUResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+
+	cameraForGPU_->worldPosition = { 0.0f,0.0f,-5.0f };
+}
+
 void Sphere::Release() {
 	vertexResource->Release();
 	materialResource_->Release();

@@ -34,6 +34,8 @@ public:
 	void CreateTransformationMatrixResource();
 
 	void CreateWVPMatrix();
+
+	void CreateCameraForGPUResource();
 private:
 	Material* materialData_{};
 

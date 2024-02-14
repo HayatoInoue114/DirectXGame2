@@ -90,12 +90,12 @@ private:
 	Microsoft::WRL::ComPtr<ID3DBlob> particleVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<ID3DBlob> particlePixelShaderBlob_{};*/
 
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc_[MAXPSO]{};
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{};
 
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[3]{};
 
 	//実際に生成
-	Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState_[MAXPSO]{};
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> PipelineManagerState_[MAXPSO]{};
 
 	//ビューポート
 	D3D12_VIEWPORT viewport_{};

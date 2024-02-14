@@ -31,9 +31,6 @@
     <Filter Include="ヘッダー ファイル\GraphicsRenderer">
       <UniqueIdentifier>{93e449ea-001f-4948-8c69-0cd2ff356a80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\FormatString">
-      <UniqueIdentifier>{1caf239b-ffb5-47e4-9eee-b5a40ca49623}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ヘッダー ファイル\FormatString">
       <UniqueIdentifier>{507d3a5c-16f2-4c0a-8010-88312281c146}</UniqueIdentifier>
     </Filter>
@@ -102,6 +99,9 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\TextureManager">
       <UniqueIdentifier>{8ac60a1b-1763-48e9-ad62-641756b66788}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\FormatString">
+      <UniqueIdentifier>{1caf239b-ffb5-47e4-9eee-b5a40ca49623}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +172,9 @@
       <Filter>ソース ファイル\Sprite</Filter>
     </ClCompile>
     <ClCompile Include="components\Audio\3DAudio\Audio3D.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="manager\PipelineManager\PiplineManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -276,6 +279,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="manager\PipelineManager\PiplineManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

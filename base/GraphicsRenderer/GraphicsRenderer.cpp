@@ -115,7 +115,6 @@ void GraphicsRenderer::CreateRootSignature() {
 		rootParameters_[i][0].Descriptor.ShaderRegister = 0;
 
 		if (i != 1) {
-			// worldTransform
 			rootParameters_[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters_[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 			rootParameters_[i][1].Descriptor.ShaderRegister = 0;
@@ -125,7 +124,6 @@ void GraphicsRenderer::CreateRootSignature() {
 			rootParameters_[i][2].DescriptorTable.pDescriptorRanges = descriptorRange_;
 			rootParameters_[i][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
 
-			// viewProjection
 			rootParameters_[i][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters_[i][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 			rootParameters_[i][4].Descriptor.ShaderRegister = 1;
@@ -256,43 +254,43 @@ void GraphicsRenderer::CreatePSO() {
 	HRESULT hr;
 
 	for (int i = 0; i < MAXPSO; i++) {
-		graphicsPipelineStateDesc_[i] = {};
-		graphicsPipelineStateDesc_[i].pRootSignature = rootSignature_[i].Get();//RootSignature
-		graphicsPipelineStateDesc_[i].InputLayout = inputLayoutDesc_[i];//InputLayout
+		PipelineManagerStateDesc_[i] = {};
+		PipelineManagerStateDesc_[i].pRootSignature = rootSignature_[i].Get();//RootSignature
+		PipelineManagerStateDesc_[i].InputLayout = inputLayoutDesc_[i];//InputLayout
 
 		if (i == 0) {
-			graphicsPipelineStateDesc_[i].VS = { vertexShaderBlob_->GetBufferPointer(),
+			PipelineManagerStateDesc_[i].VS = { vertexShaderBlob_->GetBufferPointer(),
 		vertexShaderBlob_->GetBufferSize() };//VertexShader
-			graphicsPipelineStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
+			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
 			pixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
 		if (i == 1) {
-			graphicsPipelineStateDesc_[i].VS = { particleVertexShaderBlob_->GetBufferPointer(),
+			PipelineManagerStateDesc_[i].VS = { particleVertexShaderBlob_->GetBufferPointer(),
 		particleVertexShaderBlob_->GetBufferSize() };//VertexShader
-			graphicsPipelineStateDesc_[i].PS = { particlePixelShaderBlob_->GetBufferPointer(),
+			PipelineManagerStateDesc_[i].PS = { particlePixelShaderBlob_->GetBufferPointer(),
 			particlePixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
 		
 		
-		graphicsPipelineStateDesc_[i].BlendState = blendDesc_[i];//BlendState
-		graphicsPipelineStateDesc_[i].RasterizerState = rasterizerDesc_[i];//RasterizeState
+		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState
+		PipelineManagerStateDesc_[i].RasterizerState = rasterizerDesc_[i];//RasterizeState
 		//書き込むRTVの情報
-		graphicsPipelineStateDesc_[i].NumRenderTargets = 1;
-		graphicsPipelineStateDesc_[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		PipelineManagerStateDesc_[i].NumRenderTargets = 1;
+		PipelineManagerStateDesc_[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		//利用するトポロジ（形状）のタイプ。三角形
-		graphicsPipelineStateDesc_[i].PrimitiveTopologyType =
+		PipelineManagerStateDesc_[i].PrimitiveTopologyType =
 			D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 		//どのように画面に色を打ち込むかの設定（気にしなくてよい）
-		graphicsPipelineStateDesc_[i].SampleDesc.Count = 1;
-		graphicsPipelineStateDesc_[i].SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+		PipelineManagerStateDesc_[i].SampleDesc.Count = 1;
+		PipelineManagerStateDesc_[i].SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
 		//DepthStencilの設定
-		graphicsPipelineStateDesc_[i].DepthStencilState = depthStencilDesc_;
-		graphicsPipelineStateDesc_[i].DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		PipelineManagerStateDesc_[i].DepthStencilState = depthStencilDesc_;
+		PipelineManagerStateDesc_[i].DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
 
-		graphicsPipelineState_[i] = nullptr;
-		hr = DirectX12::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc_[i],
-			IID_PPV_ARGS(&graphicsPipelineState_[i]));
+		PipelineManagerState_[i] = nullptr;
+		hr = DirectX12::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&PipelineManagerStateDesc_[i],
+			IID_PPV_ARGS(&PipelineManagerState_[i]));
 		assert(SUCCEEDED(hr));
 	}
 	for (int i = 0; i < MAXPSO; i++) {
@@ -350,7 +348,7 @@ void GraphicsRenderer::DrawCall() {
 		directX12_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);	//Scirssorを設定
 		//RootSignatureを設定。PSOに設定しているけど別途設定が必要
 		directX12_->GetCommandList()->SetGraphicsRootSignature(rootSignature_[i].Get());
-		directX12_->GetCommandList()->SetPipelineState(graphicsPipelineState_[i].Get());	//PSOを設定
+		directX12_->GetCommandList()->SetPipelineState(PipelineManagerState_[i].Get());	//PSOを設定
 	}
 }
 

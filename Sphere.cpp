@@ -12,6 +12,7 @@ void Sphere::Initialize(DirectX12* directX12, Light* light) {
 	CreateMaterialResource();
 	CreateVertexBufferView();
 	CreateTransformationMatrixResource();
+	CreateCameraForGPUResource();
 	WriteDataToResource();
 
 	//軽度分割数1つ分の角度
@@ -90,6 +91,8 @@ void Sphere::Initialize(DirectX12* directX12, Light* light) {
 	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 	// Lightingを有効にする
 	materialData_->enableLighting = true;
+
+	materialData_->shininess = 50;
 }
 
 void Sphere::CreateVertexResource() {
@@ -142,7 +145,7 @@ void Sphere::CreateWVPMatrix() {
 }
 
 void Sphere::CreateCameraForGPUResource() {
-	cameraForGPUResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(CameraForGPU));
+	cameraForGPUResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(CameraForGPU));
 	cameraForGPU_ = nullptr;
 	cameraForGPUResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
 
@@ -173,6 +176,7 @@ void Sphere::Draw() {
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall ? directX12_->GetTextureSrvHandleGPU2() : directX12_->GetTextureSrvHandleGPU());
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, light_->GetDirectionalLightResource()->GetGPUVirtualAddress());
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	directX12_->GetCommandList()->DrawInstanced(vertexIndex_, 1, 0, 0);

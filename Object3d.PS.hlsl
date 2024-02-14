@@ -46,28 +46,31 @@ PixelShaderOutput main(VertexShaderOutput input) {
 		cos = pow(NdotL * 0.5f + 0.5f, 2.0f);
 		output.color.rgb = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
 		output.color.a = gMaterial.color.a * textureColor.a;
+
+		float32_t3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
+		float32_t3 reflectLight = reflect(gDirectionalLight.direction, normalize(input.normal));
+
+		float RdotE = dot(reflectLight,toEye);
+		float specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
+
+		//拡散反射
+		float32_t3 diffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
+		
+		//鏡面反射
+		float32_t3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float32_t3(1.0f,1.0f,1.0f);
+		
+		//拡散反射*鏡面反射
+		output.color.rgb = ((textureColor.rgb * diffuse) + specular);
+		//output.color.rgb = diffuse * specular;
+
+		//αは今まで通り
+		output.color.a = gMaterial.color.a * textureColor.a;
 	}
 	else {
 		output.color = gMaterial.color * textureColor;
 	}
 
-	float32_t3 toEye = normalize(gCamera.worldPosition - input.worldPosition);
-	float32_t3 reflectLight = reflect(gDirectionalLight.direction, normalize(input.normal));
-
-	float RdotE = dot(reflectLight,toEye);
-	float specularPow = pow(saturate(RdotE), gMaterial.shininess); // 反射強度
-
-	//拡散反射
-	float32_t3 diffuse = gMaterial.color.rgb * textureColor.rgb * gDirectionalLight.color.rgb * cos * gDirectionalLight.intensity;
 	
-	//鏡面反射
-	float32_t3 specular = gDirectionalLight.color.rgb * gDirectionalLight.intensity * specularPow * float32_t3(1.0f,1.0f,1.0f);
-	
-	//拡散反射*鏡面反射
-	output.color.rgb = diffuse * specular;
-
-	//αは今まで通り
-	output.color.a = gMaterial.color.a * textureColor.a;
 
 	return output;
 }

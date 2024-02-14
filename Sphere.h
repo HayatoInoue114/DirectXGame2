@@ -7,6 +7,7 @@
 #include "Material.h"
 #include "TransformationMatrix.h"
 #include "CameraForGPU.h"
+#include <wrl.h>
 
 class Light;
 
@@ -83,5 +84,10 @@ private:
 	uint32_t vertexIndex_ = kSubdivision * kSubdivision * 6;
 
 	bool useMonsterBall = true;
+
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> cameraForGPUResource_;
+
+	CameraForGPU* cameraForGPU_;
 };
 

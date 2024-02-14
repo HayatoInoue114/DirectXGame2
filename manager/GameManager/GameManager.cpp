@@ -84,7 +84,7 @@ void GameManager::Update() {
 
 	//sphere_->Update(transform_,color_);
 
-	//sprite_->Update();
+	sprite_->Update();
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Update(transform_);
 	}*/
@@ -136,9 +136,9 @@ void GameManager::Draw() {
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Draw();
 	}*/
-	//sprite_->Draw();
+	sprite_->Draw();
 
-	model_->Draw(UVCHECKER);
+	//model_->Draw(UVCHECKER);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

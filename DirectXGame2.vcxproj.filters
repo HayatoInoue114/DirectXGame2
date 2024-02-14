@@ -82,6 +82,9 @@
     <Filter Include="ヘッダー ファイル\Light">
       <UniqueIdentifier>{93512fa9-f520-48c2-b8c1-6764bd75f3b8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Structs\CameraForGPU">
+      <UniqueIdentifier>{fc53c7ec-e6cb-4544-9c5e-c35c899af948}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

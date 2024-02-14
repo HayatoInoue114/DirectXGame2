@@ -114,6 +114,10 @@ void GraphicsRenderer::CreateRootSignature(DirectX12* directX12) {
 	rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
 	rootParameters[3].Descriptor.ShaderRegister = 1; //レジスタ番号1を使う
 
+	rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //CBVを使う
+	rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+	rootParameters[4].Descriptor.ShaderRegister = 1; //レジスタ番号1を使う
+
 	descriptionRootSignature.pParameters = rootParameters;
 	descriptionRootSignature.NumParameters = _countof(rootParameters);
 

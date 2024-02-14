@@ -6,6 +6,7 @@
 #include "Vertexdata.h"
 #include "Material.h"
 #include "TransformationMatrix.h"
+#include "CameraForGPU.h"
 
 class Light;
 

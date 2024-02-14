@@ -59,7 +59,7 @@ private:
 	IDxcBlobUtf8* shaderError_{};
 	IDxcBlob* shaderBlob_{};
 
-	D3D12_ROOT_PARAMETER rootParameters_[MAXPSO][5] = {};
+	D3D12_ROOT_PARAMETER rootParameters_[MAXPSO][6] = {};
 
 	//シリアライズしてバイナリにする
 	//Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob_[MAXPSO]{};

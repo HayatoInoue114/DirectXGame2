@@ -202,7 +202,7 @@ void Model::SetMaterialData() {
 
 void Model::CreateModel() {
 	//モデル読み込み
-	modelData_ = LoadObjFile("resources", "plane");
+	modelData_ = LoadObjFile("resources", "ball");
 	//頂点リソースを作る
 	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
 }
@@ -252,10 +252,6 @@ void Model::Update(Transform& transform, Vector4& color) {
 }
 
 void Model::Draw(uint32_t textureNum) {
-	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-		
-	}
-
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
@@ -266,7 +262,6 @@ void Model::Draw(uint32_t textureNum) {
 	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
-	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, instancingResource_->GetGPUVirtualAddress());
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum]);
@@ -274,21 +269,6 @@ void Model::Draw(uint32_t textureNum) {
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), MAXINSTANCE, 0, 0);
-	//パラメータからUVTransform用の行列を生成する
-	
-
-	//DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_); // VBVを設定
-
-	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, worldTransform_.constBuff_->GetGPUVirtualAddress());
-
-	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, viewProjection.constBuff_->GetGPUVirtualAddress());
-	//// DescriptorTableの設定
-	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureHandle]);
-	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::GetInstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
-
-	//// マテリアルCBufferの場所を設定
-	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	//DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
 }
 
 void Model::ImGuiAdjustParameter() {

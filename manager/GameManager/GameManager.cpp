@@ -33,8 +33,8 @@ void GameManager::Initialize()
 		sphere_[i] = new Sphere;
 		sphere_[i]->Initialize(directX12_);
 	}*/
-
-	sphere_->Initialize(directX12_,light_);
+	sphere_ = std::make_unique<Sphere>();
+	sphere_->Initialize(directX12_, light_);
 
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i] = new Sprite;
@@ -78,11 +78,9 @@ void GameManager::Update() {
 		triangle_[i]->Update(transform_,color_);
 	}*/
 
-	/*for (int i = 0; i < MAXSPHERE; i++) {
-		sphere_[i]->Update(transform_, color_);
-	}*/
+	
 
-	//sphere_->Update(transform_,color_);
+	sphere_->Update(transform_,color_);
 
 	sprite_->Update();
 	/*for (int i = 0; i < MAXSPRITE; i++) {
@@ -98,9 +96,6 @@ void GameManager::Update() {
 void GameManager::Release() {
 	directX12_->Release();
 	graphicsRenderer_->Release();
-	/*for (int i = 0; i < MAXSPHERE; i++) {
-		sphere_[i]->Release();
-	}*/
 	//for (int i = 0; i < MAXSPRITE; i++) {
 	//	sprite_[i]->Release();
 	//}
@@ -129,16 +124,15 @@ void GameManager::Draw() {
 	/*for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Draw();
 	}*/
-	/*for (int i = 0; i < MAXSPHERE; i++) {
-		sphere_[i]->Draw();
-	}*/
+
+	sphere_->Draw();
 	//sphere_->Draw();
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Draw();
 	}*/
 	//sprite_->Draw();
 
-	model_->Draw(UVCHECKER);
+	//model_->Draw(UVCHECKER);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

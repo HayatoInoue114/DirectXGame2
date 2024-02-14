@@ -13,7 +13,7 @@
 #include "../../manager/TextureManager/TextureManager.h"
 #include "../../structure/ModelData/ModelData.h"
 
-#define MAXINSTANCE 10 // インスタンス数
+#define MAXINSTANCE 1 // インスタンス数
 
 class Model
 {

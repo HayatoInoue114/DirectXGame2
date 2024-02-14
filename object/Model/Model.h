@@ -12,6 +12,7 @@
 #include "../../components/Light/Light.h"
 #include "../../manager/TextureManager/TextureManager.h"
 #include "../../structure/ModelData/ModelData.h"
+#include "../../structure/CameraForGPU/CameraForGPU.h"
 
 #define MAXINSTANCE 1 // インスタンス数
 
@@ -46,6 +47,8 @@ public:
 
 	void CreateSRV();
 
+	void CreateCameraForGPUResource();
+
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
 
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
@@ -56,6 +59,8 @@ private:
 	ModelData modelData_{};
 
 	Material* materialData_{};
+
+	CameraForGPU* cameraForGPU_;
 
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties_{};
@@ -104,5 +109,7 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_{};
 
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_{};
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> cameraForGPUResource_;;
 };
 

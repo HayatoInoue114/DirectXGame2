@@ -110,14 +110,11 @@ void GraphicsRenderer::CreateRootSignature() {
 
 		//RootParameter作成。複数設定できるので配列。
 
-		rootParameters_[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters_[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters_[i][0].Descriptor.ShaderRegister = 0;
+		
 
-
-		rootParameters_[i][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		/*rootParameters_[i][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters_[i][5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters_[i][5].Descriptor.ShaderRegister = 2;
+		rootParameters_[i][5].Descriptor.ShaderRegister = 2;*/
 		if (i != 1) {
 			// worldTransform
 			rootParameters_[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
@@ -166,6 +163,32 @@ void GraphicsRenderer::CreateRootSignature() {
 		staticSamplers_[i][0].MaxLOD = D3D12_FLOAT32_MAX; //ありったけのMixmapを使う
 		staticSamplers_[i][0].ShaderRegister = 0; //レジスタ番号0を使う
 		staticSamplers_[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+
+		rootParameters_[0][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters_[0][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters_[0][0].Descriptor.ShaderRegister = 0;
+
+		rootParameters_[0][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters_[0][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		rootParameters_[0][1].Descriptor.ShaderRegister = 0;
+
+		rootParameters_[0][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE; //DescriptorTableを使う
+		rootParameters_[0][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+		rootParameters_[0][2].DescriptorTable.pDescriptorRanges = descriptorRange_; //Tableの中身の配列を指定
+		rootParameters_[0][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_); //Tableで利用する数
+
+		rootParameters_[0][3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV; //CBVを使う
+		rootParameters_[0][3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+		rootParameters_[0][3].Descriptor.ShaderRegister = 1; //レジスタ番号1を使う
+
+		rootParameters_[0][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters_[0][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters_[0][4].Descriptor.ShaderRegister = 2;
+
+		rootParameters_[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters_[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters_[i][0].Descriptor.ShaderRegister = 0;
+
 
 		descriptionRootSignature_[i].pStaticSamplers = staticSamplers_[i];
 		descriptionRootSignature_[i].NumStaticSamplers = _countof(staticSamplers_[i]);

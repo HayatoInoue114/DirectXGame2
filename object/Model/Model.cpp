@@ -110,6 +110,7 @@ void Model::Initialize() {
 	CreateModel();
 	CreateMaterialResource();
 	CreateVertexBufferView();
+	CreateCameraForGPUResource();
 	//CreateTransformationMatrixResource();
 	CreateInstance();
 
@@ -242,6 +243,14 @@ void Model::CreateSRV() {
 	DirectX12::GetInstance()->GetDevice()->CreateShaderResourceView(instancingResource_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 }
 
+void Model::CreateCameraForGPUResource() {
+	cameraForGPUResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(CameraForGPU));
+	cameraForGPU_ = nullptr;
+	cameraForGPUResource_->Map(0, nullptr, reinterpret_cast<void**>(&cameraForGPU_));
+
+	cameraForGPU_->worldPosition = { 0.0f,0.0f,-5.0f };
+}
+
 
 void Model::Update(Transform& transform, Vector4& color) {
 	transform_ = transform;
@@ -266,6 +275,8 @@ void Model::Draw(uint32_t textureNum) {
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum]);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());
+
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), MAXINSTANCE, 0, 0);

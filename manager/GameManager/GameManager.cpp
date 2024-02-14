@@ -125,14 +125,14 @@ void GameManager::Draw() {
 		triangle_[i]->Draw();
 	}*/
 
-	sphere_->Draw();
+	//sphere_->Draw();
 	//sphere_->Draw();
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Draw();
 	}*/
 	//sprite_->Draw();
 
-	//model_->Draw(UVCHECKER);
+	model_->Draw(UVCHECKER);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

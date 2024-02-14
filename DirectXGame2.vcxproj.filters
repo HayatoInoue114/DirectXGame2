@@ -278,6 +278,9 @@
     <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="structure\CameraForGPU\CameraForGPU.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

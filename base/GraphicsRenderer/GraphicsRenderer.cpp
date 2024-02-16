@@ -260,13 +260,13 @@ void GraphicsRenderer::CreatePSO() {
 
 		if (i == 0) {
 			PipelineManagerStateDesc_[i].VS = { vertexShaderBlob_->GetBufferPointer(),
-		vertexShaderBlob_->GetBufferSize() };//VertexShader
+			vertexShaderBlob_->GetBufferSize() };//VertexShader
 			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
 			pixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
 		if (i == 1) {
 			PipelineManagerStateDesc_[i].VS = { particleVertexShaderBlob_->GetBufferPointer(),
-		particleVertexShaderBlob_->GetBufferSize() };//VertexShader
+			particleVertexShaderBlob_->GetBufferSize() };//VertexShader
 			PipelineManagerStateDesc_[i].PS = { particlePixelShaderBlob_->GetBufferPointer(),
 			particlePixelShaderBlob_->GetBufferSize() };//PixelShader
 		}

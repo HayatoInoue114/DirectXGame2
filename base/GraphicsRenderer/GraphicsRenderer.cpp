@@ -119,6 +119,10 @@ void GraphicsRenderer::CreateRootSignature() {
 
 		D3D12_ROOT_PARAMETER rootParameters[MAXPSO][5] = {};
 
+		/*rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		rootParameters[1].Descriptor.ShaderRegister = 0;*/
+
 		rootParameters[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[i][0].Descriptor.ShaderRegister = 0;
@@ -192,27 +196,32 @@ void GraphicsRenderer::CreateRootSignature() {
 }
 
 void GraphicsRenderer::InputLayout() {
-	inputElementDescs_[0] = {};
-	inputElementDescs_[0].SemanticName = "POSITION";
-	inputElementDescs_[0].SemanticIndex = 0;
-	inputElementDescs_[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-	inputElementDescs_[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs_[1] = {};
-	inputElementDescs_[1].SemanticName = "TEXCOORD";
-	inputElementDescs_[1].SemanticIndex = 0;
-	inputElementDescs_[1].Format = DXGI_FORMAT_R32G32_FLOAT;
-	inputElementDescs_[1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-	inputElementDescs_[2] = {};
-	inputElementDescs_[2].SemanticName = "NORMAL";
-	inputElementDescs_[2].SemanticIndex = 0;
-	inputElementDescs_[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	inputElementDescs_[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	for (int i = 0; i < MAXPSO; i++) {
+		inputElementDescs_[i][0] = {};
+		inputElementDescs_[i][0].SemanticName = "POSITION";
+		inputElementDescs_[i][0].SemanticIndex = 0;
+		inputElementDescs_[i][0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		inputElementDescs_[i][0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+		inputElementDescs_[i][1] = {};
+		inputElementDescs_[i][1].SemanticName = "TEXCOORD";
+		inputElementDescs_[i][1].SemanticIndex = 0;
+		inputElementDescs_[i][1].Format = DXGI_FORMAT_R32G32_FLOAT;
+		inputElementDescs_[i][1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+		inputElementDescs_[i][2] = {};
+		inputElementDescs_[i][2].SemanticName = "NORMAL";
+		inputElementDescs_[i][2].SemanticIndex = 0;
+		inputElementDescs_[i][2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		inputElementDescs_[i][2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
+		inputLayoutDesc_[i] = {};
+		inputLayoutDesc_[i].pInputElementDescs = inputElementDescs_[i];
+		inputLayoutDesc_[i].NumElements = _countof(inputElementDescs_[i]);
+	}
+	
 
 	for (int i = 0; i < MAXPSO; i++) {
 	
-		inputLayoutDesc_[i] = {};
-		inputLayoutDesc_[i].pInputElementDescs = inputElementDescs_;
-		inputLayoutDesc_[i].NumElements = _countof(inputElementDescs_);
+		
 	}
 	
 }

@@ -92,7 +92,7 @@ private:
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{};
 
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[3]{};
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[MAXPSO][3]{};
 
 	//実際に生成
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> PipelineManagerState_[MAXPSO]{};

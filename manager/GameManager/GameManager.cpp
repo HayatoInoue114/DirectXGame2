@@ -113,7 +113,7 @@ void GameManager::BeginFrame() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	directX12_->PreDraw();
-	graphicsRenderer_->DrawCall();
+	graphicsRenderer_->DrawCall(directX12_);
 }
 
 void GameManager::EndFrame() {

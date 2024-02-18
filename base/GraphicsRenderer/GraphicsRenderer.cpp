@@ -382,6 +382,12 @@
 
 #include "GraphicsRenderer.h"
 
+GraphicsRenderer* GraphicsRenderer::GetInstance() {
+	static GraphicsRenderer instance;
+
+	return &instance;
+}
+
 void GraphicsRenderer::Dxc() {
 	HRESULT hr;
 	//dxcCompilerを初期化
@@ -564,10 +570,10 @@ void GraphicsRenderer::ResterizerState() {
 
 void GraphicsRenderer::BuildShader() {
 	//Shaderをコンパイルする
-	vertexShaderBlob = CompileShader(L"Object3d.VS.hlsl", L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
+	vertexShaderBlob = CompileShader(L"./ShaderFile/Object3d.VS.hlsl", L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(vertexShaderBlob != nullptr);
 
-	pixelShaderBlob = CompileShader(L"Object3d.PS.hlsl", L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
+	pixelShaderBlob = CompileShader(L"./ShaderFile/Object3d.PS.hlsl", L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(pixelShaderBlob != nullptr);
 }
 
@@ -634,7 +640,6 @@ void GraphicsRenderer::Initialize(DirectX12* directX12) {
 }
 
 void GraphicsRenderer::Release() {
-	triangle->Release();
 	graphicsPipelineState->Release();
 	if (errorBlob) {
 		errorBlob->Release();

@@ -110,46 +110,48 @@ void GraphicsRenderer::CreateRootSignature() {
 
 		//RootParameter作成。複数設定できるので配列。
 
-		rootParameters_[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters_[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters_[i][0].Descriptor.ShaderRegister = 0;
+		D3D12_ROOT_PARAMETER rootParameters[MAXPSO][5] = {};
+
+		rootParameters[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[i][0].Descriptor.ShaderRegister = 0;
 
 		if (i != 1) {
-			rootParameters_[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters_[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters_[i][1].Descriptor.ShaderRegister = 0;
+			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[i][1].Descriptor.ShaderRegister = 0;
 
-			rootParameters_[i][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters_[i][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters_[i][2].DescriptorTable.pDescriptorRanges = descriptorRange_;
-			rootParameters_[i][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+			rootParameters[i][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[i][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			rootParameters[i][2].DescriptorTable.pDescriptorRanges = descriptorRange_;
+			rootParameters[i][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
 
-			rootParameters_[i][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters_[i][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters_[i][4].Descriptor.ShaderRegister = 1;
+			rootParameters[i][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[i][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[i][4].Descriptor.ShaderRegister = 1;
 		}
 
-		rootParameters_[i][3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters_[i][3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters_[i][3].Descriptor.ShaderRegister = 1;
+		rootParameters[i][3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[i][3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[i][3].Descriptor.ShaderRegister = 1;
 		
 
-		rootParameters_[1][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		rootParameters_[1][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		rootParameters_[1][1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-		rootParameters_[1][1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+		rootParameters[1][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParameters[1][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		rootParameters[1][1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+		rootParameters[1][1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 	
-		rootParameters_[1][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		rootParameters_[1][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters_[1][2].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-		rootParameters_[1][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+		rootParameters[1][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParameters[1][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[1][2].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+		rootParameters[1][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 		
-		rootParameters_[1][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters_[1][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		rootParameters_[1][4].Descriptor.ShaderRegister = 1;
+		rootParameters[1][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[1][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		rootParameters[1][4].Descriptor.ShaderRegister = 1;
 
-		descriptionRootSignature_[i].pParameters = rootParameters_[i];
-		descriptionRootSignature_[i].NumParameters = _countof(rootParameters_[i]);
+		descriptionRootSignature_[i].pParameters = rootParameters[i];
+		descriptionRootSignature_[i].NumParameters = _countof(rootParameters[i]);
 
 		staticSamplers_[i][0] = {};
 		staticSamplers_[i][0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; //バイリニアフィルタ

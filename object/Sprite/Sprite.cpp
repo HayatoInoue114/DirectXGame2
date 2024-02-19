@@ -1,7 +1,18 @@
 #include "Sprite.h"
+#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
+#include "../../manager/TextureManager/TextureManager.h"
 
 void Sprite::Initialize(DirectX12* directX12) {
 	directX12_ = directX12;
+
+
+	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
+	//Transform変数を作る
+	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+
+	size_ = { 640,360 };
+
+	textureNum_ = 0;
 
 	CreateVertexResource();
 	CreateMaterialResource();
@@ -25,7 +36,7 @@ void Sprite::CreateVertexBufferView() {
 	vertexBufferView_.BufferLocation = vertexResource_->GetGPUVirtualAddress();
 
 	//使用するリソースのサイズは頂点6つ分のサイズ
-	vertexBufferView_.SizeInBytes = sizeof(VertexData) * 6;
+	vertexBufferView_.SizeInBytes = sizeof(VertexData) * 4;
 	//1頂点当たりのサイズ
 	vertexBufferView_.StrideInBytes = sizeof(VertexData);
 }
@@ -43,13 +54,13 @@ void Sprite::SetVertexData() {
 	vertexData_[LT].texcoord = { 0.0f,0.0f };
 	vertexData_[LT].normal = { 0.0f,0.0f,-1.0f };
 	// 右下
-	vertexData_[RT].position = { 640.0f, 360.0f, 0.0f, 1.0f };
-	vertexData_[RT].texcoord = { 1.0f,1.0f };
-	vertexData_[RT].normal = { 0.0f,0.0f,-1.0f };
-	// 右上
-	vertexData_[RB].position = { 640.0f, 0.0f, 0.0f, 1.0f };
-	vertexData_[RB].texcoord = { 1.0f,0.0f };
+	vertexData_[RB].position = { 640.0f, 360.0f, 0.0f, 1.0f };
+	vertexData_[RB].texcoord = { 1.0f,1.0f };
 	vertexData_[RB].normal = { 0.0f,0.0f,-1.0f };
+	// 右上
+	vertexData_[RT].position = { 640.0f, 0.0f, 0.0f, 1.0f };
+	vertexData_[RT].texcoord = { 1.0f, 0.0f };
+	vertexData_[RT].normal = { 0.0f,0.0f,-1.0f };
 }
 
 void Sprite::CreateTransformationMatrixResource() {
@@ -65,9 +76,7 @@ void Sprite::CreateTransformationMatrixResource() {
 }
 
 void Sprite::CalculateAndSetWVPMatrix() {
-	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
-	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 	viewMatrix_ = MakeIdentity4x4();
@@ -121,15 +130,17 @@ void Sprite::SetMaterialData() {
 }
 
 void Sprite::Update() {
-	float left = (0.0f - anchorPoint_.x) * transform_.scale.x;
-	float right = (1.0f - anchorPoint_.x) * transform_.scale.x;
-	float top = (0.0f - anchorPoint_.y) * transform_.scale.y;
-	float bottom = (1.0f - anchorPoint_.y) * transform_.scale.y;
+	transform_.scale = { size_.x,size_.y,1.0f };
+
+	float left = 0.0f - anchorPoint_.x;
+	float right = 1.0f - anchorPoint_.x;
+	float top = 0.0f - anchorPoint_.y;
+	float bottom = 1.0f - anchorPoint_.y;
 
 	vertexData_[LB].position = { left, bottom, 0.0f, 1.0f };
 	vertexData_[LT].position = { left, top, 0.0f, 1.0f };
-	vertexData_[RT].position = { right, top, 0.0f, 1.0f };
 	vertexData_[RB].position = { right, bottom, 0.0f, 1.0f };
+	vertexData_[RT].position = { right, top, 0.0f, 1.0f };
 
 	CalculateAndSetWVPMatrix();
 	//色の指定
@@ -157,6 +168,8 @@ void Sprite::Draw() {
 	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//TransformationMatrixCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
+
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum_]);
 	//描画！(DrawCall/ドローコール)
 	directX12_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }

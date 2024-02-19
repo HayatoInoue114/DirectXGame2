@@ -113,7 +113,7 @@ void GameManager::BeginFrame() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	directX12_->PreDraw();
-	graphicsRenderer_->DrawCall(directX12_);
+	graphicsRenderer_->DrawCall();
 }
 
 void GameManager::EndFrame() {
@@ -125,7 +125,20 @@ void GameManager::Finalize() {
 }
 
 ///////////////////////////////////////////////////////////////Draw//////////////////////////////////
+void GameManager::Draw2D() {
+	graphicsRenderer_->SetRootSignatureAndPSO(0);
+	sprite_->Draw();
+}
+
+void GameManager::Draw3D() {
+
+}
+
 void GameManager::Draw() {
+
+	Draw2D();
+
+	Draw3D();
 	/*for (int i = 0; i < MAXTRIANGLE; i++) {
 		triangle_[i]->Draw();
 	}*/
@@ -136,7 +149,7 @@ void GameManager::Draw() {
 	/*for (int i = 0; i < MAXSPRITE; i++) {
 		sprite_[i]->Draw();
 	}*/
-	sprite_->Draw();
+	
 
 	//model_->Draw(UVCHECKER);
 }

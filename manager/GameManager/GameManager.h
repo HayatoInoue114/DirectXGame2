@@ -33,6 +33,10 @@ public:
 
 	void Draw();
 
+	void Draw2D();
+
+	void Draw3D();
+
 	void VariableInit();
 private:
 	TriangleData triangleData[MAXTRIANGLE] = {};

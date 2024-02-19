@@ -57,8 +57,8 @@ private:
 	enum VERTEX {
 		LB,
 		LT,
-		RT,
-		RB
+		RB,
+		RT
 	};
 
 	Material* materialData_{};
@@ -111,5 +111,9 @@ private:
 
 	//非表示フラグ
 	bool isInvisible_ = false;
+
+	Vector2 size_;
+
+	uint32_t textureNum_;
 };
 

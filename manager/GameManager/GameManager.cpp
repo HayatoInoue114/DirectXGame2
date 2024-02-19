@@ -131,7 +131,8 @@ void GameManager::Draw2D() {
 }
 
 void GameManager::Draw3D() {
-
+	graphicsRenderer_->SetRootSignatureAndPSO(1);
+	model_->Draw(1);
 }
 
 void GameManager::Draw() {

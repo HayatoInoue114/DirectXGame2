@@ -11,13 +11,17 @@ public:
 
 	ID3D12Resource* GetDirectionalLightResource() { return directionalLightResource_; }
 
-	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
-
-	void CreateDirectionalResource();
+	
 
 	void Initialize(DirectX12* directX12);
 
 	void AdjustParameter();
+
+private:
+	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
+
+	void CreateDirectionalResource();
+
 private:
 	DirectX12* directX12_;
 

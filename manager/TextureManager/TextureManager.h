@@ -10,7 +10,7 @@
 #include <wrl.h>
 #include "../../structure/ModelData/ModelData.h"
 
-#include "../../base/DirectX12/DirectX12.h"
+//#include "../../base/DirectX12/DirectX12.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -26,6 +26,19 @@ class TextureManager
 public:
 	static TextureManager* GetInstance();
 
+	// スプライトの初期化
+	void Initialize();
+
+	void Finalize();
+
+	//void CreateSRV();
+
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
+	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
+
+	D3D12_GPU_DESCRIPTOR_HANDLE* GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
+
+private:
 	// Textureを読む
 	DirectX::ScratchImage LoadTexture(const std::string& filePath);
 
@@ -38,22 +51,23 @@ public:
 	// TextureResourceにデータを転送する
 	//Microsoft::WRL::ComPtr<ID3D12Resource> UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>& texture, const DirectX::ScratchImage& mipImages);
 	void UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>& texture, const DirectX::ScratchImage& mipImages);
-	
+
 	// textureを読んで転送する
 	void LoadAndTransferTexture();
 
-	// スプライトの初期化
-	void Initialize();
-
 	void CreateResouce();
 
-	//void CreateSRV();
-
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	D3D12_GPU_DESCRIPTOR_HANDLE* GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
 private:
+	//テクスチャ1枚分のデータ
+	struct TextureData {
+		std::string filepath;
+		DirectX::TexMetadata metadata;
+		Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+		D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
+		D3D12_GPU_DESCRIPTOR_HANDLE srvHnadleGPU;
+	};
+
+	std::vector<TextureData> textureDatas_;
 
 	static const uint32_t kMaxImages = TEXTURENUM;
 

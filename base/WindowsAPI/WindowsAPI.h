@@ -17,15 +17,14 @@ public:
 
 	void Init();
 
+	HWND GetHwnd() const { return hwnd; }
+	
+private:
 	void WindowClass();
 	void WindowSize();
 	void WindowCreate();
 
 	static LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
-
-
-	HWND GetHwnd() const { return hwnd; }
-
 private:
 	//ウインドウクラスの設定
 	WNDCLASS wc{};

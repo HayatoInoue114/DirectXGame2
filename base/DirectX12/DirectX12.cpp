@@ -1,5 +1,7 @@
 #include "DirectX12.h"
 
+const uint32_t DirectX12::kMaxSRVCount = 512;
+
 DirectX12* DirectX12::GetInstance() {
 	static DirectX12 instance;
 
@@ -102,7 +104,7 @@ void DirectX12::SwapChain() {
 void DirectX12::DescriptorHeap() {
 	rtvDescriptorHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
 	rtvDescriptorHeapDesc_ = {};
-	srvDescriptorHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, true);
+	srvDescriptorHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true);
 
 	rtvDescriptorHeapDesc_.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	//レンダーターゲットビュー用
 	rtvDescriptorHeapDesc_.NumDescriptors = 2;	//ダブルバッファように二つ、多くても別に構わない
@@ -316,15 +318,7 @@ void DirectX12::UpdateFixFPS() {
 
 
 
-void DirectX12::ResourceLeakCheck() {
-	//リソースリークチェック
 
-	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug_)))) {
-		debug_->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
-		debug_->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
-		debug_->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
-	}
-}
 
 void DirectX12::Release() {
 	CloseHandle(fenceEvent_);

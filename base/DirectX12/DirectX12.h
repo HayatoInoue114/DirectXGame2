@@ -27,57 +27,18 @@ public:
 
 	void Init(WindowsAPI* windowsAPI);
 
-	void DXGIFactory();
+	void Release();
 
-	void Adapter();
-
-	void D3D12Device();
-
-	void Command();
-
-	void SwapChain();
-
-	void DescriptorHeap();
-
-	//FPS固定化初期化
-	void InitializeFixFPS();
-
-	//FPS固定更新
-	void UpdateFixFPS();
-
-	/*void RTV();*/
 
 	/// <summary>
-	/// 描画前処理
-	/// </summary>
+/// 描画前処理
+/// </summary>
 	void PreDraw();
 
 	/// <summary>
 	/// 描画後処理
 	/// </summary>
 	void PostDraw();
-	
-	void DebugLayer();
-
-	void Error();
-
-	void Barrier();
-
-	void ScreenDisplay();
-
-	void CommandConfirm();
-
-	void Fence();
-
-	/*void Update();*/
-
-	void ResourceLeakCheck();
-
-	void Release();
-
-	void SetImGuiDescriptorHeap();
-
-	void PushImGuiDrawCommand();
 
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 
@@ -103,6 +64,50 @@ public:
 
 	ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
 
+	
+
+	//D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+
+	//D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() { return srvDescriptorHeap_.Get(); }
+private:
+	void DXGIFactory();
+
+	void Adapter();
+
+	void D3D12Device();
+
+	void Command();
+
+	void SwapChain();
+
+	void DescriptorHeap();
+
+	//FPS固定化初期化
+	void InitializeFixFPS();
+
+	//FPS固定更新
+	void UpdateFixFPS();
+
+	/*void RTV();*/
+
+
+
+	void DebugLayer();
+
+	void Error();
+
+	void Barrier();
+
+	void ScreenDisplay();
+
+	void CommandConfirm();
+
+	void Fence();
+
+	/*void Update();*/
+
 	void CreateDepthStencilResource();
 
 	void CreateDSV();
@@ -111,12 +116,11 @@ public:
 
 	void InitializeDescriptorSize();
 
-	//D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
-	//D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+	void SetImGuiDescriptorHeap();
 
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() { return srvDescriptorHeap_.Get(); }
-public:
+	void PushImGuiDrawCommand();
+
 	void GetBackBuffer();
 
 	void ClearRTV();
@@ -179,7 +183,7 @@ private:
 	//FenceのSignalを待つためのイベントを作成する
 	HANDLE fenceEvent_{};
 
-	Microsoft::WRL::ComPtr<IDXGIDebug1> debug_{};
+
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap_{};
 
@@ -213,5 +217,9 @@ private:
 
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
+
+	private:  //メンバ定数
+	//最大SRV 数（最大テクスチャ枚数）
+	static const uint32_t kMaxSRVCount;
 };
 

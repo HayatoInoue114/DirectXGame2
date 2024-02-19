@@ -1,5 +1,6 @@
 #include "TextureManager.h"
 #include "../../object/Model/Model.h"
+#include "../../base/DirectX12/DirectX12.h"
 
 TextureManager* TextureManager::GetInstance() {
 	static TextureManager instance;
@@ -8,6 +9,8 @@ TextureManager* TextureManager::GetInstance() {
 }
 
 void TextureManager::Initialize() {
+	/*textureDatas_.reserve(DirectX12::)*/
+
 	LoadAndTransferTexture();
 }
 
@@ -107,35 +110,6 @@ void TextureManager::CreateResouce() {
 }
 
 
-
-
-//Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes) {
-//	HRESULT hr;
-//	//頂点リソース用のヒープの設定
-//	D3D12_HEAP_PROPERTIES uploadHeapProperties = {};
-//	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;//UploadHeapを使う
-//	//リソースの設定
-//	D3D12_RESOURCE_DESC resourceDesc = {};
-//	//バッファリソース。テクスチャの場合はまた別の設定をする
-//	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-//	resourceDesc.Width = sizeInBytes * 3;//リソースのサイズ。今回はVector４を３頂点分
-//	//バッファの場合はこれらは1にする決まり
-//	resourceDesc.Height = 1;
-//	resourceDesc.DepthOrArraySize = 1;
-//	resourceDesc.MipLevels = 1;
-//	resourceDesc.SampleDesc.Count = 1;
-//	//バッファの場合はこれにする決まり
-//	resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-//	//実際にリソースを作る
-//	ID3D12Resource* Resource = nullptr;
-//	hr = device->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE,
-//		&resourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-//		IID_PPV_ARGS(&Resource));
-//	assert(SUCCEEDED(hr));
-//
-//	return Resource;
-//}
-
 D3D12_CPU_DESCRIPTOR_HANDLE TextureManager::GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index) {
 	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 	handleCPU.ptr += (static_cast<unsigned long long>(descriptorSize) * index);
@@ -146,4 +120,8 @@ D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetGPUDescriptorHandle(const Microso
 	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
 	handleGPU.ptr += (static_cast<unsigned long long>(descriptorSize) * index);
 	return handleGPU;
+}
+
+void TextureManager::Finalize() {
+
 }

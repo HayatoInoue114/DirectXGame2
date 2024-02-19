@@ -18,6 +18,9 @@ public:
 
 	void Draw();
 
+	void ImGuiAdjustParameter();
+
+private:
 	void CreateVertexResource();
 
 	void CreateVertexBufferView();
@@ -32,7 +35,6 @@ public:
 
 	void SetMaterialData();
 
-	void ImGuiAdjustParameter();
 private:
 	Material* materialData_{};
 

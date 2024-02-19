@@ -19,22 +19,6 @@ public:
 
 	void Draw();
 
-	void CreateVertexResource();
-
-	void CreateVertexBufferView();
-
-	void SetVertexData();
-
-	void CreateTransformationMatrixResource();
-
-	void CalculateAndSetWVPMatrix();
-
-	void CreateMaterialResource();
-
-	void CreateIndex();
-
-	void SetMaterialData();
-
 	void ImGuiAdjustParameter();
 
 	// セッター
@@ -52,6 +36,23 @@ public:
 	bool GetisFlipX() const { return isFlipX_; }
 	bool GetisFlipY() const { return isFlipY_; }
 	bool GetisInvisible() const { return isInvisible_; }
+
+private:
+	void CreateVertexResource();
+
+	void CreateVertexBufferView();
+
+	void SetVertexData();
+
+	void CreateTransformationMatrixResource();
+
+	void CalculateAndSetWVPMatrix();
+
+	void CreateMaterialResource();
+
+	void CreateIndex();
+
+	void SetMaterialData();
 
 private:
 	enum VERTEX {

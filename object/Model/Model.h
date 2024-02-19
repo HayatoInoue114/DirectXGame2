@@ -24,6 +24,9 @@ public:
 
 	void Draw(uint32_t textureNum);
 
+	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
+
+private:
 	void CreatevertexResource();
 
 	void CreateVertexBufferView();
@@ -50,7 +53,6 @@ public:
 
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 private:
 	//モデル読み込み
 	ModelData modelData_{};

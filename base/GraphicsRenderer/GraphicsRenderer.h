@@ -14,6 +14,17 @@ public:
 
 	void Initialize(DirectX12* directX12);
 
+	void Viewport();
+
+	void ScissorRect();
+
+	void Release();
+
+	void DrawCall();
+
+	void SetRootSignatureAndPSO(int n);
+
+private:
 	void Dxc();
 
 	IDxcBlob* CompileShader(
@@ -39,17 +50,8 @@ public:
 
 	void CreatePSO();
 
-	void DrawCall();
-
-	void Viewport();
-
-	void ScissorRect();
-
-	void Release();
-
 	void DepthStencilState();
 
-	void SetRootSignatureAndPSO(int n);
 private:
 	DirectX12* directX12_;
 	IDxcUtils* dxcUtils_{};

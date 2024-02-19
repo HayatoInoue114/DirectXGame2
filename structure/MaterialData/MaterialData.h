@@ -8,4 +8,4 @@ struct MaterialData
 	std::string textureFilePath;
 };
 
-MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
+MaterialData LoadMaterialTemplateFile(const std::string& filename);

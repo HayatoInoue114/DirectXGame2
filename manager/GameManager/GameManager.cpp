@@ -15,6 +15,9 @@ void GameManager::Initialize()
 	textureManager_ = TextureManager::GetInstance();
 	textureManager_->GetInstance()->Initialize();
 
+	modelManager_ = ModelManager::GetInstance();
+	modelManager_->GetInstance()->Initialize();
+
 #pragma endregion 基盤システムの初期化
 
 	for (int i = 0; i < 3; i++) {

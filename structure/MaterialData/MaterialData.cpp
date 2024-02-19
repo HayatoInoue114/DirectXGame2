@@ -1,10 +1,10 @@
 #include "MaterialData.h"
 #include <assert.h>
 
-MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename) {
+MaterialData LoadMaterialTemplateFile(const std::string& filename) {
 	MaterialData materialData; // 構築するMaterialData
 	std::string line; // ファイルから読んだ1行を格納するもの
-	std::ifstream file(directoryPath + "/" + filename); // ファイルを開く
+	std::ifstream file("resources/" + filename); // ファイルを開く
 	assert(file.is_open());
 
 	while (std::getline(file,line))
@@ -18,7 +18,7 @@ MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const st
 			std::string textureFilename;
 			s >> textureFilename;
 			//連結してファイルパスにする
-			materialData.textureFilePath = directoryPath + "/" + textureFilename;
+			materialData.textureFilePath = "resources/" + textureFilename;
 		}
 		
 	}

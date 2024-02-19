@@ -27,7 +27,7 @@ public:
 	void Initialize();
 
 	// objファイルの読み込み
-	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
+	ModelData LoadObjFile(const std::string& filename);
 
 	// Getter
 	ModelData* GetModelData() { return modelData_; }

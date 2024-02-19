@@ -7,21 +7,21 @@ ModelManager* ModelManager::GetInstance() {
 }
 
 void ModelManager::Initialize() {
-	modelData_[CUBE] = LoadObjFile("resources", "cube");
-	modelData_[SPHERE] = LoadObjFile("resources", "skydome");
-	modelData_[SKYDOME] = LoadObjFile("resources", "skydome");
-	modelData_[PLAYER] = LoadObjFile("resources", "player");
-	modelData_[ENEMY] = LoadObjFile("resources", "enemy");
+	modelData_[CUBE] = LoadObjFile("cube");
+	modelData_[SPHERE] = LoadObjFile("skydome");
+	modelData_[SKYDOME] = LoadObjFile("skydome");
+	modelData_[PLAYER] = LoadObjFile("player");
+	modelData_[ENEMY] = LoadObjFile("enemy");
 }
 
-ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
+ModelData ModelManager::LoadObjFile(const std::string& filename) {
 	ModelData modelData; // 構築するModelData
 	std::vector<Vector4> positions; // 位置
 	std::vector<Vector3> normals; // 法線
 	std::vector<Vector2> texcoords; // テクスチャ座標
 	std::string line; // ファイルから呼んだ1行を格納するもの
 
-	std::ifstream file(directoryPath + "/" + filename + ".obj"); // ファイルを開く
+	std::ifstream file("resources/" + filename + ".obj"); // ファイルを開く
 	assert(file.is_open()); // とりあえず聞けなかったら止める
 
 	while (std::getline(file, line))
@@ -81,7 +81,7 @@ ModelData ModelManager::LoadObjFile(const std::string& directoryPath, const std:
 			std::string materialFilename;
 			s >> materialFilename;
 			//基本的にobjファイルと同一階層にmtlは存在させるので,ディレクトリ名とファイル名を渡す
-			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
+			modelData.material = LoadMaterialTemplateFile(materialFilename);
 		}
 	}
 	return modelData;

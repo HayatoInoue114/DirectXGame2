@@ -9,6 +9,7 @@
 #include "../../components/Light/Light.h"
 #include "../../object/Model/Model.h"
 #include "../../manager/TextureManager/TextureManager.h"
+#include "../../manager/ModelManager/ModelManager.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
 #define MAXSPRITE 1 //スプライトの最大数
@@ -44,6 +45,7 @@ private:
 	Model* model_ = new Model;
 
 	TextureManager* textureManager_{};
+	ModelManager* modelManager_{};
 
 	DirectX12* directX12_{};
 	GraphicsRenderer* graphicsRenderer_{};

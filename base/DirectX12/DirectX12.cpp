@@ -97,7 +97,7 @@ void DirectX12::SwapChain() {
 	swapChainDesc_.BufferCount = 2;	//ダブルバッファ
 	swapChainDesc_.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;	//モニタにうつしたら、中身を破棄
 	//コマンドキュー、ウインドウハンドル、設定を渡して生成する
-	HRESULT hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_.Get(), windowsAPI_->GetHwnd(), &swapChainDesc_, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf()));
+	HRESULT hr = dxgiFactory_->CreateSwapChainForHwnd(commandQueue_.Get(), WindowsAPI::GetInstance()->GetHwnd(), &swapChainDesc_, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(swapChain_.GetAddressOf()));
 	assert(SUCCEEDED(hr));
 }
 
@@ -130,11 +130,11 @@ void DirectX12::DescriptorHeap() {
 
 	//まず１つ目を作る。１つ目は最初のところに作る。作る場所をこちらで指定してあげる必要がある
 	rtvHandle_[0] = rtvStartHandle_;
-	device_->CreateRenderTargetView(swapChainResource_[0], &rtvDesc_, rtvHandle_[0]);
+	device_->CreateRenderTargetView(swapChainResource_[0].Get(), &rtvDesc_, rtvHandle_[0]);
 	//２つ目のディスクリプタハンドルを得る（自力で)
 	rtvHandle_[1].ptr = rtvHandle_[0].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	//２つ目を作る
-	device_->CreateRenderTargetView(swapChainResource_[1], &rtvDesc_, rtvHandle_[1]);
+	device_->CreateRenderTargetView(swapChainResource_[1].Get(), &rtvDesc_, rtvHandle_[1]);
 
 
 }
@@ -232,7 +232,7 @@ void DirectX12::Barrier() {
 	//Noneしておく
 	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier_.Transition.pResource = swapChainResource_[backBufferIndex_];
+	barrier_.Transition.pResource = swapChainResource_[backBufferIndex_].Get();
 	//遷移前（現在）のResourceState
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 	//遷移後のResourceState
@@ -320,18 +320,17 @@ void DirectX12::UpdateFixFPS() {
 
 
 
-void DirectX12::Release() {
+void DirectX12::Finalize() {
 	CloseHandle(fenceEvent_);
-	CloseWindow(windowsAPI_->GetHwnd());
+	CloseWindow(WindowsAPI::GetInstance()->GetHwnd());
 }
 
-void DirectX12::Init(WindowsAPI* windowsAPI) {
+void DirectX12::Init() {
 	//システムタイマーの精度を上げる
 	timeBeginPeriod(1);
 
 	InitializeFixFPS();
-	windowsAPI_ = windowsAPI;
-	windowsAPI->Init();
+	WindowsAPI::GetInstance()->Init();
 	DXGIFactory();
 	Adapter();
 	DebugLayer();
@@ -348,7 +347,7 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(windowsAPI_->GetHwnd());
+	ImGui_ImplWin32_Init(WindowsAPI::GetInstance()->GetHwnd());
 	ImGui_ImplDX12_Init(device_.Get(),
 		swapChainDesc_.BufferCount,
 		rtvDesc_.Format,
@@ -358,9 +357,6 @@ void DirectX12::Init(WindowsAPI* windowsAPI) {
 	Fence();
 
 	InitializeDescriptorSize();
-
-	/*LoadAndTransferTexture();
-	CreateSRV();*/
 }
 
 void DirectX12::PreDraw() {
@@ -420,107 +416,6 @@ ID3D12DescriptorHeap* DirectX12::CreateDescriptorHeap(ID3D12Device* device, D3D1
 	return descriptorHeap;
 }
 
-
-//DirectX::ScratchImage LoadTexture(const std::string& filePath) {
-//	//テクスチャファイルを呼んでプログラムで扱えるようにする
-//	DirectX::ScratchImage image{};
-//	std::wstring filepathW = ConvertString(filePath);
-//	HRESULT hr = DirectX::LoadFromWICFile(filepathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-//	assert(SUCCEEDED(hr));
-//
-//	//ミップマップの作成
-//	DirectX::ScratchImage mipImage{};
-//	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImage);
-//	assert(SUCCEEDED(hr));
-//
-//	//ミップマップ付きのデータを返す
-//	return mipImage;
-//}
-
-//ID3D12Resource* DirectX12::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata) {
-//	D3D12_RESOURCE_DESC resourceDesc{};
-//	resourceDesc.Width = UINT(metadata.width);
-//	resourceDesc.Height = UINT(metadata.height);
-//	resourceDesc.MipLevels = UINT16(metadata.mipLevels);
-//	resourceDesc.DepthOrArraySize = UINT16(metadata.arraySize);
-//	resourceDesc.Format = metadata.format;
-//	resourceDesc.SampleDesc.Count = 1;
-//	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION(metadata.dimension);
-//
-//	D3D12_HEAP_PROPERTIES heapProperties{};
-//	heapProperties.Type = D3D12_HEAP_TYPE_CUSTOM;
-//	heapProperties.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-//	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-//
-//	ID3D12Resource* resource = nullptr;
-//	HRESULT hr = device->CreateCommittedResource(
-//		&heapProperties,
-//		D3D12_HEAP_FLAG_NONE,
-//		&resourceDesc,
-//		D3D12_RESOURCE_STATE_GENERIC_READ,
-//		nullptr,
-//		IID_PPV_ARGS(&resource));
-//	assert(SUCCEEDED(hr));
-//	return resource;
-//}
-
-//void DirectX12::UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages) {
-//	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
-//	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
-//		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-//		HRESULT hr = texture->WriteToSubresource(
-//			UINT(mipLevel),
-//			nullptr,
-//			img->pixels,
-//			UINT(img->rowPitch),
-//			UINT(img->slicePitch)
-//		);
-//		assert(SUCCEEDED(hr));
-//	}
-//}
-
-//void DirectX12::LoadAndTransferTexture() {
-//	DirectX::ScratchImage mipImages = LoadTexture("Resources/uvChecker.png");
-//	metadata_ = mipImages.GetMetadata();
-//	textureResource_ = CreateTextureResource(device_.Get(), metadata_);
-//	UploadTextureData(textureResource_, mipImages);
-//
-//	DirectX::ScratchImage mipImages2 = LoadTexture("Resources/monsterBall.png");
-//	metadata2_ = mipImages2.GetMetadata();
-//	textureResource2_ = CreateTextureResource(device_.Get(), metadata2_);
-//	UploadTextureData(textureResource2_, mipImages2);
-//}
-
-//void DirectX12::CreateSRV() {
-//	//metaDataをもとにSRVの設定
-//	srvDesc_ = {};
-//	srvDesc_.Format = metadata_.format;
-//	srvDesc_.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-//	srvDesc_.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-//	srvDesc_.Texture2D.MipLevels = UINT(metadata_.mipLevels);
-//
-//	srvDesc2_ = {};
-//	srvDesc2_.Format = metadata2_.format;
-//	srvDesc2_.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-//	srvDesc2_.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-//	srvDesc2_.Texture2D.MipLevels = UINT(metadata2_.mipLevels);
-//
-//	//SRVを作成するDescriptorHeapの場所を決める
-//	textureSrvHandleCPU_ = srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-//	textureSrvHandleGPU_ = srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart();
-//
-//	//先頭はImGuiが使っているのでその次を使う
-//	textureSrvHandleCPU_.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-//	textureSrvHandleGPU_.ptr += device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-//
-//	//SRVの生成
-//	device_->CreateShaderResourceView(textureResource_, &srvDesc_, textureSrvHandleCPU_);
-//
-//	textureSrvHandleCPU2_ = GetCPUDescriptorHandle(srvDescriptorHeap_.Get(), descriptorSizeSRV_, 2);
-//	textureSrvHandleGPU2_ = GetGPUDescriptorHandle(srvDescriptorHeap_.Get(), descriptorSizeSRV_, 2);
-//	
-//	device_->CreateShaderResourceView(textureResource2_, &srvDesc2_, textureSrvHandleCPU2_);
-//}
 
 ID3D12Resource* DirectX12::CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height) {
 	//生成するResourceの設定
@@ -589,15 +484,3 @@ void DirectX12::InitializeDescriptorSize() {
 	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 }
-
-//D3D12_CPU_DESCRIPTOR_HANDLE DirectX12::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-//	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-//	handleCPU.ptr += (static_cast<unsigned long long>(descriptorSize) * index);
-//	return handleCPU;
-//}
-//
-//D3D12_GPU_DESCRIPTOR_HANDLE DirectX12::GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-//	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-//	handleGPU.ptr += (static_cast<unsigned long long>(descriptorSize) * index);
-//	return handleGPU;
-//}

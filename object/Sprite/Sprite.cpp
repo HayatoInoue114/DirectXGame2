@@ -174,7 +174,8 @@ void Sprite::Draw() {
 }
 
 void Sprite::ImGuiAdjustParameter() {
-	ImGui::Text("Sprite");
+	ImGui::Begin("Sprite");
+	//ImGui::Text("Sprite");
 	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
 	ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
 	ImGui::SliderFloat3("Scale", &transform_.scale.x, -5, 5);
@@ -183,4 +184,6 @@ void Sprite::ImGuiAdjustParameter() {
 	ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
 	ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
 	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
+	ImGui::ColorEdit4("ModelColor", &materialData_->color.x, 1);
+	ImGui::End();
 }

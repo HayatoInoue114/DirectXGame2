@@ -207,6 +207,13 @@ void Model::CreateModel() {
 	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
 }
 
+void Model::LoadModel(const std::string& filename) {
+	//モデル読み込み
+	modelData_ = LoadObjFile("resources", filename);
+	//頂点リソースを作る
+	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
+}
+
 void Model::CreateInstance() {
 	instancingResource_ = CreateBufferResource(DirectX12::GetInstance()->GetDevice(), sizeof(TransformationMatrix) * MAXINSTANCE);
 
@@ -252,8 +259,6 @@ void Model::Update(Transform& transform, Vector4& color) {
 }
 
 void Model::Draw(uint32_t textureNum) {
-
-
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
@@ -274,7 +279,8 @@ void Model::Draw(uint32_t textureNum) {
 }
 
 void Model::ImGuiAdjustParameter() {
-	ImGui::Text("Sphere");
+	ImGui::Begin("model");
+	//ImGui::Text("Model");
 	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
 	ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
 	ImGui::SliderFloat3("Scale", &transform_.scale.x, -5, 5);
@@ -284,5 +290,6 @@ void Model::ImGuiAdjustParameter() {
 	ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
 	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
 	ImGui::ColorEdit4("ModelColor", &materialData_->color.x, 1);
+	ImGui::End();
 }
 

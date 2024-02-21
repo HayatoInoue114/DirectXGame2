@@ -1,16 +1,17 @@
 #include "GameManager.h"
+#include "../../base/ResourceLeakCheck/ResourceLeakCheck.h"
 
 void GameManager::Initialize() 
 {
 #pragma region 基盤システムの初期化
 	directX12_ = DirectX12::GetInstance();
-	directX12_->GetInstance()->Init(WindowsAPI::GetInstance());
+	directX12_->GetInstance()->Init();
 
 	graphicsRenderer_ = GraphicsRenderer::GetInstance();
-	graphicsRenderer_->GetInstance()->Initialize(DirectX12::GetInstance());
+	graphicsRenderer_->GetInstance()->Initialize();
 
 	light_ = Light::Getinstance();
-	light_->Getinstance()->Initialize(DirectX12::GetInstance());
+	light_->Getinstance()->Initialize();
 	
 	textureManager_ = TextureManager::GetInstance();
 	textureManager_->GetInstance()->Initialize();
@@ -99,14 +100,8 @@ void GameManager::Update() {
 }
 
 void GameManager::Release() {
-	directX12_->Release();
+	
 	graphicsRenderer_->Release();
-	/*for (int i = 0; i < MAXSPHERE; i++) {
-		sphere_[i]->Release();
-	}*/
-	//for (int i = 0; i < MAXSPRITE; i++) {
-	//	sprite_[i]->Release();
-	//}
 }
 
 
@@ -124,7 +119,8 @@ void GameManager::EndFrame() {
 }
 
 void GameManager::Finalize() {
-	directX12_->ResourceLeakCheck();
+	directX12_->Finalize();
+	textureManager_->Finalize();
 }
 
 ///////////////////////////////////////////////////////////////Draw//////////////////////////////////

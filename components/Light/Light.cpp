@@ -36,15 +36,14 @@ ID3D12Resource* Light::CreateBufferResource(ID3D12Device* device, size_t sizeInB
 }
 
 void Light::CreateDirectionalResource() {
-	directionalLightResource_ = CreateBufferResource(directX12_->GetDevice().Get(), sizeof(DirectionalLight));
+	directionalLightResource_ = CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(DirectionalLight));
 	// マテリアルにデータを書き込む
 	directionalLightData_ = nullptr;
 	// 書き込むためのアドレスを取得
 	directionalLightResource_->Map(0, nullptr, reinterpret_cast<void**>(&directionalLightData_));
 }
 
-void Light::Initialize(DirectX12* directX12) {
-	directX12_ = directX12;
+void Light::Initialize() {
 	CreateDirectionalResource();
 
 	// Lightingのデフォ値

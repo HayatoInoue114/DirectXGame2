@@ -13,7 +13,7 @@ public:
 
 	
 
-	void Initialize(DirectX12* directX12);
+	void Initialize();
 
 	void AdjustParameter();
 
@@ -23,7 +23,6 @@ private:
 	void CreateDirectionalResource();
 
 private:
-	DirectX12* directX12_;
 
 	ID3D12Resource* directionalLightResource_;
 	DirectionalLight* directionalLightData_;

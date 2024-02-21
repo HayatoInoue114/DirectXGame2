@@ -24,6 +24,8 @@ public:
 
 	void Draw(uint32_t textureNum);
 
+	void LoadModel(const std::string& filename);
+
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 
 private:

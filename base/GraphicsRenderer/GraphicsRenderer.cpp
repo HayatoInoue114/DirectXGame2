@@ -119,10 +119,6 @@ void GraphicsRenderer::CreateRootSignature() {
 
 		D3D12_ROOT_PARAMETER rootParameters[MAXPSO][5] = {};
 
-		/*rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		rootParameters[1].Descriptor.ShaderRegister = 0;*/
-
 		rootParameters[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[i][0].Descriptor.ShaderRegister = 0;
@@ -254,17 +250,17 @@ void GraphicsRenderer::ResterizerState() {
 
 void GraphicsRenderer::BuildShader() {
 	//Shaderをコンパイルする
-	vertexShaderBlob_ = CompileShader(L"./ShaderFile/Object3d.VS.hlsl", L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+	vertexShaderBlob_ = CompileShader(L"./ShaderFile/Object3d.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(vertexShaderBlob_ != nullptr);
 
-	pixelShaderBlob_ = CompileShader(L"./ShaderFile/Object3d.PS.hlsl", L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+	pixelShaderBlob_ = CompileShader(L"./ShaderFile/Object3d.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(pixelShaderBlob_ != nullptr);
 
 	//Particle
-	particleVertexShaderBlob_ = CompileShader(L"./ShaderFile/Particle.VS.hlsl", L"vs_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+	particleVertexShaderBlob_ = CompileShader(L"./ShaderFile/Particle.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(particleVertexShaderBlob_ != nullptr);
 
-	particlePixelShaderBlob_ = CompileShader(L"./ShaderFile/Particle.PS.hlsl", L"ps_6_0", dxcUtils_, dxcCompiler_, includeHandler_);
+	particlePixelShaderBlob_ = CompileShader(L"./ShaderFile/Particle.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(particlePixelShaderBlob_ != nullptr);
 }
 
@@ -337,8 +333,7 @@ void GraphicsRenderer::ScissorRect() {
 	scissorRect_.bottom = kCliantHeight;
 }
 
-void GraphicsRenderer::Initialize(DirectX12* directX12) {
-	directX12_ = directX12;
+void GraphicsRenderer::Initialize() {
 	Dxc();
 	CreateRootSignature();
 	InputLayout();
@@ -350,26 +345,26 @@ void GraphicsRenderer::Initialize(DirectX12* directX12) {
 }
 
 void GraphicsRenderer::Release() {
-	for (int i = 0; i < MAXPSO; i++) {
+	/*for (int i = 0; i < MAXPSO; i++) {
 		if (errorBlob_[i]) {
 			errorBlob_[i]->Release();
 		}
-	}
+	}*/
 	
 	/*pixelShaderBlob_->Release();
 	vertexShaderBlob_->Release();*/
 }
 
 void GraphicsRenderer::DrawCall() {
-	directX12_->GetCommandList()->RSSetViewports(1, &viewport_);	//Viewportを設定
-	directX12_->GetCommandList()->RSSetScissorRects(1, &scissorRect_);	//Scirssorを設定
-	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	DirectX12::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);	//Viewportを設定
+	DirectX12::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);	//Scirssorを設定
+	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void GraphicsRenderer::SetRootSignatureAndPSO(int n) {
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	directX12_->GetCommandList()->SetGraphicsRootSignature(rootSignature_[n].Get());
-	directX12_->GetCommandList()->SetPipelineState(PipelineManagerState_[n].Get());	//PSOを設定
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[n].Get());
+	DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[n].Get());	//PSOを設定
 }
 
 void GraphicsRenderer::DepthStencilState() {

@@ -25,9 +25,9 @@ public:
 
 	static DirectX12* GetInstance();
 
-	void Init(WindowsAPI* windowsAPI);
+	void Init();
 
-	void Release();
+	void Finalize();
 
 
 	/// <summary>
@@ -133,7 +133,6 @@ private:
 
 	void ClearDepthBuffer();
 private:
-	WindowsAPI* windowsAPI_{};
 	Microsoft::WRL::ComPtr<ID3D12Device> device_{};
 	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_{};
 
@@ -172,7 +171,8 @@ private:
 	
 	UINT backBufferIndex_{};
 	
-	ID3D12Resource* swapChainResource_[2]{};
+	Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResource_[2]{};
+	//ID3D12Resource* swapChainResource_[2]{};
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier_{};
 	
@@ -218,7 +218,7 @@ private:
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
 
-	private:  //メンバ定数
+	public:  //メンバ定数
 	//最大SRV 数（最大テクスチャ枚数）
 	static const uint32_t kMaxSRVCount;
 };

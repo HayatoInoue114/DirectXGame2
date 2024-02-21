@@ -1,12 +1,14 @@
-#pragma once
-
-
-class ResourceLeakCheck
-{
-public:
-	static void Check();
-
-private:
-	Microsoft::WRL::ComPtr<IDXGIDebug1> debug_{};
-};
+//#pragma once
+//
+//
+//class ResourceLeakCheck
+//{
+//public:
+//	static ResourceLeakCheck* GetInstance();
+//
+//	static void Check();
+//
+//private:
+//	static Microsoft::WRL::ComPtr<IDXGIDebug1> debug_;
+//};
 

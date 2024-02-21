@@ -9,7 +9,7 @@ TextureManager* TextureManager::GetInstance() {
 }
 
 void TextureManager::Initialize() {
-	/*textureDatas_.reserve(DirectX12::)*/
+	textureDatas_.reserve(DirectX12::kMaxSRVCount);
 
 	LoadAndTransferTexture();
 }

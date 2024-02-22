@@ -7,6 +7,7 @@
 #include "../../structure/VertexData/VertexData.h"
 #include "../../structure/Material/Material.h"
 #include "../../math/TransformationMatrix.h"
+#include "../../math/WorldTransform/WorldTransform.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -122,5 +123,7 @@ private:
 	Vector2 size_;
 
 	uint32_t textureNum_;
+
+	WorldTransform worldTransform_;
 };
 

@@ -12,6 +12,8 @@
 #include "../../components/Light/Light.h"
 #include "../../manager/TextureManager/TextureManager.h"
 #include "../../structure/ModelData/ModelData.h"
+#include "../../math/WorldTransform/WorldTransform.h"
+#include "../../ViewProjection/ViewProjection.h"
 
 
 #define MAXINSTANCE 10 // インスタンス数
@@ -23,7 +25,7 @@ public:
 
 	void Update(Transform& transform, Vector4& color);
 
-	void Draw(uint32_t textureNum);
+	void Draw(WorldTransform& worldTransform, ViewProjection& viewProjection, uint32_t textureNum);
 
 	void LoadModel(const std::string& filename);
 
@@ -113,5 +115,7 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU_{};
 
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_{};
+
+	WorldTransform worldTransform_;
 };
 

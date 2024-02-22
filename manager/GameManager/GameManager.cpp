@@ -49,6 +49,7 @@ void GameManager::Initialize()
 
 	model_->Initialize();
 
+
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
 }

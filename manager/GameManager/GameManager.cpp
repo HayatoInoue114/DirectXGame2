@@ -198,13 +198,13 @@ void GameManager::Initialize()
 {
 #pragma region 基盤システムの初期化
 	directX12_ = DirectX12::GetInstance();
-	directX12_->GetInstance()->Init(WindowsAPI::GetInstance());
+	directX12_->GetInstance()->Init();
 
 	graphicsRenderer_ = GraphicsRenderer::GetInstance();
-	graphicsRenderer_->GetInstance()->Initialize(DirectX12::GetInstance());
+	graphicsRenderer_->GetInstance()->Initialize();
 
 	light_ = Light::Getinstance();
-	light_->Getinstance()->Initialize(DirectX12::GetInstance());
+	light_->Getinstance()->Initialize();
 
 	textureManager_ = TextureManager::GetInstance();
 	textureManager_->GetInstance()->Initialize();
@@ -293,39 +293,7 @@ void GameManager::Update() {
 
 #pragma region Update
 
-	//switch (sceneNum_)
-	//{
-	//case TITLESCENE:
-	//	//titleScene_->Update();
-	//	if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || !input_->PushKeyTrigger(DIK_SPACE)) {
-	//		gameScene_->Initialize();
-	//		sceneNum_ = GAMESCENE;
-	//	}
-	//	break;
-	//case GAMESCENE:
-	//	gameScene_->Update();
-	//	if (gameScene_->GetIsClear()) {
-	//		/*gameScene_->Finalize();*/
-	//		gameClearScene_->Initialize();
-	//		sceneNum_ = GAMECLEARSCENE;
-	//	}
 
-	//	break;
-	//case GAMECLEARSCENE:
-	//	//gameClearScene_->Update();
-	//	//clearSprite_->Draw(transform_);
-	//	if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || !input_->PushKeyTrigger(DIK_SPACE)) {
-	//		titleScene_->Initialize();
-	//		sceneNum_ = TITLESCENE;
-	//	}
-	//	break;
-	//default:
-	//	break;
-	//}
-
-
-
-	//sceneArr_[sceneNum_]->Update();
 
 #pragma endregion Update
 
@@ -344,7 +312,7 @@ void GameManager::BeginFrame() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	directX12_->PreDraw();
-	graphicsRenderer_->DrawCall(directX12_);
+	graphicsRenderer_->DrawCall();
 }
 
 void GameManager::EndFrame() {
@@ -352,30 +320,37 @@ void GameManager::EndFrame() {
 }
 
 void GameManager::Finalize() {
-	directX12_->Release();
-	graphicsRenderer_->Release();
-	directX12_->ResourceLeakCheck();
 }
 
 ///////////////////////////////////////////////////////////////Draw//////////////////////////////////
+void GameManager::Draw2D() {
+	graphicsRenderer_->SetRootSignatureAndPSO(0);
+	sprite_->Draw();
+}
+
+void GameManager::Draw3D() {
+	graphicsRenderer_->SetRootSignatureAndPSO(1);
+	model_->Draw(1);
+}
+
 void GameManager::Draw() {
-	//sceneArr_[sceneNum_]->Draw();
 
-	//switch (sceneNum_)
-	//{
-	//case TITLESCENE:
-	//	//titleSprite_->Draw(transform_);
-	//	break;
-	//case GAMESCENE:
-	//	gameScene_->Draw();
-	//	break;
-	//case GAMECLEARSCENE:
-	//	//clearSprite_->Draw(transform_);
-	//	break;
-	//default:
-	//	break;
-	//}
+	Draw2D();
 
+	Draw3D();
+	/*for (int i = 0; i < MAXTRIANGLE; i++) {
+		triangle_[i]->Draw();
+	}*/
+	/*for (int i = 0; i < MAXSPHERE; i++) {
+		sphere_[i]->Draw();
+	}*/
+	//sphere_->Draw();
+	/*for (int i = 0; i < MAXSPRITE; i++) {
+		sprite_[i]->Draw();
+	}*/
+	
+
+	//model_->Draw(UVCHECKER);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

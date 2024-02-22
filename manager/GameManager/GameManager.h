@@ -78,7 +78,7 @@
 #include "../../components/Light/Light.h"
 #include "../../object/Model/Model.h"
 #include "../../manager/TextureManager/TextureManager.h"
-#include "../../object/Particle/Particle.h"
+//#include "../../object/Particle/Particle.h"
 #include "../../Input/Input.h"
 #include "../../ViewProjection/ViewProjection.h"
 #include "../../math/WorldTransform/WorldTransform.h"
@@ -116,6 +116,10 @@ public:
 
 	void Draw();
 
+	void Draw2D();
+	
+	void Draw3D();
+
 	void VariableInit();
 
 	/*enum Scene
@@ -128,7 +132,7 @@ public:
 private:
 	std::unique_ptr<Model> model_{};
 
-	std::unique_ptr<Particle> particle_{};
+	//std::unique_ptr<Particle> particle_{};
 
 	Sprite* sprite_{};
 

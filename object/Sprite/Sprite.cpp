@@ -22,8 +22,8 @@ Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t t
 	return sprite;
 }
 
-void Sprite::Initialize(DirectX12* directX12) {
-	directX12_ = directX12;
+void Sprite::Initialize() {
+	directX12_ = DirectX12::GetInstance();
 
 
 	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };

@@ -18,6 +18,8 @@ public:
 	void Init();
 
 	HWND GetHwnd() const { return hwnd; }
+
+	WNDCLASS GetWc() const { return wc; }
 	
 private:
 	void WindowClass();

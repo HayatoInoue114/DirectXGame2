@@ -14,7 +14,7 @@
 class Sprite
 {
 public:
-	void Initialize(DirectX12* directX12);
+	void Initialize();
 
 	void Update();
 

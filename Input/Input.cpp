@@ -10,7 +10,7 @@ void Input::Initialize() {
 
 	HRESULT result{};
 	// InputDeviceの作成
-	result = DirectInput8Create(WindowsAPI::GetInstance()->GetHwnd(), DIRECTINPUT_VERSION, IID_IDirectInput8,
+	result = DirectInput8Create(WindowsAPI::GetInstance()->GetWc().hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8,
 		(void**)&Input::GetInstance()->directInput, nullptr);
 
 	assert(SUCCEEDED(result));

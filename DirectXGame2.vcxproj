@@ -119,6 +119,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="manager\TextureManager\TextureManager.cpp" />
     <ClCompile Include="object\Traiangle\Triangle.cpp" />
     <ClCompile Include="base\WindowsAPI\WindowsAPI.cpp" />
+    <ClCompile Include="ViewProjection\ViewProjection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShaderFile\Particle.PS.hlsl">
@@ -184,6 +185,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="object\Traiangle\Triangle.h" />
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="base\WindowsAPI\WindowsAPI.h" />
+    <ClInclude Include="ViewProjection\ViewProjection.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

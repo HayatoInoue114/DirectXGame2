@@ -13,6 +13,7 @@
 #include "../../manager/TextureManager/TextureManager.h"
 #include "../../structure/ModelData/ModelData.h"
 
+
 #define MAXINSTANCE 10 // インスタンス数
 
 class Model
@@ -25,6 +26,10 @@ public:
 	void Draw(uint32_t textureNum);
 
 	void LoadModel(const std::string& filename);
+
+	Model* CreateModelFromObj(int modelName);
+
+	std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 

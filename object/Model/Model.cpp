@@ -1,5 +1,6 @@
 #include "Model.h"
 #include <assert.h>
+#include "../../manager/ModelManager/ModelManager.h"
 
 ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
 	ModelData modelData; // 構築するModelData
@@ -99,6 +100,27 @@ Microsoft::WRL::ComPtr<ID3D12Resource> Model::CreateBufferResource(const Microso
 	assert(SUCCEEDED(hr));
 
 	return vertexResource;
+}
+
+Model* Model::CreateModelFromObj(int modelName) {
+	Model* model = new Model();
+	// モデルの読み込み
+
+	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
+
+	model->Initialize();
+	return model;
+}
+
+std::unique_ptr<Model> Model::CreateModelFromObjPtr(int modelName) {
+	std::unique_ptr<Model> model;
+	model = std::make_unique<Model>();
+	// モデルの読み込み
+	//model->SetTextureNum(modelName);
+	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
+
+	model->Initialize();
+	return model;
 }
 
 void Model::Initialize() {

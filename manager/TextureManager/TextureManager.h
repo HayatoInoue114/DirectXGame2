@@ -10,7 +10,7 @@
 #include <wrl.h>
 #include "../../structure/ModelData/ModelData.h"
 
-//#include "../../base/DirectX12/DirectX12.h"
+#include "../../base/DirectX12/DirectX12.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -19,6 +19,16 @@
 enum TextureName {
 	UVCHECKER,
 	MONSTERBALL,
+	//PLAYER,
+	//ENEMY,
+	RETICLE,
+	PLAYERBULLET,
+	ENEMYBULLET,
+	SKYDOMETEX,
+	CLEAR,
+	TITLESPRITE,
+	BLACK,
+
 	TEXTURENUM
 };
 class TextureManager
@@ -26,19 +36,6 @@ class TextureManager
 public:
 	static TextureManager* GetInstance();
 
-	// スプライトの初期化
-	void Initialize();
-
-	void Finalize();
-
-	//void CreateSRV();
-
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	D3D12_GPU_DESCRIPTOR_HANDLE* GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
-
-private:
 	// Textureを読む
 	DirectX::ScratchImage LoadTexture(const std::string& filePath);
 
@@ -55,19 +52,18 @@ private:
 	// textureを読んで転送する
 	void LoadAndTransferTexture();
 
+	// スプライトの初期化
+	void Initialize();
+
 	void CreateResouce();
 
-private:
-	//テクスチャ1枚分のデータ
-	struct TextureData {
-		std::string filepath;
-		DirectX::TexMetadata metadata;
-		Microsoft::WRL::ComPtr<ID3D12Resource> resource;
-		D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
-		D3D12_GPU_DESCRIPTOR_HANDLE srvHnadleGPU;
-	};
+	//void CreateSRV();
 
-	std::vector<TextureData> textureDatas_;
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
+	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
+
+	D3D12_GPU_DESCRIPTOR_HANDLE* GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
+private:
 
 	static const uint32_t kMaxImages = TEXTURENUM;
 

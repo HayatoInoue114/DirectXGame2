@@ -3,6 +3,7 @@
 #include "../manager/TextureManager/TextureManager.h"
 #include <cassert>
 #include <fstream>
+#include "../manager/ModelManager/ModelManager.h"
 
 GameScene::GameScene() {}
 
@@ -46,7 +47,7 @@ void GameScene::Initialize() {
 
 	// 3Dモデルの生成
 	modelSkydome_ = std::make_unique<Model>();
-	modelSkydome_ = Model::CreateModelFromObjPtr(SKYDOME);
+	modelSkydome_ = modelSkydome_->CreateModelFromObjPtr(SKYDOME);
 
 	// ビュープロジェクションの初期化
 	viewProjection.Initialize();

@@ -3,13 +3,7 @@
 #include "../../base/DirectX12/DirectX12.h"
 #include <wrl.h>
 #include "../../ViewProjection/ViewProjection.h"
-
-struct TransformationMatrix
-{
-	Matrix4x4 WVP;
-	Matrix4x4 World;
-};
-
+#include "../TransformationMatrix.h"
 
 // 定数バッファ用データ構造体
 struct ConstBufferDataWorldTransform {

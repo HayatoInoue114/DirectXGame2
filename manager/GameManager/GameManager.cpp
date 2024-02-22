@@ -45,7 +45,7 @@ void GameManager::Initialize()
 		sprite_[i]->Initialize(directX12_);
 	}*/
 
-	sprite_->Initialize(directX12_);
+	sprite_->Initialize();
 
 	model_->Initialize();
 

@@ -103,6 +103,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="manager\PipelineManager\PiplineManager.cpp" />
     <ClCompile Include="manager\ModelManager\ModelManager.cpp" />
     <ClCompile Include="base\ResourceLeakCheck\ResourceLeakCheck.cpp" />
+    <ClCompile Include="scene\GameClearScene.cpp" />
+    <ClCompile Include="scene\GameScene.cpp" />
+    <ClCompile Include="scene\IScene.cpp" />
+    <ClCompile Include="scene\TitleScene.cpp" />
     <ClCompile Include="utility\FormatString\FormatString.cpp" />
     <ClCompile Include="manager\GameManager\GameManager.cpp" />
     <ClCompile Include="base\GraphicsRenderer\GraphicsRenderer.cpp" />
@@ -159,6 +163,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="manager\PipelineManager\PiplineManager.h" />
     <ClInclude Include="manager\ModelManager\ModelManager.h" />
     <ClInclude Include="base\ResourceLeakCheck\ResourceLeakCheck.h" />
+    <ClInclude Include="scene\GameClearScene.h" />
+    <ClInclude Include="scene\GameScene.h" />
+    <ClInclude Include="scene\IScene.h" />
+    <ClInclude Include="scene\TitleScene.h" />
     <ClInclude Include="structure\VertexData\VertexData.h" />
     <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h" />
     <ClInclude Include="utility\FormatString\FormatString.h" />

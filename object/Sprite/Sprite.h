@@ -24,20 +24,24 @@ public:
 	Sprite* Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
 
 	// セッター
-	void SetTransform(const Transform& transform) { transform_ = transform; }
+	void SetWorldTransform(const WorldTransform& transform) { worldTransform_ = transform; }
 	void SetColor(const Vector4& color) { materialData_->color = color; }
 	void SetAnchorPoint(const Vector3& anchorpoint) { anchorPoint_ = anchorpoint; }
 	void SetisFlipX(bool isFlipX) { isFlipX_ = isFlipX; }
 	void SetisFlipY(bool isFlipY) { isFlipY_ = isFlipY; }
 	void SetisInvisible(bool isInvisible) { isInvisible_ = isInvisible; }
+	void SetSize(const Vector2& size) { size_ = size; }
+	void SetPosition(const Vector2& position) { worldTransform_.translation_.x = position.x; worldTransform_.translation_.y = position.y; }
+	void SetTextureNum(uint32_t num) { textureNum_ = num; }
 
 	// ゲッター
-	const Transform& GetTransform() const { return transform_; }
+	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 	const Vector4& GetColor() const { return materialData_->color; }
 	const Vector3& GetAnchorpoint() const { return anchorPoint_; }
 	bool GetisFlipX() const { return isFlipX_; }
 	bool GetisFlipY() const { return isFlipY_; }
 	bool GetisInvisible() const { return isInvisible_; }
+	const Vector2& GetPosition() const { return { worldTransform_.translation_.x ,worldTransform_.translation_.y }; }
 
 private:
 	void CreateVertexResource();

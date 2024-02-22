@@ -2,6 +2,26 @@
 #include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 #include "../../manager/TextureManager/TextureManager.h"
 
+/// <summary>
+/// スプライト生成
+/// </summary>
+/// <param name="position"></param>
+/// <param name="size"></param>
+/// <param name="color"></param>
+/// <returns></returns>
+Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum)
+{
+	Sprite* sprite = new Sprite;
+	sprite->SetSize(size);
+	sprite->SetPosition({ position.x,position.y });
+	sprite->SetColor(color);
+	sprite->Initialize();
+	sprite->SetTextureNum(textureNum);
+	//textureNum_ = textureNum;
+
+	return sprite;
+}
+
 void Sprite::Initialize(DirectX12* directX12) {
 	directX12_ = directX12;
 

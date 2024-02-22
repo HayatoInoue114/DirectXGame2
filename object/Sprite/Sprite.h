@@ -21,6 +21,8 @@ public:
 
 	void ImGuiAdjustParameter();
 
+	Sprite* Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
+
 	// セッター
 	void SetTransform(const Transform& transform) { transform_ = transform; }
 	void SetColor(const Vector4& color) { materialData_->color = color; }

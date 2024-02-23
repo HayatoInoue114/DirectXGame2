@@ -6,6 +6,8 @@
 #include "../../structure/VertexData/VertexData.h"
 #include "../../structure/Material/Material.h"
 #include "../../math/TransformationMatrix.h"
+#include "../../math/WorldTransform/WorldTransform.h"
+
 
 class Light;
 
@@ -64,7 +66,7 @@ private:
 	WorldTransform transform_{};
 	Matrix4x4 worldMatrix_{};
 
-	Transform cameraTransform_{};
+	WorldTransform cameraTransform_{};
 
 	Matrix4x4 projectionMatrix_{};
 
@@ -83,7 +85,7 @@ private:
 
 	bool useMonsterBall_ = true;
 
-	Transform uvTransform_{};
+	WorldTransform uvTransform_{};
 
 	Matrix4x4 uvTransformMatrix_{};
 };

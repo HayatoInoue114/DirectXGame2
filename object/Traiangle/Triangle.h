@@ -64,7 +64,7 @@ private:
 	WorldTransform transform_{};
 	Matrix4x4 worldMatrix_{};
 
-	Transform cameraTransform_{};
+	WorldTransform cameraTransform_{};
 	
 	Matrix4x4 projectionMatrix_{};
 

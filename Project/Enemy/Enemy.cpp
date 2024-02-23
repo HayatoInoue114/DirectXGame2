@@ -24,7 +24,7 @@ void Enemy::Initialize(Model* model, Vector3 position) {
 
 	model_ = model;
 	// テクスチャ読み込み
-	textureHandle_ = PLAYER;
+	textureHandle_ = 0;
 
 	isDead = true;
 

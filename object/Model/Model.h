@@ -23,7 +23,7 @@ class Model
 public:
 	void Initialize();
 
-	void Update(Transform& transform, Vector4& color);
+	void Update(WorldTransform& transform, Vector4& color);
 
 	void Draw(WorldTransform& worldTransform, ViewProjection& viewProjection, uint32_t textureNum);
 
@@ -87,7 +87,7 @@ private:
 	ID3D12Resource* wvpResource_{};
 	TransformationMatrix* wvpData_{};
 
-	Transform transform_{};
+	WorldTransform transform_{};
 	Matrix4x4 worldMatrix_{};
 
 	Transform cameraTransform_{};

@@ -164,7 +164,7 @@ private:
 
 	Sprite* clearSprite_{};
 
-	WorldTransform transform_{};
+	WorldWorldTransform transform_{};
 };
 
 

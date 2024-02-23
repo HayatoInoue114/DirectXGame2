@@ -14,7 +14,7 @@ class Sphere
 public:
 	void Initialize(DirectX12* directX12, Light* light);
 
-	void Update(Transform& transform, Vector4& color);
+	void Update(WorldTransform& transform, Vector4& color);
 
 	void Draw();
 
@@ -61,7 +61,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_{};
 	TransformationMatrix* wvpData_{};
 
-	Transform transform_{};
+	WorldTransform transform_{};
 	Matrix4x4 worldMatrix_{};
 
 	Transform cameraTransform_{};

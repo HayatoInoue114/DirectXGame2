@@ -22,5 +22,5 @@ private:
 
 	Sprite* sprite_{};
 
-	WorldTransform transform_{};
+	WorldWorldTransform transform_{};
 };

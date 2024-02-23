@@ -154,7 +154,7 @@ void Sphere::SetMaterialData() {
 	};
 }
 
-void Sphere::Update(Transform& transform, Vector4& color) {
+void Sphere::Update(WorldTransform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();
 	//色の指定

@@ -272,7 +272,7 @@ void Model::CreateSRV() {
 }
 
 
-void Model::Update(Transform& transform, Vector4& color) {
+void Model::Update(WorldTransform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();
 	//色の指定

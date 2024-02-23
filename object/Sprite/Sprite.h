@@ -26,7 +26,7 @@ public:
 	std::unique_ptr<Sprite> CreateUniqe(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
 
 	// セッター
-	void SetWorldTransform(const WorldTransform& transform) { worldTransform_ = transform; }
+	void SetWorldTransform(const WorldWorldTransform& transform) { worldTransform_ = transform; }
 	void SetColor(const Vector4& color) { materialData_->color = color; }
 	void SetAnchorPoint(const Vector3& anchorpoint) { anchorPoint_ = anchorpoint; }
 	void SetisFlipX(bool isFlipX) { isFlipX_ = isFlipX; }
@@ -84,7 +84,7 @@ private:
 
 	TransformationMatrix* transformationMatrixData_{};
 
-	Transform transform_{};
+	WorldTransform transform_{};
 
 	Matrix4x4 worldMatrix_{};
 

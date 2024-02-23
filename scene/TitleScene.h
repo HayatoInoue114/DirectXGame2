@@ -19,7 +19,7 @@ private:
 	std::unique_ptr<Sprite> sprite_{};
 	//Sprite* Sprite_{};
 
-	WorldTransform transform_{};
+	WorldWorldTransform transform_{};
 
 	ViewProjection viewProjection;
 

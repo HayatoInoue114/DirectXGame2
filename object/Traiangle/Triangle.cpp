@@ -80,7 +80,7 @@ void Triangle::CreateWVPMatrix() {
 	*wvpData_ = worldViewProjectionMatrix_;
 }
 
-void Triangle::Update(Transform& transform, Vector4& color) {
+void Triangle::Update(WorldTransform& transform, Vector4& color) {
 	transform_ = transform;
 	CreateWVPMatrix();
 	//色の指定

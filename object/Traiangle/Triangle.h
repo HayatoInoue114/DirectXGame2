@@ -30,7 +30,7 @@ public:
 
 	void CreateTransformationMatrixResource();
 	
-	void Update(Transform& transform,Vector4& color);
+	void Update(WorldTransform& transform,Vector4& color);
 
 	void Draw();
 
@@ -61,7 +61,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_{};
 	Matrix4x4* wvpData_{};
 
-	Transform transform_{};
+	WorldTransform transform_{};
 	Matrix4x4 worldMatrix_{};
 
 	Transform cameraTransform_{};

@@ -23,6 +23,7 @@ public:
 	void ImGuiAdjustParameter();
 
 	Sprite* Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
+	std::unique_ptr<Sprite> CreateUniqe(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
 
 	// セッター
 	void SetWorldTransform(const WorldTransform& transform) { worldTransform_ = transform; }

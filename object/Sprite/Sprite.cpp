@@ -22,6 +22,18 @@ Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t t
 	return sprite;
 }
 
+std::unique_ptr<Sprite> CreateUniqe(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum) {
+	std::unique_ptr<Sprite> sprite = std::make_unique<Sprite>();
+	sprite->SetSize(size);
+	sprite->SetPosition({ position.x,position.y });
+	sprite->SetColor(color);
+	sprite->Initialize();
+	sprite->SetTextureNum(textureNum);
+	//textureNum_ = textureNum;
+
+	return sprite;
+}
+
 void Sprite::Initialize() {
 	directX12_ = DirectX12::GetInstance();
 

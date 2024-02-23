@@ -63,7 +63,7 @@ void GameScene::Initialize() {
 
 	textureHandle = PLAYER;
 	// 自キャラの初期化
-	playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
+	playerModel_ = playerModel_->CreateModelFromObjPtr(PLAYER);
 	
 
 	// デバッグカメラの生成
@@ -262,7 +262,7 @@ void GameScene::Draw() {
 
 	player_->DrawUI();
 
-	blackSprite_->Draw(worldTransform_);
+	blackSprite_->Draw();
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
@@ -394,7 +394,7 @@ void GameScene::AddEnemyBullet(EnemyBullet* enemhyBullet) {
 
 void GameScene::EnemySpawn(Vector3 position) {
 	Enemy* newEnemy = new Enemy();
-	Model* newModel = Model::CreateModelFromObj(ENEMY);
+	Model* newModel = newModel->CreateModelFromObj(ENEMY);
 	newModel->SetColor({ 1,0,0,1 });
 	newEnemy->SetPlayer(player_.get());
 	newEnemy->Initialize(newModel, position);
@@ -498,7 +498,7 @@ void GameScene::EnemyFire() {
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity_ = TransformNormal(velocity_, worldTransform_.matWorld_);
 
-		Model* newModel = Model::CreateModelFromObj(CUBE);
+		Model* newModel = newModel->CreateModelFromObj(CUBE);
 		newModel->SetColor({ 1,1,0,1 });
 
 		// 弾を生成し、初期化

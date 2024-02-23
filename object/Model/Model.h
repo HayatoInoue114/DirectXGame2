@@ -35,6 +35,8 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 
+	void SetColor(const Vector4& color) { materialData_->color; }
+
 private:
 	void CreatevertexResource();
 

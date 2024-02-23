@@ -9,7 +9,7 @@ void TitleScene::Initialize() {
 	/*Sprite_ = new Sprite;
 	Sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
 
-	sprite_ = Model::CreateModelFromObjPtr(TITLE);
+	sprite_ = sprite_->Create({}, TITLESPRITE);
 
 	transform_.Initialize();
 	viewProjection.Initialize();

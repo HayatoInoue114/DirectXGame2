@@ -59,7 +59,7 @@
 //	Vector4 color_ = {1.0f,0.0f,0.0f,1.0f};
 //
 //	Transform transform_ = {};
-//	float scale_[3] = { 1.0f,1.0f,0.0f };
+//	float scale[3] = { 1.0f,1.0f,0.0f };
 //	float rotate_[3] = { 0.0f,0.0f,0.0f };
 //	float translate_[3] = { 0.0f,0.0f,0.0f };
 //
@@ -164,7 +164,7 @@ private:
 
 	Sprite* clearSprite_{};
 
-	WorldWorldTransform transform_{};
+	WorldTransform transform_{};
 };
 
 

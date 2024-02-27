@@ -43,7 +43,7 @@ void GameScene::Initialize() {
 	model = model->CreateModelFromObj(CUBE);
 
 	worldTransform_.Initialize();
-	worldTransform_.scale_ = { 10,10,1 };
+	worldTransform_.scale = { 10,10,1 };
 
 	// 3Dモデルの生成
 	modelSkydome_ = std::make_unique<Model>();
@@ -176,9 +176,9 @@ void GameScene::Update() {
 
 	ImGui::Begin("View");
 	//ImGui::SliderFloat3("translation", , 10, 10);
-	ImGui::SliderFloat3("rotation", &viewProjection.rotation_.x, 10, 10);
-	ImGui::SliderFloat3("Cameratranslation", &railCamera_->GetWorldTransform().translation_.x, 10, 10);
-	ImGui::SliderFloat3("Camerarotation", &railCamera_->GetWorldTransform().rotation_.x, 10, 10);
+	ImGui::SliderFloat3("rotation", &viewProjection.rotate.x, 10, 10);
+	ImGui::SliderFloat3("Cameratranslation", &railCamera_->GetWorldTransform().translate.x, 10, 10);
+	ImGui::SliderFloat3("Camerarotation", &railCamera_->GetWorldTransform().rotate.x, 10, 10);
 	ImGui::End();
 	
 
@@ -394,7 +394,8 @@ void GameScene::AddEnemyBullet(EnemyBullet* enemhyBullet) {
 
 void GameScene::EnemySpawn(Vector3 position) {
 	Enemy* newEnemy = new Enemy();
-	Model* newModel = newModel->CreateModelFromObj(ENEMY);
+	Model* newModel{};
+	newModel->CreateModelFromObj(ENEMY);
 	newModel->SetColor({ 1,0,0,1 });
 	newEnemy->SetPlayer(player_.get());
 	newEnemy->Initialize(newModel, position);
@@ -498,7 +499,8 @@ void GameScene::EnemyFire() {
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity_ = TransformNormal(velocity_, worldTransform_.matWorld_);
 
-		Model* newModel = newModel->CreateModelFromObj(CUBE);
+		Model* newModel{};
+		newModel->CreateModelFromObj(CUBE);
 		newModel->SetColor({ 1,1,0,1 });
 
 		// 弾を生成し、初期化

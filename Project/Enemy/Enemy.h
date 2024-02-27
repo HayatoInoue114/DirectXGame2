@@ -69,7 +69,7 @@ public:
 	void ChangeState(BaseEnemyState* newState);
 
 	void ChangePosition(Vector3 vector);
-	Vector3 GetTranslation() { return worldTransform_.translation_; }
+	Vector3 GetTranslation() { return worldTransform_.translate; }
 
 	void SetGameScene(GameScene* gameScene) { gameScene_ = gameScene; }
 

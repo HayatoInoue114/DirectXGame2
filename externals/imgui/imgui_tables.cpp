@@ -556,15 +556,15 @@ bool    ImGui::BeginTableEx(const char* name, ImGuiID id, int columns_count, ImG
     // It will also react to changing fonts with mixed results. It doesn't need to be perfect but merely provide a decent transition.
     // FIXME-DPI: Provide consistent standards for reference size. Perhaps using g.CurrentDpiScale would be more self explanatory.
     // This is will lead us to non-rounded WidthRequest in columns, which should work but is a poorly tested path.
-    const float new_ref_scale_unit = g.FontSize; // g.Font->GetCharAdvance('A') ?
-    if (table->RefScale != 0.0f && table->RefScale != new_ref_scale_unit)
+    const float new_ref_scaleunit = g.FontSize; // g.Font->GetCharAdvance('A') ?
+    if (table->RefScale != 0.0f && table->RefScale != new_ref_scaleunit)
     {
-        const float scale_factor = new_ref_scale_unit / table->RefScale;
-        //IMGUI_DEBUG_PRINT("[table] %08X RefScaleUnit %.3f -> %.3f, scaling width by %.3f\n", table->ID, table->RefScaleUnit, new_ref_scale_unit, scale_factor);
+        const float scalefactor = new_ref_scaleunit / table->RefScale;
+        //IMGUI_DEBUG_PRINT("[table] %08X RefScaleUnit %.3f -> %.3f, scaling width by %.3f\n", table->ID, table->RefScaleUnit, new_ref_scaleunit, scalefactor);
         for (int n = 0; n < columns_count; n++)
-            table->Columns[n].WidthRequest = table->Columns[n].WidthRequest * scale_factor;
+            table->Columns[n].WidthRequest = table->Columns[n].WidthRequest * scalefactor;
     }
-    table->RefScale = new_ref_scale_unit;
+    table->RefScale = new_ref_scaleunit;
 
     // Disable output until user calls TableNextRow() or TableNextColumn() leading to the TableUpdateLayout() call..
     // This is not strictly necessary but will reduce cases were "out of table" output will be misleading to the user.

@@ -6,6 +6,7 @@
 #include "../../math/WorldTransform/WorldTransform.h"
 #include "../../object/Sprite/Sprite.h"
 #include <list>
+#include "../../manager/ModelManager/ModelManager.h"
 
 /// <summary>
 /// 自キャラ

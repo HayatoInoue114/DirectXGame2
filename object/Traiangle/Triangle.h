@@ -5,6 +5,8 @@
 #include "../../math/MT/MT.h"
 #include "../../structure/VertexData/VertexData.h"
 #include "../../structure/Material/Material.h"
+#include "../../math/WorldTransform/WorldTransform.h"
+
 
 #pragma comment(lib,"dxcompiler.lib")
 

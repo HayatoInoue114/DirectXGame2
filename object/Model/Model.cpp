@@ -126,7 +126,7 @@ std::unique_ptr<Model> Model::CreateModelFromObjPtr(int modelName) {
 void Model::Initialize() {
 
 	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	transform_.Initialize();
 
 	//CreatevertexResource();
 	CreateModel();
@@ -184,7 +184,9 @@ void Model::WriteDataToResource() {
 
 void Model::CreateWVPMatrix() {
 	//カメラ
-	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
+	//cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f} };
+	cameraTransform_.Initialize();
+	cameraTransform_.translate = { 0.0f,0.0f,-10.0f };
 	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 
 
@@ -215,11 +217,7 @@ void Model::SetMaterialData() {
 	//UVTransformを単位行列で初期化
 	materialData_->uvTransform = MakeIdentity4x4();
 	//uvTransform用の変数
-	uvTransform_ = {
-		{1.0f,1.0f,1.0f},
-		{0.0f,0.0f,0.0f},
-		{0.0f,0.0f,0.0f}
-	};
+	uvTransform_.Initialize();
 }
 
 void Model::CreateModel() {
@@ -249,7 +247,7 @@ void Model::CreateInstance() {
 	}
 
 	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-		transforms_[index] = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f}, {index * 0.1f,index * 0.1f,index * 0.1f} };
+		transforms_[index].Initialize();
 	}
 
 
@@ -304,17 +302,17 @@ void Model::Draw(WorldTransform& worldTransform, ViewProjection& viewProjection,
 }
 
 void Model::ImGuiAdjustParameter() {
-	ImGui::Begin("model");
-	//ImGui::Text("Model");
-	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
-	ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
-	ImGui::SliderFloat3("Scale", &transform_.scale.x, -5, 5);
-	ImGui::SliderFloat3("Rotate", &transform_.rotate.x, -5, 5);
-	ImGui::Text("UVTransform");
-	ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
-	ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
-	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
-	ImGui::ColorEdit4("ModelColor", &materialData_->color.x, 1);
-	ImGui::End();
+	//ImGui::Begin("model");
+	////ImGui::Text("Model");
+	//ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
+	//ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
+	//ImGui::SliderFloat3("Scale", &transform_.scale.x, -5, 5);
+	//ImGui::SliderFloat3("Rotate", &transform_.rotate.x, -5, 5);
+	//ImGui::Text("UVTransform");
+	//ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
+	//ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
+	//ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
+	//ImGui::ColorEdit4("ModelColor", &materialData_->color.x, 1);
+	//ImGui::End();
 }
 

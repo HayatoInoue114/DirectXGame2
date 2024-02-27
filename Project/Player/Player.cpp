@@ -27,8 +27,8 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	// 3Dレティクルのワールドトランスフォーム初期化
 	worldTransform3DReticle_.Initialize();
 
-	worldSprite2DReticle_.translation_ = { 640, 360, 0 };
-	worldSprite2DReticle_.scale_ = { 10,10,0 };
+	worldSprite2DReticle_.translate = { 640, 360, 0 };
+	worldSprite2DReticle_.scale = { 10,10,0 };
 	reticleColor_ = { 1,1,1,1 };
 
 	// スプライト生成
@@ -37,7 +37,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	sprite2DReticle_ = sprite2DReticle_->Create({ 640, 360, 0 }, { 5,5 }, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();
-	worldTransform_.translation_ = { playerPosition };
+	worldTransform_.translate = { playerPosition };
 }
 
 void Player::Update(ViewProjection viewProjection) {
@@ -102,21 +102,21 @@ void Player::Update(ViewProjection viewProjection) {
 	}
 
 	// 座標移動（ベクトルの加算）
-	worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	worldTransform_.translate = Add(worldTransform_.translate, move);
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(
-		worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
+		worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 
 	// 移動限界座標
 	const float kMoveLimitX = 17;
 	const float kMoveLimitY = 17;
 
 	// 範囲を超えない処理
-	worldTransform_.translation_.x =
-		std::clamp(worldTransform_.translation_.x, -kMoveLimitX, kMoveLimitX);
+	worldTransform_.translate.x =
+		std::clamp(worldTransform_.translate.x, -kMoveLimitX, kMoveLimitX);
 
-	worldTransform_.translation_.y =
-		std::clamp(worldTransform_.translation_.y, -kMoveLimitY, kMoveLimitY);
+	worldTransform_.translate.y =
+		std::clamp(worldTransform_.translate.y, -kMoveLimitY, kMoveLimitY);
 
 
 
@@ -125,17 +125,17 @@ void Player::Update(ViewProjection viewProjection) {
 
 	// キャラクターの座標を画面表示する処理
 	//float num[3] = {
-	//	worldTransform_.translation_.x, worldTransform_.translation_.y,
-	//	worldTransform_.translation_.z };
+	//	worldTransform_.translate.x, worldTransform_.translate.y,
+	//	worldTransform_.translate.z };
 	//ImGui::Begin("Player    DebugCamera : LALT");
 	//ImGui::SliderFloat3("Player", num, -30, 30);
 	//ImGui::Text("Rotate : A or D");
 	//ImGui::Text("Bullet : SPACE");
 	//ImGui::End();
 
-	//worldTransform_.translation_.x = num[0];
-	//worldTransform_.translation_.y = num[1];
-	//worldTransform_.translation_.z = num[2];
+	//worldTransform_.translate.x = num[0];
+	//worldTransform_.translate.y = num[1];
+	//worldTransform_.translate.z = num[2];
 
 	Rotate();
 
@@ -147,9 +147,9 @@ void Player::Update(ViewProjection viewProjection) {
 	//// ベクトルの長さを整える
 	//offset = Multiply(kDistanceplayerTo3DReticle, Normalize(offset));
 	//// 3Dレティクルの座標を設定
-	//worldTransform3DReticle_.translation_ = Add(offset, worldTransform_.translation_);
+	//worldTransform3DReticle_.translate = Add(offset, worldTransform_.translate);
 
-	//Vector3 positionReticle = worldTransform3DReticle_.translation_;
+	//Vector3 positionReticle = worldTransform3DReticle_.translate;
 	Matrix4x4 matViewport = MakeViewportMatrix(0, 0, kCliantWidth, kCliantHeight, 0, 1);
 	/*Matrix4x4 matViewProjectionViewport =
 		Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
@@ -177,16 +177,16 @@ void Player::Update(ViewProjection viewProjection) {
 	mouseDirection = Normalize(mouseDirection);
 
 	const float kDistanceTestObject = 150.0f;
-	worldTransform3DReticle_.translation_.x = posNear.x + mouseDirection.x * kDistanceTestObject;
-	worldTransform3DReticle_.translation_.y = posNear.y + mouseDirection.y * kDistanceTestObject;
-	worldTransform3DReticle_.translation_.z = posNear.z + mouseDirection.z * kDistanceTestObject;
+	worldTransform3DReticle_.translate.x = posNear.x + mouseDirection.x * kDistanceTestObject;
+	worldTransform3DReticle_.translate.y = posNear.y + mouseDirection.y * kDistanceTestObject;
+	worldTransform3DReticle_.translate.z = posNear.z + mouseDirection.z * kDistanceTestObject;
 
-	worldTransform3DReticle_.translation_.x = std::clamp(
-		worldTransform3DReticle_.translation_.x, (float)-kCliantHeight,
+	worldTransform3DReticle_.translate.x = std::clamp(
+		worldTransform3DReticle_.translate.x, (float)-kCliantHeight,
 		(float)kCliantWidth);
 
-	worldTransform3DReticle_.translation_.y = std::clamp(
-		worldTransform3DReticle_.translation_.y, (float)-kCliantHeight,
+	worldTransform3DReticle_.translate.y = std::clamp(
+		worldTransform3DReticle_.translate.y, (float)-kCliantHeight,
 		(float)kCliantHeight);
 
 	worldTransform3DReticle_.UpdateMatrix();
@@ -197,8 +197,8 @@ void Player::Update(ViewProjection viewProjection) {
 		"2DReticle:(%f,%f)", sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y);
 	ImGui::Text("Near:(%+.2f,+%+.2f,%+.2f)", posNear.x, posNear.y, posNear.z);
 	ImGui::Text(
-		"Far:(%+.2f,+%+.2f,%+.2f)", worldTransform3DReticle_.translation_.x,
-		worldTransform3DReticle_.translation_.y, worldTransform3DReticle_.translation_.z);
+		"Far:(%+.2f,+%+.2f,%+.2f)", worldTransform3DReticle_.translate.x,
+		worldTransform3DReticle_.translate.y, worldTransform3DReticle_.translate.z);
 	ImGui::End();*/
 	// キャラクター攻撃処理
 	Attack();
@@ -235,13 +235,14 @@ void Player::Attack() {
 		Vector3 velocity(0, 0, kBulletSpeed);
 
 		// 自機から照準オブジェクトへのベクトル
-		velocity = Subtract(worldTransform3DReticle_.translation_, GetWorldPosition());
+		velocity = Subtract(worldTransform3DReticle_.translate, GetWorldPosition());
 		velocity = kBulletSpeed * Normalize(velocity);
 
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
-		Model* model = Model::CreateModelFromObj(CUBE);
+		Model* model{};
+		model->CreateModelFromObj(CUBE);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
@@ -257,13 +258,14 @@ void Player::Attack() {
 		Vector3 velocity(0, 0, kBulletSpeed);
 
 		// 自機から照準オブジェクトへのベクトル
-		velocity = Subtract(worldTransform3DReticle_.translation_, GetWorldPosition());
+		velocity = Subtract(worldTransform3DReticle_.translate, GetWorldPosition());
 		velocity = kBulletSpeed * Normalize(velocity);
 
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
-		Model* model = Model::CreateModelFromObj(CUBE);
+		Model* model{};
+		model->CreateModelFromObj(CUBE);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
@@ -280,10 +282,10 @@ void Player::Rotate() {
 
 	// 押した方向で移動ベクトルを変更
 	if (input_->PushKey(DIK_A)) {
-		worldTransform_.rotation_.y += kRotSpeed;
+		worldTransform_.rotate.y += kRotSpeed;
 	}
 	else if (input_->PushKey(DIK_D)) {
-		worldTransform_.rotation_.y -= kRotSpeed;
+		worldTransform_.rotate.y -= kRotSpeed;
 	}
 }
 
@@ -315,7 +317,7 @@ void Player::SetParent(const WorldTransform* parent) {
 }
 
 void Player::DrawUI() { 
-	sprite2DReticle_->Draw(worldSprite2DReticle_); 
+	sprite2DReticle_->Draw(); 
 }
 
 Vector2 Player::GetCursorPosition() {

@@ -30,7 +30,7 @@ void Enemy::Initialize(Model* model, Vector3 position) {
 
 	worldTransform_.Initialize();
 	// 引数で受け取った初期座標をセット
-	worldTransform_.translation_ = { position };
+	worldTransform_.translate = { position };
 
 	state_ = new EnemyStateApproach();
 
@@ -42,7 +42,7 @@ void Enemy::Approach() {}
 void Enemy::Leave() {
 	// move = {kCharacterSpeed, kCharacterSpeed, 0};
 	////// 移動
-	// worldTransform_.translation_ = Add(worldTransform_.translation_, move);
+	// worldTransform_.translate = Add(worldTransform_.translate, move);
 }
 
 void Enemy::ChangeState(BaseEnemyState* newState) {
@@ -64,7 +64,7 @@ void Enemy::Draw(ViewProjection& viewProjection) {
 }
 
 void Enemy::ChangePosition(Vector3 vector) {
-	worldTransform_.translation_ = Add(worldTransform_.translation_, vector);
+	worldTransform_.translate = Add(worldTransform_.translate, vector);
 }
 
 void Enemy::Fire() { gameScene_->EnemyFire(); }

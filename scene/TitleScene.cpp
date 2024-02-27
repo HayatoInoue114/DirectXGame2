@@ -9,12 +9,13 @@ void TitleScene::Initialize() {
 	/*Sprite_ = new Sprite;
 	Sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
 
-	sprite_ = sprite_->CreateUniqe({}, {}, {1,1,1,1},TITLESPRITE);
+	sprite_ = new Sprite;
+	sprite_ = sprite_->Create({}, {}, {1,1,1,1},TITLESPRITE);
 
 	transform_.Initialize();
 	viewProjection.Initialize();
 
-	transform_.scale_ = { 1.0f,0.5f,0.7f };
+	transform_.scale = { 1.0f,0.5f,0.7f };
 
 	t_ = 0;
 	isT_ = 0;
@@ -30,10 +31,10 @@ void TitleScene::Update() {
 	}
 
 	if (isT_ % 2 == 0) {
-		transform_.translation_.y += 0.01f;
+		transform_.translate.y += 0.01f;
 	}
 	else {
-		transform_.translation_.y -= 0.01f;
+		transform_.translate.y -= 0.01f;
 	}
 	
 
@@ -54,5 +55,5 @@ void TitleScene::Draw() {
 }
 
 void TitleScene::Finalize() {
-	//delete sprite_;
+	delete sprite_;
 }

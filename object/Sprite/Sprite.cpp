@@ -38,9 +38,11 @@ void Sprite::Initialize() {
 	directX12_ = DirectX12::GetInstance();
 
 
-	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
+	//cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
+	cameraTransform_.Initialize();
+	cameraTransform_.translate = { 0.0f,0.0f,-5.0f };
 	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	transform_.Initialize();
 
 	size_ = { 640,360 };
 
@@ -154,11 +156,7 @@ void Sprite::SetMaterialData() {
 	//UVTransformを単位行列で初期化
 	materialData_->uvTransform = MakeIdentity4x4();
 	//uvTransform用の変数
-	uvTransform_ = {
-		{1.0f,1.0f,1.0f},
-		{0.0f,0.0f,0.0f},
-		{0.0f,0.0f,0.0f}
-	};
+	uvTransform_.Initialize();
 }
 
 void Sprite::Update() {

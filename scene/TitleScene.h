@@ -16,10 +16,10 @@ public:
 private:
 	Input* input_{};
 
-	std::unique_ptr<Sprite> sprite_{};
+	Sprite* sprite_{};
 	//Sprite* Sprite_{};
 
-	WorldWorldTransform transform_{};
+	WorldTransform transform_{};
 
 	ViewProjection viewProjection;
 

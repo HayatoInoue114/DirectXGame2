@@ -23,7 +23,7 @@
 //
 //	for (int i = 0; i < 3; i++) {
 //		colorVolume_[i] = 1.0f;
-//		scale_[i] = 1.0f;
+//		scale[i] = 1.0f;
 //		rotate_[i] = 0.0f;
 //		translate_[i] = 0.0f;
 //	}
@@ -58,7 +58,7 @@
 //#pragma region ImGui(もういらないかも)
 //	ImGui::ColorEdit3("TriangleColor", colorVolume_);
 //	ImGui::SliderFloat3("TriangleColor", colorVolume_, 0.0f, 1.0f);
-//	ImGui::SliderFloat3("TriangleScale", scale_, -5, 5);
+//	ImGui::SliderFloat3("TriangleScale", scale, -5, 5);
 //	ImGui::SliderFloat3("TriangleRotate", rotate_, -5, 5);
 //	ImGui::SliderFloat3("TriangleTranslate", translate_, -1, 1);
 //	ImGui::Begin("CommonSettings");
@@ -74,7 +74,7 @@
 //	ImGui::End();
 //
 //	color_ = { colorVolume_[0],colorVolume_[1],colorVolume_[2],1.0f };
-//	transform_ = { {scale_[0],scale_[1],scale_[2]},{rotate_[0],rotate_[1],rotate_[2]},{translate_[0],translate_[1],translate_[2]} };
+//	transform_ = { {scale[0],scale[1],scale[2]},{rotate_[0],rotate_[1],rotate_[2]},{translate_[0],translate_[1],translate_[2]} };
 //	rotate_[1] += 0.0f;
 //#pragma endregion ImGui
 //

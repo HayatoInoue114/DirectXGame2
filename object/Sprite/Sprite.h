@@ -33,7 +33,7 @@ public:
 	void SetisFlipY(bool isFlipY) { isFlipY_ = isFlipY; }
 	void SetisInvisible(bool isInvisible) { isInvisible_ = isInvisible; }
 	void SetSize(const Vector2& size) { size_ = size; }
-	void SetPosition(const Vector2& position) { worldTransform_.translation_.x = position.x; worldTransform_.translation_.y = position.y; }
+	void SetPosition(const Vector2& position) { worldTransform_.translate.x = position.x; worldTransform_.translate.y = position.y; }
 	void SetTextureNum(uint32_t num) { textureNum_ = num; }
 
 	// ゲッター
@@ -43,7 +43,7 @@ public:
 	bool GetisFlipX() const { return isFlipX_; }
 	bool GetisFlipY() const { return isFlipY_; }
 	bool GetisInvisible() const { return isInvisible_; }
-	const Vector2& GetPosition() const { return { worldTransform_.translation_.x ,worldTransform_.translation_.y }; }
+	const Vector2& GetPosition() const { return { worldTransform_.translate.x ,worldTransform_.translate.y }; }
 
 private:
 	void CreateVertexResource();

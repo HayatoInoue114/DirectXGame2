@@ -8,7 +8,7 @@ void Sphere::Initialize(DirectX12* directX12, Light* light) {
 	light_ = light;
 
 	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	transform_.Initialize();
 
 	CreateVertexResource();
 	CreateMaterialResource();
@@ -128,7 +128,9 @@ void Sphere::WriteDataToResource() {
 }
 
 void Sphere::CreateWVPMatrix() {
-	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f,} };
+	//cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
+	cameraTransform_.Initialize();
+	cameraTransform_.translate = { 0.0f,0.0f,-10.0f };
 
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
@@ -147,11 +149,8 @@ void Sphere::SetMaterialData() {
 	//UVTransformを単位行列で初期化
 	materialData_->uvTransform = MakeIdentity4x4();
 	//uvTransform用の変数
-	uvTransform_. = {
-		{1.0f,1.0f,1.0f},
-		{0.0f,0.0f,0.0f},
-		{0.0f,0.0f,0.0f}
-	};
+	uvTransform_.Initialize();
+
 }
 
 void Sphere::Update(WorldTransform& transform, Vector4& color) {

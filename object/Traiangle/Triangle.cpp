@@ -30,7 +30,7 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	vertexData[5].texcoord = { 1.0f,1.0f };
 
 	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	transform_.Initialize();
 }
 
 void Triangle::CreateVertexResource() {
@@ -70,7 +70,9 @@ void Triangle::WriteDataToResource() {
 }
 
 void Triangle::CreateWVPMatrix() {
-	cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
+	//cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
+	cameraTransform_.Initialize();
+	cameraTransform_.translate = { 0.0f,0.0f,-5.0f };
 
 	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
@@ -105,7 +107,7 @@ void Triangle::Draw() {
 void Triangle::ImGuiAdjustParameter() {
 	/*ImGui::ColorEdit3("TriangleColor", &color_);
 	ImGui::SliderFloat3("TriangleColor", &colorVolume_, 0.0f, 1.0f);
-	ImGui::SliderFloat3("TriangleScale", &scale_, -5, 5);
+	ImGui::SliderFloat3("TriangleScale", &scale, -5, 5);
 	ImGui::SliderFloat3("TriangleRotate", &rotate_, -5, 5);
 	ImGui::SliderFloat3("TriangleTranslate", &translate_, -1, 1);*/
 }

@@ -89,7 +89,7 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 
 void GraphicsRenderer::CreateRootSignature() {
 	HRESULT hr;
-	
+
 	for (int i = 0; i < MAXPSO - 1; i++) {
 		descriptorRange_[i][0].BaseShaderRegister = 0;
 		descriptorRange_[i][0].NumDescriptors = 1;
@@ -141,18 +141,18 @@ void GraphicsRenderer::CreateRootSignature() {
 		rootParameters[i][3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[i][3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[i][3].Descriptor.ShaderRegister = 1;
-		
+
 
 		rootParameters[1][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 		rootParameters[1][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 		rootParameters[1][1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
 		rootParameters[1][1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
-	
+
 		rootParameters[1][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 		rootParameters[1][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[1][2].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
 		rootParameters[1][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
-		
+
 		rootParameters[1][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[1][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 		rootParameters[1][4].Descriptor.ShaderRegister = 1;

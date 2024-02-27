@@ -12,10 +12,10 @@
 Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum)
 {
 	Sprite* sprite = new Sprite;
+	sprite->Initialize();
 	sprite->SetSize(size);
 	sprite->SetPosition({ position.x,position.y });
 	sprite->SetColor(color);
-	sprite->Initialize();
 	sprite->SetTextureNum(textureNum);
 	//textureNum_ = textureNum;
 

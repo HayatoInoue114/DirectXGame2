@@ -9,8 +9,8 @@ void TitleScene::Initialize() {
 	/*Sprite_ = new Sprite;
 	Sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
 
-	sprite_ = new Sprite;
-	sprite_ = sprite_->Create({}, {}, {1,1,1,1},TITLESPRITE);
+	sprite_ = std::make_unique<Sprite>();
+	sprite_->CreateUniqe({}, {}, {1,1,1,1},TITLESPRITE);
 
 	transform_.Initialize();
 	viewProjection.Initialize();
@@ -55,5 +55,5 @@ void TitleScene::Draw() {
 }
 
 void TitleScene::Finalize() {
-	delete sprite_;
+	//delete sprite_;
 }

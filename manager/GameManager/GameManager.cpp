@@ -222,20 +222,6 @@ void GameManager::Initialize()
 	// シーンごとの初期化
 	sceneArr_[sceneNum_]->Initialize();
 
-	//sceneNum_ = TITLESCENE;
-
-	/*titleScene_ = new TitleScene();
-	titleScene_->Initialize();
-	titleSprite_ = Sprite::Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, TITLE);
-
-	gameScene_ = new GameScene();
-	gameScene_->Initialize();
-
-	gameClearScene_ = new GameClearScene();
-	gameClearScene_->Initialize();
-
-	clearSprite_ = Sprite::Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, CLEAR);*/
-
 	transform_.Initialize();
 
 	graphicsRenderer_->Viewport();
@@ -325,7 +311,7 @@ void GameManager::Finalize() {
 ///////////////////////////////////////////////////////////////Draw//////////////////////////////////
 void GameManager::Draw2D() {
 	graphicsRenderer_->SetRootSignatureAndPSO(0);
-	sprite_->Draw();
+	//sprite_->Draw();
 }
 
 void GameManager::Draw3D() {
@@ -338,19 +324,7 @@ void GameManager::Draw() {
 	Draw2D();
 
 	Draw3D();
-	/*for (int i = 0; i < MAXTRIANGLE; i++) {
-		triangle_[i]->Draw();
-	}*/
-	/*for (int i = 0; i < MAXSPHERE; i++) {
-		sphere_[i]->Draw();
-	}*/
-	//sphere_->Draw();
-	/*for (int i = 0; i < MAXSPRITE; i++) {
-		sprite_[i]->Draw();
-	}*/
 	
-
-	//model_->Draw(UVCHECKER);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 

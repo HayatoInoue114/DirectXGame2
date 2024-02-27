@@ -16,7 +16,7 @@ public:
 private:
 	Input* input_{};
 
-	Sprite* sprite_{};
+	std::unique_ptr<Sprite> sprite_{};
 	//Sprite* Sprite_{};
 
 	WorldTransform transform_{};

@@ -136,7 +136,7 @@ void Model::Initialize() {
 	CreateModel();
 	CreateMaterialResource();
 	CreateVertexBufferView();
-	CreateTransformationMatrixResource();
+	//CreateTransformationMatrixResource();
 	CreateInstance();
 
 	CreateSRV();

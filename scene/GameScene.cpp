@@ -4,6 +4,7 @@
 #include <cassert>
 #include <fstream>
 #include "../manager/ModelManager/ModelManager.h"
+#include "../base/GraphicsRenderer/GraphicsRenderer.h"
 
 GameScene::GameScene() {}
 
@@ -210,7 +211,43 @@ void GameScene::Update() {
 
 }
 
+void GameScene::Draw2D() {
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
+	player_->DrawUI();
+
+	blackSprite_->Draw();
+}
+
+void GameScene::Draw3D() {
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
+	skydome_->Draw(viewProjection);
+
+	player_->Draw(viewProjection);
+
+
+	for (Enemy* enemy : enemies_) {
+		enemy->Draw(viewProjection);
+	}
+
+	// 弾描画
+	for (EnemyBullet* bullet : enemyBullets_) {
+		bullet->Draw(viewProjection);
+	}
+	//model_->Draw(1);
+}
+
+//void GameScene::Draw() {
+//
+//	Draw2D();
+//
+//	Draw3D();
+//
+//}
+
 void GameScene::Draw() {
+
+	Draw2D();
+	Draw3D();
 
 	// コマンドリストの取得
 	//ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
@@ -224,7 +261,7 @@ void GameScene::Draw() {
 	/// </summary>
 	/// 
 	
-	skydome_->Draw(viewProjection);
+	
 
 	// スプライト描画後処理
 	//Sprite::PostDraw();
@@ -240,17 +277,7 @@ void GameScene::Draw() {
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	//skydome_->Draw(viewProjection);
-	player_->Draw(viewProjection);
-
-
-	for (Enemy* enemy : enemies_) {
-		enemy->Draw(viewProjection);
-	}
-
-	// 弾描画
-	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Draw(viewProjection);
-	}
+	
 
 	// 3Dオブジェクト描画後処理
 	//Model::PostDraw();
@@ -260,9 +287,7 @@ void GameScene::Draw() {
 	// 前景スプライト描画前処理
 	//Sprite::PreDraw(commandList);
 
-	player_->DrawUI();
-
-	blackSprite_->Draw();
+	
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>

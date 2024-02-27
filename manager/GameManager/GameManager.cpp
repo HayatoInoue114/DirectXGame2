@@ -309,23 +309,23 @@ void GameManager::Finalize() {
 }
 
 ///////////////////////////////////////////////////////////////Draw//////////////////////////////////
-void GameManager::Draw2D() {
-	graphicsRenderer_->SetRootSignatureAndPSO(0);
-	//sprite_->Draw();
-}
-
-void GameManager::Draw3D() {
-	graphicsRenderer_->SetRootSignatureAndPSO(1);
-	//model_->Draw(1);
-}
-
-void GameManager::Draw() {
-
-	Draw2D();
-
-	Draw3D();
-	
-}
+//void GameManager::Draw2D() {
+//	graphicsRenderer_->SetRootSignatureAndPSO(0);
+//	//sprite_->Draw();
+//}
+//
+//void GameManager::Draw3D() {
+//	graphicsRenderer_->SetRootSignatureAndPSO(1);
+//	//model_->Draw(1);
+//}
+//
+//void GameManager::Draw() {
+//
+//	Draw2D();
+//
+//	Draw3D();
+//	
+//}
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
 

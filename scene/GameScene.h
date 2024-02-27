@@ -71,6 +71,10 @@ public: // メンバ関数
 	/// </summary>
 	void EnemyFire();
 
+	void Draw2D();
+
+	void Draw3D();
+
 	/// <summary>
 	/// 弾を発射し、タイマーをリセットするコールバック関数
 	/// </summary>

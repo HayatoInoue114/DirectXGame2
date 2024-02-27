@@ -9,8 +9,8 @@ void TitleScene::Initialize() {
 	/*Sprite_ = new Sprite;
 	Sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
 
-	/*sprite_ = std::make_unique<Sprite>();
-	sprite_->CreateUniqe({}, {}, {1,1,1,1},TITLESPRITE);*/
+	sprite_ = std::make_unique<Sprite>();
+	sprite_->CreateUniqe({}, {}, {1,1,1,1},TITLESPRITE);
 
 	transform_.Initialize();
 	viewProjection.Initialize();
@@ -48,10 +48,28 @@ void TitleScene::Update() {
 	}
 }
 
+//void TitleScene::Draw() {
+//	//sprite_->Draw(transform_);
+//	
+//	//Sprite_->Draw(transform_);
+//}
+
+void TitleScene::Draw2D() {
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
+	sprite_->Draw();
+}
+
+void TitleScene::Draw3D() {
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
+	//model_->Draw(1);
+}
+
 void TitleScene::Draw() {
-	//sprite_->Draw(transform_);
-	//sprite_->Draw();
-	//Sprite_->Draw(transform_);
+
+	Draw2D();
+
+	Draw3D();
+
 }
 
 void TitleScene::Finalize() {

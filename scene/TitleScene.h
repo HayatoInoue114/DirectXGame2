@@ -13,6 +13,10 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Finalize()override;
+
+	void Draw2D();
+
+	void Draw3D();
 private:
 	Input* input_{};
 

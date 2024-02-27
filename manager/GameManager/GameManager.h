@@ -114,11 +114,11 @@ public:
 
 	void Finalize();
 
-	void Draw();
+	/*void Draw();
 
 	void Draw2D();
 	
-	void Draw3D();
+	void Draw3D();*/
 
 	void VariableInit();
 

@@ -6,8 +6,8 @@ void TitleScene::Initialize() {
 	// 入力
 	input_ = Input::GetInstance();
 
-	/*Sprite_ = new Sprite;
-	Sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
+	/*sprite_ = new Sprite;
+	sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
 
 	sprite_ = std::make_unique<Sprite>();
 	sprite_->CreateUniqe({}, {}, {1,1,1,1},TITLESPRITE);

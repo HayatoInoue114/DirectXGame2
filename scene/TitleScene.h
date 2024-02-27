@@ -21,7 +21,7 @@ private:
 	Input* input_{};
 
 	std::unique_ptr<Sprite> sprite_{};
-	//Sprite* Sprite_{};
+	//Sprite* sprite_{};
 
 	WorldTransform transform_{};
 

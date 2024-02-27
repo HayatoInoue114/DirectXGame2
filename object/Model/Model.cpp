@@ -104,22 +104,26 @@ Microsoft::WRL::ComPtr<ID3D12Resource> Model::CreateBufferResource(const Microso
 
 Model* Model::CreateModelFromObj(int modelName) {
 	Model* model = new Model();
+
+	model->Initialize();
 	// モデルの読み込み
 
 	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
 
-	model->Initialize();
+	
 	return model;
 }
 
 std::unique_ptr<Model> Model::CreateModelFromObjPtr(int modelName) {
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
+	model->Initialize();
+	
 	// モデルの読み込み
 	//model->SetTextureNum(modelName);
 	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
 
-	model->Initialize();
+	
 	return model;
 }
 
@@ -132,7 +136,7 @@ void Model::Initialize() {
 	CreateModel();
 	CreateMaterialResource();
 	CreateVertexBufferView();
-	//CreateTransformationMatrixResource();
+	CreateTransformationMatrixResource();
 	CreateInstance();
 
 	CreateSRV();

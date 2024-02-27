@@ -108,7 +108,7 @@ void GameScene::Initialize() {
 	isClear_ = false;
 
 	blackSprite_ = new Sprite;
-	blackSprite_->Create({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, BLACK);
+	blackSprite_ = blackSprite_->Create({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, BLACK);
 
 	FireAndResetCallback();
 }

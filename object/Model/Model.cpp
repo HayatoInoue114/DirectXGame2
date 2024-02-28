@@ -68,7 +68,7 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 			std::string materialFilename;
 			s >> materialFilename;
 			//基本的にobjファイルと同一階層にmtlは存在させるので,ディレクトリ名とファイル名を渡す
-			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
+			modelData.material = LoadMaterialTemplateFile(materialFilename);
 		}
 	}
 	return modelData;
@@ -160,12 +160,12 @@ void Model::WriteDataToResource() {
 }
 
 void Model::CreateWVPMatrix() {
-	cameraTransform_.scale_ = { 1.0f,1.0f,1.0f };
-	cameraTransform_.rotation_ = {};
-	cameraTransform_.translation_ = { 0.0f,0.0f,-10.0f, };
+	cameraTransform_.scale = { 1.0f,1.0f,1.0f };
+	cameraTransform_.rotate = {};
+	cameraTransform_.translate = { 0.0f,0.0f,-10.0f, };
 
-	worldMatrix_ = MakeAffineMatrix(worldTransform_.scale_, worldTransform_.rotation_, worldTransform_.translation_);
-	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale_, cameraTransform_.rotation_, cameraTransform_.translation_);
+	worldMatrix_ = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 	viewMatrix_ = Inverse(cameramatrix_);
 	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
@@ -181,9 +181,9 @@ void Model::SetMaterialData() {
 	//UVTransformを単位行列で初期化
 	materialData_->uvTransform = MakeIdentity4x4();
 	//uvTransform用の変数
-	uvTransform_.scale_ = { 1.0f,1.0f,1.0f };
-	uvTransform_.rotation_ = {};
-	uvTransform_.translation_ = {};
+	uvTransform_.scale = { 1.0f,1.0f,1.0f };
+	uvTransform_.rotate = {};
+	uvTransform_.translate = {};
 }
 
 void Model::CreateModel() {
@@ -203,9 +203,9 @@ void Model::Draw(WorldTransform& worldTransform, ViewProjection& viewProjection,
 	worldTransform_ = worldTransform;
 	CreateWVPMatrix();
 	//パラメータからUVTransform用の行列を生成する
-	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale_);
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotation_.z));
-	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translation_));
+	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
+	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
 
 	DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);	//VBVを設定
@@ -223,7 +223,7 @@ void Model::Draw(WorldTransform& worldTransform, ViewProjection& viewProjection,
 }
 
 void Model::ImGuiAdjustParameter() {
-	ImGui::Text("Model");
+	/*ImGui::Text("Model");
 	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
 	ImGui::SliderFloat3("Translate", &worldTransform_.translation_.x, -5, 5);
 	ImGui::SliderFloat3("Scale", &worldTransform_.scale_.x, -5, 5);
@@ -231,6 +231,6 @@ void Model::ImGuiAdjustParameter() {
 	ImGui::Text("UVTransform");
 	ImGui::DragFloat2("UVTranslate", &uvTransform_.translation_.x, 0.01f, -10.0f, 10.0f);
 	ImGui::DragFloat2("UVScale", &uvTransform_.scale_.x, 0.01f, -10.0f, 10.0f);
-	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotation_.z);
+	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotation_.z);*/
 }
 

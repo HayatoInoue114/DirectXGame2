@@ -40,9 +40,9 @@ void TitleScene::Update() {
 
 	XINPUT_STATE joyState;
 	// ゲームパッド未接続なら何もせず抜ける
-	if (!Input::GetInstance()->GetJoystickState(joyState)) {
+	/*if (!Input::GetInstance()->GetJoystickState(joyState)) {
 		return;
-	}
+	}*/
 	if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B)) {
 		SetSceneNum(GAME_SCENE);
 	}

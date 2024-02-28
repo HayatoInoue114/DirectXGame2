@@ -283,7 +283,7 @@ void Model::Update(WorldTransform& transform, Vector4& color) {
 }
 
 void Model::Draw(WorldTransform& worldTransform, ViewProjection& viewProjection, uint32_t textureNum) {
-	worldTransform_ = worldTransform;
+	transforms_[0] = worldTransform;
 	CreateWVPMatrix();
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);

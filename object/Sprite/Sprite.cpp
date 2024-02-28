@@ -81,7 +81,7 @@ void Sprite::SetVertexData() {
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
 	// 左下
-	vertexData_[LB].position = { 0.0f, 360.0f, 0.0f, 1.0f };
+	vertexData_[LB].position = { 0.0f, size_.y, 0.0f, 1.0f };
 	vertexData_[LB].texcoord = { 0.0f,1.0f };
 	vertexData_[LB].normal = { 0.0f,0.0f,-1.0f };
 	// 左上
@@ -89,11 +89,11 @@ void Sprite::SetVertexData() {
 	vertexData_[LT].texcoord = { 0.0f,0.0f };
 	vertexData_[LT].normal = { 0.0f,0.0f,-1.0f };
 	// 右下
-	vertexData_[RB].position = { 640.0f, 360.0f, 0.0f, 1.0f };
+	vertexData_[RB].position = { size_.x, size_.y, 0.0f, 1.0f };
 	vertexData_[RB].texcoord = { 1.0f,1.0f };
 	vertexData_[RB].normal = { 0.0f,0.0f,-1.0f };
 	// 右上
-	vertexData_[RT].position = { 640.0f, 0.0f, 0.0f, 1.0f };
+	vertexData_[RT].position = { size_.x, 0.0f, 0.0f, 1.0f };
 	vertexData_[RT].texcoord = { 1.0f, 0.0f };
 	vertexData_[RT].normal = { 0.0f,0.0f,-1.0f };
 }
@@ -161,7 +161,7 @@ void Sprite::SetMaterialData() {
 }
 
 void Sprite::Update() {
-	transform_.scale = { size_.x,size_.y,1.0f };
+	//transform_.scale = { size_.x,size_.y,1.0f };
 
 	float left = 0.0f - anchorPoint_.x;
 	float right = 1.0f - anchorPoint_.x;

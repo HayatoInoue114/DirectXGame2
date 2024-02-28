@@ -29,9 +29,9 @@ public:
 
 	void LoadModel(const std::string& filename);
 
-	Model* CreateModelFromObj(int modelName);
+	static Model* CreateModelFromObj(int modelName);
 
-	std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
+	static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 

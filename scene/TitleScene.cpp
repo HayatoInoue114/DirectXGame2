@@ -9,8 +9,7 @@ void TitleScene::Initialize() {
 	/*sprite_ = new Sprite;
 	sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
 
-	sprite_ = std::make_unique<Sprite>();
-	sprite_ = sprite_->CreateUniqe({0,0,0}, {1280,720}, {1,1,1,1},MONSTERBALL);
+	sprite_ = Sprite::CreateUniqe({0,0,0}, {1280,720}, {1,1,1,1},MONSTERBALL);
 
 	transform_.Initialize();
 	viewProjection.Initialize();
@@ -37,6 +36,7 @@ void TitleScene::Update() {
 		transform_.translate.y -= 0.01f;
 	}
 	
+	sprite_->Update();
 
 	XINPUT_STATE joyState;
 	// ゲームパッド未接続なら何もせず抜ける

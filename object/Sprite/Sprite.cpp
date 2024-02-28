@@ -52,6 +52,8 @@ void Sprite::Initialize() {
 	CreateVertexResource();
 	CreateMaterialResource();
 	CreateVertexBufferView();
+	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+
 	SetVertexData();
 	CreateIndex();
 	CreateTransformationMatrixResource();
@@ -77,23 +79,27 @@ void Sprite::CreateVertexBufferView() {
 }
 
 void Sprite::SetVertexData() {
-	vertexData_ = nullptr;
-	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
+
+	float left = 0.0f - anchorPoint_.x;
+	float right = 1.0f - anchorPoint_.x;
+	float top = 0.0f - anchorPoint_.y;
+	float bottom = 1.0f - anchorPoint_.y;
+
 
 	// 左下
-	vertexData_[LB].position = { 0.0f, size_.y, 0.0f, 1.0f };
+	vertexData_[LB].position = { left, bottom, 0.0f, 1.0f };
 	vertexData_[LB].texcoord = { 0.0f,1.0f };
 	vertexData_[LB].normal = { 0.0f,0.0f,-1.0f };
 	// 左上
-	vertexData_[LT].position = { 0.0f, 0.0f, 0.0f, 1.0f };
+	vertexData_[LT].position = { left, top, 0.0f, 1.0f };
 	vertexData_[LT].texcoord = { 0.0f,0.0f };
 	vertexData_[LT].normal = { 0.0f,0.0f,-1.0f };
 	// 右下
-	vertexData_[RB].position = { size_.x, size_.y, 0.0f, 1.0f };
+	vertexData_[RB].position = { right, bottom, 0.0f, 1.0f };
 	vertexData_[RB].texcoord = { 1.0f,1.0f };
 	vertexData_[RB].normal = { 0.0f,0.0f,-1.0f };
 	// 右上
-	vertexData_[RT].position = { size_.x, 0.0f, 0.0f, 1.0f };
+	vertexData_[RT].position = { right, top, 0.0f, 1.0f };
 	vertexData_[RT].texcoord = { 1.0f, 0.0f };
 	vertexData_[RT].normal = { 0.0f,0.0f,-1.0f };
 }
@@ -161,17 +167,12 @@ void Sprite::SetMaterialData() {
 }
 
 void Sprite::Update() {
-	//transform_.scale = { size_.x,size_.y,1.0f };
+	transform_.scale = { size_.x,size_.y,1.0f };
 
-	float left = 0.0f - anchorPoint_.x;
-	float right = 1.0f - anchorPoint_.x;
-	float top = 0.0f - anchorPoint_.y;
-	float bottom = 1.0f - anchorPoint_.y;
-
-	vertexData_[LB].position = { left, bottom, 0.0f, 1.0f };
-	vertexData_[LT].position = { left, top, 0.0f, 1.0f };
-	vertexData_[RB].position = { right, bottom, 0.0f, 1.0f };
-	vertexData_[RT].position = { right, top, 0.0f, 1.0f };
+	SetVertexData();
+	
+	
+	
 
 	CalculateAndSetWVPMatrix();
 	//色の指定

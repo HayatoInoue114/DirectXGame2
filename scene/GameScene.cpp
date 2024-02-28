@@ -40,15 +40,13 @@ void GameScene::Initialize() {
 	//textureHandle = TextureManager::Load("godest.png");
 	// 3Dモデルの生成
 
-	model = new Model;
-	model = model->CreateModelFromObj(CUBE);
+	model = Model:: CreateModelFromObj(CUBE);
 
 	worldTransform_.Initialize();
 	worldTransform_.scale = { 10,10,1 };
 
 	// 3Dモデルの生成
-	modelSkydome_ = std::make_unique<Model>();
-	modelSkydome_ = modelSkydome_->CreateModelFromObjPtr(SKYDOME);
+	modelSkydome_ = Model::CreateModelFromObjPtr(SKYDOME);
 
 	// ビュープロジェクションの初期化
 	viewProjection.Initialize();
@@ -64,7 +62,7 @@ void GameScene::Initialize() {
 
 	textureHandle = PLAYER;
 	// 自キャラの初期化
-	playerModel_ = playerModel_->CreateModelFromObjPtr(PLAYER);
+	playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
 	
 
 	// デバッグカメラの生成
@@ -108,7 +106,7 @@ void GameScene::Initialize() {
 	isClear_ = false;
 
 	blackSprite_ = std::make_unique<Sprite>();
-	blackSprite_ = blackSprite_->CreateUniqe({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, BLACK);
+	blackSprite_ = Sprite::CreateUniqe({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, BLACK);
 
 	FireAndResetCallback();
 }
@@ -420,7 +418,7 @@ void GameScene::AddEnemyBullet(EnemyBullet* enemhyBullet) {
 void GameScene::EnemySpawn(Vector3 position) {
 	Enemy* newEnemy = new Enemy();
 	Model* newModel{};
-	newModel->CreateModelFromObj(ENEMY);
+	newModel = Model::CreateModelFromObj(ENEMY);
 	newModel->SetColor({ 1,0,0,1 });
 	newEnemy->SetPlayer(player_.get());
 	newEnemy->Initialize(newModel, position);
@@ -525,7 +523,7 @@ void GameScene::EnemyFire() {
 		velocity_ = TransformNormal(velocity_, worldTransform_.matWorld_);
 
 		Model* newModel{};
-		newModel->CreateModelFromObj(CUBE);
+		newModel = Model::CreateModelFromObj(CUBE);
 		newModel->SetColor({ 1,1,0,1 });
 
 		// 弾を生成し、初期化

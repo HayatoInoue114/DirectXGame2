@@ -69,6 +69,8 @@ void GameManager::Update() {
 			preSceneNum_ = sceneNum_;
 			sceneNum_ = sceneArr_[sceneNum_]->GetSceneNum();
 
+			input_->Update();
+
 			//シーン変更チェック
 			if (sceneNum_ != preSceneNum_) {
 				sceneArr_[preSceneNum_]->Finalize();

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <cassert>
 #include <algorithm>
+#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 // NULLポインタチェック
 Player::Player() {}
@@ -9,7 +10,6 @@ Player::~Player() {
 	for (PlayerBullet* bullet : bullets_) {
 		delete bullet;
 	}
-	delete sprite2DReticle_;
 }
 
 void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosition) {
@@ -34,7 +34,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	// スプライト生成
 	/*sprite2DReticle_ = new Sprite;
 	sprite2DReticle_ = sprite2DReticle_->Create({ 640, 360, 0 }, { 10,10 }, { 0,0,0,1 }, RETICLE);*/
-	sprite2DReticle_ = Sprite::Create({ 640, 360, 0 }, { 5,5 }, { 1,1,1,1 }, RETICLE);
+	sprite2DReticle_ = Sprite::CreateUniqe({ 640, 360, 50 }, { 5,5 }, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();
 	worldTransform_.translate = { playerPosition };
@@ -86,18 +86,18 @@ void Player::Update(ViewProjection viewProjection) {
 	}
 
 	// 押した方向で移動ベクトルを変更(左右)
-	if (input_->PushKey(DIK_LEFT)) {
+	if (Input::GetInstance()->PushKey(DIK_LEFT)) {
 		move.x -= kCharacterSpeed;
 	}
-	else if (input_->PushKey(DIK_RIGHT)) {
+	else if (Input::GetInstance()->PushKey(DIK_RIGHT)) {
 		move.x += kCharacterSpeed;
 	}
 
 	// 押した方向で移動ベクトルを変更(上下)
-	if (input_->PushKey(DIK_UP)) {
+	if (Input::GetInstance()->PushKey(DIK_UP)) {
 		move.y += kCharacterSpeed;
 	}
-	else if (input_->PushKey(DIK_DOWN)) {
+	else if (Input::GetInstance()->PushKey(DIK_DOWN)) {
 		move.y -= kCharacterSpeed;
 	}
 
@@ -123,20 +123,6 @@ void Player::Update(ViewProjection viewProjection) {
 	// 行列を定数バッファに転送
 	worldTransform_.UpdateMatrix();
 
-	// キャラクターの座標を画面表示する処理
-	//float num[3] = {
-	//	worldTransform_.translate.x, worldTransform_.translate.y,
-	//	worldTransform_.translate.z };
-	//ImGui::Begin("Player    DebugCamera : LALT");
-	//ImGui::SliderFloat3("Player", num, -30, 30);
-	//ImGui::Text("Rotate : A or D");
-	//ImGui::Text("Bullet : SPACE");
-	//ImGui::End();
-
-	//worldTransform_.translate.x = num[0];
-	//worldTransform_.translate.y = num[1];
-	//worldTransform_.translate.z = num[2];
-
 	Rotate();
 
 	// 自機から3Dレティクルへの距離
@@ -156,14 +142,14 @@ void Player::Update(ViewProjection viewProjection) {
 	positionReticle = Transform(positionReticle, matViewProjectionViewport);*/
 
 	// マウス座標（スクリーン座標）を取得する
-	POINT mousePosition;
-	GetCursorPos(&mousePosition);
+	/*POINT mousePosition;
+	GetCursorPos(&mousePosition);*/
 
 	//クライアントエリア座標に変換する
-	/*HWND hwnd = WinApp::GetInstance()->GetHwnd();
+	/*HWND hwnd = WindowsAPI::GetInstance()->GetHwnd();
 	ScreenToClient(hwnd, &mousePosition);
 
-	sprite2DReticle_->SetPosition(Vector2(mousePosition.x, mousePosition.y));*/
+	sprite2DReticle_->SetPosition(Vector2(mousePosition.x, mousePosition.y));
 
 	Matrix4x4 matVPV = Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
 	Matrix4x4 matInverseVPV = Inverse(matVPV);
@@ -190,18 +176,12 @@ void Player::Update(ViewProjection viewProjection) {
 		(float)kCliantHeight);
 
 	worldTransform3DReticle_.UpdateMatrix();
-	worldTransform3DReticle_.TransferMatrix();
+	worldTransform3DReticle_.TransferMatrix();*/
 
-	/*ImGui::Begin("Player");
-	ImGui::Text(
-		"2DReticle:(%f,%f)", sprite2DReticle_->GetPosition().x, sprite2DReticle_->GetPosition().y);
-	ImGui::Text("Near:(%+.2f,+%+.2f,%+.2f)", posNear.x, posNear.y, posNear.z);
-	ImGui::Text(
-		"Far:(%+.2f,+%+.2f,%+.2f)", worldTransform3DReticle_.translate.x,
-		worldTransform3DReticle_.translate.y, worldTransform3DReticle_.translate.z);
-	ImGui::End();*/
 	// キャラクター攻撃処理
 	Attack();
+
+	sprite2DReticle_->Update();
 
 	// 弾更新
 	for (PlayerBullet* bullet : bullets_) {
@@ -229,7 +209,7 @@ void Player::Attack() {
 	//	return;
 	//}
 
-	if (joyState.Gamepad.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER) {
+	if (!Input::GetInstance()->GamePadTrigger(XINPUT_GAMEPAD_RIGHT_SHOULDER)) {
 		// 弾の速度
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
@@ -242,7 +222,7 @@ void Player::Attack() {
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 		Model* model{};
-		//model->CreateModelFromObj(CUBE);
+		model = Model::CreateModelFromObj(CUBE);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
@@ -265,7 +245,7 @@ void Player::Attack() {
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 		Model* model{};
-		//model->CreateModelFromObj(CUBE);
+		model = Model::CreateModelFromObj(CUBE);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();

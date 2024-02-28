@@ -43,7 +43,7 @@ void Sprite::Initialize() {
 	cameraTransform_.Initialize();
 	cameraTransform_.translate = { 0.0f,0.0f,-5.0f };
 	//Transform変数を作る
-	transform_.Initialize();
+	worldTransform_.Initialize();
 
 	size_ = { 640,360 };
 
@@ -55,8 +55,8 @@ void Sprite::Initialize() {
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 
 	SetVertexData();
-	CreateIndex();
 	CreateTransformationMatrixResource();
+	CreateIndex();
 	SetMaterialData();
 }
 
@@ -118,11 +118,11 @@ void Sprite::CreateTransformationMatrixResource() {
 
 void Sprite::CalculateAndSetWVPMatrix() {
 
-	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	transformationMatrixData_->World = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 	viewMatrix_ = MakeIdentity4x4();
 	projectionMatrix_ = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kCliantHeight), 0.0f, 100.0f);
-	worldViewprojectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatrix_));
+	worldViewprojectionMatrix_ = Multiply(transformationMatrixData_->World, Multiply(viewMatrix_, projectionMatrix_));
 	transformationMatrixData_->WVP = worldViewprojectionMatrix_;
 	transformationMatrixData_->World = worldMatrix_;
 
@@ -134,7 +134,6 @@ void Sprite::CreateMaterialResource() {
 	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(Material));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-
 }
 
 void Sprite::CreateIndex() {
@@ -167,15 +166,15 @@ void Sprite::SetMaterialData() {
 }
 
 void Sprite::Update() {
-	transform_.scale = { size_.x,size_.y,1.0f };
+	worldTransform_.scale = { size_.x,size_.y,1.0f };
 
 	SetVertexData();
-	
-	
 	
 
 	CalculateAndSetWVPMatrix();
 	//色の指定
+
+	worldTransform_.UpdateMatrix();
 
 	ImGuiAdjustParameter();
 }
@@ -209,9 +208,9 @@ void Sprite::ImGuiAdjustParameter() {
 	ImGui::Begin("Sprite");
 	//ImGui::Text("Sprite");
 	ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
-	ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
-	ImGui::SliderFloat3("Scale", &transform_.scale.x, -5, 5);
-	ImGui::SliderFloat3("Rotate", &transform_.rotate.x, -5, 5);
+	ImGui::SliderFloat3("Translate", &worldTransform_.translate.x, -5, 5);
+	ImGui::SliderFloat3("Scale", &worldTransform_.scale.x, -5, 5);
+	ImGui::SliderFloat3("Rotate", &worldTransform_.rotate.x, -5, 5);
 	ImGui::Text("UVTransform");
 	ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
 	ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);

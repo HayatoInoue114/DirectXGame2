@@ -20,11 +20,18 @@ private:
 	Input* input_{};
 
 	std::unique_ptr<Sprite> sprite_{};
+	std::unique_ptr<Sprite> black_{};
 	//Sprite* sprite_{};
 
 	WorldTransform transform_{};
 
 	ViewProjection viewProjection;
+
+	Vector4 color_;
+
+	float a_{};
+
+	int count_{};
 
 	int t_;
 	int isT_;

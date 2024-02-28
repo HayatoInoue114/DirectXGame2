@@ -84,7 +84,7 @@ private:
 
 	TransformationMatrix* transformationMatrixData_{};
 
-	WorldTransform transform_{};
+	//WorldTransform transform_{};
 
 	Matrix4x4 worldMatrix_{};
 

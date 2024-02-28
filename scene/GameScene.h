@@ -151,5 +151,7 @@ private: // メンバ変数
 	int flameCount_{};
 
 	bool isClear_{};
+
+	Vector4 color_;
 };
 

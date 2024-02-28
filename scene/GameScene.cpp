@@ -104,8 +104,9 @@ void GameScene::Initialize() {
 
 	isClear_ = false;
 
-	blackSprite_ = std::make_unique<Sprite>();
-	blackSprite_ = Sprite::CreateUniqe({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, BLACK);
+	blackSprite_ = Sprite::CreateUniqe({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
+
+	color_ = { 1,1,1,1 };
 
 	FireAndResetCallback();
 }
@@ -172,6 +173,11 @@ void GameScene::Update() {
 	// 天球の更新
 	skydome_->Update();
 
+	color_.w -= 0.1f;
+	blackSprite_->SetColor(color_);
+
+	blackSprite_->Update();
+
 	ImGui::Begin("View");
 	//ImGui::SliderFloat3("translation", , 10, 10);
 	ImGui::SliderFloat3("rotation", &viewProjection.rotate.x, 10, 10);
@@ -212,11 +218,6 @@ void GameScene::Draw2D() {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	player_->DrawUI();
 
-	blackSprite_->Draw();
-}
-
-void GameScene::Draw3D() {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
 	skydome_->Draw(viewProjection);
 
 	player_->Draw(viewProjection);
@@ -230,6 +231,13 @@ void GameScene::Draw3D() {
 	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->Draw(viewProjection);
 	}
+
+	blackSprite_->Draw();
+}
+
+void GameScene::Draw3D() {
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
+	
 	//model_->Draw(1);
 }
 
@@ -522,8 +530,8 @@ void GameScene::EnemyFire() {
 		velocity_ = TransformNormal(velocity_, worldTransform_.matWorld_);
 
 		Model* newModel{};
-		/*newModel = Model::CreateModelFromObj(CUBE);
-		newModel->SetColor({ 1,1,0,1 });*/
+		newModel = Model::CreateModelFromObj(CUBE);
+		newModel->SetColor({ 1,1,0,1 });
 
 		// 弾を生成し、初期化
 		EnemyBullet* newBullet = new EnemyBullet();

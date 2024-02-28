@@ -101,7 +101,7 @@ private:
 	WorldTransform worldTransform3DReticle_;
 
 	// 2Dレティクル用のスプライト
-	Sprite* sprite2DReticle_ = nullptr;
+	std::unique_ptr<Sprite> sprite2DReticle_ = nullptr;
 
 	WorldTransform worldSprite2DReticle_;
 

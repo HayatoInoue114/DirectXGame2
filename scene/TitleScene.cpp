@@ -9,7 +9,9 @@ void TitleScene::Initialize() {
 	/*sprite_ = new Sprite;
 	sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
 
-	sprite_ = Sprite::CreateUniqe({0,0,0}, {1280,720}, {1,1,1,1},MONSTERBALL);
+	sprite_ = Sprite::CreateUniqe({0,0,0}, {1280,720}, {1,1,1,1},TITLESPRITE);
+	black_ = Sprite::CreateUniqe({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
+
 
 	transform_.Initialize();
 	viewProjection.Initialize();
@@ -18,6 +20,10 @@ void TitleScene::Initialize() {
 
 	t_ = 0;
 	isT_ = 0;
+
+	color_ = { 1,1,1,0 };
+	a_ = 0;
+	count_ = 0;
 }
 
 void TitleScene::Update() {
@@ -35,7 +41,15 @@ void TitleScene::Update() {
 	else {
 		transform_.translate.y -= 0.01f;
 	}
+
+
 	
+	sprite_->SetAnchorPoint({ transform_.translate.x,transform_.translate.y });
+
+	color_.w = a_;
+	black_->SetColor(color_);
+
+	black_->Update();
 	sprite_->Update();
 
 	XINPUT_STATE joyState;
@@ -44,6 +58,16 @@ void TitleScene::Update() {
 		return;
 	}*/
 	if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B)) {
+		count_ = 1;
+	}
+
+	if (count_ == 1) {
+		if (t_ % 3 == 0) {
+			a_ += 0.1;
+		}
+	}
+
+	if (a_ >= 1) {
 		SetSceneNum(GAME_SCENE);
 	}
 }
@@ -57,6 +81,7 @@ void TitleScene::Update() {
 void TitleScene::Draw2D() {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	sprite_->Draw();
+	black_->Draw();
 }
 
 void TitleScene::Draw3D() {

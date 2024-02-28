@@ -105,6 +105,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="manager\ModelManager\ModelManager.cpp" />
     <ClCompile Include="base\ResourceLeakCheck\ResourceLeakCheck.cpp" />
     <ClCompile Include="math\WorldTransform\WorldTransform.cpp" />
+    <ClCompile Include="object\Model\Model.cpp" />
     <ClCompile Include="Project\Bullet\EnemyBullet\EnemyBullet.cpp" />
     <ClCompile Include="Project\Bullet\PlayerBullet\PlayerBullet.cpp" />
     <ClCompile Include="Project\Enemy\Enemy.cpp" />
@@ -176,6 +177,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="manager\ModelManager\ModelManager.h" />
     <ClInclude Include="base\ResourceLeakCheck\ResourceLeakCheck.h" />
     <ClInclude Include="math\WorldTransform\WorldTransform.h" />
+    <ClInclude Include="object\Model\Model.h" />
     <ClInclude Include="Project\Bullet\EnemyBullet\EnemyBullet.h" />
     <ClInclude Include="Project\Bullet\PlayerBullet\PlayerBullet.h" />
     <ClInclude Include="Project\Enemy\Enemy.h" />

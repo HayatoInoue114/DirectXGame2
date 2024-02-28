@@ -124,7 +124,7 @@ void Sprite::CalculateAndSetWVPMatrix() {
 	projectionMatrix_ = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kCliantHeight), 0.0f, 100.0f);
 	worldViewprojectionMatrix_ = Multiply(transformationMatrixData_->World, Multiply(viewMatrix_, projectionMatrix_));
 	transformationMatrixData_->WVP = worldViewprojectionMatrix_;
-	transformationMatrixData_->World = worldMatrix_;
+	//transformationMatrixData_->World = worldMatrix_;
 
 	//projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 }
@@ -170,14 +170,15 @@ void Sprite::Update() {
 
 	SetVertexData();
 	
-
 	CalculateAndSetWVPMatrix();
+	
 	//色の指定
+	//ImGuiAdjustParameter();
 
-	ImGuiAdjustParameter();
 }
 
 void Sprite::Draw() {
+	
 	if (isInvisible_) {
 		return;
 	}

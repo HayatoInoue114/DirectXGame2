@@ -86,7 +86,7 @@ private:
 
 	//WorldTransform transform_{};
 
-	Matrix4x4 worldMatrix_{};
+	//Matrix4x4 worldMatrix_{};
 
 	Matrix4x4 viewMatrix_{};
 

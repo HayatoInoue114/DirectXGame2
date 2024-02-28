@@ -36,10 +36,10 @@ void TitleScene::Update() {
 	}
 
 	if (isT_ % 2 == 0) {
-		transform_.translate.y += 0.01f;
+		transform_.translate.y += 1;
 	}
 	else {
-		transform_.translate.y -= 0.01f;
+		transform_.translate.y -= 1;
 	}
 
 

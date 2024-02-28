@@ -27,12 +27,13 @@ public:
 	void Initialize();
 
 	// Getter
-	ModelData* GetModelData() { return modelData_; }
+	ModelData* GetModelData(int num) { return modelData_[num]; }
 
 private:
 	// objファイルの読み込み
 	ModelData LoadObjFile(const std::string& filename);
 
 private:
-	ModelData modelData_[MODELNUM];
+	std::vector<ModelData*> modelData_;
+	//ModelData modelData_[MODELNUM];
 };

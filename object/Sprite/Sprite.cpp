@@ -2,13 +2,6 @@
 #include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 #include "../../manager/TextureManager/TextureManager.h"
 
-/// <summary>
-/// スプライト生成
-/// </summary>
-/// <param name="position"></param>
-/// <param name="size"></param>
-/// <param name="color"></param>
-/// <returns></returns>
 Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum)
 {
 	Sprite* sprite = new Sprite;
@@ -17,12 +10,31 @@ Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t t
 	sprite->SetPosition({ position.x,position.y });
 	sprite->SetColor(color);
 	sprite->SetTextureNum(textureNum);
-	//textureNum_ = textureNum;
 
 	return sprite;
 }
+Sprite* Sprite::Create(Vector2 size, Vector4 color, uint32_t textureNum)
+{
+	Sprite* sprite = new Sprite;
+	sprite->Initialize();
+	sprite->SetSize(size);
+	sprite->SetColor(color);
+	sprite->SetTextureNum(textureNum);
 
-std::unique_ptr<Sprite> Sprite::CreateUniqe(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum) {
+	return sprite;
+}
+Sprite* Sprite::Create(Vector2 size, uint32_t textureNum)
+{
+	Sprite* sprite = new Sprite;
+	sprite->Initialize();
+	sprite->SetSize(size);
+	sprite->SetTextureNum(textureNum);
+	
+	return sprite;
+}
+
+
+std::unique_ptr<Sprite> Sprite::CreateUnique(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum) {
 	std::unique_ptr<Sprite> sprite;
 	sprite = std::make_unique<Sprite>();
 	sprite->Initialize();
@@ -30,16 +42,31 @@ std::unique_ptr<Sprite> Sprite::CreateUniqe(Vector3 position, Vector2 size, Vect
 	sprite->SetPosition({ position.x,position.y });
 	sprite->SetColor(color);
 	sprite->SetTextureNum(textureNum);
-	//textureNum_ = textureNum;
-
+	
+	return sprite;
+}
+std::unique_ptr<Sprite> Sprite::CreateUnique(Vector2 size, Vector4 color, uint32_t textureNum) {
+	std::unique_ptr<Sprite> sprite;
+	sprite = std::make_unique<Sprite>();
+	sprite->Initialize();
+	sprite->SetSize(size);
+	sprite->SetColor(color);
+	sprite->SetTextureNum(textureNum);
+	
+	return sprite;
+}
+std::unique_ptr<Sprite> Sprite::CreateUnique(Vector2 size,uint32_t textureNum) {
+	std::unique_ptr<Sprite> sprite;
+	sprite = std::make_unique<Sprite>();
+	sprite->Initialize();
+	sprite->SetSize(size);
+	sprite->SetTextureNum(textureNum);
+	
 	return sprite;
 }
 
 void Sprite::Initialize() {
 	directX12_ = DirectX12::GetInstance();
-
-
-	//cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
 	cameraTransform_.Initialize();
 	cameraTransform_.translate = { 0.0f,0.0f,-5.0f };
 	//Transform変数を作る
@@ -117,16 +144,12 @@ void Sprite::CreateTransformationMatrixResource() {
 }
 
 void Sprite::CalculateAndSetWVPMatrix() {
-
 	transformationMatrixData_->World = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 	viewMatrix_ = MakeIdentity4x4();
 	projectionMatrix_ = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kCliantHeight), 0.0f, 100.0f);
 	worldViewprojectionMatrix_ = Multiply(transformationMatrixData_->World, Multiply(viewMatrix_, projectionMatrix_));
 	transformationMatrixData_->WVP = worldViewprojectionMatrix_;
-	//transformationMatrixData_->World = worldMatrix_;
-
-	//projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 }
 
 void Sprite::CreateMaterialResource() {
@@ -171,10 +194,6 @@ void Sprite::Update() {
 	SetVertexData();
 	
 	CalculateAndSetWVPMatrix();
-	
-	//色の指定
-	//ImGuiAdjustParameter();
-
 }
 
 void Sprite::Draw() {

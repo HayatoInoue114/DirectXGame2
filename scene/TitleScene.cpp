@@ -9,8 +9,8 @@ void TitleScene::Initialize() {
 	/*sprite_ = new Sprite;
 	sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
 
-	sprite_ = Sprite::CreateUniqe({0,0,0}, {1280,720}, {1,1,1,1},TITLESPRITE);
-	black_ = Sprite::CreateUniqe({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
+	sprite_ = Sprite::CreateUnique({0,0,0}, {1280,720}, {1,1,1,1},TITLESPRITE);
+	black_ = Sprite::CreateUnique({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
 
 
 	transform_.Initialize();

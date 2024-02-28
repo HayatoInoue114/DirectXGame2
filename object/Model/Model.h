@@ -47,18 +47,22 @@ public:
 
 	void CreateModel();
 
-	/*void CreateInstance();
-
-	void CreateSRV();
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);*/
-
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 
-	static Model* CreateModelFromObj(int modelName);
 
+	/// <summary>
+	/// モデル生成
+	/// </summary>
+	/// <param name="modelName"></param>
+	/// <returns></returns>
+	static Model* CreateModelFromObj(int modelName);
+	/// <summary>
+	/// モデル生成(ユニークポインタ)
+	/// </summary>
+	/// <param name="modelName"></param>
+	/// <returns></returns>
 	static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 
 	void SetTextureNum(uint32_t num) { modelName_ = num; }

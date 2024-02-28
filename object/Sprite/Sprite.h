@@ -22,8 +22,55 @@ public:
 
 	void ImGuiAdjustParameter();
 
+	/// <summary>
+	/// スプライト生成
+	/// </summary>
+	/// <param name="position : 位置"></param>
+	/// <param name="size : 大きさ(今は1280x720が画面ちょうど)"></param>
+	/// <param name="color : 色"></param>
+	/// <param name="textureNum : TextureManagerで読み込んだTextureNum"></param>
+	/// <returns></returns>
 	static Sprite* Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
-	static std::unique_ptr<Sprite> CreateUniqe(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
+	/// <summary>
+	/// スプライト生成
+	/// </summary>
+	/// <param name="size : 大きさ(今は1280x720が画面ちょうど)"></param>
+	/// <param name="color : 色"></param>
+	/// <param name="textureNum : TextureManagerで読み込んだTextureNum"></param>
+	/// <returns></returns>
+	static Sprite* Create(Vector2 size, Vector4 color, uint32_t textureNum);
+	/// <summary>
+	/// スプライト生成
+	/// </summary>
+	/// <param name="size : 大きさ(今は1280x720が画面ちょうど)"></param>
+	/// <param name="textureNum : TextureManagerで読み込んだTextureNum"></param>
+	/// <returns></returns>
+	static Sprite* Create(Vector2 size,uint32_t textureNum);
+
+	/// <summary>
+	/// スプライト生成(ユニークポインタ)
+	/// </summary>
+	/// <param name="position : 位置"></param>
+	/// <param name="size : 大きさ(今は1280x720が画面ちょうど)"></param>
+	/// <param name="color : 色"></param>
+	/// <param name="textureNum : TextureManagerで読み込んだTextureNum"></param>
+	/// <returns></returns>
+	static std::unique_ptr<Sprite> CreateUnique(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
+	/// <summary>
+	/// スプライト生成(ユニークポインタ)
+	/// </summary>
+	/// <param name="size : 大きさ(今は1280x720が画面ちょうど)"></param>
+	/// <param name="color : 色"></param>
+	/// <param name="textureNum : TextureManagerで読み込んだTextureNum"></param>
+	/// <returns></returns>
+	static std::unique_ptr<Sprite> CreateUnique(Vector2 size, Vector4 color, uint32_t textureNum);
+	/// <summary>
+	/// スプライト生成(ユニークポインタ)
+	/// </summary>
+	/// <param name="size : 大きさ(今は1280x720が画面ちょうど)"></param>
+	/// <param name="textureNum : TextureManagerで読み込んだTextureNum"></param>
+	/// <returns></returns>
+	static std::unique_ptr<Sprite> CreateUnique(Vector2 size, uint32_t textureNum);
 
 	// セッター
 	void SetWorldTransform(const WorldTransform& transform) { worldTransform_ = transform; }

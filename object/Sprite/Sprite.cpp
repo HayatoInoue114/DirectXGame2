@@ -174,8 +174,6 @@ void Sprite::Update() {
 	CalculateAndSetWVPMatrix();
 	//色の指定
 
-	worldTransform_.UpdateMatrix();
-
 	ImGuiAdjustParameter();
 }
 

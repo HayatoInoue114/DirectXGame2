@@ -44,7 +44,7 @@ void TitleScene::Update() {
 
 
 	
-	sprite_->SetAnchorPoint({ transform_.translate.x,transform_.translate.y });
+	sprite_->SetPosition({ transform_.translate.x,transform_.translate.y });
 
 	color_.w = a_;
 	black_->SetColor(color_);

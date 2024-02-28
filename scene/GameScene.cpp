@@ -107,8 +107,8 @@ void GameScene::Initialize() {
 
 	isClear_ = false;
 
-	blackSprite_ = new Sprite;
-	blackSprite_ = blackSprite_->Create({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, BLACK);
+	blackSprite_ = std::make_unique<Sprite>();
+	blackSprite_ = blackSprite_->CreateUniqe({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, BLACK);
 
 	FireAndResetCallback();
 }
@@ -556,8 +556,6 @@ void GameScene::Finalize() {
 	for (TimedCall* timedCall : timedCalls_) {
 		delete timedCall;
 	}
-
-	delete blackSprite_;
 	// ビュー(カメラ)の解放
 	viewProjection.constBuff_.ReleaseAndGetAddressOf();
 

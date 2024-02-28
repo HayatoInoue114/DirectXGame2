@@ -34,7 +34,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	// スプライト生成
 	/*sprite2DReticle_ = new Sprite;
 	sprite2DReticle_ = sprite2DReticle_->Create({ 640, 360, 0 }, { 10,10 }, { 0,0,0,1 }, RETICLE);*/
-	sprite2DReticle_ = Sprite::CreateUniqe({ 640, 360, 50 }, { 5,5 }, { 1,1,1,1 }, RETICLE);
+	sprite2DReticle_ = Sprite::CreateUniqe({ 640, 360, 50 }, { 100,100 }, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();
 	worldTransform_.translate = { playerPosition };
@@ -55,6 +55,8 @@ void Player::Update(ViewProjection viewProjection) {
 	// キャラクターの移動ベクトル
 	Vector3 move = { 0, 0, 0 };
 
+	Vector3 rotate = {};
+
 	// キャラクターの移動の速さ
 	const float kCharacterSpeed = 0.2f;
 
@@ -65,6 +67,8 @@ void Player::Update(ViewProjection viewProjection) {
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
 		move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
 		move.y += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
+
+		rotate.z -= (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
 	}
 
 	// スプライトの現在座標を取得
@@ -103,6 +107,10 @@ void Player::Update(ViewProjection viewProjection) {
 
 	// 座標移動（ベクトルの加算）
 	worldTransform_.translate = Add(worldTransform_.translate, move);
+
+	worldTransform_.rotate = Add(worldTransform_.rotate, rotate);
+
+	worldTransform_.rotate.z = std::clamp(worldTransform_.rotate.z, -1.0f, 1.0f);
 
 	worldTransform_.matWorld_ = MakeAffineMatrix(
 		worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
@@ -149,7 +157,7 @@ void Player::Update(ViewProjection viewProjection) {
 	/*HWND hwnd = WindowsAPI::GetInstance()->GetHwnd();
 	ScreenToClient(hwnd, &mousePosition);
 
-	sprite2DReticle_->SetPosition(Vector2(mousePosition.x, mousePosition.y));
+	sprite2DReticle_->SetPosition(Vector2(mousePosition.x, mousePosition.y));*/
 
 	Matrix4x4 matVPV = Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
 	Matrix4x4 matInverseVPV = Inverse(matVPV);
@@ -176,7 +184,7 @@ void Player::Update(ViewProjection viewProjection) {
 		(float)kCliantHeight);
 
 	worldTransform3DReticle_.UpdateMatrix();
-	worldTransform3DReticle_.TransferMatrix();*/
+	worldTransform3DReticle_.TransferMatrix();
 
 	// キャラクター攻撃処理
 	Attack();

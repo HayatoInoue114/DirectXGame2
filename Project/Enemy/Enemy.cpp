@@ -18,7 +18,7 @@ Enemy::~Enemy() {
 	delete player_;*/
 }
 
-void Enemy::Initialize(Particle* model, Vector3 position) {
+void Enemy::Initialize(Model* model, Vector3 position) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -60,7 +60,7 @@ void Enemy::Update() {
 }
 
 void Enemy::Draw(ViewProjection& viewProjection) {
-	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
 void Enemy::ChangePosition(Vector3 vector) {

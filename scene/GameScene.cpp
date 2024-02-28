@@ -39,13 +39,13 @@ void GameScene::Initialize() {
 	//textureHandle = TextureManager::Load("godest.png");
 	// 3Dモデルの生成
 
-	//model = Model:: CreateModelFromObj(CUBE);
+	model = Model:: CreateModelFromObj(CUBE);
 
 	worldTransform_.Initialize();
 	worldTransform_.scale = { 10,10,1 };
 
 	// 3Dモデルの生成
-	//modelSkydome_ = Model::CreateModelFromObjPtr(SKYDOME);
+	modelSkydome_ = Model::CreateModelFromObjPtr(SKYDOME);
 
 	// ビュープロジェクションの初期化
 	viewProjection.Initialize();
@@ -61,7 +61,7 @@ void GameScene::Initialize() {
 
 	textureHandle = PLAYER;
 	// 自キャラの初期化
-	//playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
+	playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
 	
 
 	// デバッグカメラの生成
@@ -96,7 +96,7 @@ void GameScene::Initialize() {
 
 	Vector3 playerPosition(0, 0, 50.0f);
 
-	player_->Initialize(nullptr, textureHandle, playerPosition);
+	player_->Initialize(playerModel_.get(), textureHandle, playerPosition);
 
 	dedCount_ = 0;
 
@@ -416,9 +416,9 @@ void GameScene::AddEnemyBullet(EnemyBullet* enemhyBullet) {
 
 void GameScene::EnemySpawn(Vector3 position) {
 	Enemy* newEnemy = new Enemy();
-	Particle* newModel{};
-	/*newModel = Model::CreateModelFromObj(ENEMY);
-	newModel->SetColor({ 1,0,0,1 });*/
+	Model* newModel{};
+	newModel = Model::CreateModelFromObj(ENEMY);
+	newModel->SetColor({ 1,0,0,1 });
 	newEnemy->SetPlayer(player_.get());
 	newEnemy->Initialize(newModel, position);
 	newEnemy->SetGameScene(this);
@@ -521,7 +521,7 @@ void GameScene::EnemyFire() {
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity_ = TransformNormal(velocity_, worldTransform_.matWorld_);
 
-		Particle* newModel{};
+		Model* newModel{};
 		/*newModel = Model::CreateModelFromObj(CUBE);
 		newModel->SetColor({ 1,1,0,1 });*/
 

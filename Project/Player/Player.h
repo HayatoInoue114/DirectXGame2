@@ -1,7 +1,7 @@
 #pragma once
 #include "../../Input/Input.h"
 #include "../../math/MT/MT.h"
-//#include "../../object/Model/Model.h"
+#include "../../object/Model/Model.h"
 #include "../Bullet/PlayerBullet/PlayerBullet.h"
 #include "../../math/WorldTransform/WorldTransform.h"
 #include "../../object/Sprite/Sprite.h"
@@ -23,7 +23,7 @@ public:
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="textureHandle">テクスチャハンドル</param>
-	void Initialize(Particle* model, uint32_t textureHandle, Vector3 playerPosition);
+	void Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosition);
 
 	/// <summary>
 	/// 更新
@@ -84,7 +84,7 @@ private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
-	Particle* model_ = nullptr;
+	Model* model_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	// キーボード入力

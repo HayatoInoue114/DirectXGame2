@@ -1,7 +1,7 @@
 #pragma once
 #include "../ViewProjection/ViewProjection.h"
 #include "../math/WorldTransform/WorldTransform.h"
-
+#include "../object/Model/Model.h"
 #include "../Project/Player/Player.h"
 #include "../Project/Enemy/Enemy.h"
 #include "../Project/TimedCall/TimedCall.h"
@@ -99,9 +99,9 @@ private: // メンバ変数
 	uint32_t textureHandle = 0;
 
 	// 3Dモデルデータ
-	Particle* model = nullptr;
-	//std::unique_ptr<Model> playerModel_;
-	//std::unique_ptr<Model> enemyModel_;
+	Model* model = nullptr;
+	std::unique_ptr<Model> playerModel_;
+	std::unique_ptr<Model> enemyModel_;
 
 	// ビュープロジェクション
 	ViewProjection viewProjection;
@@ -117,7 +117,7 @@ private: // メンバ変数
 
 	// 敵
 	std::list<Enemy*> enemies_;
-	std::list<Particle*> enemiesModel_;
+	std::list<Model*> enemiesModel_;
 	//std::unique_ptr<Model> enemyModel_;
 
 	// 天球
@@ -125,7 +125,7 @@ private: // メンバ変数
 	//Skydome* skydome_ = nullptr;
 
 	// 3Dモデル
-	//std::unique_ptr<Model> modelSkydome_ = nullptr;
+	std::unique_ptr<Model> modelSkydome_ = nullptr;
 
 	// レールカメラ
 	RailCamera* railCamera_ = nullptr;

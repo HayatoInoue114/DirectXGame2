@@ -9,7 +9,6 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-	delete model;
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
@@ -40,13 +39,13 @@ void GameScene::Initialize() {
 	//textureHandle = TextureManager::Load("godest.png");
 	// 3Dモデルの生成
 
-	model = Model:: CreateModelFromObj(CUBE);
+	//model = Model:: CreateModelFromObj(CUBE);
 
 	worldTransform_.Initialize();
 	worldTransform_.scale = { 10,10,1 };
 
 	// 3Dモデルの生成
-	modelSkydome_ = Model::CreateModelFromObjPtr(SKYDOME);
+	//modelSkydome_ = Model::CreateModelFromObjPtr(SKYDOME);
 
 	// ビュープロジェクションの初期化
 	viewProjection.Initialize();
@@ -62,7 +61,7 @@ void GameScene::Initialize() {
 
 	textureHandle = PLAYER;
 	// 自キャラの初期化
-	playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
+	//playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
 	
 
 	// デバッグカメラの生成
@@ -90,14 +89,14 @@ void GameScene::Initialize() {
 	//skydome_ = new Skydome();
 	skydome_ = std::make_unique<Skydome>();
 	// 天球の初期化
-	skydome_->Initialize(modelSkydome_.get());
+	//skydome_->Initialize(modelSkydome_.get());
 
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
 
 	Vector3 playerPosition(0, 0, 50.0f);
 
-	player_->Initialize(playerModel_.get(), textureHandle, playerPosition);
+	player_->Initialize(nullptr, textureHandle, playerPosition);
 
 	dedCount_ = 0;
 
@@ -417,9 +416,9 @@ void GameScene::AddEnemyBullet(EnemyBullet* enemhyBullet) {
 
 void GameScene::EnemySpawn(Vector3 position) {
 	Enemy* newEnemy = new Enemy();
-	Model* newModel{};
-	newModel = Model::CreateModelFromObj(ENEMY);
-	newModel->SetColor({ 1,0,0,1 });
+	Particle* newModel{};
+	/*newModel = Model::CreateModelFromObj(ENEMY);
+	newModel->SetColor({ 1,0,0,1 });*/
 	newEnemy->SetPlayer(player_.get());
 	newEnemy->Initialize(newModel, position);
 	newEnemy->SetGameScene(this);
@@ -522,9 +521,9 @@ void GameScene::EnemyFire() {
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity_ = TransformNormal(velocity_, worldTransform_.matWorld_);
 
-		Model* newModel{};
-		newModel = Model::CreateModelFromObj(CUBE);
-		newModel->SetColor({ 1,1,0,1 });
+		Particle* newModel{};
+		/*newModel = Model::CreateModelFromObj(CUBE);
+		newModel->SetColor({ 1,1,0,1 });*/
 
 		// 弾を生成し、初期化
 		EnemyBullet* newBullet = new EnemyBullet();
@@ -542,7 +541,6 @@ void GameScene::FireAndResetCallback() {
 }
 
 void GameScene::Finalize() {
-	delete model;
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}

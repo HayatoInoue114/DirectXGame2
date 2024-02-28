@@ -1,8 +1,8 @@
 #pragma once
-#include "../../object/Model/Model.h"
+//#include "../../object/Model/Model.h"
 #include "../../math/WorldTransform/WorldTransform.h"
 
-
+class Particle;
 class RailCamera {
 public:
 	/// <summary>

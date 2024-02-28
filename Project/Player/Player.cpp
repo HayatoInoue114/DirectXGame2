@@ -12,8 +12,8 @@ Player::~Player() {
 	delete sprite2DReticle_;
 }
 
-void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosition) {
-	assert(model);
+void Player::Initialize(Particle* model, uint32_t textureHandle, Vector3 playerPosition) {
+	//assert(model);
 
 	// 引数として受け取ったデータをメンバ変数に記録する
 	model_ = model;
@@ -34,7 +34,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	// スプライト生成
 	/*sprite2DReticle_ = new Sprite;
 	sprite2DReticle_ = sprite2DReticle_->Create({ 640, 360, 0 }, { 10,10 }, { 0,0,0,1 }, RETICLE);*/
-	sprite2DReticle_ = Sprite::Create({ 640, 360, 0 }, { 5,5 }, { 1,1,1,1 }, RETICLE);
+	//sprite2DReticle_ = Sprite::Create({ 640, 360, 0 }, { 5,5 }, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();
 	worldTransform_.translate = { playerPosition };
@@ -68,22 +68,22 @@ void Player::Update(ViewProjection viewProjection) {
 	}
 
 	// スプライトの現在座標を取得
-	Vector2 spritePosition = sprite2DReticle_->GetPosition();
+	//Vector2 spritePosition = sprite2DReticle_->GetPosition();
 
-	//ジョイスティック状態取得
-	if (Input::GetInstance()->GetJoystickState(joyState)) {
-		spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 5.0f;
-		spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 5.0f;
+	////ジョイスティック状態取得
+	//if (Input::GetInstance()->GetJoystickState(joyState)) {
+	//	spritePosition.x += (float)joyState.Gamepad.sThumbRX / SHRT_MAX * 5.0f;
+	//	spritePosition.y -= (float)joyState.Gamepad.sThumbRY / SHRT_MAX * 5.0f;
 
-		spritePosition.x =
-			std::clamp(spritePosition.x, 0.0f, (float)kCliantWidth);
-		spritePosition.y = std::clamp(
-			spritePosition.y, 0.0f, (float)kCliantHeight);
-		//スプライトの座標変更を反映
-		sprite2DReticle_->SetPosition(spritePosition);
+	//	spritePosition.x =
+	//		std::clamp(spritePosition.x, 0.0f, (float)kCliantWidth);
+	//	spritePosition.y = std::clamp(
+	//		spritePosition.y, 0.0f, (float)kCliantHeight);
+	//	//スプライトの座標変更を反映
+	//	sprite2DReticle_->SetPosition(spritePosition);
 
-		worldSprite2DReticle_ = sprite2DReticle_->GetWorldTransform();
-	}
+	//	worldSprite2DReticle_ = sprite2DReticle_->GetWorldTransform();
+	//}
 
 	// 押した方向で移動ベクトルを変更(左右)
 	if (input_->PushKey(DIK_LEFT)) {
@@ -215,7 +215,7 @@ void Player::Draw(ViewProjection viewProjection) {
 		bullet->Draw(viewProjection);
 	}
 
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
 // void Player::SetWorldTransform_(WorldTransform worldTransform) {
@@ -241,8 +241,8 @@ void Player::Attack() {
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
-		Model* model{};
-		model->CreateModelFromObj(CUBE);
+		Particle* model{};
+		//model->CreateModelFromObj(CUBE);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
@@ -264,8 +264,8 @@ void Player::Attack() {
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
-		Model* model{};
-		model->CreateModelFromObj(CUBE);
+		Particle* model{};
+		//model->CreateModelFromObj(CUBE);
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();

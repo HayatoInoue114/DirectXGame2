@@ -18,7 +18,7 @@
 
 #define MAXINSTANCE 1 // インスタンス数
 
-class Model
+class Particle
 {
 public:
 	void Initialize();
@@ -29,9 +29,9 @@ public:
 
 	void LoadModel(const std::string& filename);
 
-	static Model* CreateModelFromObj(int modelName);
+	static Particle* CreateModelFromObj(int modelName);
 
-	static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
+	static std::unique_ptr<Particle> CreateModelFromObjPtr(int modelName);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 

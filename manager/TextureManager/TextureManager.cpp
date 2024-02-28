@@ -1,5 +1,4 @@
 #include "TextureManager.h"
-#include "../../object/Model/Model.h"
 
 TextureManager* TextureManager::GetInstance() {
 	static TextureManager instance;

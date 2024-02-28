@@ -4,7 +4,7 @@ PlayerBullet::PlayerBullet() { velocity_ = {}; }
 
 PlayerBullet::~PlayerBullet() {}
 
-void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
+void PlayerBullet::Initialize(Particle* model, const Vector3& position, const Vector3& velocity) {
 	// NULLポインタチェック
 	assert(model);
 
@@ -12,7 +12,7 @@ void PlayerBullet::Initialize(Model* model, const Vector3& position, const Vecto
 	// テクスチャ読み込み
 	/*textureHandle_ = TextureManager::GetInstance()->LoadTexture("godest.png");*/
 
-	textureHandle_ = PLAYERBULLET;
+	//textureHandle_ = PLAYERBULLET;
 
 	worldTransform_.Initialize();
 	// 引数で受け取った初期座標をセット
@@ -35,7 +35,7 @@ void PlayerBullet::Update() {
 }
 
 void PlayerBullet::Draw(ViewProjection& viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
 Vector3 PlayerBullet::GetWorldPosition() {

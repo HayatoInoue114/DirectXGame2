@@ -123,7 +123,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="components\Light\Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="structure\MaterialData\MaterialData.cpp" />
-    <ClCompile Include="object\Model\Model.cpp" />
+    <ClCompile Include="object\Particle\Particle.cpp" />
     <ClCompile Include="math\MT\MT.cpp" />
     <ClCompile Include="object\Sphere\Sphere.cpp" />
     <ClCompile Include="object\Sprite\Sprite.cpp" />
@@ -197,7 +197,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="components\Light\Light.h" />
     <ClInclude Include="structure\Material\Material.h" />
     <ClInclude Include="structure\MaterialData\MaterialData.h" />
-    <ClInclude Include="object\Model\Model.h" />
+    <ClInclude Include="object\Particle\Particle.h" />
     <ClInclude Include="structure\ModelData\ModelData.h" />
     <ClInclude Include="math\MT\MT.h" />
     <ClInclude Include="object\ResourceObject\ResourceObject.h" />

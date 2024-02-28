@@ -159,7 +159,7 @@
     <ClCompile Include="components\Light\Light.cpp">
       <Filter>ソース ファイル\Light</Filter>
     </ClCompile>
-    <ClCompile Include="object\Model\Model.cpp">
+    <ClCompile Include="object\Particle\Particle.cpp">
       <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
     <ClCompile Include="structure\MaterialData\MaterialData.cpp">
@@ -308,7 +308,7 @@
     <ClInclude Include="structure\ModelData\ModelData.h">
       <Filter>ヘッダー ファイル\Structs</Filter>
     </ClInclude>
-    <ClInclude Include="object\Model\Model.h">
+    <ClInclude Include="object\Particle\Particle.h">
       <Filter>ヘッダー ファイル\Model</Filter>
     </ClInclude>
     <ClInclude Include="structure\MaterialData\MaterialData.h">

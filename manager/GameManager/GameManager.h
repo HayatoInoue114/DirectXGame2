@@ -76,7 +76,7 @@
 #include "../../object/Sprite/Sprite.h"
 #include "../../object/Sphere/Sphere.h"
 #include "../../components/Light/Light.h"
-#include "../../object/Model/Model.h"
+//#include "../../object/Model/Model.h"
 #include "../../manager/TextureManager/TextureManager.h"
 //#include "../../object/Particle/Particle.h"
 #include "../../Input/Input.h"
@@ -96,6 +96,8 @@
 #define MAXTRIANGLE 1 //三角形の最大数
 #define MAXSPRITE 1 //スプライトの最大数
 #define MAXSPHERE 1 //球の最大数
+
+class Particle;
 
 class GameManager
 {
@@ -130,7 +132,7 @@ public:
 	};*/
 
 private:
-	std::unique_ptr<Model> model_{};
+	//std::unique_ptr<Model> model_{};
 
 	//std::unique_ptr<Particle> particle_{};
 

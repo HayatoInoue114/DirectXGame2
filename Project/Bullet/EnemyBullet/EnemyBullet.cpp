@@ -10,13 +10,13 @@ EnemyBullet::EnemyBullet() {
 
 EnemyBullet::~EnemyBullet() {}
 
-void EnemyBullet::Initialize(Model* model, const Vector3& position, const Vector3& velocity) {
+void EnemyBullet::Initialize(Particle* model, const Vector3& position, const Vector3& velocity) {
 	// NULLポインタチェック
 	assert(model);
 
 	model_ = model;
 	// テクスチャ読み込み
-	textureHandle_ = ENEMYBULLET;
+	//textureHandle_ = ENEMYBULLET;
 
 	worldTransform_.Initialize();
 
@@ -63,7 +63,7 @@ void EnemyBullet::Update() {
 }
 
 void EnemyBullet::Draw(ViewProjection& viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
 Vector3 EnemyBullet::GetWorldPosition() {

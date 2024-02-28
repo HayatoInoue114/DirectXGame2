@@ -1,9 +1,11 @@
 #pragma once
-#include "../../../object/Model/Model.h"
+//#include "../../../object/Model/Model.h"
 #include "../../../math/MT/MT.h"
 #include "../../../math/WorldTransform/WorldTransform.h"
 #include <assert.h>
 
+
+class Particle;
 class PlayerBullet {
 public:
 	PlayerBullet();
@@ -14,7 +16,7 @@ public:
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="position">初期座標</param>
-	void Initialize(Model* model, const Vector3& position, const Vector3& velocity);
+	void Initialize(Particle* model, const Vector3& position, const Vector3& velocity);
 
 	/// <summary>
 	/// 更新
@@ -41,7 +43,7 @@ private:
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル
-	Model* model_ = nullptr;
+	Particle* model_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 

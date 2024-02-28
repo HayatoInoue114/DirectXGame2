@@ -99,9 +99,9 @@ private: // メンバ変数
 	uint32_t textureHandle = 0;
 
 	// 3Dモデルデータ
-	Model* model = nullptr;
-	std::unique_ptr<Model> playerModel_;
-	std::unique_ptr<Model> enemyModel_;
+	Particle* model = nullptr;
+	//std::unique_ptr<Model> playerModel_;
+	//std::unique_ptr<Model> enemyModel_;
 
 	// ビュープロジェクション
 	ViewProjection viewProjection;
@@ -117,7 +117,7 @@ private: // メンバ変数
 
 	// 敵
 	std::list<Enemy*> enemies_;
-	std::list<Model*> enemiesModel_;
+	std::list<Particle*> enemiesModel_;
 	//std::unique_ptr<Model> enemyModel_;
 
 	// 天球
@@ -125,7 +125,7 @@ private: // メンバ変数
 	//Skydome* skydome_ = nullptr;
 
 	// 3Dモデル
-	std::unique_ptr<Model> modelSkydome_ = nullptr;
+	//std::unique_ptr<Model> modelSkydome_ = nullptr;
 
 	// レールカメラ
 	RailCamera* railCamera_ = nullptr;

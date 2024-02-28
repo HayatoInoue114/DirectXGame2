@@ -2,7 +2,7 @@
 #include "../Bullet/EnemyBullet/EnemyBullet.h"
 #include "EnemyState/EnemyState.h"
 #include "../../math/MT/MT.h"
-#include "../../object/Model/Model.h"
+//#include "../../object/Model/Model.h"
 #include "../TimedCall/TimedCall.h"
 #include "../../math/WorldTransform/WorldTransform.h"
 #include <assert.h>
@@ -11,7 +11,7 @@ class GameScene;
 class Enemy;
 class Player;
 class BaseEnemyState;
-
+class Particle;
 /// <summary>
 /// 敵
 /// </summary>
@@ -23,7 +23,7 @@ public:
 	/// 初期化
 	/// </summary>
 	/// <param name="model">モデル</param>
-	void Initialize(Model* model, Vector3 position);
+	void Initialize(Particle* model, Vector3 position);
 
 	/// <summary>
 	/// 更新
@@ -80,7 +80,7 @@ private:
 	// ワールド変換データ
 	WorldTransform worldTransform_ = {};
 	// モデル
-	Model* model_ = nullptr;
+	Particle* model_ = nullptr;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 

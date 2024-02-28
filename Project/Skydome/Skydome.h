@@ -1,13 +1,15 @@
 #pragma once
-#include "../../object/Model/Model.h"
+//#include "../../object/Model/Model.h"
 #include "../../math/WorldTransform/WorldTransform.h"
 
+
+class Particle;
 class Skydome {
 public:
 	/// <summary>
 	/// 初期化
 	/// </summary>
-	void Initialize(Model* model);
+	void Initialize(Particle* model);
 	/// <summary>
 	/// 更新
 	/// </summary>
@@ -23,5 +25,5 @@ private:
 	WorldTransform worldTransform_;
 
 	// モデル
-	Model* model_ = nullptr;
+	Particle* model_ = nullptr;
 };

@@ -203,7 +203,7 @@ void Player::Draw(ViewProjection viewProjection) {
 		bullet->Draw(viewProjection);
 	}
 
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
 // void Player::SetWorldTransform_(WorldTransform worldTransform) {

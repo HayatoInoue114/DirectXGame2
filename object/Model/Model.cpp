@@ -108,7 +108,7 @@ void Model::Initialize() {
 	//Transform変数を作る
 	worldTransform_.Initialize();
 
-	//CreatevertexResource();
+	//CreateVertexResource();
 	CreateModel();
 	CreateMaterialResource();
 	CreateVertexBufferView();
@@ -120,9 +120,9 @@ void Model::Initialize() {
 	SetMaterialData();
 }
 
-void Model::CreatevertexResource() {
-	//vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * vertexIndex_);
-}
+//void Model::CreateVertexResource() {
+//	//vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * vertexIndex_);
+//}
 
 void Model::CreateVertexBufferView() {
 	vertexBufferView_ = {};
@@ -160,7 +160,7 @@ void Model::WriteDataToResource() {
 }
 
 void Model::CreateWVPMatrix() {
-	cameraTransform_.scale = { 1.0f,1.0f,1.0f };
+	/*cameraTransform_.scale = { 1.0f,1.0f,1.0f };
 	cameraTransform_.rotate = {};
 	cameraTransform_.translate = { 0.0f,0.0f,-10.0f, };
 
@@ -170,7 +170,7 @@ void Model::CreateWVPMatrix() {
 	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
 	wvpData_->WVP = worldViewProjectionMatrix_;
-	wvpData_->World = worldMatrix_;
+	wvpData_->World = worldMatrix_;*/
 }
 
 void Model::SetMaterialData() {
@@ -199,8 +199,7 @@ void Model::Update() {
 	//ImGuiAdjustParameter();
 }
 
-void Model::Draw(WorldTransform& worldTransform, ViewProjection& viewProjection, uint32_t textureNum) {
-	worldTransform_ = worldTransform;
+void Model::Draw() {
 	CreateWVPMatrix();
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
@@ -215,7 +214,7 @@ void Model::Draw(WorldTransform& worldTransform, ViewProjection& viewProjection,
 	//wvp用のCBufferの場所を設定
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum]);
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[modelName_]);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。

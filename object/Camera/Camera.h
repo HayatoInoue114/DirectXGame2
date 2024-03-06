@@ -5,6 +5,7 @@ class Camera
 {
 public:
 	Camera();
+	void Initialize();
 	void Update();
 	
 	//setter
@@ -18,8 +19,8 @@ public:
 	//getter
 	const Matrix4x4& GetWorldTransform() const { return worldMatrix_; }
 	const Matrix4x4& GetViewMatrix() const { return viewMatrix_; }
-	const Matrix4x4& GetProjectionMatrix() const { projectionMatrix_; }
-	const Matrix4x4& GetViewProjectionMatrix() const { viewProjectionMatrix_; }
+	const Matrix4x4& GetProjectionMatrix() const { return projectionMatrix_; }
+	const Matrix4x4& GetViewProjectionMatrix() const { return viewProjectionMatrix_; }
 	const Vector3& GetRotate() const { return Transform_.rotate; }
 	const Vector3& GetTranslate() const { return Transform_.translate; }
 

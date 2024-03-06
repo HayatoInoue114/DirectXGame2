@@ -13,6 +13,7 @@
 #include "../../structure/ModelData/ModelData.h"
 #include "../../math/WorldTransform/WorldTransform.h"
 #include "../../manager/ModelManager/ModelManager.h"
+#include "../../math/Transform/Transform.h"
 
 #define MAXINSTANCE 10 // インスタンス数
 
@@ -27,9 +28,29 @@ public:
 
 	void Update();
 
-	void Draw(WorldTransform& worldTransform, ViewProjection& viewProjection, uint32_t textureNum);
+	void Draw();
 
-	void CreatevertexResource();
+	void ImGuiAdjustParameter();
+
+	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
+
+	static Model* CreateModelFromObj(int modelName);
+
+	static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
+
+	
+
+public:  //ゲッター,セッター
+	void SetTransform(const TransformS& transform) { worldTransform_.scale = transform.scale,worldTransform_.rotate = transform.rotate,worldTransform_.translate = transform.translate; }
+	void SetWorldTransform(const WorldTransform& worldTransform) { worldTransform_ = worldTransform; }
+	void SetWVP(const TransformationMatrix& wvp) { *wvpData_ = wvp; }
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
+	void SetTextureNum(uint32_t num) { modelName_ = num; }
+	void SetColor(const Vector4& color) { materialData_->color = color; }
+
+private:
+	//void CreateVertexResource();
 
 	void CreateVertexBufferView();
 
@@ -43,26 +64,8 @@ public:
 
 	void SetMaterialData();
 
-	void ImGuiAdjustParameter();
-
 	void CreateModel();
 
-	/*void CreateInstance();
-
-	void CreateSRV();
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);*/
-
-	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
-
-	static Model* CreateModelFromObj(int modelName);
-
-	static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
-
-	void SetTextureNum(uint32_t num) { modelName_ = num; }
-	void SetColor(const Vector4& color) { materialData_->color = color; }
 private:
 	//モデル読み込み
 	ModelData modelData_{};

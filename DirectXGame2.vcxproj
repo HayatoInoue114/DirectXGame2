@@ -108,6 +108,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="math\WorldTransform\WorldTransform.cpp" />
     <ClCompile Include="object\Camera\Camera.cpp" />
     <ClCompile Include="object\Model\Model.cpp" />
+    <ClCompile Include="object\Primitive\Primitive\Primitive.cpp" />
+    <ClCompile Include="object\Primitive\PrimitiveCommon\PrimitiveCommon.cpp" />
+    <ClCompile Include="manager\PrimitiveManager\PrimitiveManager.cpp" />
     <ClCompile Include="Project\Bullet\EnemyBullet\EnemyBullet.cpp" />
     <ClCompile Include="Project\Bullet\PlayerBullet\PlayerBullet.cpp" />
     <ClCompile Include="Project\Enemy\Enemy.cpp" />
@@ -120,6 +123,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="scene\GameScene.cpp" />
     <ClCompile Include="scene\IScene.cpp" />
     <ClCompile Include="scene\TitleScene.cpp" />
+    <ClCompile Include="scene\TestScene.cpp" />
     <ClCompile Include="utility\FormatString\FormatString.cpp" />
     <ClCompile Include="manager\GameManager\GameManager.cpp" />
     <ClCompile Include="base\GraphicsRenderer\GraphicsRenderer.cpp" />
@@ -182,6 +186,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="math\WorldTransform\WorldTransform.h" />
     <ClInclude Include="object\Camera\Camera.h" />
     <ClInclude Include="object\Model\Model.h" />
+    <ClInclude Include="object\Primitive\Primitive\Primitive.h" />
+    <ClInclude Include="object\Primitive\PrimitiveCommon\PrimitiveCommon.h" />
+    <ClInclude Include="manager\PrimitiveManager\PrimitiveManager.h" />
     <ClInclude Include="Project\Bullet\EnemyBullet\EnemyBullet.h" />
     <ClInclude Include="Project\Bullet\PlayerBullet\PlayerBullet.h" />
     <ClInclude Include="Project\Enemy\Enemy.h" />
@@ -196,6 +203,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="scene\TitleScene.h" />
     <ClInclude Include="structure\VertexData\VertexData.h" />
     <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h" />
+    <ClInclude Include="scene\TestScene.h" />
     <ClInclude Include="utility\FormatString\FormatString.h" />
     <ClInclude Include="manager\GameManager\GameManager.h" />
     <ClInclude Include="base\GraphicsRenderer\GraphicsRenderer.h" />

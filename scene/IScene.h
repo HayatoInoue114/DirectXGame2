@@ -1,9 +1,12 @@
 #pragma once
+#include "../Input/Input.h"
+#include "../object/Sprite/Sprite.h"
 
 enum Scene {
 	TITLE_SCENE,
 	GAME_SCENE,
-	GAMECLEAR_SCENE
+	GAMECLEAR_SCENE,
+	TEST_SCENE
 };
 
 class IScene

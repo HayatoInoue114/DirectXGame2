@@ -60,7 +60,7 @@ void Enemy::Update() {
 }
 
 void Enemy::Draw(ViewProjection& viewProjection) {
-	model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 
 void Enemy::ChangePosition(Vector3 vector) {

@@ -1,4 +1,3 @@
-
 #include "GameManager.h"
 
 GameManager::GameManager() {
@@ -6,13 +5,14 @@ GameManager::GameManager() {
 	sceneArr_[TITLE_SCENE] = new TitleScene();
 	sceneArr_[GAME_SCENE] = new GameScene();
 	sceneArr_[GAMECLEAR_SCENE] = new GameClearScene();
+	sceneArr_[TEST_SCENE] = new TestScene();
 }
 
 GameManager::~GameManager() {
 	delete titleScene_;
 	delete gameScene_;
 	delete gameClearScene_;
-
+	delete testScene_;
 }
 
 void GameManager::Initialize()
@@ -39,7 +39,7 @@ void GameManager::Initialize()
 #pragma endregion 基盤システムの初期化
 
 	//初期シーンの設定
-	sceneNum_ = TITLE_SCENE;
+	sceneNum_ = TEST_SCENE;
 	// シーンごとの初期化
 	sceneArr_[sceneNum_]->Initialize();
 

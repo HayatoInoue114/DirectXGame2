@@ -92,6 +92,7 @@
 #include "../../scene/TitleScene.h"
 #include "../../scene/GameScene.h"
 #include "../../scene/GameClearScene.h"
+#include "../../scene/TestScene.h"
 
 #define MAXTRIANGLE 1 //三角形の最大数
 #define MAXSPRITE 1 //スプライトの最大数
@@ -147,6 +148,8 @@ private:
 	TitleScene* titleScene_{};
 
 	GameClearScene* gameClearScene_{};
+
+	TestScene* testScene_{};
 
 	DirectX12* directX12_{};
 

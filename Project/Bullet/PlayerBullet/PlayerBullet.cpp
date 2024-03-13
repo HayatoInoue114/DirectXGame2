@@ -34,7 +34,7 @@ void PlayerBullet::Update() {
 	worldTransform_.UpdateMatrix();
 }
 
-void PlayerBullet::Draw(ViewProjection& viewProjection) {
+void PlayerBullet::Draw() {
 	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 

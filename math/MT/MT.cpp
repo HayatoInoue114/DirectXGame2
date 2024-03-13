@@ -515,78 +515,78 @@ float Max(float num1, float num2) {
 	}
 }
 
-Vector2 operator+(const Vector2& a, const Vector2& b) {
-	Vector2 c = { a.x + b.x,a.y + b.y };
-
-	return c;
-}
-
-Vector2 operator-(const Vector2& a, const Vector2& b) {
-	Vector2 c = { a.x - b.x,a.y - b.y };
-
-	return c;
-}
-
-Vector2 operator*(const Vector2& a, const Vector2& b) {
-	Vector2 c = { a.x * b.x,a.y * b.y };
-
-	return c;
-}
-
-Vector2 operator*(const float& a, const Vector2& b) {
-	Vector2 c = { a * b.x,a * b.y };
-
-	return c;
-}
-
-Vector3 operator+(const Vector3& a, const Vector3& b) {
-	Vector3 c = { a.x + b.x,a.y + b.y ,a.z + b.z };
-
-	return c;
-}
-
-Vector3 operator+(const Vector3& a, const float& b) {
-	Vector3 c = { a.x + b,a.y + b,a.z + b };
-
-	return c;
-}
-
-Vector3 operator-(const Vector3& a, const Vector3& b) {
-	Vector3 c = { a.x - b.x,a.y - b.y,a.z - b.z };
-
-	return c;
-}
-
-Vector3 operator-(const Vector3& a, const float& b) {
-	Vector3 c = { a.x - b,a.y - b,a.z - b };
-
-	return c;
-}
-
-Vector3 operator*(const Vector3& a, const Vector3& b) {
-	Vector3 c = { a.x * b.x, a.y * b.y, a.z * b.z };
-
-	return c;
-}
-
-Vector3 operator*(const float& a, const Vector3& b) {
-	Vector3 c = { a * b.x,a * b.y,a * b.z };
-
-	return c;
-}
-
-// Vector3とMatrix4x4の乗算関数
-Vector3 operator*(const Vector3& vec, const Matrix4x4& mat) {
-	Vector4 result = {
-		vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0] + mat.m[3][0],
-		vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1] + mat.m[3][1],
-		vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2] + mat.m[3][2],
-		vec.x * mat.m[0][3] + vec.y * mat.m[1][3] + vec.z * mat.m[2][3] + mat.m[3][3]
-	};
-
-	// 4次元ベクトルを3次元ベクトルに戻す
-	return { result.x / result.w, result.y / result.w, result.z / result.w };
-}
+//Vector2 operator+(const Vector2& a, const Vector2& b) {
+//	Vector2 c = { a.x + b.x,a.y + b.y };
+//
+//	return c;
+//}
+//
+//Vector2 operator-(const Vector2& a, const Vector2& b) {
+//	Vector2 c = { a.x - b.x,a.y - b.y };
+//
+//	return c;
+//}
+//
+//Vector2 operator*(const Vector2& a, const Vector2& b) {
+//	Vector2 c = { a.x * b.x,a.y * b.y };
+//
+//	return c;
+//}
+//
+//Vector2 operator*(const float& a, const Vector2& b) {
+//	Vector2 c = { a * b.x,a * b.y };
+//
+//	return c;
+//}
+//
+//Vector3 operator+(const Vector3& a, const Vector3& b) {
+//	Vector3 c = { a.x + b.x,a.y + b.y ,a.z + b.z };
+//
+//	return c;
+//}
+//
+//Vector3 operator+(const Vector3& a, const float& b) {
+//	Vector3 c = { a.x + b,a.y + b,a.z + b };
+//
+//	return c;
+//}
+//
+//Vector3 operator-(const Vector3& a, const Vector3& b) {
+//	Vector3 c = { a.x - b.x,a.y - b.y,a.z - b.z };
+//
+//	return c;
+//}
+//
+//Vector3 operator-(const Vector3& a, const float& b) {
+//	Vector3 c = { a.x - b,a.y - b,a.z - b };
+//
+//	return c;
+//}
+//
+//Vector3 operator*(const Vector3& a, const Vector3& b) {
+//	Vector3 c = { a.x * b.x, a.y * b.y, a.z * b.z };
+//
+//	return c;
+//}
+//
+//Vector3 operator*(const float& a, const Vector3& b) {
+//	Vector3 c = { a * b.x,a * b.y,a * b.z };
+//
+//	return c;
+//}
+//
+//// Vector3とMatrix4x4の乗算関数
+//Vector3 operator*(const Vector3& vec, const Matrix4x4& mat) {
+//	Vector4 result = {
+//		vec.x * mat.m[0][0] + vec.y * mat.m[1][0] + vec.z * mat.m[2][0] + mat.m[3][0],
+//		vec.x * mat.m[0][1] + vec.y * mat.m[1][1] + vec.z * mat.m[2][1] + mat.m[3][1],
+//		vec.x * mat.m[0][2] + vec.y * mat.m[1][2] + vec.z * mat.m[2][2] + mat.m[3][2],
+//		vec.x * mat.m[0][3] + vec.y * mat.m[1][3] + vec.z * mat.m[2][3] + mat.m[3][3]
+//	};
+//
+//	// 4次元ベクトルを3次元ベクトルに戻す
+//	return { result.x / result.w, result.y / result.w, result.z / result.w };
+//}
 
 Matrix4x4 Transpose(const Matrix4x4& m) {
 	Matrix4x4 mat = { m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0], m.m[0][1], m.m[1][1],
@@ -620,28 +620,28 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix) {
 	return result;
 }
 
-Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2) {
-	Matrix4x4 resultMatrix = {};
-
-	resultMatrix.m[0][0] = m1.m[0][0] * m2.m[0][0] + m1.m[0][1] * m2.m[1][0] + m1.m[0][2] * m2.m[2][0] + m1.m[0][3] * m2.m[3][0];
-	resultMatrix.m[0][1] = m1.m[0][0] * m2.m[0][1] + m1.m[0][1] * m2.m[1][1] + m1.m[0][2] * m2.m[2][1] + m1.m[0][3] * m2.m[3][1];
-	resultMatrix.m[0][2] = m1.m[0][0] * m2.m[0][2] + m1.m[0][1] * m2.m[1][2] + m1.m[0][2] * m2.m[2][2] + m1.m[0][3] * m2.m[3][2];
-	resultMatrix.m[0][3] = m1.m[0][0] * m2.m[0][3] + m1.m[0][1] * m2.m[1][3] + m1.m[0][2] * m2.m[2][3] + m1.m[0][3] * m2.m[3][3];
-
-	resultMatrix.m[1][0] = m1.m[1][0] * m2.m[0][0] + m1.m[1][1] * m2.m[1][0] + m1.m[1][2] * m2.m[2][0] + m1.m[1][3] * m2.m[3][0];
-	resultMatrix.m[1][1] = m1.m[1][0] * m2.m[0][1] + m1.m[1][1] * m2.m[1][1] + m1.m[1][2] * m2.m[2][1] + m1.m[1][3] * m2.m[3][1];
-	resultMatrix.m[1][2] = m1.m[1][0] * m2.m[0][2] + m1.m[1][1] * m2.m[1][2] + m1.m[1][2] * m2.m[2][2] + m1.m[1][3] * m2.m[3][2];
-	resultMatrix.m[1][3] = m1.m[1][0] * m2.m[0][3] + m1.m[1][1] * m2.m[1][3] + m1.m[1][2] * m2.m[2][3] + m1.m[1][3] * m2.m[3][3];
-
-	resultMatrix.m[2][0] = m1.m[2][0] * m2.m[0][0] + m1.m[2][1] * m2.m[1][0] + m1.m[2][2] * m2.m[2][0] + m1.m[2][3] * m2.m[3][0];
-	resultMatrix.m[2][1] = m1.m[2][0] * m2.m[0][1] + m1.m[2][1] * m2.m[1][1] + m1.m[2][2] * m2.m[2][1] + m1.m[2][3] * m2.m[3][1];
-	resultMatrix.m[2][2] = m1.m[2][0] * m2.m[0][2] + m1.m[2][1] * m2.m[1][2] + m1.m[2][2] * m2.m[2][2] + m1.m[2][3] * m2.m[3][2];
-	resultMatrix.m[2][3] = m1.m[2][0] * m2.m[0][3] + m1.m[2][1] * m2.m[1][3] + m1.m[2][2] * m2.m[2][3] + m1.m[2][3] * m2.m[3][3];
-
-	resultMatrix.m[3][0] = m1.m[3][0] * m2.m[0][0] + m1.m[3][1] * m2.m[1][0] + m1.m[3][2] * m2.m[2][0] + m1.m[3][3] * m2.m[3][0];
-	resultMatrix.m[3][1] = m1.m[3][0] * m2.m[0][1] + m1.m[3][1] * m2.m[1][1] + m1.m[3][2] * m2.m[2][1] + m1.m[3][3] * m2.m[3][1];
-	resultMatrix.m[3][2] = m1.m[3][0] * m2.m[0][2] + m1.m[3][1] * m2.m[1][2] + m1.m[3][2] * m2.m[2][2] + m1.m[3][3] * m2.m[3][2];
-	resultMatrix.m[3][3] = m1.m[3][0] * m2.m[0][3] + m1.m[3][1] * m2.m[1][3] + m1.m[3][2] * m2.m[2][3] + m1.m[3][3] * m2.m[3][3];
-
-	return resultMatrix;
-}
+//Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2) {
+//	Matrix4x4 resultMatrix = {};
+//
+//	resultMatrix.m[0][0] = m1.m[0][0] * m2.m[0][0] + m1.m[0][1] * m2.m[1][0] + m1.m[0][2] * m2.m[2][0] + m1.m[0][3] * m2.m[3][0];
+//	resultMatrix.m[0][1] = m1.m[0][0] * m2.m[0][1] + m1.m[0][1] * m2.m[1][1] + m1.m[0][2] * m2.m[2][1] + m1.m[0][3] * m2.m[3][1];
+//	resultMatrix.m[0][2] = m1.m[0][0] * m2.m[0][2] + m1.m[0][1] * m2.m[1][2] + m1.m[0][2] * m2.m[2][2] + m1.m[0][3] * m2.m[3][2];
+//	resultMatrix.m[0][3] = m1.m[0][0] * m2.m[0][3] + m1.m[0][1] * m2.m[1][3] + m1.m[0][2] * m2.m[2][3] + m1.m[0][3] * m2.m[3][3];
+//
+//	resultMatrix.m[1][0] = m1.m[1][0] * m2.m[0][0] + m1.m[1][1] * m2.m[1][0] + m1.m[1][2] * m2.m[2][0] + m1.m[1][3] * m2.m[3][0];
+//	resultMatrix.m[1][1] = m1.m[1][0] * m2.m[0][1] + m1.m[1][1] * m2.m[1][1] + m1.m[1][2] * m2.m[2][1] + m1.m[1][3] * m2.m[3][1];
+//	resultMatrix.m[1][2] = m1.m[1][0] * m2.m[0][2] + m1.m[1][1] * m2.m[1][2] + m1.m[1][2] * m2.m[2][2] + m1.m[1][3] * m2.m[3][2];
+//	resultMatrix.m[1][3] = m1.m[1][0] * m2.m[0][3] + m1.m[1][1] * m2.m[1][3] + m1.m[1][2] * m2.m[2][3] + m1.m[1][3] * m2.m[3][3];
+//
+//	resultMatrix.m[2][0] = m1.m[2][0] * m2.m[0][0] + m1.m[2][1] * m2.m[1][0] + m1.m[2][2] * m2.m[2][0] + m1.m[2][3] * m2.m[3][0];
+//	resultMatrix.m[2][1] = m1.m[2][0] * m2.m[0][1] + m1.m[2][1] * m2.m[1][1] + m1.m[2][2] * m2.m[2][1] + m1.m[2][3] * m2.m[3][1];
+//	resultMatrix.m[2][2] = m1.m[2][0] * m2.m[0][2] + m1.m[2][1] * m2.m[1][2] + m1.m[2][2] * m2.m[2][2] + m1.m[2][3] * m2.m[3][2];
+//	resultMatrix.m[2][3] = m1.m[2][0] * m2.m[0][3] + m1.m[2][1] * m2.m[1][3] + m1.m[2][2] * m2.m[2][3] + m1.m[2][3] * m2.m[3][3];
+//
+//	resultMatrix.m[3][0] = m1.m[3][0] * m2.m[0][0] + m1.m[3][1] * m2.m[1][0] + m1.m[3][2] * m2.m[2][0] + m1.m[3][3] * m2.m[3][0];
+//	resultMatrix.m[3][1] = m1.m[3][0] * m2.m[0][1] + m1.m[3][1] * m2.m[1][1] + m1.m[3][2] * m2.m[2][1] + m1.m[3][3] * m2.m[3][1];
+//	resultMatrix.m[3][2] = m1.m[3][0] * m2.m[0][2] + m1.m[3][1] * m2.m[1][2] + m1.m[3][2] * m2.m[2][2] + m1.m[3][3] * m2.m[3][2];
+//	resultMatrix.m[3][3] = m1.m[3][0] * m2.m[0][3] + m1.m[3][1] * m2.m[1][3] + m1.m[3][2] * m2.m[2][3] + m1.m[3][3] * m2.m[3][3];
+//
+//	return resultMatrix;
+//}

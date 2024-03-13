@@ -59,7 +59,7 @@ void Enemy::Update() {
 	worldTransform_.TransferMatrix();
 }
 
-void Enemy::Draw(ViewProjection& viewProjection) {
+void Enemy::Draw() {
 	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 

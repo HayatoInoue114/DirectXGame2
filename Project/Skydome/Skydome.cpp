@@ -7,4 +7,4 @@ void Skydome::Initialize(Particle* model) {
 
 void Skydome::Update() {}
 
-void Skydome::Draw(ViewProjection viewProjection) {/* model_->Draw(worldTransform_, viewProjection, SKYDOMETEX);*/ }
+void Skydome::Draw() {/* model_->Draw(worldTransform_, viewProjection, SKYDOMETEX);*/ }

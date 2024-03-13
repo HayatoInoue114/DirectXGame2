@@ -18,7 +18,7 @@ public:
 	/// <summary>
 	/// 描画
 	/// </summary>
-	void Draw(ViewProjection viewProjection);
+	void Draw();
 
 private:
 	// ワールド変換データ

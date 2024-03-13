@@ -21,7 +21,7 @@ GameScene::~GameScene() {
 		delete timedCall;
 	}
 	// ビュー(カメラ)の解放
-	viewProjection.constBuff_.ReleaseAndGetAddressOf();
+	//viewProjection.constBuff_.ReleaseAndGetAddressOf();
 
 	worldTransform_.constBuff_.ReleaseAndGetAddressOf();
 }
@@ -48,8 +48,8 @@ void GameScene::Initialize() {
 	modelSkydome_ = Model::CreateModelFromObjPtr(SKYDOME);
 
 	// ビュープロジェクションの初期化
-	viewProjection.Initialize();
-	viewProjection.farZ = 500;
+	//viewProjection.Initialize();
+	//viewProjection.farZ = 500;
 
 	// レールカメラの生成
 	railCamera_ = new RailCamera();
@@ -118,13 +118,13 @@ void GameScene::Update() {
 		isClear_ = true;
 	}
 
-	viewProjection.UpdateMatrix();
+	//viewProjection.UpdateMatrix();
 	// レールカメラの更新
 	railCamera_->Update();
-	viewProjection.matView = railCamera_->GetViewProjection().matView;
-	viewProjection.matProjection = railCamera_->GetViewProjection().matProjection;
+	//viewProjection.matView = railCamera_->GetViewProjection().matView;
+	//viewProjection.matProjection = railCamera_->GetViewProjection().matProjection;
 
-	viewProjection.TransferMatrix();
+	//viewProjection.TransferMatrix();
 
 	
 	// 敵の発生処理
@@ -136,7 +136,7 @@ void GameScene::Update() {
 	}
 
 	// 自キャラの更新
-	player_->Update(viewProjection);
+	player_->Update();
 
 	// 終了したタイマーを削除
 	timedCalls_.remove_if([](TimedCall* timedCall) {
@@ -178,12 +178,12 @@ void GameScene::Update() {
 
 	blackSprite_->Update();
 
-	ImGui::Begin("View");
-	//ImGui::SliderFloat3("translation", , 10, 10);
-	ImGui::SliderFloat3("rotation", &viewProjection.rotate.x, 10, 10);
-	ImGui::SliderFloat3("Cameratranslation", &railCamera_->GetWorldTransform().translate.x, 10, 10);
-	ImGui::SliderFloat3("Camerarotation", &railCamera_->GetWorldTransform().rotate.x, 10, 10);
-	ImGui::End();
+	//ImGui::Begin("View");
+	////ImGui::SliderFloat3("translation", , 10, 10);
+	//ImGui::SliderFloat3("rotation", &viewProjection.rotate.x, 10, 10);
+	//ImGui::SliderFloat3("Cameratranslation", &railCamera_->GetWorldTransform().translate.x, 10, 10);
+	//ImGui::SliderFloat3("Camerarotation", &railCamera_->GetWorldTransform().rotate.x, 10, 10);
+	//ImGui::End();
 	
 
 	// デバッグカメラの更新
@@ -218,18 +218,18 @@ void GameScene::Draw2D() {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	player_->DrawUI();
 
-	skydome_->Draw(viewProjection);
+	skydome_->Draw();
 
-	player_->Draw(viewProjection);
+	player_->Draw();
 
 
 	for (Enemy* enemy : enemies_) {
-		enemy->Draw(viewProjection);
+		enemy->Draw();
 	}
 
 	// 弾描画
 	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Draw(viewProjection);
+		bullet->Draw();
 	}
 
 	blackSprite_->Draw();
@@ -524,7 +524,7 @@ void GameScene::EnemyFire() {
 		velocity_ = Normalize(velocity_);
 
 		// ベクトルの長さを速さに合わせる
-		velocity_ = kBulletSpeed * velocity_;
+		//velocity_ = kBulletSpeed * velocity_;
 
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity_ = TransformNormal(velocity_, worldTransform_.matWorld_);
@@ -561,7 +561,7 @@ void GameScene::Finalize() {
 		delete timedCall;
 	}
 	// ビュー(カメラ)の解放
-	viewProjection.constBuff_.ReleaseAndGetAddressOf();
+	//viewProjection.constBuff_.ReleaseAndGetAddressOf();
 
 	worldTransform_.constBuff_.ReleaseAndGetAddressOf();
 }

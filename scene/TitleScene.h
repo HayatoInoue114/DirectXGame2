@@ -25,7 +25,7 @@ private:
 
 	WorldTransform transform_{};
 
-	ViewProjection viewProjection;
+	//ViewProjection viewProjection;
 
 	Vector4 color_;
 

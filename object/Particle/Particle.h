@@ -5,7 +5,7 @@
 
 #include "../../base/DirectX12/DirectX12.h"
 #include "../../math/Vector4.h"
-#include "../../math/MT/MT.h"
+#include "../../math/MyMath.h"
 #include "../../structure/VertexData/VertexData.h"
 #include "../../structure/Material/Material.h"
 #include "../../math/TransformationMatrix.h"
@@ -13,19 +13,19 @@
 #include "../../manager/TextureManager/TextureManager.h"
 #include "../../structure/ModelData/ModelData.h"
 #include "../../math/WorldTransform/WorldTransform.h"
-#include "../../ViewProjection/ViewProjection.h"
+#include "../../structure/structure.h"
 
 
-#define MAXINSTANCE 1 // インスタンス数
+#define MAXINSTANCE 10 // インスタンス数
 
 class Particle
 {
 public:
 	void Initialize();
 
-	void Update(WorldTransform& transform, Vector4& color);
+	void Update();
 
-	void Draw(WorldTransform& worldTransform, ViewProjection& viewProjection, uint32_t textureNum);
+	void Draw(uint32_t textureNum);
 
 	void LoadModel(const std::string& filename);
 
@@ -35,10 +35,12 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 
-	void SetColor(const Vector4& color) { materialData_->color; }
+	void SetColor(const Vector4& color) { materialData_->color = color; }
+
+	ParticleData MakeNewParticle(std::mt19937& randomEngine);
 
 private:
-	void CreatevertexResource();
+	void CreateVertexResource();
 
 	void CreateVertexBufferView();
 
@@ -94,11 +96,9 @@ private:
 
 	Matrix4x4 projectionMatrix_{};
 
-	Matrix4x4 cameramatrix_{};
+	Matrix4x4 cameraMatrix_{};
 
 	Matrix4x4 viewMatrix_{};
-
-	Matrix4x4 projectionMatix_{};
 
 	Matrix4x4 worldViewProjectionMatrix_{};
 
@@ -108,9 +108,9 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource_;
 
-	TransformationMatrix* instancingData_{};
+	ParticleForGPU* instancingData_{};
 
-	WorldTransform transforms_[MAXINSTANCE]{};
+	ParticleData particles_[MAXINSTANCE]{};
 
 	uint32_t descriptorSizeSRV_{};
 
@@ -119,5 +119,8 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_{};
 
 	WorldTransform worldTransform_;
+
+	private:
+		float kDeltaTime = 1 / 60.0f;
 };
 

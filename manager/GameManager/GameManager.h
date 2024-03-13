@@ -80,7 +80,6 @@
 #include "../../manager/TextureManager/TextureManager.h"
 //#include "../../object/Particle/Particle.h"
 #include "../../Input/Input.h"
-#include "../../ViewProjection/ViewProjection.h"
 #include "../../math/WorldTransform/WorldTransform.h"
 #include "../ModelManager/ModelManager.h"
 

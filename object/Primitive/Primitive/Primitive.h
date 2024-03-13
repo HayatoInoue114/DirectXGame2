@@ -4,7 +4,7 @@
 #include "../../../math/TransformationMatrix.h"
 #include "../PrimitiveCommon/PrimitiveCommon.h"
 #include "../../Model/Model.h"
-#include "../../../math/MT/MT.h"
+#include "../../../math/MyMath.h"
 //#include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 class Primitive

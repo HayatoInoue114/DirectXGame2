@@ -62,7 +62,7 @@ void EnemyBullet::Update() {
 	}
 }
 
-void EnemyBullet::Draw(ViewProjection& viewProjection) {
+void EnemyBullet::Draw() {
 	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
 

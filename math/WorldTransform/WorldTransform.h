@@ -2,7 +2,7 @@
 #include "../MT/MT.h"
 #include "../../base/DirectX12/DirectX12.h"
 #include <wrl.h>
-#include "../../ViewProjection/ViewProjection.h"
+#include "../../object/Camera/Camera.h"
 #include "../TransformationMatrix.h"
 
 // 定数バッファ用データ構造体

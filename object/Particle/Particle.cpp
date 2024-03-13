@@ -120,11 +120,23 @@ std::unique_ptr<Particle> Particle::CreateModelFromObjPtr(int modelName) {
 	model->Initialize();
 	
 	// モデルの読み込み
-	//model->SetTextureNum(modelName);
 	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
 
 	
 	return model;
+}
+
+ParticleData Particle::MakeNewParticle(std::mt19937& randomEngine) {
+	std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
+	ParticleData particle;
+	particle.transform.scale = { 1.0f,1.0f,1.0f };
+	particle.transform.rotate = {};
+	particle.transform.translate = { distribution(randomEngine),distribution(randomEngine), distribution(randomEngine) };
+	particle.velocity = { distribution(randomEngine),distribution(randomEngine), distribution(randomEngine) };
+	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
+	particle.lifeTime = distTime(randomEngine);
+	particle.currentTime = 0;
+	return particle;
 }
 
 void Particle::Initialize() {
@@ -145,9 +157,20 @@ void Particle::Initialize() {
 
 
 	SetMaterialData();
+
+	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+		Scope scope = { -1.0f,1.0f };
+		ScopeVec3 scopeVec3 = { scope,scope,0 };
+		particles_[index].velocity = RandomGenerator::getRandom(scopeVec3);
+
+		Scope color = { 0.0f,256.0f };
+		ScopeVec4 colorVec4 = { color,color,color,color };
+		particles_[index].color = RandomGenerator::getColorRandom(colorVec4);
+	}
+
 }
 
-void Particle::CreatevertexResource() {
+void Particle::CreateVertexResource() {
 	//vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * vertexIndex_);
 }
 
@@ -188,28 +211,29 @@ void Particle::WriteDataToResource() {
 
 void Particle::CreateWVPMatrix() {
 	//カメラ
-	//cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f} };
 	cameraTransform_.Initialize();
 	cameraTransform_.translate = { 0.0f,0.0f,-10.0f };
-	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	cameraMatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+
+	viewMatrix_ = Inverse(cameraMatrix_);
+	projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 
 
-	//
-	/*worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	viewMatrix_ = Inverse(cameramatrix_);
-	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
-	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
-	wvpData_->WVP = worldViewProjectionMatrix_;
-	wvpData_->World = worldMatrix_;*/
-
-	viewMatrix_ = Inverse(cameramatrix_);
-	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
-
+	uint32_t numInstance = 0;
 	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-		Matrix4x4 worldMatrix = MakeAffineMatrix(transforms_[index].scale, transforms_[index].rotate, transforms_[index].translate);
-		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix_, projectionMatix_));
+		if (particles_[index].lifeTime <= particles_[index].currentTime) { // 生存時間を過ぎていたら更新せず描画対象にしない
+			continue;
+		}
+
+		Matrix4x4 worldMatrix = MakeAffineMatrix(particles_[index].transform.scale, particles_[index].transform.rotate, particles_[index].transform.translate);
+		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix_, projectionMatrix_));
+
+		particles_[index].transform.translate += particles_[index].velocity * kDeltaTime;
+		particles_[index].currentTime += kDeltaTime; // 経過時間を足す
 		instancingData_[index].WVP = worldViewProjectionMatrix;
 		instancingData_[index].World = worldMatrix;
+		instancingData_[index].color = particles_[index].color;
+		++numInstance; //生きていればParticleの数を1つカウントする
 	}
 }
 
@@ -239,10 +263,9 @@ void Particle::LoadModel(const std::string& filename) {
 }
 
 void Particle::CreateInstance() {
-	instancingResource_ = CreateBufferResource(DirectX12::GetInstance()->GetDevice(), sizeof(TransformationMatrix) * MAXINSTANCE);
+	instancingResource_ = CreateBufferResource(DirectX12::GetInstance()->GetDevice(), sizeof(ParticleForGPU) * MAXINSTANCE);
 
 	//書き込むためのアドレスを取得
-	instancingData_ = nullptr;
 	instancingResource_->Map(0, nullptr, reinterpret_cast<void**>(&instancingData_));
 	//単位行列を書き込んでおく
 	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
@@ -251,7 +274,7 @@ void Particle::CreateInstance() {
 	}
 
 	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-		transforms_[index].Initialize();
+		particles_[index].transform.Initialize();
 	}
 
 
@@ -267,23 +290,21 @@ void Particle::CreateSRV() {
 	instancingSrvDesc.Buffer.FirstElement = 0;
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = MAXINSTANCE;
-	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
+	instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
 	instancingSrvHandleCPU_ = TextureManager::GetInstance()->GetCPUDescriptorHandle(DirectX12::GetInstance()->GetSrvDescriptorHeap(), descriptorSizeSRV_, 3);
 	instancingSrvHandleGPU_ = TextureManager::GetInstance()->GetGPUDescriptorHandle(DirectX12::GetInstance()->GetSrvDescriptorHeap(), descriptorSizeSRV_, 3);
 	DirectX12::GetInstance()->GetDevice()->CreateShaderResourceView(instancingResource_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 }
 
 
-void Particle::Update(WorldTransform& transform, Vector4& color) {
-	transform_ = transform;
-	CreateWVPMatrix();
-	//色の指定
-	//materialData_->color = color;
+void Particle::Update() {
+	//CreateWVPMatrix();
+
+	
 	ImGuiAdjustParameter();
 }
 
-void Particle::Draw(WorldTransform& worldTransform, ViewProjection& viewProjection, uint32_t textureNum) {
-	transforms_[0] = worldTransform;
+void Particle::Draw(uint32_t textureNum) {
 	CreateWVPMatrix();
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
@@ -302,7 +323,7 @@ void Particle::Draw(WorldTransform& worldTransform, ViewProjection& viewProjecti
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
-	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), MAXINSTANCE, 0, 0);
 }
 
 void Particle::ImGuiAdjustParameter() {

@@ -40,7 +40,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	worldTransform_.translate = { playerPosition };
 }
 
-void Player::Update(ViewProjection viewProjection) {
+void Player::Update() {
 	/*worldTransform_.TransferMatrix();*/
 
 	// デスフラグの立った弾を削除
@@ -159,7 +159,7 @@ void Player::Update(ViewProjection viewProjection) {
 
 	sprite2DReticle_->SetPosition(Vector2(mousePosition.x, mousePosition.y));*/
 
-	Matrix4x4 matVPV = Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
+	/*Matrix4x4 matVPV = Multiply(viewProjection.matView, Multiply(viewProjection.matProjection, matViewport));
 	Matrix4x4 matInverseVPV = Inverse(matVPV);
 
 	Vector3 posNear = Vector3(sprite2DReticle_->GetPosition().x - 640, sprite2DReticle_->GetPosition().y, 0);
@@ -184,7 +184,7 @@ void Player::Update(ViewProjection viewProjection) {
 		(float)kCliantHeight);
 
 	worldTransform3DReticle_.UpdateMatrix();
-	worldTransform3DReticle_.TransferMatrix();
+	worldTransform3DReticle_.TransferMatrix();*/
 
 	// キャラクター攻撃処理
 	Attack();
@@ -197,11 +197,11 @@ void Player::Update(ViewProjection viewProjection) {
 	}
 }
 
-void Player::Draw(ViewProjection viewProjection) {
+void Player::Draw() {
 	// 弾描画
-	for (PlayerBullet* bullet : bullets_) {
+	/*for (PlayerBullet* bullet : bullets_) {
 		bullet->Draw(viewProjection);
-	}
+	}*/
 
 	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
 }
@@ -224,7 +224,7 @@ void Player::Attack() {
 
 		// 自機から照準オブジェクトへのベクトル
 		velocity = Subtract(worldTransform3DReticle_.translate, GetWorldPosition());
-		velocity = kBulletSpeed * Normalize(velocity);
+		//velocity = Normalize(velocity) * kBulletSpeed;
 
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
@@ -247,7 +247,7 @@ void Player::Attack() {
 
 		// 自機から照準オブジェクトへのベクトル
 		velocity = Subtract(worldTransform3DReticle_.translate, GetWorldPosition());
-		velocity = kBulletSpeed * Normalize(velocity);
+		//velocity = kBulletSpeed * Normalize(velocity);
 
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);

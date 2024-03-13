@@ -19,7 +19,7 @@ public:
 	/// ビュープロジェクションを取得
 	/// </summary>
 	/// <returns>ビュープロジェクション</returns>
-	const ViewProjection& GetViewProjection() { return viewProjection_; }
+	//const ViewProjection& GetViewProjection() { return viewProjection_; }
 
 	/// <summary>
 	/// ワールド座標を取得
@@ -31,5 +31,5 @@ private:
 	WorldTransform worldTransform_;
 
 	// ビュープロジェクション
-	ViewProjection viewProjection_;
+	//ViewProjection viewProjection_;
 };

@@ -154,27 +154,27 @@ int Max(int num1, int num2);
 
 float Max(float num1, float num2);
 
-Vector2 operator+(const Vector2& a, const Vector2& b);
-
-Vector2 operator-(const Vector2& a, const Vector2& b);
-
-Vector2 operator*(const Vector2& a, const Vector2& b);
-
-Vector2 operator*(const float& a, const Vector2& b);
-
-Vector3 operator+(const Vector3& a, const Vector3& b);
-
-Vector3 operator+(const Vector3& a, const float& b);
-
-Vector3 operator-(const Vector3& a, const Vector3& b);
-
-Vector3 operator-(const Vector3& a, const float& b);
-
-Vector3 operator*(const Vector3& a, const Vector3& b);
-
-Vector3 operator*(const float& a, const Vector3& b);
-
-Vector3 operator*(const Vector3& vec, const Matrix4x4& mat);
+//Vector2 operator+(const Vector2& a, const Vector2& b);
+//
+//Vector2 operator-(const Vector2& a, const Vector2& b);
+//
+//Vector2 operator*(const Vector2& a, const Vector2& b);
+//
+//Vector2 operator*(const float& a, const Vector2& b);
+//
+//Vector3 operator+(const Vector3& a, const Vector3& b);
+//
+//Vector3 operator+(const Vector3& a, const float& b);
+//
+//Vector3 operator-(const Vector3& a, const Vector3& b);
+//
+//Vector3 operator-(const Vector3& a, const float& b);
+//
+//Vector3 operator*(const Vector3& a, const Vector3& b);
+//
+//Vector3 operator*(const float& a, const Vector3& b);
+//
+//Vector3 operator*(const Vector3& vec, const Matrix4x4& mat);
 
 Matrix4x4 Transpose(const Matrix4x4& m);
 
@@ -185,4 +185,4 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 
 ///Matrix4x4
 
-Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2);
+//Matrix4x4 operator*(const Matrix4x4& m1, const Matrix4x4& m2);

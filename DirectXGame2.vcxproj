@@ -101,6 +101,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Input\Input.cpp" />
+    <ClCompile Include="manager\ParticleManager\ParticleManager.cpp" />
     <ClCompile Include="manager\PipelineManager\PiplineManager.cpp" />
     <ClCompile Include="manager\ModelManager\ModelManager.cpp" />
     <ClCompile Include="base\ResourceLeakCheck\ResourceLeakCheck.cpp" />
@@ -138,7 +139,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="manager\TextureManager\TextureManager.cpp" />
     <ClCompile Include="object\Traiangle\Triangle.cpp" />
     <ClCompile Include="base\WindowsAPI\WindowsAPI.cpp" />
-    <ClCompile Include="ViewProjection\ViewProjection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShaderFile\Particle.PS.hlsl">
@@ -167,6 +167,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\TD3\Project\Math\MathOperations\MathOperations.h" />
     <ClInclude Include="components\Audio\3DAudio\Audio3D.h" />
     <ClInclude Include="components\DirectionalLight\DirectionalLight.h" />
     <ClInclude Include="base\DirectX12\DirectX12.h" />
@@ -179,9 +180,13 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="Input\Input.h" />
+    <ClInclude Include="manager\ParticleManager\ParticleManager.h" />
     <ClInclude Include="manager\PipelineManager\PiplineManager.h" />
     <ClInclude Include="manager\ModelManager\ModelManager.h" />
     <ClInclude Include="base\ResourceLeakCheck\ResourceLeakCheck.h" />
+    <ClInclude Include="math\MathOperator\MathOperator.h" />
+    <ClInclude Include="math\MyMath.h" />
+    <ClInclude Include="math\RondomGenerator\RandomGenerator.h" />
     <ClInclude Include="math\Transform\Transform.h" />
     <ClInclude Include="math\WorldTransform\WorldTransform.h" />
     <ClInclude Include="object\Camera\Camera.h" />
@@ -201,6 +206,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\IScene.h" />
     <ClInclude Include="scene\TitleScene.h" />
+    <ClInclude Include="structure\ParticleData\ParticleData.h" />
+    <ClInclude Include="structure\ParticleForGPU\ParticleForGPU.h" />
+    <ClInclude Include="structure\structure.h" />
     <ClInclude Include="structure\VertexData\VertexData.h" />
     <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h" />
     <ClInclude Include="scene\TestScene.h" />
@@ -223,7 +231,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="object\Traiangle\Triangle.h" />
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="base\WindowsAPI\WindowsAPI.h" />
-    <ClInclude Include="ViewProjection\ViewProjection.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />

@@ -26,7 +26,7 @@ public:
 	/// 描画
 	/// </summary>
 	/// <param name="viewProjection">ビュープロジェクション</param>
-	void Draw(ViewProjection& viewProjection);
+	void Draw();
 
 	// 衝突を検出したら呼び出されるコールバック関数
 	void OnCollision();

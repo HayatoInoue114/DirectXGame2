@@ -1,5 +1,4 @@
 #pragma once
-#include "../ViewProjection/ViewProjection.h"
 #include "../math/WorldTransform/WorldTransform.h"
 #include "../object/Model/Model.h"
 #include "../Project/Player/Player.h"
@@ -104,7 +103,7 @@ private: // メンバ変数
 	std::unique_ptr<Model> enemyModel_;
 
 	// ビュープロジェクション
-	ViewProjection viewProjection;
+	//ViewProjection viewProjection;
 
 	// 自キャラ
 	std::unique_ptr<Player> player_;

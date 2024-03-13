@@ -14,7 +14,7 @@ void TitleScene::Initialize() {
 
 
 	transform_.Initialize();
-	viewProjection.Initialize();
+	//viewProjection.Initialize();
 
 	transform_.scale = { 1.0f,0.5f,0.7f };
 

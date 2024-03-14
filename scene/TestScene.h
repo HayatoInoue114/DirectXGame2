@@ -16,8 +16,8 @@ public:
 private:
 	Input* input_{};
 
-	//PrimitiveManager primitiveManager_{};
+	PrimitiveManager primitiveManager_{};
 
-	std::unique_ptr<Particle> particle_{};
+	//std::unique_ptr<Particle> particle_{};
 };
 

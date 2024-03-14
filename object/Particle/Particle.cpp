@@ -158,19 +158,16 @@ void Particle::Initialize() {
 
 	SetMaterialData();
 
-	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-		Scope scope = { -1.0f,1.0f };
-		ScopeVec3 scopeVec3 = { scope,scope,0 };
-		particles_[index].velocity = RandomGenerator::getRandom(scopeVec3);
+	// エミッターの設定
+	emitter_.count = 10;
+	emitter_.frequency = 1;
+	emitter_.frequencyTime = 0.0f;
 
-		Scope color = { 0.0f,256.0f };
-		ScopeVec4 colorVec4 = { color,color,color,color };
-		particles_[index].color = RandomGenerator::getColorRandom(colorVec4);
-
-		Scope life = { 1.0f,3.0f };
-		particles_[index].lifeTime = RandomGenerator::getRandom(life);
-	}
-
+	// フィールド(疑似風を作成)
+	accField_.acc = { 15,0,0 };
+	accField_.area.min = { -10,-10,-10 };
+	accField_.area.max = { 10,10,10 };
+	accField_.isActive = true;
 }
 
 void Particle::CreateVertexResource() {
@@ -220,29 +217,6 @@ void Particle::CreateWVPMatrix() {
 
 	viewMatrix_ = Inverse(cameraMatrix_);
 	projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
-
-
-	
-	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-
-		if (particles_[index].lifeTime <= particles_[index].currentTime) { // 生存時間を過ぎていたら更新せず描画対象にしない
-			continue;
-		}
-		float alpha = 1.0f - (particles_[index].currentTime / particles_[index].lifeTime);
-		Matrix4x4 worldMatrix = MakeAffineMatrix(particles_[index].transform.scale, particles_[index].transform.rotate, particles_[index].transform.translate);
-		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix_, projectionMatrix_));
-
-		particles_[index].transform.translate += particles_[index].velocity * kDeltaTime;
-		particles_[index].currentTime += kDeltaTime; // 経過時間を足す
-		instancingData_[index].WVP = worldViewProjectionMatrix;
-		instancingData_[index].World = worldMatrix;
-		instancingData_[index].color = particles_[index].color;
-
-		
-		instancingData_[index].color.w = alpha;
-		++numInstance_; //生きていればParticleの数を1つカウントする
-	}
-
 	
 }
 
@@ -282,9 +256,9 @@ void Particle::CreateInstance() {
 		instancingData_[index].World = MakeIdentity4x4();
 	}
 
-	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+	/*for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
 		particles_[index].transform.Initialize();
-	}
+	}*/
 
 
 }
@@ -307,20 +281,86 @@ void Particle::CreateSRV() {
 
 
 void Particle::Update() {
-	//CreateWVPMatrix();
+	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
+		// 生存時間が過ぎたら処理を行わない
+		if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+			particleIterator = particles_.erase(particleIterator);
+			continue;
+		}
 
-	
-	ImGuiAdjustParameter();
-}
+		if (numInstance_ < MAXINSTANCE) {
+			// 移動処理
+			(*particleIterator).transform.translate = Add((*particleIterator).transform.translate, kDeltaTime * (*particleIterator).velocity);
 
-void Particle::Draw(uint32_t textureNum) {
-	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-		
+			// 指定した時間に透明になる
+			float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
+			(*particleIterator).color.w = alpha;
+			instancingData_[numInstance_].color = (*particleIterator).color;
+			++numInstance_;
+		}
+
+		++particleIterator;
 	}
 
+	emitter_.frequencyTime += kDeltaTime;
+	if (emitter_.frequency <= emitter_.frequencyTime) {
+		std::random_device seedGenerator;
+		std::mt19937 randomEngine(seedGenerator());
+		particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
+		emitter_.frequencyTime -= emitter_.frequency;
+	}
+}
 
+void Particle::Draw(Camera* camera, uint32_t textureNum) {
 	CreateWVPMatrix();
-	
+	// カメラ行列
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(Vector3{ 1,1,1 }, camera->GetRotate(), camera->GetTranslate());
+	// 板ポリを正面に向ける
+	Matrix4x4 backToFrontMatrix = MakeIdentity4x4();
+	// billboardMatrixを作成
+	Matrix4x4 billboardMatrix = cameraMatrix;
+	billboardMatrix.m[3][0] = 0.0f;
+	billboardMatrix.m[3][1] = 0.0f;
+	billboardMatrix.m[3][2] = 0.0f;
+
+
+	//for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+	//	if (particles_[index].lifeTime <= particles_[index].currentTime) { // 生存時間を過ぎていたら更新せず描画対象にしない
+	//		continue;
+	//	}
+	//	float alpha = 1.0f - (particles_[index].currentTime / particles_[index].lifeTime);
+	//	Matrix4x4 worldMatrix =AffineMatrix(particles_[index].transform.scale, billboardMatrix, particles_[index].transform.translate);
+	//	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix_, projectionMatrix_));
+	//	particles_[index].transform.translate += particles_[index].velocity * kDeltaTime;
+	//	particles_[index].currentTime += kDeltaTime; // 経過時間を足す
+	//	instancingData_[index].WVP = worldViewProjectionMatrix;
+	//	instancingData_[index].World = worldMatrix;
+	//	instancingData_[index].color = particles_[index].color;
+	//	instancingData_[index].color.w = alpha;
+	//	++numInstance_; //生きていればParticleの数を1つカウントする
+	//}
+
+	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
+		// 生存時間が過ぎたら処理を行わない
+		if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+			particleIterator = particles_.erase(particleIterator);
+			continue;
+		}
+
+		if (numInstance_ < MAXINSTANCE) {
+
+			// WVPとworldMatrixの計算
+			Matrix4x4 worldMatrix = AffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate);//MakeAffineMatrix(particles_[index].transform.scale, Vector3{ 1,1,1 }/*particles_[index].transform.rotate*/, particles_[index].transform.translate);
+			instancingData_[numInstance_].World = Multiply(worldMatrix, Multiply(camera->GetViewMatrix(), camera->GetProjectionMatrix()));
+			instancingData_[numInstance_].WVP = instancingData_[numInstance_].World;
+			++numInstance_;
+
+			// 時間を進める
+			(*particleIterator).currentTime += kDeltaTime;
+		}
+
+		++particleIterator;
+	}
 
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
@@ -342,18 +382,96 @@ void Particle::Draw(uint32_t textureNum) {
 	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), numInstance_, 0, 0);
 }
 
-void Particle::ImGuiAdjustParameter() {
-	//ImGui::Begin("model");
-	////ImGui::Text("Model");
-	//ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
-	//ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
-	//ImGui::SliderFloat3("Scale", &transform_.scale.x, -5, 5);
-	//ImGui::SliderFloat3("Rotate", &transform_.rotate.x, -5, 5);
-	//ImGui::Text("UVTransform");
-	//ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
-	//ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
-	//ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
-	//ImGui::ColorEdit4("ModelColor", &materialData_->color.x, 1);
-	//ImGui::End();
+ParticleData Particle::MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate) {
+	// 座標
+	std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
+	// 速度
+	std::uniform_real_distribution<float> distVel(-1.0f, 1.0f);
+	// 色
+	std::uniform_real_distribution<float> distColor(0.0f, 1.0f);
+	// 生存可能時間
+	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
+
+	ParticleData particle;
+	particle.transform.scale = { 1.0f,1.0f,1.0f };
+	particle.transform.rotate = { 0,0,0 };
+	Vector3 randomTranslate;
+
+	randomTranslate = { distribution(randomEngine),distribution(randomEngine) ,distribution(randomEngine) };
+	particle.transform.translate = Add(translate, randomTranslate);
+	//if()
+	particle.velocity = { distribution(randomEngine) ,distribution(randomEngine) ,distribution(randomEngine) };
+	particle.color = { distColor(randomEngine),distColor(randomEngine) ,distColor(randomEngine),1.0f };
+	particle.lifeTime = distTime(randomEngine);
+	particle.currentTime = 0;
+	return particle;
 }
+
+std::list<ParticleData> Particle::Emission(const Emitter& emitter, std::mt19937& randomEngine)
+{
+	std::list<ParticleData> particles;
+	for (uint32_t count = 0; count < emitter.count; ++count) {
+		particles.push_back(MakeNewParticle(randomEngine, emitter_.transform.translate));
+	}
+	return particles;
+}
+
+void Particle::ImGuiAdjustParameter() {
+	std::random_device seedGenerator;
+	std::mt19937 randomEngine(seedGenerator());
+
+	ImGui::Begin("Particles");
+	if (ImGui::Button("Add Particle")) {
+		particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
+	}
+	ImGui::Text("Emitter.frquencyTime:%f", emitter_.frequencyTime);
+	ImGui::DragFloat3("Emitter.Translate", &emitter_.transform.translate.x, 0.01f, -100.0f, 100.0f);
+	ImGui::Checkbox("isFieldAcceleration", &accField_.isActive);
+	ImGui::End();
+}
+
+Matrix4x4 Particle::AffineMatrix(const Vector3& scale, const Matrix4x4& rotateMatrix, const Vector3& translate) {
+	// 計算結果
+	Matrix4x4 result{};
+
+	// アフィン変換行列の計算
+	result.m[0][0] = scale.x * rotateMatrix.m[0][0];
+	result.m[0][1] = scale.x * rotateMatrix.m[0][1];
+	result.m[0][2] = scale.x * rotateMatrix.m[0][2];
+	result.m[0][3] = 0.0f;
+
+	result.m[1][0] = scale.y * rotateMatrix.m[1][0];
+	result.m[1][1] = scale.y * rotateMatrix.m[1][1];
+	result.m[1][2] = scale.y * rotateMatrix.m[1][2];
+	result.m[1][3] = 0.0f;
+
+	result.m[2][0] = scale.z * rotateMatrix.m[2][0];
+	result.m[2][1] = scale.z * rotateMatrix.m[2][1];
+	result.m[2][2] = scale.z * rotateMatrix.m[2][2];
+	result.m[2][3] = 0.0f;
+
+	result.m[3][0] = translate.x;
+	result.m[3][1] = translate.y;
+	result.m[3][2] = translate.z;
+	result.m[3][3] = 1.0f;
+
+	return result;
+}
+
+
+
+//void Particle::ImGuiAdjustParameter() {
+//	//ImGui::Begin("model");
+//	////ImGui::Text("Model");
+//	//ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
+//	//ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
+//	//ImGui::SliderFloat3("Scale", &transform_.scale.x, -5, 5);
+//	//ImGui::SliderFloat3("Rotate", &transform_.rotate.x, -5, 5);
+//	//ImGui::Text("UVTransform");
+//	//ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
+//	//ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
+//	//ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
+//	//ImGui::ColorEdit4("ModelColor", &materialData_->color.x, 1);
+//	//ImGui::End();
+//}
 

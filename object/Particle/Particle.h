@@ -26,7 +26,7 @@ public:
 
 	void Update();
 
-	void Draw(uint32_t textureNum);
+	void Draw(Camera* camera, uint32_t textureNum);
 
 	void LoadModel(const std::string& filename);
 
@@ -39,6 +39,8 @@ public:
 	void SetColor(const Vector4& color) { materialData_->color = color; }
 
 	ParticleData MakeNewParticle(std::mt19937& randomEngine);
+
+	void ImGuiAdjustParameter();
 
 private:
 	void CreateVertexResource();
@@ -55,7 +57,7 @@ private:
 
 	void SetMaterialData();
 
-	void ImGuiAdjustParameter();
+	//void ImGuiAdjustParameter();
 
 	void CreateModel();
 
@@ -63,11 +65,24 @@ private:
 
 	void CreateSRV();
 
+	Matrix4x4 AffineMatrix(const Vector3& scale, const Matrix4x4& rotateMatrix, const Vector3& translate);
+
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
 
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
 
-private:
+	ParticleData MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate);
+
+	std::list<ParticleData> Emission(const Emitter& emitter, std::mt19937& randomEngine);
+
+private: ///メンバ変数///
+	// パーティクル
+	std::list<ParticleData> particles_;
+	// エミッタ
+	Emitter emitter_;
+	// フィールド
+	AccField accField_;
+
 	//モデル読み込み
 	ModelData modelData_{};
 
@@ -111,7 +126,7 @@ private:
 
 	ParticleForGPU* instancingData_{};
 
-	ParticleData particles_[MAXINSTANCE]{};
+	//ParticleData particles_[MAXINSTANCE]{};
 
 	uint32_t descriptorSizeSRV_{};
 
@@ -123,7 +138,7 @@ private:
 
 	uint32_t numInstance_ = 0;
 
-	private:
+	private: ///メンバ定数///
 		float kDeltaTime = 1 / 60.0f;
 };
 

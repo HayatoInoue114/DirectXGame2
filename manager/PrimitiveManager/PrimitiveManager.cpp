@@ -16,15 +16,34 @@ void PrimitiveManager::Initialize() {
 	model_ = model_->CreateModelFromObjPtr(PLAYER);
 
 	primitive_->SetModel(model_.get());
+
+
+
+	particle_ = std::make_unique<Particle>();
+	particle_->Initialize();
 }
 
 void PrimitiveManager::Update() {
 	camera_->Update();
 	primitive_->SetCamera(camera_.get());
 	primitive_->Update();
+	particle_->Update();
+	particle_->ImGuiAdjustParameter();
 }
 
 void PrimitiveManager::Draw() {
+	Draw2D();
+	Draw3D();
+}
+
+void PrimitiveManager::Draw2D()
+{
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
-	primitive_->Draw();
+	//primitive_->Draw();
+}
+
+void PrimitiveManager::Draw3D()
+{
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
+	particle_->Draw(camera_.get(), CIRCLE);
 }

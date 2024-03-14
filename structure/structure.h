@@ -6,3 +6,5 @@
 #include "XAudio2_Buffer/XAudio2_Buffer.h"
 #include "ParticleData/ParticleData.h"
 #include "ParticleForGPU/ParticleForGPU.h"
+#include "Emitter/Emitter.h"
+#include "AccField/AccField.h"

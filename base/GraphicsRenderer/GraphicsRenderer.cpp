@@ -222,19 +222,49 @@ void GraphicsRenderer::InputLayout() {
 }
 
 void GraphicsRenderer::BlendState() {
-	for (int i = 0; i < MAXPSO; i++) {
-		blendDesc_[i] = {};
-		//全ての色要素を書き込む
+	blendDesc_[0].RenderTarget[0].RenderTargetWriteMask =
+		D3D12_COLOR_WRITE_ENABLE_ALL;
+	for (int i = 1; i < MAXPSO; i++) {
+		// すべての色要素を書き込む
 		blendDesc_[i].RenderTarget[0].RenderTargetWriteMask =
 			D3D12_COLOR_WRITE_ENABLE_ALL;
 		blendDesc_[i].RenderTarget[0].BlendEnable = true;
-		blendDesc_[i].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-		blendDesc_[i].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-		blendDesc_[i].RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 		blendDesc_[i].RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
 		blendDesc_[i].RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 		blendDesc_[i].RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
 	}
+
+	// ブレンドモードの設定
+
+	// ノーマル
+	blendDesc_[6].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc_[6].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc_[6].RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+
+	// 加算
+	blendDesc_[2].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc_[2].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc_[2].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+
+	// 減算
+	blendDesc_[3].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc_[3].RenderTarget[0].BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+	blendDesc_[3].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+
+	// 乗算
+	blendDesc_[4].RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
+	blendDesc_[4].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc_[4].RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
+
+	// スクリーン
+	blendDesc_[5].RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
+	blendDesc_[5].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc_[5].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+
+	// particle
+	blendDesc_[1].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	blendDesc_[1].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	blendDesc_[1].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 }
 
 void GraphicsRenderer::ResterizerState() {
@@ -371,7 +401,7 @@ void GraphicsRenderer::DepthStencilState() {
 	//Depthの機能を有効化する
 	depthStencilDesc_.DepthEnable = true;
 	//書き込みをします
-	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 	//比較関数はLessEqual。つまり、近ければ描画される
 	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }

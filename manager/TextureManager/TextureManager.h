@@ -28,6 +28,7 @@ enum TextureName {
 	CLEAR,
 	TITLESPRITE,
 	BLACK,
+	CIRCLE,
 
 	TEXTURENUM
 };

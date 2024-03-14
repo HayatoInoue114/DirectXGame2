@@ -166,6 +166,9 @@ void Particle::Initialize() {
 		Scope color = { 0.0f,256.0f };
 		ScopeVec4 colorVec4 = { color,color,color,color };
 		particles_[index].color = RandomGenerator::getColorRandom(colorVec4);
+
+		Scope life = { 1.0f,3.0f };
+		particles_[index].lifeTime = RandomGenerator::getRandom(life);
 	}
 
 }
@@ -219,12 +222,13 @@ void Particle::CreateWVPMatrix() {
 	projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
 
 
-	uint32_t numInstance = 0;
+	
 	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+
 		if (particles_[index].lifeTime <= particles_[index].currentTime) { // 生存時間を過ぎていたら更新せず描画対象にしない
 			continue;
 		}
-
+		float alpha = 1.0f - (particles_[index].currentTime / particles_[index].lifeTime);
 		Matrix4x4 worldMatrix = MakeAffineMatrix(particles_[index].transform.scale, particles_[index].transform.rotate, particles_[index].transform.translate);
 		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix_, projectionMatrix_));
 
@@ -233,8 +237,13 @@ void Particle::CreateWVPMatrix() {
 		instancingData_[index].WVP = worldViewProjectionMatrix;
 		instancingData_[index].World = worldMatrix;
 		instancingData_[index].color = particles_[index].color;
-		++numInstance; //生きていればParticleの数を1つカウントする
+
+		
+		instancingData_[index].color.w = alpha;
+		++numInstance_; //生きていればParticleの数を1つカウントする
 	}
+
+	
 }
 
 void Particle::SetMaterialData() {
@@ -305,7 +314,14 @@ void Particle::Update() {
 }
 
 void Particle::Draw(uint32_t textureNum) {
+	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+		
+	}
+
+
 	CreateWVPMatrix();
+	
+
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
@@ -323,7 +339,7 @@ void Particle::Draw(uint32_t textureNum) {
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
-	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), MAXINSTANCE, 0, 0);
+	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), numInstance_, 0, 0);
 }
 
 void Particle::ImGuiAdjustParameter() {

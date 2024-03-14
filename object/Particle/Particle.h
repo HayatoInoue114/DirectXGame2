@@ -14,6 +14,7 @@
 #include "../../structure/ModelData/ModelData.h"
 #include "../../math/WorldTransform/WorldTransform.h"
 #include "../../structure/structure.h"
+#include "../Camera/Camera.h"
 
 
 #define MAXINSTANCE 10 // インスタンス数
@@ -119,6 +120,8 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_{};
 
 	WorldTransform worldTransform_;
+
+	uint32_t numInstance_ = 0;
 
 	private:
 		float kDeltaTime = 1 / 60.0f;

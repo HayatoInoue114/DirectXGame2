@@ -81,6 +81,7 @@ void TextureManager::LoadAndTransferTexture() {
 	mipImages_[CLEAR] = LoadTexture("resources/clear.png");
 	mipImages_[TITLESPRITE] = LoadTexture("resources/titleSprite.png");
 	mipImages_[BLACK] = LoadTexture("resources/black.png");
+	mipImages_[CIRCLE] = LoadTexture("resources/circle.png");
 
 	//Uploadする
 	for (uint32_t i = 0; i < kMaxImages; i++) {

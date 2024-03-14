@@ -18,7 +18,7 @@ void TestScene::Update() {
 
 void TestScene::Draw() {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
-	particle_->Draw(0);
+	particle_->Draw(CIRCLE);
 	//primitiveManager_.Draw();
 }
 

@@ -29,6 +29,8 @@ private:
 
 	std::unique_ptr<Model> model_;
 
-	std::unique_ptr<Particle> particle_{};
+	//std::unique_ptr<Particle> particle_{};
+
+	Particle particle_;
 };
 

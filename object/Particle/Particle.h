@@ -42,6 +42,8 @@ public:
 
 	void ImGuiAdjustParameter();
 
+	void SetWVP(const TransformationMatrix& wvp) { *wvpData_ = wvp; }
+
 private:
 	void CreateVertexResource();
 
@@ -71,9 +73,9 @@ private:
 
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
 
-	ParticleData MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate);
+	ParticleData MakeNewParticle(const Vector3& translate);
 
-	std::list<ParticleData> Emission(const Emitter& emitter, std::mt19937& randomEngine);
+	std::list<ParticleData> Emission(const Emitter& emitter);
 
 private: ///メンバ変数///
 	// パーティクル

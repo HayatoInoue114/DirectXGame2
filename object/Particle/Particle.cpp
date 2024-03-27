@@ -1,6 +1,7 @@
 #include "Particle.h"
 #include <assert.h>
 #include "../../manager/ModelManager/ModelManager.h"
+#include <numbers>
 
 ModelData Particle::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
 	ModelData modelData; // 構築するModelData
@@ -129,6 +130,7 @@ std::unique_ptr<Particle> Particle::CreateModelFromObjPtr(int modelName) {
 ParticleData Particle::MakeNewParticle(std::mt19937& randomEngine) {
 	std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
 	ParticleData particle;
+	particle.transform.Initialize();
 	particle.transform.scale = { 1.0f,1.0f,1.0f };
 	particle.transform.rotate = {};
 	particle.transform.translate = { distribution(randomEngine),distribution(randomEngine), distribution(randomEngine) };
@@ -159,9 +161,10 @@ void Particle::Initialize() {
 	SetMaterialData();
 
 	// エミッターの設定
-	emitter_.count = 10;
+	emitter_.count = 3;
 	emitter_.frequency = 1;
 	emitter_.frequencyTime = 0.0f;
+	emitter_.transform.Initialize();
 
 	// フィールド(疑似風を作成)
 	accField_.acc = { 15,0,0 };
@@ -288,27 +291,33 @@ void Particle::Update() {
 			continue;
 		}
 
+		
+		
+		
 		if (numInstance_ < MAXINSTANCE) {
+			
 			// 移動処理
-			(*particleIterator).transform.translate = Add((*particleIterator).transform.translate, kDeltaTime * (*particleIterator).velocity);
+			(*particleIterator).transform.translate = Add((*particleIterator).transform.translate, (*particleIterator).velocity);
 
 			// 指定した時間に透明になる
+
 			float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
 			(*particleIterator).color.w = alpha;
 			instancingData_[numInstance_].color = (*particleIterator).color;
+			
 			++numInstance_;
 		}
 
 		++particleIterator;
 	}
 
-	emitter_.frequencyTime += kDeltaTime;
+	/*emitter_.frequencyTime += kDeltaTime;
 	if (emitter_.frequency <= emitter_.frequencyTime) {
 		std::random_device seedGenerator;
 		std::mt19937 randomEngine(seedGenerator());
 		particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
 		emitter_.frequencyTime -= emitter_.frequency;
-	}
+	}*/
 }
 
 void Particle::Draw(Camera* camera, uint32_t textureNum) {
@@ -316,9 +325,9 @@ void Particle::Draw(Camera* camera, uint32_t textureNum) {
 	// カメラ行列
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(Vector3{ 1,1,1 }, camera->GetRotate(), camera->GetTranslate());
 	// 板ポリを正面に向ける
-	Matrix4x4 backToFrontMatrix = MakeIdentity4x4();
+	Matrix4x4 backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
 	// billboardMatrixを作成
-	Matrix4x4 billboardMatrix = cameraMatrix;
+	Matrix4x4 billboardMatrix = cameraMatrix * backToFrontMatrix;
 	billboardMatrix.m[3][0] = 0.0f;
 	billboardMatrix.m[3][1] = 0.0f;
 	billboardMatrix.m[3][2] = 0.0f;
@@ -347,17 +356,27 @@ void Particle::Draw(Camera* camera, uint32_t textureNum) {
 			continue;
 		}
 
+	
+
 		if (numInstance_ < MAXINSTANCE) {
+			
 
 			// WVPとworldMatrixの計算
-			Matrix4x4 worldMatrix = AffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate);//MakeAffineMatrix(particles_[index].transform.scale, Vector3{ 1,1,1 }/*particles_[index].transform.rotate*/, particles_[index].transform.translate);
-			instancingData_[numInstance_].World = Multiply(worldMatrix, Multiply(camera->GetViewMatrix(), camera->GetProjectionMatrix()));
-			instancingData_[numInstance_].WVP = instancingData_[numInstance_].World;
-			++numInstance_;
+			Matrix4x4 scaleMatrix = MakeScaleMatrix((*particleIterator).transform.scale);
+			Matrix4x4 translateMatrix = MakeTranslateMatrix((*particleIterator).transform.translate);
 
-			// 時間を進める
-			(*particleIterator).currentTime += kDeltaTime;
+			Matrix4x4 cameraMat = camera->GetViewMatrix() * camera->GetProjectionMatrix();
+
+
+			//Matrix4x4 worldMatrix = AffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate);//MakeAffineMatrix(particles_[index].transform.scale, Vector3{ 1,1,1 }/*particles_[index].transform.rotate*/, particles_[index].transform.translate);
+			Matrix4x4 worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+			instancingData_[numInstance_].WVP = worldMatrix * cameraMat;
+			
+			++numInstance_;
 		}
+
+		// 時間を進める
+		(*particleIterator).currentTime += kDeltaTime;
 
 		++particleIterator;
 	}
@@ -382,49 +401,59 @@ void Particle::Draw(Camera* camera, uint32_t textureNum) {
 	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), numInstance_, 0, 0);
 }
 
-ParticleData Particle::MakeNewParticle(std::mt19937& randomEngine, const Vector3& translate) {
-	// 座標
-	std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
-	// 速度
-	std::uniform_real_distribution<float> distVel(-1.0f, 1.0f);
-	// 色
-	std::uniform_real_distribution<float> distColor(0.0f, 1.0f);
-	// 生存可能時間
-	std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
+ParticleData Particle::MakeNewParticle(const Vector3& translate) {
+	//// 座標
+	//std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
+	//// 速度
+	//std::uniform_real_distribution<float> distVel(-1.0f, 1.0f);
+	//// 色
+	//std::uniform_real_distribution<float> distColor(0.0f, 1.0f);
+	//// 生存可能時間
+	//std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
 
 	ParticleData particle;
 	particle.transform.scale = { 1.0f,1.0f,1.0f };
 	particle.transform.rotate = { 0,0,0 };
-	Vector3 randomTranslate;
+	Vector3 randomTranslate{};
 
-	randomTranslate = { distribution(randomEngine),distribution(randomEngine) ,distribution(randomEngine) };
+	Scope trans = { -1.0f,1.0f };
+	ScopeVec3 translateVec3 = { trans,trans,trans };
+	randomTranslate = RandomGenerator::getRandom(translateVec3);
+	//randomTranslate = { distribution(randomEngine),distribution(randomEngine) ,distribution(randomEngine) };
 	particle.transform.translate = Add(translate, randomTranslate);
 	//if()
-	particle.velocity = { distribution(randomEngine) ,distribution(randomEngine) ,distribution(randomEngine) };
-	particle.color = { distColor(randomEngine),distColor(randomEngine) ,distColor(randomEngine),1.0f };
-	particle.lifeTime = distTime(randomEngine);
+	Scope vel = { -1.0f,1.0f };
+	ScopeVec3 randomVec3 = { vel,vel,vel };
+	particle.velocity = RandomGenerator::getRandom(randomVec3);
+
+	Scope color = { 0,255 };
+	ScopeVec4 colorVec4 = { color,color,color,{255,255} };
+	particle.color = RandomGenerator::getColorRandom(colorVec4);
+
+	Scope time = { 1.0f,3.0f };
+	particle.lifeTime = RandomGenerator::getRandom(time);
 	particle.currentTime = 0;
 	return particle;
 }
 
-std::list<ParticleData> Particle::Emission(const Emitter& emitter, std::mt19937& randomEngine)
+std::list<ParticleData> Particle::Emission(const Emitter& emitter)
 {
 	std::list<ParticleData> particles;
 	for (uint32_t count = 0; count < emitter.count; ++count) {
-		particles.push_back(MakeNewParticle(randomEngine, emitter_.transform.translate));
+		particles.push_back(MakeNewParticle(emitter_.transform.translate));
 	}
 	return particles;
 }
 
 void Particle::ImGuiAdjustParameter() {
-	std::random_device seedGenerator;
-	std::mt19937 randomEngine(seedGenerator());
+	/*std::random_device seedGenerator;
+	std::mt19937 randomEngine(seedGenerator());*/
 
 	ImGui::Begin("Particles");
 	if (ImGui::Button("Add Particle")) {
-		particles_.splice(particles_.end(), Emission(emitter_, randomEngine));
+		particles_.splice(particles_.end(), Emission(emitter_));
 	}
-	ImGui::Text("Emitter.frquencyTime:%f", emitter_.frequencyTime);
+	ImGui::Text("Emitter.frequencyTime:%f", emitter_.frequencyTime);
 	ImGui::DragFloat3("Emitter.Translate", &emitter_.transform.translate.x, 0.01f, -100.0f, 100.0f);
 	ImGui::Checkbox("isFieldAcceleration", &accField_.isActive);
 	ImGui::End();

@@ -7,7 +7,7 @@ void Primitive::Initialize() {
 
 void Primitive::Update() {
 	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-	Matrix4x4 worldViewProjectionMatrix;
+	Matrix4x4 worldViewProjectionMatrix{};
 	if (camera_) {
 		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
 		worldViewProjectionMatrix = worldMatrix * viewProjectionMatrix;

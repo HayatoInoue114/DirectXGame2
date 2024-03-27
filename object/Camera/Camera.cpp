@@ -1,5 +1,6 @@
 #include "Camera.h"
 #include "../../base/WindowsAPI/WindowsAPI.h"
+#include "../../Input/Input.h"
 
 Camera::Camera()
 	: Transform_({ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f },{0.0f,0.0f,0.0f} })
@@ -43,8 +44,9 @@ void Camera::Update() {
 	projectionMatrix_ = MakePerspectiveFovMatrix(FovY_, aspectRatio_, nearClip_, farClip_);
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
 
+
 	ImGui::Begin("Camera");
-	ImGui::SliderFloat3("translate", &Transform_.translate.x, -10, 10);
-	ImGui::SliderFloat3("rotate", &Transform_.rotate.x, -10, 10);
+	ImGui::DragFloat3("translate", &Transform_.translate.x, -10, 10);
+	ImGui::DragFloat3("rotate", &Transform_.rotate.x, -10, 10);
 	ImGui::End();
 }

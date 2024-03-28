@@ -1,5 +1,10 @@
 #pragma once
 #include "../../math/Transform/Transform.h"
+#include "../../base/DirectX12/DirectX12.h"
+
+struct CameraForGPU {
+	Vector3 worldPosition;
+};
 
 class Camera
 {
@@ -37,5 +42,8 @@ private:
 	float nearClip_;
 	float farClip_;
 
+	Microsoft::WRL::ComPtr<ID3D12Resource> cameraForGPUResource;
+
+	CameraForGPU *position;
 };
 

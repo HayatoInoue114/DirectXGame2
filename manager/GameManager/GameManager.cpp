@@ -39,7 +39,7 @@ void GameManager::Initialize()
 #pragma endregion 基盤システムの初期化
 
 	//初期シーンの設定
-	sceneNum_ = TEST_SCENE;
+	sceneNum_ = TITLE_SCENE;
 	// シーンごとの初期化
 	sceneArr_[sceneNum_]->Initialize();
 

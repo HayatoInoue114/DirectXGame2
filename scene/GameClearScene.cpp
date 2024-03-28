@@ -13,16 +13,17 @@ void GameClearScene::Initialize() {
 void GameClearScene::Update() {
 	XINPUT_STATE joyState;
 	// ゲームパッド未接続なら何もせず抜ける
-	if (!Input::GetInstance()->GetJoystickState(joyState)) {
-		return;
-	}
-	if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B)) {
+	//if (!Input::GetInstance()->GetJoystickState(joyState)) {
+	//	return;
+	//}
+	if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || input_->PushKeyTrigger(DIK_SPACE)) {
 		SetSceneNum(TITLE_SCENE);
 	}
 }
 
 void GameClearScene::Draw() {
-	//sprite_->Draw(transform_);
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
+	sprite_->Draw();
 }
 
 void GameClearScene::Finalize() {

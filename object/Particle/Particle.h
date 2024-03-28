@@ -38,7 +38,9 @@ public:
 
 	void SetColor(const Vector4& color) { materialData_->color = color; }
 
-	ParticleData MakeNewParticle(std::mt19937& randomEngine);
+	//ParticleData MakeNewParticle(std::mt19937& randomEngine);
+
+	ParticleData MakeNewParticle(const Vector3& translate);
 
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
@@ -116,9 +118,9 @@ private:
 
 	ParticleForGPU* instancingData_{};
 
-	//ParticleData particles_[MAXINSTANCE]{};
+	ParticleData particles_[MAXINSTANCE]{};
 
-	std::list<ParticleData> particles_;
+	//std::list<ParticleData> particles_;
 
 	uint32_t descriptorSizeSRV_{};
 

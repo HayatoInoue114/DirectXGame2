@@ -57,7 +57,7 @@ void TitleScene::Update() {
 	/*if (!Input::GetInstance()->GetJoystickState(joyState)) {
 		return;
 	}*/
-	if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B)) {
+	if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || input_->PushKeyTrigger(DIK_SPACE)) {
 		count_ = 1;
 	}
 
@@ -68,7 +68,7 @@ void TitleScene::Update() {
 	}
 
 	if (a_ >= 1) {
-		SetSceneNum(GAME_SCENE);
+		SetSceneNum(TEST_SCENE);
 	}
 }
 
@@ -81,7 +81,7 @@ void TitleScene::Update() {
 void TitleScene::Draw2D() {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	sprite_->Draw();
-	black_->Draw();
+	//black_->Draw();
 }
 
 void TitleScene::Draw3D() {

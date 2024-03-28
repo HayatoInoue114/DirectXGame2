@@ -344,9 +344,6 @@ void Particle::Update() {
 }
 
 void Particle::Draw(uint32_t textureNum) {
-	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-		
-	}
 
 
 	CreateWVPMatrix();

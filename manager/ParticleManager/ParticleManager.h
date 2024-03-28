@@ -1,19 +1,23 @@
 #pragma once
+#include "../../object/Particle/Particle.h"
 
 class ParticleManager
 {
 public:
-	ParticleManager();
-	~ParticleManager();
+	void Initialize();
+
+	void Update();
+
+	void Draw();
+
+	void SetCamera(Camera* camera) { this->camera_ = camera; }
 
 private:
+	WorldTransform worldTransform_;
 
+	TransformationMatrix wvpData_{};
+
+	Camera* camera_ = nullptr;
+
+	Particle particle_;
 };
-
-ParticleManager::ParticleManager()
-{
-}
-
-ParticleManager::~ParticleManager()
-{
-}

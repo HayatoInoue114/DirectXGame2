@@ -1,10 +1,15 @@
 #pragma once
 #include "../../object/Particle/Particle.h"
+#include "../../structure/"
 
 class ParticleManager
 {
 public:
 	void Initialize();
+
+	ParticleData MakeNewParticle(const Vector3& translate);
+
+	std::list<ParticleData> Emission(const Emitter& emitter);
 
 	void Update();
 

@@ -159,17 +159,34 @@ void Particle::Initialize() {
 
 	SetMaterialData();
 
-	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+	/*for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
 		Scope scope = { -1.0f,1.0f };
 		ScopeVec3 scopeVec3 = { scope,scope,0 };
-		particles_[index].velocity = RandomGenerator::getRandom(scopeVec3);
+		particleIterator->velocity = RandomGenerator::getRandom(scopeVec3);
 
 		Scope color = { 0.0f,256.0f };
 		ScopeVec4 colorVec4 = { color,color,color,color };
-		particles_[index].color = RandomGenerator::getColorRandom(colorVec4);
+		particleIterator->color = RandomGenerator::getColorRandom(colorVec4);
 
 		Scope life = { 1.0f,3.0f };
-		particles_[index].lifeTime = RandomGenerator::getRandom(life);
+		particleIterator->lifeTime = RandomGenerator::getRandom(life);
+	}*/
+	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
+		
+		Scope scope = { -1.0f,1.0f };
+		ScopeVec3 scopeVec3 = { scope,scope,0 };
+		particleIterator->velocity = RandomGenerator::getRandom(scopeVec3);
+
+		Scope color = { 0.0f,256.0f };
+		ScopeVec4 colorVec4 = { color,color,color,color };
+		particleIterator->color = RandomGenerator::getColorRandom(colorVec4);
+
+		Scope life = { 1.0f,3.0f };
+		particleIterator->lifeTime = RandomGenerator::getRandom(life);
+		
+		
+		
+		++particleIterator;
 	}
 
 }
@@ -224,16 +241,16 @@ void Particle::CreateWVPMatrix() {
 
 
 	
-	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
+	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
 
-		if (particles_[index].lifeTime <= particles_[index].currentTime) { // 生存時間を過ぎていたら更新せず描画対象にしない
+		if (particleIterator->lifeTime <= particleIterator->currentTime) { // 生存時間を過ぎていたら更新せず描画対象にしない
 			continue;
 		}
-		float alpha = 1.0f - (particles_[index].currentTime / particles_[index].lifeTime);
+		float alpha = 1.0f - (particleIterator->currentTime / particleIterator->lifeTime);
 
-		particles_[index].transform.translate += particles_[index].velocity * kDeltaTime;
-		particles_[index].currentTime += kDeltaTime; // 経過時間を足す
-		instancingData_[index].color = particles_[index].color;
+		particleIterator->transform.translate += particleIterator->velocity * kDeltaTime;
+		particleIterator->currentTime += kDeltaTime; // 経過時間を足す
+		instancingData_[numInstance_].color = particleIterator->color;
 
 		// カメラ行列
 		Matrix4x4 cameraMatrix = MakeAffineMatrix(Vector3{ 1,1,1 }, camera_->GetRotate(), camera_->GetTranslate());
@@ -246,18 +263,20 @@ void Particle::CreateWVPMatrix() {
 		billboardMatrix.m[3][2] = 0.0f;
 
 		// WVPとworldMatrixの計算
-		Matrix4x4 scaleMatrix = MakeScaleMatrix(particles_[index].transform.scale);
-		Matrix4x4 translateMatrix = MakeTranslateMatrix(particles_[index].transform.translate);
+		Matrix4x4 scaleMatrix = MakeScaleMatrix(particleIterator->transform.scale);
+		Matrix4x4 translateMatrix = MakeTranslateMatrix(particleIterator->transform.translate);
 
 		Matrix4x4 cameraMat = camera_->GetViewMatrix() * camera_->GetProjectionMatrix();
 
 
-		//Matrix4x4 worldMatrix = AffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate);//MakeAffineMatrix(particles_[index].transform.scale, Vector3{ 1,1,1 }/*particles_[index].transform.rotate*/, particles_[index].transform.translate);
+		//Matrix4x4 worldMatrix = AffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate);//MakeAffineMatrix(particleIterator->transform.scale, Vector3{ 1,1,1 }/*particleIterator->transform.rotate*/, particleIterator->transform.translate);
 		Matrix4x4 worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
-		instancingData_[index].WVP = worldMatrix * cameraMat;
+		instancingData_[numInstance_].WVP = worldMatrix * cameraMat;
 		
-		instancingData_[index].color.w = alpha;
+		instancingData_[numInstance_].color.w = alpha;
 		++numInstance_; //生きていればParticleの数を1つカウントする
+
+		++particleIterator;
 	}
 
 	
@@ -298,12 +317,6 @@ void Particle::CreateInstance() {
 		instancingData_[index].WVP = MakeIdentity4x4();
 		instancingData_[index].World = MakeIdentity4x4();
 	}
-
-	for (uint32_t index = 0; index < MAXINSTANCE; ++index) {
-		particles_[index].transform.Initialize();
-	}
-
-
 }
 
 void Particle::CreateSRV() {

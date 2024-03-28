@@ -27,4 +27,7 @@ private:
 	//Particle particle_;
 
 	std::list<Particle> particle_;
+
+	// エミッタ
+	Emitter emitter_;
 };

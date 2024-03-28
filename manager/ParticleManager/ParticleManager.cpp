@@ -6,15 +6,6 @@ void ParticleManager::Initialize() {
 }
 
 ParticleData ParticleManager::MakeNewParticle(const Vector3& translate) {
-	//// 座標
-	//std::uniform_real_distribution<float> distribution(-1.0f, 1.0f);
-	//// 速度
-	//std::uniform_real_distribution<float> distVel(-1.0f, 1.0f);
-	//// 色
-	//std::uniform_real_distribution<float> distColor(0.0f, 1.0f);
-	//// 生存可能時間
-	//std::uniform_real_distribution<float> distTime(1.0f, 3.0f);
-
 	ParticleData particle;
 	particle.transform.scale = { 1.0f,1.0f,1.0f };
 	particle.transform.rotate = { 0,0,0 };
@@ -23,17 +14,19 @@ ParticleData ParticleManager::MakeNewParticle(const Vector3& translate) {
 	Scope trans = { -1.0f,1.0f };
 	ScopeVec3 translateVec3 = { trans,trans,trans };
 	randomTranslate = RandomGenerator::getRandom(translateVec3);
-	//randomTranslate = { distribution(randomEngine),distribution(randomEngine) ,distribution(randomEngine) };
 	particle.transform.translate = Add(translate, randomTranslate);
-	//if()
+	
+	//velocity
 	Scope vel = { -1.0f,1.0f };
 	ScopeVec3 randomVec3 = { vel,vel,vel };
 	particle.velocity = RandomGenerator::getRandom(randomVec3);
 
+	//color
 	Scope color = { 0,255 };
 	ScopeVec4 colorVec4 = { color,color,color,{255,255} };
 	particle.color = RandomGenerator::getColorRandom(colorVec4);
 
+	//lifeTime
 	Scope time = { 1.0f,3.0f };
 	particle.lifeTime = RandomGenerator::getRandom(time);
 	particle.currentTime = 0;

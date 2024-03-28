@@ -1,6 +1,6 @@
 #pragma once
 #include "../../object/Particle/Particle.h"
-#include "../../structure/"
+#include "../../structure/Emitter/Emitter.h"
 
 class ParticleManager
 {

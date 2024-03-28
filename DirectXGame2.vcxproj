@@ -206,6 +206,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\IScene.h" />
     <ClInclude Include="scene\TitleScene.h" />
+    <ClInclude Include="structure\Emitter\Emitter.h" />
     <ClInclude Include="structure\ParticleData\ParticleData.h" />
     <ClInclude Include="structure\ParticleForGPU\ParticleForGPU.h" />
     <ClInclude Include="structure\structure.h" />

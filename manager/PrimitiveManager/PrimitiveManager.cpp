@@ -25,6 +25,8 @@ void PrimitiveManager::Update() {
 	camera_->Update();
 	primitive_->SetCamera(camera_.get());
 	primitive_->Update();
+
+	particle_->SetCamera(camera_.get());
 }
 
 void PrimitiveManager::Draw() {

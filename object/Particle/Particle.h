@@ -40,6 +40,8 @@ public:
 
 	ParticleData MakeNewParticle(std::mt19937& randomEngine);
 
+	void SetCamera(Camera* camera) { camera_ = camera; }
+
 private:
 	void CreateVertexResource();
 
@@ -68,6 +70,9 @@ private:
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
 
 private:
+
+	Camera* camera_;
+
 	//モデル読み込み
 	ModelData modelData_{};
 

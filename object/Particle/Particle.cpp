@@ -238,6 +238,17 @@ void Particle::CreateWVPMatrix() {
 		instancingData_[index].World = worldMatrix;
 		instancingData_[index].color = particles_[index].color;
 
+		// WVPとworldMatrixの計算
+		Matrix4x4 scaleMatrix = MakeScaleMatrix(particles_[index].transform.scale);
+		Matrix4x4 translateMatrix = MakeTranslateMatrix(particles_[index].transform.translate);
+
+		Matrix4x4 cameraMat = camera_->GetViewMatrix() * camera_->GetProjectionMatrix();
+
+
+		//Matrix4x4 worldMatrix = AffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate);//MakeAffineMatrix(particles_[index].transform.scale, Vector3{ 1,1,1 }/*particles_[index].transform.rotate*/, particles_[index].transform.translate);
+		Matrix4x4 worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
+		instancingData_[numInstance_].WVP = worldMatrix * cameraMat;
+
 		
 		instancingData_[index].color.w = alpha;
 		++numInstance_; //生きていればParticleの数を1つカウントする

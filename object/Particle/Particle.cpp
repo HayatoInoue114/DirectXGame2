@@ -1,6 +1,7 @@
 #include "Particle.h"
 #include <assert.h>
 #include "../../manager/ModelManager/ModelManager.h"
+#include <numbers>
 
 ModelData Particle::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
 	ModelData modelData; // 構築するModelData
@@ -229,14 +230,20 @@ void Particle::CreateWVPMatrix() {
 			continue;
 		}
 		float alpha = 1.0f - (particles_[index].currentTime / particles_[index].lifeTime);
-		Matrix4x4 worldMatrix = MakeAffineMatrix(particles_[index].transform.scale, particles_[index].transform.rotate, particles_[index].transform.translate);
-		Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix_, projectionMatrix_));
 
 		particles_[index].transform.translate += particles_[index].velocity * kDeltaTime;
 		particles_[index].currentTime += kDeltaTime; // 経過時間を足す
-		instancingData_[index].WVP = worldViewProjectionMatrix;
-		instancingData_[index].World = worldMatrix;
 		instancingData_[index].color = particles_[index].color;
+
+		// カメラ行列
+		Matrix4x4 cameraMatrix = MakeAffineMatrix(Vector3{ 1,1,1 }, camera_->GetRotate(), camera_->GetTranslate());
+		// 板ポリを正面に向ける
+		Matrix4x4 backToFrontMatrix = MakeRotateYMatrix(std::numbers::pi_v<float>);
+		// billboardMatrixを作成
+		Matrix4x4 billboardMatrix = cameraMatrix * backToFrontMatrix;
+		billboardMatrix.m[3][0] = 0.0f;
+		billboardMatrix.m[3][1] = 0.0f;
+		billboardMatrix.m[3][2] = 0.0f;
 
 		// WVPとworldMatrixの計算
 		Matrix4x4 scaleMatrix = MakeScaleMatrix(particles_[index].transform.scale);
@@ -247,8 +254,7 @@ void Particle::CreateWVPMatrix() {
 
 		//Matrix4x4 worldMatrix = AffineMatrix((*particleIterator).transform.scale, billboardMatrix, (*particleIterator).transform.translate);//MakeAffineMatrix(particles_[index].transform.scale, Vector3{ 1,1,1 }/*particles_[index].transform.rotate*/, particles_[index].transform.translate);
 		Matrix4x4 worldMatrix = scaleMatrix * billboardMatrix * translateMatrix;
-		instancingData_[numInstance_].WVP = worldMatrix * cameraMat;
-
+		instancingData_[index].WVP = worldMatrix * cameraMat;
 		
 		instancingData_[index].color.w = alpha;
 		++numInstance_; //生きていればParticleの数を1つカウントする

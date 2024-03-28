@@ -16,6 +16,9 @@ void PrimitiveManager::Initialize() {
 	model_ = model_->CreateModelFromObjPtr(PLAYER);
 
 	primitive_->SetModel(model_.get());
+
+	particle_ = std::make_unique<Particle>();
+	particle_->Initialize();
 }
 
 void PrimitiveManager::Update() {
@@ -25,6 +28,19 @@ void PrimitiveManager::Update() {
 }
 
 void PrimitiveManager::Draw() {
+	
+	Draw2D();
+	Draw3D();
+}
+
+void PrimitiveManager::Draw2D()
+{
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	primitive_->Draw();
+}
+
+void PrimitiveManager::Draw3D()
+{
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
+	particle_->Draw(CIRCLE);
 }

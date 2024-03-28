@@ -343,17 +343,16 @@ void Particle::Draw(uint32_t textureNum) {
 }
 
 void Particle::ImGuiAdjustParameter() {
-	//ImGui::Begin("model");
-	////ImGui::Text("Model");
-	//ImGui::CheckboxFlags("isLighting", &materialData_->enableLighting, 1);
-	//ImGui::SliderFloat3("Translate", &transform_.translate.x, -5, 5);
-	//ImGui::SliderFloat3("Scale", &transform_.scale.x, -5, 5);
-	//ImGui::SliderFloat3("Rotate", &transform_.rotate.x, -5, 5);
-	//ImGui::Text("UVTransform");
-	//ImGui::DragFloat2("UVTranslate", &uvTransform_.translate.x, 0.01f, -10.0f, 10.0f);
-	//ImGui::DragFloat2("UVScale", &uvTransform_.scale.x, 0.01f, -10.0f, 10.0f);
-	//ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotate.z);
-	//ImGui::ColorEdit4("ModelColor", &materialData_->color.x, 1);
-	//ImGui::End();
+	/*std::random_device seedGenerator;
+	std::mt19937 randomEngine(seedGenerator());*/
+
+	/*ImGui::Begin("Particles");
+	if (ImGui::Button("Add Particle")) {
+		particles_.splice(particles_.end(), Emission(emitter_));
+	}
+	ImGui::Text("Emitter.frequencyTime:%f", emitter_.frequencyTime);
+	ImGui::DragFloat3("Emitter.Translate", &emitter_.transform.translate.x, 0.01f, -100.0f, 100.0f);
+	ImGui::Checkbox("isFieldAcceleration", &accField_.isActive);
+	ImGui::End();*/
 }
 

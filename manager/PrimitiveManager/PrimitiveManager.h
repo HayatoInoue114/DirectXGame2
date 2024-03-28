@@ -3,6 +3,7 @@
 //#include "../../object/Primitive/PrimitiveCommon/PrimitiveCommon.h"
 #include "../../object/Camera/Camera.h"
 #include "../../object/Model/Model.h"
+#include "../../object/Particle/Particle.h"
 
 #include <memory>
 
@@ -16,6 +17,10 @@ public:
 
 	void Draw();
 
+	void Draw2D();
+
+	void Draw3D();
+
 private:
 	std::unique_ptr<Primitive> primitive_;
 	//std::unique_ptr<PrimitiveCommon> primitiveCommon_;
@@ -23,5 +28,7 @@ private:
 	std::unique_ptr<Camera> camera_;
 
 	std::unique_ptr<Model> model_;
+
+	std::unique_ptr<Particle> particle_{};
 };
 

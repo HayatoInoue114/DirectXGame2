@@ -50,6 +50,11 @@ void Camera::Update() {
 
 	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource->GetGPUVirtualAddress());
 
+	//if (Input::GetInstance()->PushKey(DIK_UP)) {
+	//	Transform_.translate.x
+	//}
+	
+
 	ImGui::Begin("Camera");
 	ImGui::DragFloat3("translate", &Transform_.translate.x, -0.1, 0.1);
 	ImGui::DragFloat3("rotate", &Transform_.rotate.x, -0.1, 0.1);

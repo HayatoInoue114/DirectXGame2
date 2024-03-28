@@ -1,6 +1,7 @@
 #pragma once
 #include "../../math/Transform/Transform.h"
 #include "../../base/DirectX12/DirectX12.h"
+#include "../../Input/Input.h"
 
 struct CameraForGPU {
 	Vector3 worldPosition;

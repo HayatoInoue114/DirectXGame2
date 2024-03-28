@@ -19,5 +19,7 @@ private:
 
 	Camera* camera_ = nullptr;
 
-	Particle particle_;
+	//Particle particle_;
+
+	std::list<Particle> particle_;
 };

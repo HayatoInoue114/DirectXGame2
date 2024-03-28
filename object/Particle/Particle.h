@@ -116,9 +116,9 @@ private:
 
 	ParticleForGPU* instancingData_{};
 
-	ParticleData particles_[MAXINSTANCE]{};
+	//ParticleData particles_[MAXINSTANCE]{};
 
-	//std::list<ParticleData> particles_;
+	std::list<ParticleData> particles_;
 
 	uint32_t descriptorSizeSRV_{};
 

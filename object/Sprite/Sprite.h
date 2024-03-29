@@ -1,5 +1,4 @@
 #pragma once
-//#include <dxcapi.h>
 
 #include "../../base/DirectX12/DirectX12.h"
 #include "../../math/Vector4.h"
@@ -23,15 +22,15 @@ public:
 	void ImGuiAdjustParameter();
 
 	static Sprite* Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
-	static std::unique_ptr<Sprite> CreateUniqe(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
+	static std::unique_ptr<Sprite> CreateUnique(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
 
 	// セッター
 	void SetWorldTransform(const WorldTransform& transform) { worldTransform_ = transform; }
 	void SetColor(const Vector4& color) { materialData_->color = color; }
-	void SetAnchorPoint(const Vector3& anchorpoint) { anchorPoint_ = anchorpoint; }
-	void SetisFlipX(bool isFlipX) { isFlipX_ = isFlipX; }
-	void SetisFlipY(bool isFlipY) { isFlipY_ = isFlipY; }
-	void SetisInvisible(bool isInvisible) { isInvisible_ = isInvisible; }
+	void SetAnchorPoint(const Vector3& anchorPoint) { anchorPoint_ = anchorPoint; }
+	void SetIsFlipX(bool isFlipX) { isFlipX_ = isFlipX; }
+	void SetIsFlipY(bool isFlipY) { isFlipY_ = isFlipY; }
+	void SetIsInvisible(bool isInvisible) { isInvisible_ = isInvisible; }
 	void SetSize(const Vector2& size) { size_ = size; }
 	void SetPosition(const Vector2& position) { worldTransform_.translate.x = position.x; worldTransform_.translate.y = position.y; }
 	void SetTextureNum(uint32_t num) { textureNum_ = num; }
@@ -39,11 +38,11 @@ public:
 	// ゲッター
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
 	const Vector4& GetColor() const { return materialData_->color; }
-	const Vector3& GetAnchorpoint() const { return anchorPoint_; }
-	bool GetisFlipX() const { return isFlipX_; }
-	bool GetisFlipY() const { return isFlipY_; }
-	bool GetisInvisible() const { return isInvisible_; }
-	const Vector2& GetPosition() const { return { worldTransform_.translate.x ,worldTransform_.translate.y }; }
+	const Vector3& GetAnchorPoint() const { return anchorPoint_; }
+	bool GetIsFlipX() const { return isFlipX_; }
+	bool GetIsFlipY() const { return isFlipY_; }
+	bool GetIsInvisible() const { return isInvisible_; }
+	Vector2 GetPosition() const { return Vector2(this->worldTransform_.translate.x, this->worldTransform_.translate.y); }
 
 private:
 	void CreateVertexResource();
@@ -92,11 +91,11 @@ private:
 
 	Matrix4x4 projectionMatrix_{};
 
-	Matrix4x4 worldViewprojectionMatrix_{};
+	Matrix4x4 worldViewProjectionMatrix_{};
 
 	WorldTransform cameraTransform_{};
 
-	Matrix4x4 cameramatrix_{};
+	Matrix4x4 cameraMatrix_{};
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 

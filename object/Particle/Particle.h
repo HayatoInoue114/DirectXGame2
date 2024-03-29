@@ -79,11 +79,11 @@ private:
 
 private: ///メンバ変数///
 	// パーティクル
-	std::list<ParticleData> particles_;
+	std::list<ParticleData> particles_{};
 	// エミッタ
-	Emitter emitter_;
+	Emitter emitter_{};
 	// フィールド
-	AccField accField_;
+	AccField accField_{};
 
 	//モデル読み込み
 	ModelData modelData_{};
@@ -136,7 +136,7 @@ private: ///メンバ変数///
 
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_{};
 
-	WorldTransform worldTransform_;
+	WorldTransform worldTransform_{};
 
 	uint32_t numInstance_ = 0;
 

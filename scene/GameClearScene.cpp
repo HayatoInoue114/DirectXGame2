@@ -11,7 +11,7 @@ void GameClearScene::Initialize() {
 }
 
 void GameClearScene::Update() {
-	XINPUT_STATE joyState;
+	XINPUT_STATE joyState{};
 	// ゲームパッド未接続なら何もせず抜ける
 	/*if (!Input::GetInstance()->GetJoystickState(joyState)) {
 		return;

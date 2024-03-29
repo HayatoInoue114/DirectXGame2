@@ -53,9 +53,9 @@ ModelData Particle::LoadObjFile(const std::string& directoryPath, const std::str
 					std::getline(v, index, '/');// /区切りでインデックスを読んでいく
 					elementIndices[element] = std::stoi(index);
 				}
-				Vector4 position = positions[elementIndices[0] - 1];
-				Vector2 texcoord = texcoords[elementIndices[1] - 1];
-				Vector3 normal = normals[elementIndices[2] - 1];
+				Vector4 position = positions[static_cast<std::vector<Vector4, std::allocator<Vector4>>::size_type>(elementIndices[0]) - 1];
+				Vector2 texcoord = texcoords[static_cast<std::vector<Vector2, std::allocator<Vector2>>::size_type>(elementIndices[1]) - 1];
+				Vector3 normal = normals[static_cast<std::vector<Vector3, std::allocator<Vector3>>::size_type>(elementIndices[2]) - 1];
 				VertexData vertex = { position,texcoord,normal };
 				modelData.vertices.push_back(vertex);
 				triangle[faceVertex] = { position,texcoord,normal };
@@ -146,7 +146,7 @@ void Particle::Initialize() {
 	//Transform変数を作る
 	transform_.Initialize();
 
-	//CreatevertexResource();
+	//CreateVertexResource();
 	CreateModel();
 	CreateMaterialResource();
 	CreateVertexBufferView();
@@ -398,7 +398,7 @@ void Particle::Draw(Camera* camera, uint32_t textureNum) {
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
-	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
+	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum]);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 

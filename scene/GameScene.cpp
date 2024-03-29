@@ -104,7 +104,7 @@ void GameScene::Initialize() {
 
 	isClear_ = false;
 
-	blackSprite_ = Sprite::CreateUniqe({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
+	blackSprite_ = Sprite::CreateUnique({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
 
 	color_ = { 1,1,1,1 };
 

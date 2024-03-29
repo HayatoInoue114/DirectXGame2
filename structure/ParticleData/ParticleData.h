@@ -3,9 +3,9 @@
 
 struct ParticleData
 {
-	TransformS transform;
-	Vector3 velocity;
-	Vector4 color;
-	float lifeTime;
-	float currentTime;
+	TransformS transform = {};
+	Vector3 velocity = {};
+	Vector4 color = {};
+	float lifeTime = {};
+	float currentTime = {};
 };

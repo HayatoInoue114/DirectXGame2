@@ -19,41 +19,41 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 
 		//identifierに応じた報酬
 		if (identifier == "v") {
-			Vector4 position;
+			Vector4 position{};
 			s >> position.x >> position.y >> position.z;
 			position.x *= -1.0f;
 			position.w = 1.0f;
 			positions.push_back(position);
 		}
 		else if (identifier == "vt") {
-			Vector2 texcoord;
+			Vector2 texcoord{};
 			s >> texcoord.x >> texcoord.y;
 			texcoord.y = 1.0f - texcoord.y;
 			texcoords.push_back(texcoord);
 		}
 		else if (identifier == "vn") {
-			Vector3 normal;
+			Vector3 normal{};
 			s >> normal.x >> normal.y >> normal.z;
 			normal.x *= -1.0f;
 			normals.push_back(normal);
 		}
 		else if (identifier == "f") {
-			VertexData triangle[3];
+			VertexData triangle[3]{};
 			//面は三角形限定。その他は未対応
 			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
 				std::string vertexDefinition;
 				s >> vertexDefinition;
 				//頂点の要素へのIndexは「位置/UV/法線」で格納されているので、分解してIndexを取得する
 				std::istringstream v(vertexDefinition);
-				uint32_t elementIndices[3];
+				uint32_t elementIndices[3]{};
 				for (int32_t element = 0; element < 3; ++element) {
 					std::string index;
 					std::getline(v, index, '/');// /区切りでインデックスを読んでいく
 					elementIndices[element] = std::stoi(index);
 				}
-				Vector4 position = positions[elementIndices[0] - 1];
-				Vector2 texcoord = texcoords[elementIndices[1] - 1];
-				Vector3 normal = normals[elementIndices[2] - 1];
+				Vector4 position = positions[static_cast<std::vector<Vector4, std::allocator<Vector4>>::size_type>(elementIndices[0]) - 1];
+				Vector2 texcoord = texcoords[static_cast<std::vector<Vector2, std::allocator<Vector2>>::size_type>(elementIndices[1]) - 1];
+				Vector3 normal = normals[static_cast<std::vector<Vector3, std::allocator<Vector3>>::size_type>(elementIndices[2]) - 1];
 				VertexData vertex = { position,texcoord,normal };
 				modelData.vertices.push_back(vertex);
 				triangle[faceVertex] = { position,texcoord,normal };
@@ -72,14 +72,6 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 		}
 	}
 	return modelData;
-}
-
-Model::Model() {
-
-}
-
-Model::~Model() {
-
 }
 
 Model* Model::CreateModelFromObj(int modelName) {
@@ -165,10 +157,10 @@ void Model::CreateWVPMatrix() {
 	cameraTransform_.translate = { 0.0f,0.0f,-10.0f, };
 
 	worldMatrix_ = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
-	viewMatrix_ = Inverse(cameramatrix_);
-	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
-	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
+	cameraMatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	viewMatrix_ = Inverse(cameraMatrix_);
+	projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
+	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatrix_));
 	wvpData_->WVP = worldViewProjectionMatrix_;
 	wvpData_->World = worldMatrix_;*/
 }
@@ -213,7 +205,7 @@ void Model::Draw() {
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
+	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[modelName_]);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 

@@ -49,5 +49,5 @@ void PrimitiveManager::Draw2D()
 void PrimitiveManager::Draw3D()
 {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
-	particle_.Draw(camera_.get(), CIRCLE);
+	particle_.Draw(camera_.get(), UVCHECKER);
 }

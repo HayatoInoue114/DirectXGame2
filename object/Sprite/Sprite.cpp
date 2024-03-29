@@ -22,7 +22,7 @@ Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t t
 	return sprite;
 }
 
-std::unique_ptr<Sprite> Sprite::CreateUniqe(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum) {
+std::unique_ptr<Sprite> Sprite::CreateUnique(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum) {
 	std::unique_ptr<Sprite> sprite;
 	sprite = std::make_unique<Sprite>();
 	sprite->Initialize();
@@ -119,14 +119,14 @@ void Sprite::CreateTransformationMatrixResource() {
 void Sprite::CalculateAndSetWVPMatrix() {
 
 	transformationMatrixData_->World = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
+	cameraMatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
 	viewMatrix_ = MakeIdentity4x4();
 	projectionMatrix_ = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kCliantHeight), 0.0f, 100.0f);
-	worldViewprojectionMatrix_ = Multiply(transformationMatrixData_->World, Multiply(viewMatrix_, projectionMatrix_));
-	transformationMatrixData_->WVP = worldViewprojectionMatrix_;
+	worldViewProjectionMatrix_ = Multiply(transformationMatrixData_->World, Multiply(viewMatrix_, projectionMatrix_));
+	transformationMatrixData_->WVP = worldViewProjectionMatrix_;
 	//transformationMatrixData_->World = worldMatrix_;
 
-	//projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
+	//projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
 }
 
 void Sprite::CreateMaterialResource() {
@@ -144,7 +144,7 @@ void Sprite::CreateIndex() {
 	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
 	//使用するリソースのサイズはインデックス6つ分のサイズ
 	indexBufferView_.SizeInBytes = sizeof(uint32_t) * 6;
-	//インデックスはuint32_tとする
+	//インデックスは:uint32_tとする
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
 	//インデックスリソースにデータを書き込む

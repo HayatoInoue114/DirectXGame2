@@ -9,8 +9,8 @@ void TitleScene::Initialize() {
 	/*sprite_ = new Sprite;
 	sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
 
-	sprite_ = Sprite::CreateUniqe({0,0,0}, {1280,720}, {1,1,1,1},TITLESPRITE);
-	black_ = Sprite::CreateUniqe({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
+	sprite_ = Sprite::CreateUnique({0,0,0}, {1280,720}, {1,1,1,1},TITLESPRITE);
+	black_ = Sprite::CreateUnique({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
 
 
 	transform_.Initialize();
@@ -28,8 +28,6 @@ void TitleScene::Initialize() {
 
 void TitleScene::Update() {
 	t_++;
-
-	int max = 3;
 
 	if (t_ % 10 == 0) {
 		isT_++;
@@ -62,7 +60,7 @@ void TitleScene::Update() {
 
 	if (count_ == 1) {
 		if (t_ % 3 == 0) {
-			a_ += 0.1;
+			a_ += 0.1f;
 		}
 	}
 

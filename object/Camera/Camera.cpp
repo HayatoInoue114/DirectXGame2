@@ -47,7 +47,7 @@ void Camera::Update() {
 
 
 	ImGui::Begin("Camera");
-	ImGui::DragFloat3("translate", &Transform_.translate.x, -0.01f, 0.01);
-	ImGui::DragFloat3("rotate", &Transform_.rotate.x, -0.01f, 0.01);
+	ImGui::DragFloat3("translate", &Transform_.translate.x, -0.01f, 0.01f);
+	ImGui::DragFloat3("rotate", &Transform_.rotate.x, -0.01f, 0.01f);
 	ImGui::End();
 }

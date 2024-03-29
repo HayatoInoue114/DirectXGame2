@@ -10,7 +10,7 @@ public:
 	///	テクスチャ読み込み
 	/// </summary>
 	/// <param name="index">テクスチャ番号</param>
-	void LoadTexture(uint32_t index);
+	//void LoadTexture(uint32_t index);
 
 private:
 	// SRVの最大個数

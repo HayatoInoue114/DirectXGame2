@@ -20,9 +20,6 @@
 class Model
 {
 public:
-	Model();
-
-	~Model();
 
 	void Initialize();
 
@@ -98,11 +95,9 @@ private:
 
 	Matrix4x4 projectionMatrix_{};
 
-	Matrix4x4 cameramatrix_{};
+	Matrix4x4 cameraMatrix_{};
 
 	Matrix4x4 viewMatrix_{};
-
-	Matrix4x4 projectionMatix_{};
 
 	Matrix4x4 worldViewProjectionMatrix_{};
 
@@ -120,6 +115,6 @@ private:
 
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_{};
 
-	uint32_t modelName_;
+	uint32_t modelName_ = {};
 };
 

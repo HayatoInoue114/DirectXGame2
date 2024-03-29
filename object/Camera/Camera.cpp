@@ -3,7 +3,7 @@
 #include "../../Input/Input.h"
 
 Camera::Camera()
-	: Transform_({ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f },{0.0f,0.0f,0.0f} })
+	: Transform_({ {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f },{0.0f,0.0f,-30.0f} })
 	, FovY_ (0.45f)
 	, aspectRatio_(float(kCliantWidth) / float(kCliantHeight))
 	, nearClip_(0.1f)
@@ -28,6 +28,7 @@ Camera::Camera()
 
 void Camera::Initialize() {
 	Transform_.Initialize();
+	Transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f },{0.0f,0.0f,-30.0f} };
 	FovY_ = 0.45f;
 	aspectRatio_ = (float(kCliantWidth) / float(kCliantHeight));
 	nearClip_ = 0.1f;
@@ -46,7 +47,7 @@ void Camera::Update() {
 
 
 	ImGui::Begin("Camera");
-	ImGui::DragFloat3("translate", &Transform_.translate.x, -10, 10);
-	ImGui::DragFloat3("rotate", &Transform_.rotate.x, -10, 10);
+	ImGui::DragFloat3("translate", &Transform_.translate.x, -0.01f, 0.01);
+	ImGui::DragFloat3("rotate", &Transform_.rotate.x, -0.01f, 0.01);
 	ImGui::End();
 }

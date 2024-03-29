@@ -2,7 +2,6 @@
 #include "../base/GraphicsRenderer/GraphicsRenderer.h"
 
 void TestScene::Initialize() {
-	SetSceneNum(TEST_SCENE);
 	// 入力
 	input_ = Input::GetInstance();
 

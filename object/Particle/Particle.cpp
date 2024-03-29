@@ -162,7 +162,7 @@ void Particle::Initialize() {
 
 	// エミッターの設定
 	emitter_.count = 3;
-	emitter_.frequency = 1;
+	emitter_.frequency = 10;
 	emitter_.frequencyTime = 0.0f;
 	emitter_.transform.Initialize();
 
@@ -286,27 +286,21 @@ void Particle::CreateSRV() {
 void Particle::Update() {
 	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
 		// 生存時間が過ぎたら処理を行わない
-		if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
+		/*if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
 			particleIterator = particles_.erase(particleIterator);
 			continue;
-		}
+		}*/
 
 		
 		
 		
-		if (numInstance_ < MAXINSTANCE) {
+		/*if (numInstance_ < MAXINSTANCE) {
 			
-			// 移動処理
-			(*particleIterator).transform.translate = Add((*particleIterator).transform.translate, (*particleIterator).velocity);
-
-			// 指定した時間に透明になる
-
-			float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
-			(*particleIterator).color.w = alpha;
-			instancingData_[numInstance_].color = (*particleIterator).color;
+			
+			
 			
 			++numInstance_;
-		}
+		}*/
 
 		++particleIterator;
 	}
@@ -349,6 +343,8 @@ void Particle::Draw(Camera* camera, uint32_t textureNum) {
 	//	++numInstance_; //生きていればParticleの数を1つカウントする
 	//}
 
+	numInstance_ = 0;
+
 	for (std::list<ParticleData>::iterator particleIterator = particles_.begin(); particleIterator != particles_.end();) {
 		// 生存時間が過ぎたら処理を行わない
 		if ((*particleIterator).lifeTime <= (*particleIterator).currentTime) {
@@ -356,10 +352,17 @@ void Particle::Draw(Camera* camera, uint32_t textureNum) {
 			continue;
 		}
 
-	
+		
 
 		if (numInstance_ < MAXINSTANCE) {
 			
+			// 移動処理
+			(*particleIterator).transform.translate = Add((*particleIterator).transform.translate, (*particleIterator).velocity);
+			// 指定した時間に透明になる
+
+			float alpha = 1.0f - ((*particleIterator).currentTime / (*particleIterator).lifeTime);
+			(*particleIterator).color.w = alpha;
+			instancingData_[numInstance_].color = (*particleIterator).color;
 
 			// WVPとworldMatrixの計算
 			Matrix4x4 scaleMatrix = MakeScaleMatrix((*particleIterator).transform.scale);
@@ -379,6 +382,8 @@ void Particle::Draw(Camera* camera, uint32_t textureNum) {
 		(*particleIterator).currentTime += kDeltaTime;
 
 		++particleIterator;
+
+		
 	}
 
 	//パラメータからUVTransform用の行列を生成する
@@ -422,7 +427,7 @@ ParticleData Particle::MakeNewParticle(const Vector3& translate) {
 	//randomTranslate = { distribution(randomEngine),distribution(randomEngine) ,distribution(randomEngine) };
 	particle.transform.translate = Add(translate, randomTranslate);
 	//if()
-	Scope vel = { -1.0f,1.0f };
+	Scope vel = { -0.01f,0.01f };
 	ScopeVec3 randomVec3 = { vel,vel,vel };
 	particle.velocity = RandomGenerator::getRandom(randomVec3);
 

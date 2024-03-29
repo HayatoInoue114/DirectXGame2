@@ -2,6 +2,10 @@
 
 void Primitive::Initialize() {
 	worldTransform_.Initialize();
+
+	Scope scope = { -10.0f,10.0f };
+	ScopeVec3 scope3 = { scope,scope,scope };
+	worldTransform_.translate = RandomGenerator::GetInstance()->getRandom(scope3);
 	//this->camera_ = primitiveCommon_->GetDefaultCamera();
 }
 

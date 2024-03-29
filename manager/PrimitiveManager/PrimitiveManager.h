@@ -23,11 +23,17 @@ private:
 	void Draw3D();
 private:
 	std::unique_ptr<Primitive> primitive_;
+
+	std::unique_ptr<Model> model_;
+
+	std::unique_ptr<Primitive> primitive2_;
+
+	std::unique_ptr<Model> model2_;
 	//std::unique_ptr<PrimitiveCommon> primitiveCommon_;
 
 	std::unique_ptr<Camera> camera_;
 
-	std::unique_ptr<Model> model_;
+	
 
 	//std::unique_ptr<Particle> particle_{};
 

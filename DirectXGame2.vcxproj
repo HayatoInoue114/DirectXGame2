@@ -91,6 +91,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="math\Line\Catmull-Rom Spline\CatmullRom.cpp" />
     <ClCompile Include="components\Audio\3DAudio\Audio3D.cpp" />
     <ClCompile Include="base\DirectX12\DirectX12.cpp" />
     <ClCompile Include="externals\imgui\imgui.cpp" />
@@ -100,6 +101,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="math\Line\HermitePoly\HermitePoly.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="manager\ParticleManager\ParticleManager.cpp" />
     <ClCompile Include="manager\PipelineManager\PiplineManager.cpp" />
@@ -107,6 +109,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="base\ResourceLeakCheck\ResourceLeakCheck.cpp" />
     <ClCompile Include="math\Transform\Transform.cpp" />
     <ClCompile Include="math\WorldTransform\WorldTransform.cpp" />
+    <ClCompile Include="object\ModelLine\ModelLine.cpp" />
     <ClCompile Include="object\Camera\Camera.cpp" />
     <ClCompile Include="object\Model\Model.cpp" />
     <ClCompile Include="object\Primitive\Primitive\Primitive.cpp" />
@@ -169,6 +172,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\TD3\Project\Math\MathOperations\MathOperations.h" />
+    <ClInclude Include="math\Line\Catmull-Rom Spline\CatmullRom.h" />
     <ClInclude Include="components\Audio\3DAudio\Audio3D.h" />
     <ClInclude Include="components\DirectionalLight\DirectionalLight.h" />
     <ClInclude Include="base\DirectX12\DirectX12.h" />
@@ -180,6 +184,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_rectpack.h" />
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
+    <ClInclude Include="math\Line\HermitePoly\HermitePoly.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="manager\ParticleManager\ParticleManager.h" />
     <ClInclude Include="manager\PipelineManager\PiplineManager.h" />
@@ -190,6 +195,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="math\RondomGenerator\RandomGenerator.h" />
     <ClInclude Include="math\Transform\Transform.h" />
     <ClInclude Include="math\WorldTransform\WorldTransform.h" />
+    <ClInclude Include="object\ModelLine\ModelLine.h" />
     <ClInclude Include="object\Camera\Camera.h" />
     <ClInclude Include="object\Model\Model.h" />
     <ClInclude Include="object\Primitive\Primitive\Primitive.h" />

@@ -2,7 +2,7 @@
 #include "../manager/GameManager/GameManager.h"
 
 void TitleScene::Initialize() {
-	SetSceneNum(TITLE_SCENE);
+	//SetSceneNum(TITLE_SCENE);
 	// 入力
 	input_ = Input::GetInstance();
 
@@ -78,7 +78,7 @@ void TitleScene::Update() {
 void TitleScene::Draw2D() {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	sprite_->Draw();
-	black_->Draw();
+	//black_->Draw();
 }
 
 void TitleScene::Draw3D() {

@@ -1,10 +1,11 @@
 #pragma once
 #include "../../math/Transform/Transform.h"
+#include "../../math/MyMath.h"
 
 class Camera
 {
 public:
-	Camera();
+	//Camera();
 	void Initialize();
 	void Update();
 	

@@ -1,6 +1,7 @@
 #include "MT.h"
 #include <algorithm>
 #include <cassert>
+#include "../MathOperator/MathOperator.h"
 
 Matrix4x4 MakeIdentity4x4() {
 	Matrix4x4 mat = {
@@ -68,6 +69,13 @@ Matrix4x4 MakeRotateZMatrix(float radian) {
 	return mat;
 }
 
+Matrix4x4 MakeRotateXYZMatrix(const Vector3& rotate)
+{
+	Matrix4x4 x = MakeRotateXMatrix(rotate.x);
+	Matrix4x4 y = MakeRotateYMatrix(rotate.y);
+	Matrix4x4 z = MakeRotateZMatrix(rotate.z);
+	return x * y * z;
+}
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate) {
 	Matrix4x4 rotateXMatrix = MakeRotateXMatrix(rotate.x);
@@ -234,15 +242,30 @@ Matrix4x4 Inverse(const Matrix4x4& m) {
 }
 
 Matrix4x4 MakePerspectiveFovMatrix(float fovY, float aspectRatio, float nearClip, float farClip) {
-	Matrix4x4 mat = {
-		(1 / aspectRatio) * (1 / std::tanf(fovY / 2)),	0,	0,	0,
-		0,	1 / std::tanf(fovY / 2),	0,	0,
-		0,	0,	farClip / (farClip - nearClip),	1,
-		0,	0,	(-nearClip * farClip) / (farClip - nearClip),	0
-	};
-	return mat;
-}
+	Matrix4x4 result{};
 
+	result.m[0][0] = (1 / aspectRatio) * 1 / std::tan(fovY / 2);
+	result.m[0][1] = 0.0f;
+	result.m[0][2] = 0.0f;
+	result.m[0][3] = 0.0f;
+
+	result.m[1][0] = 0.0f;
+	result.m[1][1] = 1 / std::tan(fovY / 2);
+	result.m[1][2] = 0.0f;
+	result.m[1][3] = 0.0f;
+
+	result.m[2][0] = 0.0f;
+	result.m[2][1] = 0.0f;
+	result.m[2][2] = farClip / (farClip - nearClip);
+	result.m[2][3] = 1.0f;
+
+	result.m[3][0] = 0.0f;
+	result.m[3][1] = 0.0f;
+	result.m[3][2] = -nearClip * farClip / (farClip - nearClip);
+	result.m[3][3] = 0.0f;
+
+	return result;
+}
 Matrix4x4 MakeOrthographicMatrix(float left, float top, float right, float bottom, float nearClip, float farClip) {
 	Matrix4x4 mat = {
 		2 / (right - left),	0,0,0,

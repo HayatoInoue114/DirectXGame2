@@ -4,7 +4,7 @@ Vector3 CatmullRomSpline::GetPoint(float t)
 {
     size_t l = _controlPoints.size();
     float progress = (l - 1) * t;
-    size_t i = std::floor(progress);
+    size_t i = (size_t)std::floor(progress);
     float weight = progress - i;
 
     if (std::abs(weight) < 0.001f && i >= l - 1) {

@@ -4,6 +4,7 @@
 #include "../../object/Camera/Camera.h"
 #include "../../object/Model/Model.h"
 #include "../../object/Particle/Particle.h"
+#include "../../Project/Skydome/Skydome.h"
 
 #include <memory>
 
@@ -33,7 +34,9 @@ private:
 
 	std::unique_ptr<Camera> camera_;
 
-	
+	std::unique_ptr<Skydome> dome_;
+
+	std::unique_ptr<Model> domeModel_;
 
 	//std::unique_ptr<Particle> particle_{};
 

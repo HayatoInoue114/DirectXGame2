@@ -21,6 +21,12 @@ void PrimitiveManager::Initialize() {
 	model2_ = model2_->CreateModelFromObjPtr(ENEMY);
 	primitive2_->SetModel(model2_.get());
 
+	domeModel_ = std::make_unique<Model>();
+	domeModel_ = domeModel_->CreateModelFromObjPtr(SKYDOME);
+
+	dome_ = std::make_unique<Skydome>();
+	dome_->Initialize(domeModel_.get(),camera_.get());
+
 	particle_.Initialize();
 }
 
@@ -44,6 +50,7 @@ void PrimitiveManager::Draw2D()
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	primitive_->Draw();
 	primitive2_->Draw();
+	dome_->Draw();
 }
 
 void PrimitiveManager::Draw3D()

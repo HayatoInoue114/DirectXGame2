@@ -15,8 +15,6 @@
 #include "../../manager/ModelManager/ModelManager.h"
 #include "../../math/Transform/Transform.h"
 
-#define MAXINSTANCE 10 // インスタンス数
-
 class Model
 {
 public:

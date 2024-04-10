@@ -47,6 +47,7 @@ void Camera::Update() {
 
 	//カメラの移動スピード
 	float speed = 0.2f;
+	//ダッシュ
 	float accel = 5.0f;
 
 	if (Input::GetInstance()->PushKey(DIK_LSHIFT)) {

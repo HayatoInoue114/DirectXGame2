@@ -62,28 +62,11 @@ void GameScene::Initialize() {
 	textureHandle = PLAYER;
 	// 自キャラの初期化
 	playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
-	
 
-	// デバッグカメラの生成
-	//debugCamera_ = new DebugCamera(1280, 720);
-
-	//// 軸方向の表示を有効にする
-	//AxisIndicator::GetInstance()->SetVisible(true);
-	//// 軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
-	//AxisIndicator::GetInstance()->SetTargetViewProjection(&viewProjection);
-
-	// 敵の生成
-	/*EnemySpawn({0.5f, 0.0f, 60.0f});*/
 	
 
 	LoadEnemyPopData();
 
-	// enemy_ = new Enemy();
-	//// 敵キャラに自キャラのアドレスを渡す
-	// enemy_->SetPlayer(player_);
-	//// 敵の初期化
-	// enemy_->Initialize(model, {0.5f, 0.0f, 80.0f}, this);
-	// enemy_->SetGameScene(this);
 
 	// 天球の生成
 	//skydome_ = new Skydome();
@@ -109,6 +92,8 @@ void GameScene::Initialize() {
 	color_ = { 1,1,1,1 };
 
 	FireAndResetCallback();
+
+	primitiveManager_.Initialize();
 }
 
 void GameScene::Update() {
@@ -120,12 +105,14 @@ void GameScene::Update() {
 
 	//viewProjection.UpdateMatrix();
 	// レールカメラの更新
+	
 	railCamera_->Update();
 	//viewProjection.matView = railCamera_->GetViewProjection().matView;
 	//viewProjection.matProjection = railCamera_->GetViewProjection().matProjection;
 
 	//viewProjection.TransferMatrix();
 
+	primitiveManager_.Update();
 	
 	// 敵の発生処理
 	UpdateEnemyPopCommands();
@@ -254,6 +241,8 @@ void GameScene::Draw() {
 	Draw2D();
 	Draw3D();
 
+	primitiveManager_.Draw();
+
 	// コマンドリストの取得
 	//ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
@@ -302,61 +291,6 @@ void GameScene::Draw() {
 
 #pragma endregion
 }
-
-// void GameScene::CheckAllCollisions() {
-//
-//	// 自弾リストの取得
-//	const std::list<PlayerBullet*>& playerBullets = player_->GetBullets();
-//	// 敵弾リストの取得
-//	const std::list<EnemyBullet*>& enemyBullets = enemyBullets_;
-//	// 敵リストの取得
-//	const std::list<Enemy*>& enemy = enemies_;
-//
-// #pragma region
-//
-//	for (EnemyBullet* enemyBullet : enemyBullets) {
-//		for (PlayerBullet* playerBullet : playerBullets) {
-//			for (Enemy* enemy : enemies_) {
-//				Vector3 playerPosition = player_->GetWorldPosition();
-//				// 敵弾と自機
-//				Vector3 enemyBulletPosition = enemyBullet->GetWorldPosition();
-//
-//				Vector3 distanceToEnemyBullet = Subtract(playerPosition, enemyBulletPosition);
-//				float dotEnemyBullet = (distanceToEnemyBullet.x * distanceToEnemyBullet.x) +
-//				                       (distanceToEnemyBullet.y * distanceToEnemyBullet.y) +
-//				                       (distanceToEnemyBullet.z * distanceToEnemyBullet.z);
-//
-//				if (dotEnemyBullet <= 5) {
-//					player_->OnCollision();
-//					enemyBullet->OnCollision();
-//				}
-//
-//				// 自弾と敵
-//				Vector3 playerBulletPosition = playerBullet->GetWorldPosition();
-//
-//				Vector3 enemyPosition = enemy->GetWorldPosition();
-//
-//				Vector3 distanceToPlayerBullet = Subtract(enemyPosition, playerBulletPosition);
-//				float dotPlayerBullet = (distanceToPlayerBullet.x * distanceToPlayerBullet.x) +
-//				                        (distanceToPlayerBullet.y * distanceToPlayerBullet.y) +
-//				                        (distanceToPlayerBullet.z * distanceToPlayerBullet.z);
-//
-//				if (dotPlayerBullet <= 5) {
-//					enemy->OnCollision();
-//					playerBullet->OnCollision();
-//				}
-//			}
-//		}
-//	}
-//
-// #pragma endregion
-//
-// #pragma region
-// #pragma endregion
-//
-// #pragma region
-// #pragma endregion
-// }
 
 void GameScene::CheckAllCollisions() {
 	Vector3 posA, posB;

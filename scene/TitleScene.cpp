@@ -65,7 +65,8 @@ void TitleScene::Update() {
 	}
 
 	if (a_ >= 1) {
-		SetSceneNum(TEST_SCENE);
+		//SetSceneNum(TEST_SCENE);
+		SetSceneNum(GAME_SCENE);
 	}
 }
 

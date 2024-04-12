@@ -16,6 +16,8 @@ public:
 	void SetAspectRatio(float aspect) { aspectRatio_ = aspect; }
 	void SetNearClip(float nearC) { nearClip_ = nearC; }
 	void SetFarClip(float farC) { farClip_ = farC; }
+	void SetViewMatrix(Matrix4x4 m) { viewMatrix_ = m; }
+	void SetProjectionMatrix(Matrix4x4 m) { projectionMatrix_ = m; }
 
 	//getter
 	const Matrix4x4& GetWorldTransform() const { return worldMatrix_; }

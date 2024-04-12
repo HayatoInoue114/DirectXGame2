@@ -7,6 +7,7 @@
 #include "../Project/RailCamera/RailCamera.h"
 #include "../Project/Skydome/Skydome.h"
 #include "IScene.h"
+#include "../manager/PrimitiveManager/PrimitiveManager.h"
 
 class Enemy;
 
@@ -152,5 +153,7 @@ private: // メンバ変数
 	bool isClear_{};
 
 	Vector4 color_;
+
+	PrimitiveManager primitiveManager_;
 };
 

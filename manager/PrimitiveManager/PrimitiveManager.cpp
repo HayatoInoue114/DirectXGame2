@@ -32,6 +32,7 @@ void PrimitiveManager::Initialize() {
 
 void PrimitiveManager::Update() {
 	camera_->Update();
+
 	primitive_->SetCamera(camera_.get());
 	primitive_->Update();
 	/*primitive2_->SetCamera(camera_.get());
@@ -48,9 +49,10 @@ void PrimitiveManager::Draw() {
 void PrimitiveManager::Draw2D()
 {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
+	dome_->Draw();
 	primitive_->Draw();
 	//primitive2_->Draw();
-	//dome_->Draw();
+	
 }
 
 void PrimitiveManager::Draw3D()

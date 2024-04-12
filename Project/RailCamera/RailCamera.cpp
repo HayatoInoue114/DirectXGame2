@@ -17,7 +17,8 @@ void RailCamera::Update() {
 		worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 
 	// カメラオブジェクトのワールド行列からビュー行列を計算する
-	//viewProjection_.matView = Inverse(worldTransform_.matWorld_);
+	camera_->SetViewMatrix(Inverse(worldTransform_.matWorld_));
+
 
 	// カメラの座標を画面表示する処理
 	/*ImGui::Begin("Camera");

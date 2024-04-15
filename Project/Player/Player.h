@@ -23,7 +23,7 @@ public:
 	/// </summary>
 	/// <param name="model">モデル</param>
 	/// <param name="textureHandle">テクスチャハンドル</param>
-	void Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosition);
+	void Initialize(Model* model, Vector3 playerPosition);
 
 	/// <summary>
 	/// 更新

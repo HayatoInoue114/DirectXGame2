@@ -12,12 +12,11 @@ Player::~Player() {
 	}
 }
 
-void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosition) {
+void Player::Initialize(Model* model, Vector3 playerPosition) {
 	//assert(model);
 
 	// 引数として受け取ったデータをメンバ変数に記録する
 	model_ = model;
-	textureHandle_ = textureHandle;
 
 	//reticleTextureHandle_ = Sprite::Create();
 
@@ -37,7 +36,7 @@ void Player::Initialize(Model* model, uint32_t textureHandle, Vector3 playerPosi
 	sprite2DReticle_ = Sprite::CreateUnique({ 640, 360, 50 }, { 100,100 }, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();
-	worldTransform_.translate = { playerPosition };
+	model_->SetPosition(playerPosition);
 }
 
 void Player::Update() {
@@ -50,7 +49,7 @@ void Player::Update() {
 			return true;
 		}
 		return false;
-		});
+	});
 
 	// キャラクターの移動ベクトル
 	Vector3 move = { 0, 0, 0 };
@@ -199,11 +198,11 @@ void Player::Update() {
 
 void Player::Draw() {
 	// 弾描画
-	/*for (PlayerBullet* bullet : bullets_) {
-		bullet->Draw(viewProjection);
-	}*/
+	for (PlayerBullet* bullet : bullets_) {
+		bullet->Draw();
+	}
 
-	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw();
 }
 
 // void Player::SetWorldTransform_(WorldTransform worldTransform) {

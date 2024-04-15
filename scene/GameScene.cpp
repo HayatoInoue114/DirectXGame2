@@ -44,7 +44,7 @@ void GameScene::Initialize() {
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
 
-	textureHandle = PLAYER;
+	//textureHandle = PLAYER;
 	// 自キャラの初期化
 	playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
 
@@ -64,7 +64,7 @@ void GameScene::Initialize() {
 
 	Vector3 playerPosition(0, 0, 50.0f);
 
-	player_->Initialize(playerModel_.get(), textureHandle, playerPosition);
+	player_->Initialize(playerModel_.get(), playerPosition);
 
 	dedCount_ = 0;
 
@@ -72,7 +72,7 @@ void GameScene::Initialize() {
 
 	isClear_ = false;
 
-	blackSprite_ = Sprite::CreateUnique({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
+	//blackSprite_ = Sprite::CreateUnique({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
 
 	color_ = { 1,1,1,1 };
 
@@ -140,10 +140,6 @@ void GameScene::Update() {
 	skydome_->Update();
 
 	color_.w -= 0.1f;
-	blackSprite_->SetColor(color_);
-
-	blackSprite_->Update();
-
 
 }
 
@@ -165,7 +161,6 @@ void GameScene::Draw2D() {
 		bullet->Draw();
 	}
 
-	blackSprite_->Draw();
 }
 
 void GameScene::Draw3D() {

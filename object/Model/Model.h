@@ -46,6 +46,8 @@ public:  //ゲッター,セッター
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 	void SetTextureNum(uint32_t num) { modelName_ = num; }
 	void SetColor(const Vector4& color) { materialData_->color = color; }
+	void SetCamera(Camera* camera) { camera_ = camera; }
+	void SetPosition(const Vector3& pos) { worldTransform_.translate = pos; }
 
 private:
 	//void CreateVertexResource();

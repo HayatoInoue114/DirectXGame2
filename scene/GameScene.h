@@ -90,7 +90,7 @@ private: // メンバ変数
 
 	WorldTransform worldTransform_;
 
-	std::unique_ptr<Sprite> blackSprite_;
+	
 
 	/// <summary>
 	/// ゲームシーン用

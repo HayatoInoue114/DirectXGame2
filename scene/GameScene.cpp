@@ -13,7 +13,7 @@ GameScene::~GameScene() {
 		delete enemy;
 	}
 	//delete modelSkydome_;
-	delete railCamera_;
+	//delete railCamera_;
 	for (EnemyBullet* enemyBullet : enemyBullets_) {
 		delete enemyBullet;
 	}
@@ -51,10 +51,10 @@ void GameScene::Initialize() {
 	//viewProjection.Initialize();
 	//viewProjection.farZ = 500;
 
-	// レールカメラの生成
-	railCamera_ = new RailCamera();
-	// レールカメラの初期化
-	railCamera_->Initialize({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+	//// レールカメラの生成
+	//railCamera_ = new RailCamera();
+	//// レールカメラの初期化
+	//railCamera_->Initialize({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
@@ -72,7 +72,7 @@ void GameScene::Initialize() {
 	//skydome_ = new Skydome();
 	skydome_ = std::make_unique<Skydome>();
 	// 天球の初期化
-	//skydome_->Initialize(modelSkydome_.get());
+	skydome_->Initialize(modelSkydome_.get());
 
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
@@ -105,14 +105,15 @@ void GameScene::Update() {
 
 	//viewProjection.UpdateMatrix();
 	// レールカメラの更新
+	primitiveManager_.Update();
+
 	
-	railCamera_->Update();
 	//viewProjection.matView = railCamera_->GetViewProjection().matView;
 	//viewProjection.matProjection = railCamera_->GetViewProjection().matProjection;
 
 	//viewProjection.TransferMatrix();
 
-	primitiveManager_.Update();
+	
 	
 	// 敵の発生処理
 	UpdateEnemyPopCommands();
@@ -487,7 +488,7 @@ void GameScene::Finalize() {
 		delete enemy;
 	}
 	//delete modelSkydome_;
-	delete railCamera_;
+	//delete railCamera_;
 	for (EnemyBullet* enemyBullet : enemyBullets_) {
 		delete enemyBullet;
 	}

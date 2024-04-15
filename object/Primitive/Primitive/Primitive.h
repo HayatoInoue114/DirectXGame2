@@ -20,6 +20,12 @@ public:
 
 	void SetModel(Model* model) { this->model_ = model; }
 
+	/// <summary>
+	/// 親となるワールドトランスフォームをセット
+	/// </summary>
+	/// <param name="model">親となるワールドトランスフォーム</param>
+	void SetParent(const WorldTransform* parent);
+
 private:
 	WorldTransform worldTransform_;
 

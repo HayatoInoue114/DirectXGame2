@@ -30,3 +30,8 @@ void Primitive::Draw() {
 		model_->Draw();
 	}
 }
+
+void Primitive::SetParent(const WorldTransform* parent)
+{
+	worldTransform_.parent_ = parent;
+}

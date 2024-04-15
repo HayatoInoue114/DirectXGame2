@@ -2,18 +2,21 @@
 #include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 void PrimitiveManager::Initialize() {
-	camera_ = std::make_unique<Camera>();
-	camera_->Initialize();
+	/*camera_ = std::make_unique<Camera>();
+	camera_->Initialize();*/
 
-
+	railCamera_ = std::make_unique<RailCamera>();
+	railCamera_->Initialize({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 	/*primitiveCommon_ = std::make_unique<PrimitiveCommon>();
 	primitiveCommon_->Initialize();*/
 
 	primitive_ = std::make_unique<Primitive>();
-	primitive_->SetCamera(camera_.get());
 	primitive_->Initialize();
-	model_ = model_->CreateModelFromObjPtr(PLAYER);
+	model_ = Model::CreateModelFromObjPtr(PLAYER);
 	primitive_->SetModel(model_.get());
+	primitive_->SetCamera(railCamera_->GetCamera());
+	
+	
 
 	//primitive2_ = std::make_unique<Primitive>();
 	//primitive2_->SetCamera(camera_.get());
@@ -22,18 +25,23 @@ void PrimitiveManager::Initialize() {
 	//primitive2_->SetModel(model2_.get());
 
 	domeModel_ = std::make_unique<Model>();
-	domeModel_ = domeModel_->CreateModelFromObjPtr(SKYDOME);
+	domeModel_ = Model::CreateModelFromObjPtr(SKYDOME);
 
 	dome_ = std::make_unique<Skydome>();
-	dome_->Initialize(domeModel_.get(),camera_.get());
+	dome_->Initialize(domeModel_.get(),railCamera_->GetCamera());
+
+	primitive_->SetParent(&railCamera_->GetWorldTransform());
 
 	particle_.Initialize();
 }
 
 void PrimitiveManager::Update() {
-	camera_->Update();
+	//camera_->Update();
+	//railCamera_->SetCamera(camera_.get());
+	
 
-	primitive_->SetCamera(camera_.get());
+	
+	railCamera_->Update();
 	primitive_->Update();
 	/*primitive2_->SetCamera(camera_.get());
 	primitive2_->Update();*/
@@ -58,5 +66,5 @@ void PrimitiveManager::Draw2D()
 void PrimitiveManager::Draw3D()
 {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
-	particle_.Draw(camera_.get(), UVCHECKER);
+	//particle_.Draw(camera_.get(), UVCHECKER);
 }

@@ -258,9 +258,6 @@
     <ClCompile Include="math\Line\HermitePoly\HermitePoly.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ResourcePeroperty\ResourceProperty.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="object\ModelLine\ModelLine.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -477,9 +474,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="math\Line\HermitePoly\HermitePoly.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ResourcePeroperty\ResourcePeroperty.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="object\ModelLine\ModelLine.h">

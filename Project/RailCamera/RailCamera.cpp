@@ -42,7 +42,7 @@ void RailCamera::Initialize(Vector3 rotate, Vector3 translate)
 	// ビュープロジェクションの初期化
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	camera_->SetFarClip(100.0f);
+	//camera_->SetFarClip(100.0f);
 
 	// スプライン曲線制御点(通過点)
 	controlPoints_ = {

@@ -86,23 +86,23 @@ private:
 	//Camera* camera_{};
 	std::unique_ptr<Camera> camera_{};
 
-	std::vector<Vector3> controlPoints_;
+	std::vector<Vector3> controlPoints_{};
 
-	float t_;
+	float t_{};
 
-	float nowFrame_;
+	float nowFrame_{};
 	const float kEndFrame_ = 360.0f;
 
 	// 視点
 	float eye_T_;
 	Vector3 eye_{};
-	uint32_t eyeIndex_;
+	uint32_t eyeIndex_{};
 
 	// 注視点
-	float target_T_;
+	float target_T_{};
 	Vector3 target_{};
-	uint32_t targetIndex_;
+	uint32_t targetIndex_{};
 
-	bool supurain_;
+	bool supurain_{};
 };
 

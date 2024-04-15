@@ -12,6 +12,8 @@ class Primitive
 public:
 	void Initialize();
 
+	void Initialize(const Vector3& pos);
+
 	void Update();
 
 	void Draw();
@@ -26,6 +28,8 @@ public:
 	/// <param name="model">親となるワールドトランスフォーム</param>
 	void SetParent(const WorldTransform* parent);
 
+	void SetPosition(const Vector3& pos) { worldTransform_.translate = pos; }
+
 private:
 	WorldTransform worldTransform_;
 
@@ -36,5 +40,7 @@ private:
 	//PrimitiveCommon* primitiveCommon_;
 
 	Model* model_ = nullptr;
+
+	bool isParent_{};
 };
 

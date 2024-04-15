@@ -1,5 +1,5 @@
 #pragma once
-#include "../../math/Transform/Transform.h"
+#include "../../math/WorldTransform/WorldTransform.h"
 #include "../../math/MyMath.h"
 
 class Camera
@@ -10,8 +10,8 @@ public:
 	void Update();
 	
 	//setter
-	void SetRotate(const Vector3& rotate) { transform_.rotate = rotate; }
-	void SetTranslate(const Vector3& translate) { transform_.translate = translate; }
+	void SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
+	void SetTranslate(const Vector3& translate) { worldTransform_.translate = translate; }
 	void SetFovY(float fov) { FovY_ = fov; }
 	void SetAspectRatio(float aspect) { aspectRatio_ = aspect; }
 	void SetNearClip(float nearC) { nearClip_ = nearC; }
@@ -22,14 +22,15 @@ public:
 	//getter
 	const Matrix4x4& GetWorldTransform() const { return worldMatrix_; }
 	const Matrix4x4& GetViewMatrix() const { return viewMatrix_; }
+	const Matrix4x4& GetWorldMatrix() const { return worldMatrix_; }
 	const Matrix4x4& GetProjectionMatrix() const { return projectionMatrix_; }
 	const Matrix4x4& GetViewProjectionMatrix() const { return viewProjectionMatrix_; }
-	const Vector3& GetRotate() const { return transform_.rotate; }
-	const Vector3& GetTranslate() const { return transform_.translate; }
+	const Vector3& GetRotate() const { return worldTransform_.rotate; }
+	const Vector3& GetTranslate() const { return worldTransform_.translate; }
 
 
 private:
-	TransformS transform_;
+	TransformS worldTransform_;
 	Matrix4x4 worldMatrix_;
 	Matrix4x4 viewMatrix_;
 	Matrix4x4 projectionMatrix_;

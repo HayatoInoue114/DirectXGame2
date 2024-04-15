@@ -7,16 +7,14 @@ void PrimitiveManager::Initialize() {
 
 	railCamera_ = std::make_unique<RailCamera>();
 	railCamera_->Initialize({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
-	/*primitiveCommon_ = std::make_unique<PrimitiveCommon>();
-	primitiveCommon_->Initialize();*/
 
 	primitive_ = std::make_unique<Primitive>();
-	primitive_->Initialize();
 	model_ = Model::CreateModelFromObjPtr(PLAYER);
 	primitive_->SetModel(model_.get());
 	primitive_->SetCamera(railCamera_->GetCamera());
-	
-	
+	primitive_->SetParent(&railCamera_->GetWorldTransform());
+	Vector3 pos = { 0,0,30 };
+	primitive_->Initialize(pos);
 
 	//primitive2_ = std::make_unique<Primitive>();
 	//primitive2_->SetCamera(camera_.get());
@@ -30,7 +28,7 @@ void PrimitiveManager::Initialize() {
 	dome_ = std::make_unique<Skydome>();
 	dome_->Initialize(domeModel_.get(),railCamera_->GetCamera());
 
-	primitive_->SetParent(&railCamera_->GetWorldTransform());
+
 
 	particle_.Initialize();
 }

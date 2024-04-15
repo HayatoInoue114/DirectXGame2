@@ -14,6 +14,7 @@
 #include "../../math/WorldTransform/WorldTransform.h"
 #include "../../manager/ModelManager/ModelManager.h"
 #include "../../math/Transform/Transform.h"
+#include "../Camera/Camera.h"
 
 class Model
 {
@@ -26,6 +27,8 @@ public:
 	void Draw();
 
 	void ImGuiAdjustParameter();
+
+	void SetParent(const WorldTransform* parent);
 
 	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
 
@@ -114,5 +117,9 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU_{};
 
 	uint32_t modelName_ = {};
+
+	Camera* camera_ = nullptr;
+
+	bool isParent_;
 };
 

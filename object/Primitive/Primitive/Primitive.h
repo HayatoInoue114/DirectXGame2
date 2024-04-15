@@ -41,6 +41,6 @@ private:
 
 	Model* model_ = nullptr;
 
-	bool isParent_{};
+	bool isParent_ = false;
 };
 

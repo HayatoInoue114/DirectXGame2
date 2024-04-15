@@ -97,6 +97,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="manager\CollisionManager\Collider\Collider.cpp" />
+    <ClCompile Include="manager\CollisionManager\CollisionManager.cpp" />
     <ClCompile Include="math\Line\Catmull-Rom Spline\CatmullRom.cpp" />
     <ClCompile Include="components\Audio\3DAudio\Audio3D.cpp" />
     <ClCompile Include="base\DirectX12\DirectX12.cpp" />
@@ -178,6 +180,8 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\TD3\Project\Math\MathOperations\MathOperations.h" />
+    <ClInclude Include="manager\CollisionManager\CollisionConfig\CollisionConfig.h" />
+    <ClInclude Include="manager\CollisionManager\Collider\Collider.h" />
     <ClInclude Include="math\Line\Catmull-Rom Spline\CatmullRom.h" />
     <ClInclude Include="components\Audio\3DAudio\Audio3D.h" />
     <ClInclude Include="components\DirectionalLight\DirectionalLight.h" />

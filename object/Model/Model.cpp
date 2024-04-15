@@ -152,17 +152,20 @@ void Model::WriteDataToResource() {
 }
 
 void Model::CreateWVPMatrix() {
-	/*cameraTransform_.scale = { 1.0f,1.0f,1.0f };
-	cameraTransform_.rotate = {};
-	cameraTransform_.translate = { 0.0f,0.0f,-10.0f, };
-
-	worldMatrix_ = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-	cameraMatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
-	viewMatrix_ = Inverse(cameraMatrix_);
-	projectionMatrix_ = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
-	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatrix_));
-	wvpData_->WVP = worldViewProjectionMatrix_;
-	wvpData_->World = worldMatrix_;*/
+	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	Matrix4x4 worldViewProjectionMatrix{};
+	if (camera_) {
+		if (isParent_) {
+			worldMatrix = Multiply(worldMatrix, camera_->GetWorldMatrix());
+		}
+		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
+		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+	}
+	else {
+		worldViewProjectionMatrix = worldMatrix;
+	}
+	wvpData_->WVP = worldViewProjectionMatrix;
+	wvpData_->World = worldMatrix;
 }
 
 void Model::SetMaterialData() {
@@ -223,5 +226,11 @@ void Model::ImGuiAdjustParameter() {
 	ImGui::DragFloat2("UVTranslate", &uvTransform_.translation_.x, 0.01f, -10.0f, 10.0f);
 	ImGui::DragFloat2("UVScale", &uvTransform_.scale_.x, 0.01f, -10.0f, 10.0f);
 	ImGui::SliderAngle("UVRotate.z", &uvTransform_.rotation_.z);*/
+}
+
+void Model::SetParent(const WorldTransform* parent)
+{
+	worldTransform_.parent_ = parent;
+	isParent_ = true;
 }
 

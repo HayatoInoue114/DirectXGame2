@@ -128,7 +128,7 @@ private: // メンバ変数
 	std::unique_ptr<Model> modelSkydome_ = nullptr;
 
 	// レールカメラ
-	RailCamera* railCamera_ = nullptr;
+	std::unique_ptr<RailCamera> railCamera_ = nullptr;
 
 	// 弾
 	std::list<EnemyBullet*> enemyBullets_;

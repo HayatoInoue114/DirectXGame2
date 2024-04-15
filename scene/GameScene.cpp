@@ -27,17 +27,7 @@ GameScene::~GameScene() {
 }
 
 void GameScene::Initialize() {
-
-	//dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
-	//audio_ = Audio::GetInstance();
-
-	//レティクルのテクスチャ
-	//TextureManager::Load("reticle.png");
-
-	// ファイル名を指定してテクスチャを読み込む
-	//textureHandle = TextureManager::Load("godest.png");
-	// 3Dモデルの生成
 
 	model = Model:: CreateModelFromObj(CUBE);
 
@@ -47,14 +37,9 @@ void GameScene::Initialize() {
 	// 3Dモデルの生成
 	modelSkydome_ = Model::CreateModelFromObjPtr(SKYDOME);
 
-	// ビュープロジェクションの初期化
-	//viewProjection.Initialize();
-	//viewProjection.farZ = 500;
-
 	//// レールカメラの生成
-	//railCamera_ = new RailCamera();
-	//// レールカメラの初期化
-	//railCamera_->Initialize({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
+	railCamera_ = std::make_unique<RailCamera>();
+	railCamera_->Initialize({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 
 	// 自キャラの生成
 	player_ = std::make_unique<Player>();
@@ -72,7 +57,7 @@ void GameScene::Initialize() {
 	//skydome_ = new Skydome();
 	skydome_ = std::make_unique<Skydome>();
 	// 天球の初期化
-	skydome_->Initialize(modelSkydome_.get());
+	skydome_->Initialize(modelSkydome_.get(),railCamera_->GetCamera());
 
 	// 自キャラとレールカメラの親子関係を結ぶ
 	player_->SetParent(&railCamera_->GetWorldTransform());
@@ -93,7 +78,7 @@ void GameScene::Initialize() {
 
 	FireAndResetCallback();
 
-	primitiveManager_.Initialize();
+	
 }
 
 void GameScene::Update() {
@@ -103,17 +88,10 @@ void GameScene::Update() {
 		isClear_ = true;
 	}
 
-	//viewProjection.UpdateMatrix();
 	// レールカメラの更新
-	primitiveManager_.Update();
+	railCamera_->Update();
 
-	
-	//viewProjection.matView = railCamera_->GetViewProjection().matView;
-	//viewProjection.matProjection = railCamera_->GetViewProjection().matProjection;
 
-	//viewProjection.TransferMatrix();
-
-	
 	
 	// 敵の発生処理
 	UpdateEnemyPopCommands();
@@ -166,39 +144,6 @@ void GameScene::Update() {
 
 	blackSprite_->Update();
 
-	//ImGui::Begin("View");
-	////ImGui::SliderFloat3("translation", , 10, 10);
-	//ImGui::SliderFloat3("rotation", &viewProjection.rotate.x, 10, 10);
-	//ImGui::SliderFloat3("Cameratranslation", &railCamera_->GetWorldTransform().translate.x, 10, 10);
-	//ImGui::SliderFloat3("Camerarotation", &railCamera_->GetWorldTransform().rotate.x, 10, 10);
-	//ImGui::End();
-	
-
-	// デバッグカメラの更新
-	//	debugCamera_->Update();
-	// #ifdef _DEBUG
-	//	if (input_->TriggerKey(DIK_LALT)) {
-	//		if (isDebugCameraActive_ == false) {
-	//			isDebugCameraActive_ = true;
-	//		} else {
-	//			isDebugCameraActive_ = false;
-	//		}
-	//
-	//	}
-	// #endif // DEBUG
-	//
-	//	//カメラの処理
-	//	if (isDebugCameraActive_) {
-	//		debugCamera_->Update();
-	//		viewProjection.matView = debugCamera_->GetViewProjection().matView;
-	//		viewProjection.matProjection = debugCamera_->GetViewProjection().matProjection;
-	//		//ビュープロジェクション行列の転送
-	//		viewProjection.TransferMatrix();
-	//	} else {
-	//		//ビュープロジェクション行列の更新と転送
-	//		viewProjection.UpdateMatrix();
-	//	}
-
 
 }
 
@@ -225,27 +170,13 @@ void GameScene::Draw2D() {
 
 void GameScene::Draw3D() {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
-	
-	//model_->Draw(1);
 }
 
-//void GameScene::Draw() {
-//
-//	Draw2D();
-//
-//	Draw3D();
-//
-//}
 
 void GameScene::Draw() {
 
 	Draw2D();
 	Draw3D();
-
-	primitiveManager_.Draw();
-
-	// コマンドリストの取得
-	//ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
@@ -487,8 +418,6 @@ void GameScene::Finalize() {
 	for (Enemy* enemy : enemies_) {
 		delete enemy;
 	}
-	//delete modelSkydome_;
-	//delete railCamera_;
 	for (EnemyBullet* enemyBullet : enemyBullets_) {
 		delete enemyBullet;
 	}

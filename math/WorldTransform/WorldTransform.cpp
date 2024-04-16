@@ -25,7 +25,7 @@ void WorldTransform::UpdateMatrix() {
 
 	// 親子関係の計算
 	if (parent_) {
-		matWorld_ *= parent_->matWorld_;
+		matWorld_ =Multiply(parent_->matWorld_,matWorld_);
 	}
 
 	TransferMatrix();

@@ -25,6 +25,32 @@ private:
 	void Draw2D();
 
 	void Draw3D();
+
+	/// <summary>
+	/// 敵弾を追加する
+	/// </summary>
+	/// <param name="enemyBullet">敵弾</param>
+	void AddEnemyBullet(EnemyBullet* enemyBullet);
+
+	/// <summary>
+	/// 敵発生データの読み込み
+	/// </summary>
+	void LoadEnemyPopData();
+
+	/// <summary>
+	/// 敵発生コマンドの更新
+	/// </summary>
+	void UpdateEnemyPopCommands();
+
+	// 敵を発生させる
+	void EnemySpawn(Vector3 position);
+
+	/// <summary>
+	/// 敵弾発射
+	/// </summary>
+	void EnemyFire();
+	void FireAndResetCallback();
+	void Finalize();
 private:
 	std::unique_ptr<Primitive> primitive_;
 
@@ -48,6 +74,21 @@ private:
 	Particle particle_;
 
 	std::unique_ptr<Player> player_;
-	std::unique_ptr<Enemy> enemy_;
+	std::list<Enemy*> enemies_;
+	std::list<Model*> enemiesModel_;
+
+	// 弾
+	std::list<EnemyBullet*> enemyBullets_;
+
+	// 敵発生コマンド
+	std::stringstream enemyPopCommands{};
+
+	bool isWaiting_ = false;
+	int waitTimer_ = 0;
+
+	// 弾を発射する間隔
+	static const uint32_t kFireInterval = 100;
+	// 次元発動のリスト
+	std::list<TimedCall*> timedCalls_;
 };
 

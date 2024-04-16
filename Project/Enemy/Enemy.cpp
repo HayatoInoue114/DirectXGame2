@@ -60,14 +60,14 @@ void Enemy::Update() {
 }
 
 void Enemy::Draw() {
-	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw();
 }
 
 void Enemy::ChangePosition(Vector3 vector) {
 	worldTransform_.translate = Add(worldTransform_.translate, vector);
 }
 
-void Enemy::Fire() { gameScene_->EnemyFire(); }
+void Enemy::Fire() { /*gameScene_->EnemyFire();*/ }
 
 Vector3 Enemy::GetWorldPosition() {
 	// ワールド座標を入れる変数

@@ -35,7 +35,7 @@ void PlayerBullet::Update() {
 }
 
 void PlayerBullet::Draw() {
-	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw();
 }
 
 Vector3 PlayerBullet::GetWorldPosition() {

@@ -63,7 +63,7 @@ void EnemyBullet::Update() {
 }
 
 void EnemyBullet::Draw() {
-	//model_->Draw(worldTransform_, viewProjection, textureHandle_);
+	model_->Draw();
 }
 
 Vector3 EnemyBullet::GetWorldPosition() {

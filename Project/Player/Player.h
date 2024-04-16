@@ -7,6 +7,7 @@
 #include "../../object/Sprite/Sprite.h"
 #include <list>
 #include "../../manager/ModelManager/ModelManager.h"
+#include "../RailCamera/RailCamera.h"
 
 class Particle;
 
@@ -80,7 +81,12 @@ public:
 	/// </summary>
 	Vector2 GetCursorPosition();
 
+	WorldTransform GetWorldTransform() { return worldTransform_; }
+
+	void SetCamera(Camera* camera) { camera_ = camera; }
 private:
+	Camera* camera_;
+	
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル

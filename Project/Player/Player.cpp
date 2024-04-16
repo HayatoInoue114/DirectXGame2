@@ -253,6 +253,8 @@ void Player::Attack() {
 
 		Model* model{};
 		model = Model::CreateModelFromObj(CUBE);
+		model->SetCamera(camera_);
+		//model->SetParent(camera_->GetWorldTransform());
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();

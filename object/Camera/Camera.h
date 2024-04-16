@@ -20,7 +20,7 @@ public:
 	void SetProjectionMatrix(Matrix4x4 m) { projectionMatrix_ = m; }
 
 	//getter
-	const Matrix4x4& GetWorldTransform() const { return worldMatrix_; }
+	//const Matrix4x4& GetWorldTransform() const { return worldTransform_; }
 	const Matrix4x4& GetViewMatrix() const { return viewMatrix_; }
 	const Matrix4x4& GetWorldMatrix() const { return worldMatrix_; }
 	const Matrix4x4& GetProjectionMatrix() const { return projectionMatrix_; }

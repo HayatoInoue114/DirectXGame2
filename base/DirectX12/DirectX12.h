@@ -51,24 +51,10 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSRVDescriptorHeap() { return srvDescriptorHeap_; }
 
-	//void LoadAndTransferTexture();
-
-	//ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
-
-	//void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
-
-	//void CreateSRV();
-
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU2() { return textureSrvHandleGPU2_; }
 
 	ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
-
-	
-
-	//D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	//D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() { return srvDescriptorHeap_.Get(); }
 private:
@@ -90,10 +76,6 @@ private:
 	//FPS固定更新
 	void UpdateFixFPS();
 
-	/*void RTV();*/
-
-
-
 	void DebugLayer();
 
 	void Error();
@@ -105,8 +87,6 @@ private:
 	void CommandConfirm();
 
 	void Fence();
-
-	/*void Update();*/
 
 	void CreateDepthStencilResource();
 
@@ -132,6 +112,11 @@ private:
 	void NextFlameCommandList();
 
 	void ClearDepthBuffer();
+
+	void CreateSRV();
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device,
+		uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor);
 private:
 	Microsoft::WRL::ComPtr<ID3D12Device> device_{};
 	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_{};
@@ -166,13 +151,13 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_{};
 
 	//RTVを２つ作るのでディスクリプタ２つ用意
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_[2]{};
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_[3]{};
 
 	
 	UINT backBufferIndex_{};
 	
 	Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResource_[2]{};
-	//ID3D12Resource* swapChainResource_[2]{};
+
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier_{};
 	
@@ -182,8 +167,6 @@ private:
 
 	//FenceのSignalを待つためのイベントを作成する
 	HANDLE fenceEvent_{};
-
-
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap_{};
 

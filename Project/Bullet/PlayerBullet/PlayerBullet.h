@@ -3,6 +3,7 @@
 #include "../../../math/MT/MT.h"
 #include "../../../math/WorldTransform/WorldTransform.h"
 #include <assert.h>
+#include "../../../object/Camera/Camera.h"
 
 
 class PlayerBullet {
@@ -38,7 +39,10 @@ public:
 	/// </summary>
 	Vector3 GetWorldPosition();
 
+	void SetCamera(Camera* camera) { camera_ = camera; }
+
 private:
+	Camera* camera_;
 	// ワールド変換データ
 	WorldTransform worldTransform_;
 	// モデル

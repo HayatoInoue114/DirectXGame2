@@ -1,6 +1,6 @@
 #pragma once
 #include "../../Input/Input.h"
-#include "../../math/MT/MT.h"
+#include "../../math/MyMath.h"
 #include "../../object/Model/Model.h"
 #include "../Bullet/PlayerBullet/PlayerBullet.h"
 #include "../../math/WorldTransform/WorldTransform.h"
@@ -112,4 +112,6 @@ private:
 	WorldTransform worldSprite2DReticle_;
 
 	Vector4 reticleColor_{};
+
+	std::unique_ptr<Model> reticleModel_;
 };

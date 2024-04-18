@@ -40,6 +40,23 @@ Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2) {
 	return resultMatrix;
 }
 
+Vector3 Multiply(const Vector3& v, const Matrix4x4& m)
+{
+	// Vector3を4x1の行列に変換する
+	Vector4 v4 = { v.x, v.y, v.z, 1 };
+
+	// Matrix4x4とVector4の行列の積を計算する
+	Vector4 result = {
+		m.m[0][0] * v4.x + m.m[0][1] * v4.y + m.m[0][2] * v4.z + m.m[0][3] * v4.z,
+		m.m[1][0] * v4.x + m.m[1][1] * v4.y + m.m[1][2] * v4.z + m.m[1][3] * v4.z,
+		m.m[2][0] * v4.x + m.m[2][1] * v4.y + m.m[2][2] * v4.z + m.m[2][3] * v4.z,
+		m.m[3][0] * v4.x + m.m[3][1] * v4.y + m.m[3][2] * v4.z + m.m[3][3] * v4.z
+	};
+
+    // 結果のVector4をVector3に変換して返す
+	return Vector3(result.x, result.y, result.z);
+}
+
 Matrix4x4 MakeRotateXMatrix(float radian) {
 	Matrix4x4 mat = {
 		1,0,0,0,

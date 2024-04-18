@@ -11,6 +11,7 @@ void PrimitiveManager::Initialize() {
 	// 自キャラとレールカメラの親子関係を結ぶ
 	model_->SetCamera(railCamera_->GetCamera());
 	model_->SetParent(&railCamera_->GetWorldTransform());
+	player_->SetParent(&railCamera_->GetWorldTransform());
 	player_->SetCamera(railCamera_->GetCamera());
 
 	Vector3 playerPosition = {0.0f,0.0f,50.0f};
@@ -61,7 +62,7 @@ void PrimitiveManager::Update() {
 			return true;
 		}
 		return false;
-		});
+	});
 
 	for (EnemyBullet* bullet : enemyBullets_) {
 		bullet->SetPlayer(player_.get());
@@ -87,6 +88,7 @@ void PrimitiveManager::Draw2D()
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	dome_->Draw();
 	player_->Draw();
+	//player_->DrawUI();
 	
 	//player_->DrawUI();
 	for (Enemy* enemy : enemies_) {
@@ -116,6 +118,7 @@ void PrimitiveManager::EnemySpawn(Vector3 position) {
 	newModel = Model::CreateModelFromObj(ENEMY);
 	newModel->SetColor({ 1,0,0,1 });
 	newModel->SetCamera(railCamera_->GetCamera());
+	newModel->SetParent(&railCamera_->GetWorldTransform());
 	newEnemy->SetPlayer(player_.get());
 	newEnemy->Initialize(newModel, position);
 	//newEnemy->SetGameScene(this);

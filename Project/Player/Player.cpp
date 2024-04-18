@@ -26,7 +26,8 @@ void Player::Initialize(Model* model, Vector3 playerPosition) {
 	// 3Dレティクルのワールドトランスフォーム初期化
 	worldTransform3DReticle_.Initialize();
 
-	worldSprite2DReticle_.translate = { 640, 360, 0 };
+	//worldSprite2DReticle_.parent_ = &camera_->GetWorldTransform();
+	//worldSprite2DReticle_ = camera_->GetWorldTransform();
 	worldSprite2DReticle_.scale = { 10,10,0 };
 	reticleColor_ = { 1,1,1,1 };
 
@@ -36,7 +37,16 @@ void Player::Initialize(Model* model, Vector3 playerPosition) {
 	sprite2DReticle_ = Sprite::CreateUnique({ 640, 360, 50 }, { 100,100 }, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();
-	model_->SetPosition(playerPosition);
+	model_->SetTranslate(playerPosition);
+	worldTransform_.translate = playerPosition;
+
+	reticleModel_ = Model::CreateModelFromObjPtr(CUBE);
+	reticleModel_->SetCamera(camera_);
+	reticleModel_->SetParent(&camera_->GetWorldTransform());
+	Vector3 pos = worldTransform3DReticle_.translate;
+	pos.z = 100.0f;
+	reticleModel_->SetWorldTransform(worldTransform3DReticle_);
+	reticleModel_->SetTranslate(pos);
 }
 
 void Player::Update() {
@@ -72,6 +82,8 @@ void Player::Update() {
 
 	// スプライトの現在座標を取得
 	Vector2 spritePosition = sprite2DReticle_->GetPosition();
+	//Vector2 spritePosition = { worldSprite2DReticle_.translate.x,worldSprite2DReticle_.translate.y };
+
 
 	//ジョイスティック状態取得
 	if (Input::GetInstance()->GetJoystickState(joyState)) {
@@ -116,7 +128,7 @@ void Player::Update() {
 
 	// 移動限界座標
 	const float kMoveLimitX = 17;
-	const float kMoveLimitY = 17;
+	const float kMoveLimitY = 10;
 
 	// 範囲を超えない処理
 	worldTransform_.translate.x =
@@ -125,20 +137,25 @@ void Player::Update() {
 	worldTransform_.translate.y =
 		std::clamp(worldTransform_.translate.y, -kMoveLimitY, kMoveLimitY);
 
+	model_->SetWorldTransform(worldTransform_);
 
+	if (input_->PushKeyTrigger(DIK_SPACE)) {
+		static int a = 0;
+		a++;
+	}
 
 	// 行列を定数バッファに転送
 	worldTransform_.UpdateMatrix();
 
-	Rotate();
+	//Rotate();
 
-	// 自機から3Dレティクルへの距離
+	//// 自機から3Dレティクルへの距離
 	//const float kDistanceplayerTo3DReticle = 50.0f;
 
 	//// 自機のワールド行列の回転を反映
-	//offset = Multyply(offset, worldTransform_.matWorld_);
+	//offset = Multiply(offset, worldTransform_.matWorld_);
 	//// ベクトルの長さを整える
-	//offset = Multiply(kDistanceplayerTo3DReticle, Normalize(offset));
+	//offset = Multiply(Normalize(offset), kDistanceplayerTo3DReticle);
 	//// 3Dレティクルの座標を設定
 	//worldTransform3DReticle_.translate = Add(offset, worldTransform_.translate);
 
@@ -194,20 +211,24 @@ void Player::Update() {
 	for (PlayerBullet* bullet : bullets_) {
 		bullet->Update();
 	}
+
+	ImGui::Begin("Player");
+	ImGui::DragFloat3("translate", &worldTransform_.translate.x);
+	ImGui::DragFloat3("reticle", &worldTransform3DReticle_.translate.x);
+	ImGui::End();
 }
 
 void Player::Draw() {
 	// 弾描画
 	for (PlayerBullet* bullet : bullets_) {
+		//bullet->SetCamera(camera_);
 		bullet->Draw();
 	}
 
+	reticleModel_->Draw();
+
 	model_->Draw();
 }
-
-// void Player::SetWorldTransform_(WorldTransform worldTransform) {
-//	worldTransform_ = {worldTransform};
-// }
 
 void Player::Attack() {
 	XINPUT_STATE joyState{};
@@ -239,26 +260,32 @@ void Player::Attack() {
 		bullets_.push_back(newBullet);
 	}
 
-	if (input_->PushKey(DIK_SPACE)) {
+	if (input_->PushKeyTrigger(DIK_SPACE)) {
 		// 弾の速度
 		const float kBulletSpeed = 1.0f;
 		Vector3 velocity(0, 0, kBulletSpeed);
 
 		// 自機から照準オブジェクトへのベクトル
-		velocity = Subtract(worldTransform3DReticle_.translate, GetWorldPosition());
-		//velocity = kBulletSpeed * Normalize(velocity);
+		//velocity = Subtract(worldTransform3DReticle_.translate, GetWorldPosition());
+		velocity = kBulletSpeed * Normalize(velocity);
+
 
 		// 速度ベクトルを自機の向きに合わせて回転させる
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 		Model* model{};
 		model = Model::CreateModelFromObj(CUBE);
-		model->SetCamera(camera_);
-		//model->SetParent(camera_->GetWorldTransform());
+		
 
+		Vector3 newPos = GetWorldPosition();
+
+		model->SetCamera(camera_);
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
-		newBullet->Initialize(model, GetWorldPosition(), velocity);
+		newBullet->Initialize(model, newPos, velocity);
+		
+		//model->SetParent(&camera_->GetWorldTransform());
+		newBullet->SetCamera(camera_);
 
 		// 弾を登録する
 		bullets_.push_back(newBullet);

@@ -21,6 +21,8 @@ public:
 
 	void Draw();
 
+	void Finalize();
+
 private:
 	void Draw2D();
 
@@ -50,7 +52,7 @@ private:
 	/// </summary>
 	void EnemyFire();
 	void FireAndResetCallback();
-	void Finalize();
+
 private:
 	std::unique_ptr<Primitive> primitive_;
 

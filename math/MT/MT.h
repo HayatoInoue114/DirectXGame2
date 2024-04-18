@@ -58,6 +58,8 @@ Matrix4x4 MakeIdentity4x4();
 /// </summary>
 Matrix4x4 Multiply(const Matrix4x4& m1, const Matrix4x4& m2);
 
+Vector3 Multiply(const Vector3& v, const Matrix4x4& m);
+
 //X軸回転行列
 Matrix4x4 MakeRotateXMatrix(float radian);
 //Y軸回転行列

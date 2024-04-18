@@ -5,14 +5,13 @@ void TestScene::Initialize() {
 	// 入力
 	input_ = Input::GetInstance();
 
-	primitiveManager_.Initialize();
-
-	/*particle_ = std::make_unique<Particle>();
-	particle_->Initialize();*/
+	//primitiveManager_.Initialize();
+	object_ = std::make_unique<Object3d>();
+	object_->Init();
 }
 
 void TestScene::Update() {
-	primitiveManager_.Update();
+	//primitiveManager_.Update();
 
 	/*if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || input_->PushKeyTrigger(DIK_SPACE)) {
 		SetSceneNum(TITLE_SCENE);
@@ -20,10 +19,11 @@ void TestScene::Update() {
 }
 
 void TestScene::Draw() {
-	//GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
-	//particle_->Draw(CIRCLE);
-	primitiveManager_.Draw();
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
+	object_->Draw();
+	//primitiveManager_.Draw();
 }
 
 void TestScene::Finalize() {
+	//primitiveManager_.Finalize();
 }

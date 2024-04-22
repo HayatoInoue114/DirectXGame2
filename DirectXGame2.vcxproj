@@ -117,6 +117,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="base\ResourceLeakCheck\ResourceLeakCheck.cpp" />
     <ClCompile Include="math\Transform\Transform.cpp" />
     <ClCompile Include="math\WorldTransform\WorldTransform.cpp" />
+    <ClCompile Include="object\Object3d\Object3d.cpp" />
     <ClCompile Include="object\ModelLine\ModelLine.cpp" />
     <ClCompile Include="object\Camera\Camera.cpp" />
     <ClCompile Include="object\Model\Model.cpp" />
@@ -205,6 +206,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="math\RondomGenerator\RandomGenerator.h" />
     <ClInclude Include="math\Transform\Transform.h" />
     <ClInclude Include="math\WorldTransform\WorldTransform.h" />
+    <ClInclude Include="object\Object3d\Object3d.h" />
     <ClInclude Include="object\ModelLine\ModelLine.h" />
     <ClInclude Include="object\Camera\Camera.h" />
     <ClInclude Include="object\Model\Model.h" />

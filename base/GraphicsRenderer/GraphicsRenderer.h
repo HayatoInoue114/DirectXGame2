@@ -7,11 +7,6 @@
 
 class DirectX12;
 
-enum PipelineState {
-	object3d,
-	particle
-};
-
 class GraphicsRenderer
 {
 public:

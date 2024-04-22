@@ -3,18 +3,18 @@
 #include "../../math/MyMath.h"
 #include "../Camera/Camera.h"
 #include "../../base/DirectX12/DirectX12.h"
-#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 class Object3d
 {
 public:
 	void Init();
+	void Init(Model* model);
 
 	void Draw();
 
 
 public:
-	void SetModel(Model* model) { this->model = model; }
+	void SetModel(Model* model) { this->model_ = model; }
 
 	void SetParent(const WorldTransform* parent);
 
@@ -27,7 +27,7 @@ public:
 	bool isParent_ = false;
 
 private:
-	Model* model = nullptr;
+	Model* model_ = nullptr;
 
 	WorldTransform worldTransform_{};
 

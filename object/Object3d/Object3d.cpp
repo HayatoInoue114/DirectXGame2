@@ -5,6 +5,12 @@ void Object3d::Init()
 	CreateTransformationMatrixResource();
 }
 
+void Object3d::Init(Model* model)
+{
+	model_ = model;
+	CreateTransformationMatrixResource();
+}
+
 void Object3d::Draw()
 {
 	CreateWVPMatrix();
@@ -14,8 +20,8 @@ void Object3d::Draw()
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 
-	if (model) {
-		model->Draw();
+	if (model_) {
+		model_->Draw();
 	}
 
 }

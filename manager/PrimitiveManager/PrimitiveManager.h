@@ -8,6 +8,7 @@
 #include "../../Project/RailCamera/RailCamera.h"
 #include "../../Project/Player/Player.h"
 #include "../../Project/Enemy/Enemy.h"
+#include "../../object/Object3d/Object3d.h"
 
 #include <memory>
 
@@ -57,10 +58,10 @@ private:
 	std::unique_ptr<Primitive> primitive_;
 
 	std::unique_ptr<Model> model_;
+	std::unique_ptr<Object3d> playerObject_;
 
 	std::unique_ptr<Primitive> primitive2_;
 
-	std::unique_ptr<Model> model2_;
 	//std::unique_ptr<PrimitiveCommon> primitiveCommon_;
 
 	std::unique_ptr<Camera> camera_;
@@ -68,6 +69,7 @@ private:
 	std::unique_ptr<Skydome> dome_;
 
 	std::unique_ptr<Model> domeModel_;
+	std::unique_ptr<Object3d> domeObject_;
 
 	std::unique_ptr<RailCamera> railCamera_;
 

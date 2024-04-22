@@ -236,30 +236,30 @@ void GraphicsRenderer::BlendState() {
 
 	// ブレンドモードの設定
 
-	// ノーマル
-	blendDesc_[6].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDesc_[6].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc_[6].RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+	//// ノーマル
+	//blendDesc_[6].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	//blendDesc_[6].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	//blendDesc_[6].RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 
-	// 加算
-	blendDesc_[2].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDesc_[2].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc_[2].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+	//// 加算
+	//blendDesc_[2].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	//blendDesc_[2].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	//blendDesc_[2].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
-	// 減算
-	blendDesc_[3].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDesc_[3].RenderTarget[0].BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
-	blendDesc_[3].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+	//// 減算
+	//blendDesc_[3].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+	//blendDesc_[3].RenderTarget[0].BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
+	//blendDesc_[3].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
-	// 乗算
-	blendDesc_[4].RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
-	blendDesc_[4].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc_[4].RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
+	//// 乗算
+	//blendDesc_[4].RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
+	//blendDesc_[4].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	//blendDesc_[4].RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
 
-	// スクリーン
-	blendDesc_[5].RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
-	blendDesc_[5].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc_[5].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+	//// スクリーン
+	//blendDesc_[5].RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
+	//blendDesc_[5].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	//blendDesc_[5].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
 	// particle
 	blendDesc_[1].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;

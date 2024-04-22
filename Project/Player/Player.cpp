@@ -14,7 +14,7 @@ Player::~Player() {
 
 void Player::Initialize(Model* model, Vector3 playerPosition) {
 	//assert(model);
-
+	playerPosition;
 	// 引数として受け取ったデータをメンバ変数に記録する
 	model_ = model;
 
@@ -36,7 +36,6 @@ void Player::Initialize(Model* model, Vector3 playerPosition) {
 	sprite2DReticle_ = Sprite::CreateUnique({ 640, 360, 50 }, { 100,100 }, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();
-	model_->SetPosition(playerPosition);
 }
 
 void Player::Update() {

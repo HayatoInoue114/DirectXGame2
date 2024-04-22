@@ -100,21 +100,15 @@ void Model::Initialize() {
 	//Transform変数を作る
 	worldTransform_.Initialize();
 
-	//CreateVertexResource();
 	CreateModel();
 	CreateMaterialResource();
 	CreateVertexBufferView();
-	CreateTransformationMatrixResource();
 
 	WriteDataToResource();
 
 
 	SetMaterialData();
 }
-
-//void Model::CreateVertexResource() {
-//	//vertexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * vertexIndex_);
-//}
 
 void Model::CreateVertexBufferView() {
 	vertexBufferView_ = {};
@@ -132,40 +126,11 @@ void Model::CreateMaterialResource() {
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 }
 
-void Model::CreateTransformationMatrixResource() {
-	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	wvpResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(TransformationMatrix));
-	//データを書き込む
-	wvpData_ = nullptr;
-	//書き込むためのアドレスを取得
-	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpData_));
-	//単位行列を書き込んでおく
-	wvpData_->WVP = MakeIdentity4x4();
-	wvpData_->World = MakeIdentity4x4();
-}
-
 void Model::WriteDataToResource() {
 	//書き込むためのアドレスを取得
 	vertexResource_->Map(0, nullptr, reinterpret_cast<void**>(&vertexData_));
 	//頂点データをリソースにコピー
 	std::memcpy(vertexData_, modelData_.vertices.data(), sizeof(VertexData) * modelData_.vertices.size());
-}
-
-void Model::CreateWVPMatrix() {
-	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-	Matrix4x4 worldViewProjectionMatrix{};
-	if (camera_) {
-		if (isParent_) {
-			worldMatrix = Multiply(worldMatrix, camera_->GetWorldMatrix());
-		}
-		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
-		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
-	}
-	else {
-		worldViewProjectionMatrix = worldMatrix;
-	}
-	wvpData_->WVP = worldViewProjectionMatrix;
-	wvpData_->World = worldMatrix;
 }
 
 void Model::SetMaterialData() {
@@ -187,7 +152,6 @@ void Model::CreateModel() {
 	//頂点リソースを作る
 	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
 
-
 }
 
 void Model::Update() {
@@ -195,7 +159,6 @@ void Model::Update() {
 }
 
 void Model::Draw() {
-	CreateWVPMatrix();
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
@@ -206,11 +169,8 @@ void Model::Draw() {
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	//wvp用のCBufferの場所を設定
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[modelName_]);
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);

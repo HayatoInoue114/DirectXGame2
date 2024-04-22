@@ -36,19 +36,24 @@ public:
 
 	static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 
-	
 
-public:  //ゲッター,セッター
-	void SetTransform(const TransformS& transform) { worldTransform_.scale = transform.scale,worldTransform_.rotate = transform.rotate,worldTransform_.translate = transform.translate; }
+
+public:  //セッター
+	void SetTransformS(const TransformS& transform) { worldTransform_.scale = transform.scale, worldTransform_.rotate = transform.rotate, worldTransform_.translate = transform.translate; }
 	void SetWorldTransform(const WorldTransform& worldTransform) { worldTransform_ = worldTransform; }
 	void SetWVP(const TransformationMatrix& wvp) { *wvpData_ = wvp; }
-
-	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 	void SetTextureNum(uint32_t num) { modelName_ = num; }
 	void SetColor(const Vector4& color) { materialData_->color = color; }
 	void SetCamera(Camera* camera) { camera_ = camera; }
-	void SetPosition(const Vector3& pos) { worldTransform_.translate = pos; }
+	void SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
+	void SetTranslate(const Vector3& translate) { worldTransform_.translate = translate; }
+	void SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 
+	//ゲッター
+	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
+	const Vector3& GetRotate() const { return worldTransform_.rotate; }
+	const Vector3& GetTranslate() const { return worldTransform_.translate; }
+	const Vector3& GetScale() const { return worldTransform_.scale; }
 private:
 	//void CreateVertexResource();
 
@@ -57,10 +62,6 @@ private:
 	void WriteDataToResource();
 
 	void CreateMaterialResource();
-
-	void CreateTransformationMatrixResource();
-
-	void CreateWVPMatrix();
 
 	void SetMaterialData();
 
@@ -94,11 +95,7 @@ private:
 
 	Matrix4x4 worldMatrix_{};
 
-	WorldTransform cameraTransform_{};
-
 	Matrix4x4 projectionMatrix_{};
-
-	Matrix4x4 cameraMatrix_{};
 
 	Matrix4x4 viewMatrix_{};
 

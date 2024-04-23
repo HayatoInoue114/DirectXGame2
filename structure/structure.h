@@ -8,3 +8,4 @@
 #include "ParticleForGPU/ParticleForGPU.h"
 #include "Emitter/Emitter.h"
 #include "AccField/AccField.h"
+#include "Node/Node.h"

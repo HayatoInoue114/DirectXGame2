@@ -28,13 +28,15 @@ public:
 
 	// 初期化
 	void Initialize();
-
+public:
 	// Getter
 	ModelData* GetModelData() { return modelData_; }
 
 private:
+	// objの読み込み
+	ModelData LoadObj(const std::string& filename);
 	// objファイルの読み込み
-	ModelData LoadObjFile(const std::string& filename);
+	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 
 private:
 	ModelData modelData_[MODELNUM];

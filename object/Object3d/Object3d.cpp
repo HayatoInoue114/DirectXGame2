@@ -34,6 +34,8 @@ void Object3d::Draw()
 
 
 	if (model_) {
+		wvpData_->WVP = model_->GetModelData().rootNode.localMatrix * worldViewProjectionMatrix_;
+		wvpData_->World = model_->GetModelData().rootNode.localMatrix * worldMatrix_;
 		model_->Draw();
 	}
 
@@ -47,20 +49,19 @@ void Object3d::SetParent(const WorldTransform* parent)
 
 void Object3d::CreateWVPMatrix()
 {
-	Matrix4x4 worldMatrix = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-	Matrix4x4 worldViewProjectionMatrix{};
+	worldMatrix_ = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	if (camera_) {
 		if (isParent_) {
-			worldMatrix = Multiply(worldMatrix, camera_->GetWorldMatrix());
+			worldMatrix_ = Multiply(worldMatrix_, camera_->GetWorldMatrix());
 		}
 		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
-		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+		worldViewProjectionMatrix_ = Multiply(worldMatrix_, viewProjectionMatrix);
 	}
 	else {
-		worldViewProjectionMatrix = worldMatrix;
+		worldViewProjectionMatrix_ = worldMatrix_;
 	}
-	wvpData_->WVP = worldViewProjectionMatrix;
-	wvpData_->World = worldMatrix;
+	wvpData_->WVP = worldViewProjectionMatrix_;
+	wvpData_->World = worldMatrix_;
 }
 
 void Object3d::CreateTransformationMatrixResource() {

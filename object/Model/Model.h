@@ -33,7 +33,9 @@ public:
 
 	static Model* CreateModelFromObj(int modelName);
 
-	static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
+	static std::unique_ptr<Model> CreateModelFromObjPtr(const std::string& filename);
+
+	//static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 
 	
 
@@ -53,6 +55,7 @@ public:  //セッター
 	const Vector3& GetRotate() const { return worldTransform_.rotate; }
 	const Vector3& GetTranslate() const { return worldTransform_.translate; }
 	const Vector3& GetScale() const { return worldTransform_.scale; }
+	const ModelData& GetModelData() const { return modelData_; }
 private:
 	//void CreateVertexResource();
 

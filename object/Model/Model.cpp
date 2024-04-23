@@ -11,12 +11,13 @@ Model* Model::CreateModelFromObj(int modelName) {
 	return model;
 }
 
-std::unique_ptr<Model> Model::CreateModelFromObjPtr(int modelName) {
+std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& filename) {
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
 	// モデルの読み込み
 	//model->SetTextureNum(modelName);
-	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
+	ModelManager::GetInstance()->LoadModel(filename);
+	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
 
 	model->Initialize();
 	return model;

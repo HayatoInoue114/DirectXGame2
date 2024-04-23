@@ -40,5 +40,9 @@ private:
 	TransformationMatrix* wvpData_{};
 
 	Camera* camera_{};
+
+	Matrix4x4 worldMatrix_{};
+
+	Matrix4x4 worldViewProjectionMatrix_{};
 };
 

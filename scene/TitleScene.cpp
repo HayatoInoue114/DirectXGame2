@@ -2,7 +2,7 @@
 #include "../manager/GameManager/GameManager.h"
 
 void TitleScene::Initialize() {
-	//SetSceneNum(TITLE_SCENE);
+	SetSceneNum(TEST_SCENE);
 	// 入力
 	input_ = Input::GetInstance();
 

@@ -11,6 +11,19 @@ void Object3d::Init(Model* model)
 	CreateTransformationMatrixResource();
 }
 
+void Object3d::Init(Camera* camera)
+{
+	camera_ = camera;
+	CreateTransformationMatrixResource();
+}
+
+void Object3d::Init(Model* model,Camera* camera)
+{
+	camera_ = camera;
+	model_ = model;
+	CreateTransformationMatrixResource();
+}
+
 void Object3d::Draw()
 {
 	CreateWVPMatrix();

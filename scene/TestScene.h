@@ -4,6 +4,7 @@
 #include "../object/Particle/Particle.h"
 
 #include "../object/Object3d/Object3d.h"
+#include "../object/Camera/Camera.h"
 
 #include "IScene.h"
 
@@ -18,11 +19,15 @@ public:
 private:
 	Input* input_{};
 
-	PrimitiveManager primitiveManager_{};
+	std::unique_ptr<Camera> camera_;
 
 	std::unique_ptr<Object3d> object_;
 
 	std::unique_ptr<Model> model_;
+
+	std::unique_ptr<Object3d> dome_;
+
+	std::unique_ptr<Model> domeModel_;
 
 	//std::unique_ptr<Particle> particle_{};
 };

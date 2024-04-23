@@ -1,6 +1,9 @@
 #pragma once
 #include "../../structure/ModelData/ModelData.h"
 #include <list>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 enum ModelName {
 	CUBE,

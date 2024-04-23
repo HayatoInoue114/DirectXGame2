@@ -16,9 +16,9 @@ void GameClearScene::Update() {
 	/*if (!Input::GetInstance()->GetJoystickState(joyState)) {
 		return;
 	}*/
-	if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || input_->PushKeyTrigger(DIK_SPACE)) {
+	/*if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || input_->PushKeyTrigger(DIK_SPACE)) {
 		SetSceneNum(TITLE_SCENE);
-	}
+	}*/
 }
 
 void GameClearScene::Draw() {

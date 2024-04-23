@@ -3,6 +3,7 @@
 #include <fstream>
 #include <sstream>
 
+
 #include "../../base/DirectX12/DirectX12.h"
 #include "../../math/Vector4.h"
 #include "../../math/MT/MT.h"
@@ -29,8 +30,6 @@ public:
 	void ImGuiAdjustParameter();
 
 	void SetParent(const WorldTransform* parent);
-
-	ModelData LoadObjFile(const std::string& directorypath, const std::string& filename);
 
 	static Model* CreateModelFromObj(int modelName);
 
@@ -119,6 +118,6 @@ private:
 
 	Camera* camera_ = nullptr;
 
-	bool isParent_;
+	bool isParent_{};
 };
 

@@ -1,7 +1,7 @@
 #include "UtilityFunction.h"
 #include <filesystem>
 
-std::string GetExtention(std::string filePath)
+std::string GetExtention(const std::string& filePath)
 {
 	std::filesystem::path path(filePath);
 	return path.extension().string();

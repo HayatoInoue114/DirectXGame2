@@ -132,6 +132,8 @@ private:
 	void NextFlameCommandList();
 
 	void ClearDepthBuffer();
+
+	void CreateRenderTexture();
 private:
 	Microsoft::WRL::ComPtr<ID3D12Device> device_{};
 	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_{};

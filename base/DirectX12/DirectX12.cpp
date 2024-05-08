@@ -479,6 +479,11 @@ void DirectX12::ClearDepthBuffer() {
 	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
+void DirectX12::CreateRenderTexture()
+{
+	Microsoft::WRL::ComPtr<ID3D12Resource>CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, uint32_t height, DXGI_FORMAT format, const Vector4 & clearColor);
+}
+
 void DirectX12::InitializeDescriptorSize() {
 	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);

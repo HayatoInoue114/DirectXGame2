@@ -1,4 +1,5 @@
 #include "DirectX12.h"
+#include "../GraphicsRenderer/GraphicsRenderer.h"
 
 const uint32_t DirectX12::kMaxSRVCount = 512;
 
@@ -136,7 +137,26 @@ void DirectX12::DescriptorHeap() {
 	//２つ目を作る
 	device_->CreateRenderTargetView(swapChainResource_[1].Get(), &rtvDesc_, rtvHandle_[1]);
 
+	rtvHandle_[2].ptr = rtvHandle_[1].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
+	//OffscreenのためのRTV
+	const Vector4 kRenderTargetClearValue{ 1.0f,0.0f,0.0f,1.0f }; //いったんわかりやすいように赤
+	auto renderTextureResource = CreateRenderTextureResource(device_, kCliantWidth, kCliantHeight, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, kRenderTargetClearValue);
+	device_->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc_, rtvHandle_[2]);
+
+
+	//SRVの設定。FormatはResourceと同じにしておく
+	D3D12_SHADER_RESOURCE_VIEW_DESC renderTextureSrvDesc{};
+	renderTextureSrvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	renderTextureSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	renderTextureSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	renderTextureSrvDesc.Texture2D.MipLevels = 1;
+
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap{};
+	//rvDescriptorHeap = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_SRV, 1, false);
+
+	//SRVの生成
+	device_->CreateShaderResourceView(renderTextureResource.Get(), &renderTextureSrvDesc, rtvHandle_[2]);
 }
 
 void DirectX12::GetBackBuffer() {
@@ -369,6 +389,8 @@ void DirectX12::PreDraw() {
 }
 
 void DirectX12::PostDraw() {
+	ClearRTV();
+	GraphicsRenderer::GetInstance()->RSSet();
 	PushImGuiDrawCommand();
 	ScreenDisplay();
 	CommandConfirm();
@@ -376,6 +398,73 @@ void DirectX12::PostDraw() {
 	UpdateFixFPS();
 	Signal();
 	NextFlameCommandList();
+}
+
+
+
+void DirectX12::CreateDepthStencilResource() {
+	//DepthStencilTextureをウインドウのサイズで作成
+	depthStencilResource_ = CreateDepthStencilTextureResource(device_.Get(), kCliantWidth, kCliantHeight);
+}
+
+void DirectX12::CreateDSV() {
+	dsvDescriptorHeap_ = nullptr;
+	dsvDescriptorHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
+
+	//DSVの設定
+	dsvDesc_ = {};
+	dsvDesc_.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本的にはResourceに合わせる
+	dsvDesc_.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
+	//DSVHeapの先頭にDSVを作る
+	device_->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc_, dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart());
+}
+
+void DirectX12::SetRenderTargets() {
+	dsvHandle_ = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	commandList_->OMSetRenderTargets(1, &rtvHandle_[backBufferIndex_], false, &dsvHandle_);
+}
+
+void DirectX12::ClearDepthBuffer() {
+	//指定した深度で画面全体をクリアする
+	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+}
+
+void DirectX12::InitializeDescriptorSize() {
+	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+}
+
+Microsoft::WRL::ComPtr<ID3D12Resource> DirectX12::CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor)
+{
+	Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+
+	D3D12_RESOURCE_DESC resourceDesc{};
+	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET; //renderTargetとして利用する
+	resourceDesc.Height = height;
+	resourceDesc.Width = width;
+	resourceDesc.DepthOrArraySize = 1;
+	resourceDesc.MipLevels = 1;
+	resourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
+	resourceDesc.SampleDesc.Count = 1;
+	resourceDesc.SampleDesc.Quality = 1;
+	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+	resourceDesc.Format = format;
+
+
+	D3D12_HEAP_PROPERTIES heapProperties{};
+	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT; //当然VRAM上に作る
+
+	D3D12_CLEAR_VALUE clearValue{};
+	clearValue.Format = format;
+	clearValue.Color[0] = clearColor.x;
+	clearValue.Color[1] = clearColor.y;
+	clearValue.Color[2] = clearColor.z;
+	clearValue.Color[3] = clearColor.w;
+
+	device->CreateCommittedResource(&heapProperties,
+		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_RENDER_TARGET, &clearValue, IID_PPV_ARGS(&resource));
+	return resource;
 }
 
 ID3D12Resource* DirectX12::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
@@ -416,7 +505,6 @@ ID3D12DescriptorHeap* DirectX12::CreateDescriptorHeap(ID3D12Device* device, D3D1
 	return descriptorHeap;
 }
 
-
 ID3D12Resource* DirectX12::CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height) {
 	//生成するResourceの設定
 
@@ -450,68 +538,4 @@ ID3D12Resource* DirectX12::CreateDepthStencilTextureResource(ID3D12Device* devic
 		IID_PPV_ARGS(&resource)); // 作成するResourceポインタへのポインタ
 	assert(SUCCEEDED(hr));
 	return resource;
-}
-
-void DirectX12::CreateDepthStencilResource() {
-	//DepthStencilTextureをウインドウのサイズで作成
-	depthStencilResource_ = CreateDepthStencilTextureResource(device_.Get(), kCliantWidth, kCliantHeight);
-}
-
-void DirectX12::CreateDSV() {
-	dsvDescriptorHeap_ = nullptr;
-	dsvDescriptorHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
-
-	//DSVの設定
-	dsvDesc_ = {};
-	dsvDesc_.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本的にはResourceに合わせる
-	dsvDesc_.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
-	//DSVHeapの先頭にDSVを作る
-	device_->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc_, dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart());
-}
-
-void DirectX12::SetRenderTargets() {
-	dsvHandle_ = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-	commandList_->OMSetRenderTargets(1, &rtvHandle_[backBufferIndex_], false, &dsvHandle_);
-}
-
-void DirectX12::ClearDepthBuffer() {
-	//指定した深度で画面全体をクリアする
-	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-}
-
-Microsoft::WRL::ComPtr<ID3D12Resource> DirectX12::CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor)
-{
-	Microsoft::WRL::ComPtr<ID3D12Resource> resource;
-
-	D3D12_RESOURCE_DESC resourceDesc{};
-	resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET; //renderTargetとして利用する
-	resourceDesc.Height = height;
-	resourceDesc.Width = width;
-	resourceDesc.DepthOrArraySize = 1;
-	resourceDesc.MipLevels = 1;
-	resourceDesc.Alignment = D3D12_DEFAULT_RESOURCE_PLACEMENT_ALIGNMENT;
-	resourceDesc.SampleDesc.Count = 1;
-	resourceDesc.SampleDesc.Quality = 1;
-	resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-	resourceDesc.Format = format;
-
-
-	D3D12_HEAP_PROPERTIES heapProperties{};
-	heapProperties.Type = D3D12_HEAP_TYPE_DEFAULT; //当然VRAM上に作る
-
-	D3D12_CLEAR_VALUE clearValue{};
-	clearValue.Format = format;
-	clearValue.Color[0] = clearColor.x;
-	clearValue.Color[1] = clearColor.y;
-	clearValue.Color[2] = clearColor.z;
-	clearValue.Color[3] = clearColor.w;
-
-	device->CreateCommittedResource(&heapProperties,
-		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_RENDER_TARGET, &clearValue, IID_PPV_ARGS(&resource));
-	return resource;
-}
-void DirectX12::InitializeDescriptorSize() {
-	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 }

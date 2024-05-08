@@ -16,6 +16,7 @@
 #include "../../manager/ModelManager/ModelManager.h"
 #include "../../math/Transform/Transform.h"
 #include "../Camera/Camera.h"
+#include "../../utility/UtilityFunction/UtilityFunction.h"
 
 class Model
 {

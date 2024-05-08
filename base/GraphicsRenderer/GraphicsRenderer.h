@@ -24,6 +24,8 @@ public:
 
 	void Release();
 
+	void RSSet();
+
 private:
 	void Dxc();
 

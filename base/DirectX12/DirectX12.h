@@ -10,6 +10,7 @@
 #include <wrl.h>
 #include <chrono>
 
+
 #include "../WindowsAPI/WindowsAPI.h"
 
 #pragma comment(lib,"d3d12.lib")
@@ -18,6 +19,7 @@
 #pragma comment(lib, "winmm.lib")
 
 class WindowsAPI;
+class GraphicsRenderer;
 
 class DirectX12
 {
@@ -168,7 +170,7 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle_{};
 
 	//RTVを２つ作るのでディスクリプタ２つ用意
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_[2]{};
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_[3]{};
 
 	
 	UINT backBufferIndex_{};

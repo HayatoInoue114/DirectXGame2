@@ -34,8 +34,10 @@ void Object3d::Draw()
 
 
 	if (model_) {
-		wvpData_->WVP = model_->GetModelData().rootNode.localMatrix * worldViewProjectionMatrix_;
-		wvpData_->World = model_->GetModelData().rootNode.localMatrix * worldMatrix_;
+		if (!model_->isObj) {
+			wvpData_->WVP = model_->GetModelData().rootNode.localMatrix * worldViewProjectionMatrix_;
+			wvpData_->World = model_->GetModelData().rootNode.localMatrix * worldMatrix_;
+		}
 		model_->Draw();
 	}
 

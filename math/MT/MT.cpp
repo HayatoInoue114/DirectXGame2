@@ -756,3 +756,119 @@ Vector3 CatmullRomPosition(const std::vector<Vector3>& points, uint32_t index, f
 	return CatmullRomInterpolation(p0, p1, p2, p3, t);
 }
 
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs) {
+	float w = lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z;
+	float x = lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y;
+	float y = lhs.w * rhs.y - lhs.x * rhs.z + lhs.y * rhs.w + lhs.z * rhs.x;
+	float z = lhs.w * rhs.z + lhs.x * rhs.y - lhs.y * rhs.x + lhs.z * rhs.w;
+
+	return Quaternion(x, y, z, w);
+}
+
+Quaternion IdentityQuaternion() {
+	return Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+}
+
+Quaternion Conjugete(const Quaternion& quaternion) {
+	return Quaternion(-quaternion.x, -quaternion.y, -quaternion.z, quaternion.w);
+}
+
+float Norm(const Quaternion& v) {
+	float result{};
+	result = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
+	return result;
+}
+
+Quaternion Normalize(const Quaternion& quaternion) {
+	if (Norm(quaternion) != 0.0f) {
+		//float invNorm = 1.0f / Norm(quaternion);
+		Quaternion num = {
+			quaternion.x / Norm(quaternion),
+			quaternion.y / Norm(quaternion),
+			quaternion.z / Norm(quaternion),
+			quaternion.w / Norm(quaternion)
+		};
+		return num;
+	}
+
+	return quaternion;
+}
+
+Quaternion Inverse(const Quaternion& v) {
+	float norm = Norm(v) * Norm(v);
+	Quaternion con = Conjugete(v);
+	Quaternion result = {
+		con.x / norm,
+		con.y / norm,
+		con.z / norm,
+		con.w / norm
+	};
+
+	return result;
+}
+
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle) {
+	float halfAngle = angle * 0.5f;
+
+	float axisLength = sqrt(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
+	float sinHalfAngle = sin(halfAngle);
+	Vector3 normalizedAxis = { axis.x / axisLength, axis.y / axisLength, axis.z / axisLength };
+
+	Quaternion result{};
+	result.w = cos(halfAngle);
+	result.x = normalizedAxis.x * sinHalfAngle;
+	result.y = normalizedAxis.y * sinHalfAngle;
+	result.z = normalizedAxis.z * sinHalfAngle;
+
+	return result;
+}
+
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion) {
+	// クォータニオンの逆元を計算
+	Quaternion conjugate = { quaternion.w, -quaternion.x, -quaternion.y, -quaternion.z };
+	float normSquared = quaternion.w * quaternion.w + quaternion.x * quaternion.x + quaternion.y * quaternion.y + quaternion.z * quaternion.z;
+
+	// 回転したベクトルを求める
+	Quaternion vQuat = { 1.0f, vector.x, vector.y, vector.z };
+	Quaternion rotated = Multiply(conjugate, Multiply(quaternion, vQuat));
+
+	// ノルムの二乗で逆元を掛ける
+	rotated = { rotated.x / normSquared, rotated.y / normSquared, rotated.z / normSquared, rotated.w / normSquared };
+
+	return { rotated.x, rotated.y, rotated.z };
+}
+
+Matrix4x4 MakeRotateMatrix(const Quaternion& q) {
+	Matrix4x4 result = {
+		q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z,  2 * (q.x * q.y + q.w * q.z),  2 * (q.x * q.z - q.w * q.y),0,
+		2 * (q.x * q.y - q.w * q.z),  q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z,  2 * (q.y * q.z + q.w * q.x),0,
+		2 * (q.z * q.z + q.w * q.y), 2 * (q.y * q.z - q.w * q.x),q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z,0,
+		0,0,0,1
+	};
+
+	return result;
+}
+
+// 内積
+float Dot(const Quaternion& q1, const Quaternion& q2) {
+	return (q1.x * q2.x) + (q1.y * q2.y) + (q1.z * q2.z) + (q1.w * q2.w);
+}
+
+// 球面線形補間
+Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float t) {
+	Quaternion q0 = q1;
+	float dot = Dot(q1, q2);
+	if (dot < 0.0f) {
+		q0 = -q0;
+		dot = -dot;
+	}
+	constexpr float EPSILON = 0.0001f;
+	if (dot >= 1.0f - EPSILON) {
+		return (1.0f - t) * q0 + t * q1;
+	}
+	float theta = std::acos(dot);
+	float sinTheta = 1.0f / std::sin(theta);
+	float scale1 = std::sin((1.0f - t) * theta) * sinTheta;
+	float scale2 = std::sin(t * theta) * sinTheta;
+	return (q0 * scale1) + (q2 * scale2);
+}

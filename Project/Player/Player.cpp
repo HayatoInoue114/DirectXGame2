@@ -4,7 +4,7 @@
 #include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 // NULLポインタチェック
-Player::Player() {}
+Player::Player() { camera_ = {}; }
 
 Player::~Player() {
 	for (PlayerBullet* bullet : bullets_) {
@@ -40,7 +40,7 @@ void Player::Initialize(Model* model, Vector3 playerPosition) {
 	model_->SetTranslate(playerPosition);
 	worldTransform_.translate = playerPosition;
 
-	reticleModel_ = Model::CreateModelFromObjPtr(CUBE);
+	reticleModel_ = Model::CreateModelFromObjPtr("cube");
 	reticleModel_->SetCamera(camera_);
 	reticleModel_->SetParent(&camera_->GetWorldTransform());
 	Vector3 pos = worldTransform3DReticle_.translate;

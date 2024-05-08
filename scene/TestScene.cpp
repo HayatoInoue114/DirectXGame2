@@ -9,16 +9,13 @@ void TestScene::Initialize() {
 	camera_->Initialize();
 	
 	model_ = std::make_unique<Model>();
-	model_ = Model::CreateModelFromObjPtr(PLANE);
+	model_ = Model::CreateModelFromObjPtr("AnimatedCube.gltf");
 
 	object_ = std::make_unique<Object3d>();
 	object_->Init(model_.get(),camera_.get());
-	/*object_->SetParent(&camera_->GetWorldTransform());
-	Vector3 pos = { 0,0,50 };
-	object_->SetTranslate(pos);*/
 
 	domeModel_ = std::make_unique<Model>();
-	domeModel_ = Model::CreateModelFromObjPtr(SKYDOME);
+	domeModel_ = Model::CreateModelFromObjPtr("skydome.obj");
 
 	dome_ = std::make_unique<Object3d>();
 	dome_->Init(domeModel_.get(),camera_.get());

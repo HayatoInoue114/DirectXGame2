@@ -35,7 +35,7 @@ void GameScene::Initialize() {
 	worldTransform_.scale = { 10,10,1 };
 
 	// 3Dモデルの生成
-	modelSkydome_ = Model::CreateModelFromObjPtr(SKYDOME);
+	modelSkydome_ = Model::CreateModelFromObjPtr("skydome");
 
 	//// レールカメラの生成
 	railCamera_ = std::make_unique<RailCamera>();
@@ -46,7 +46,7 @@ void GameScene::Initialize() {
 
 	//textureHandle = PLAYER;
 	// 自キャラの初期化
-	playerModel_ = Model::CreateModelFromObjPtr(PLAYER);
+	playerModel_ = Model::CreateModelFromObjPtr("cube");
 
 	
 

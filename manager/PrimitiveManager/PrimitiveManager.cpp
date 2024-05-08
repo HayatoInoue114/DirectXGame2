@@ -7,7 +7,7 @@ void PrimitiveManager::Initialize() {
 	railCamera_->Initialize({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 
 	player_ = std::make_unique<Player>();
-	model_ = Model::CreateModelFromObjPtr(PLAYER);
+	model_ = Model::CreateModelFromObjPtr("cube");
 	// 自キャラとレールカメラの親子関係を結ぶ
 	model_->SetCamera(railCamera_->GetCamera());
 	model_->SetParent(&railCamera_->GetWorldTransform());
@@ -19,7 +19,7 @@ void PrimitiveManager::Initialize() {
 	player_->Initialize(model_.get(), playerPosition);
 
 	domeModel_ = std::make_unique<Model>();
-	domeModel_ = Model::CreateModelFromObjPtr(SKYDOME);
+	domeModel_ = Model::CreateModelFromObjPtr("skydome");
 	domeModel_->SetCamera(railCamera_->GetCamera());
 
 	dome_ = std::make_unique<Skydome>();

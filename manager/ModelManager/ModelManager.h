@@ -5,6 +5,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <map>
+#include "../../utility/UtilityFunction/UtilityFunction.h"
 
 enum ModelName {
 	CUBE,
@@ -33,6 +34,7 @@ public:
 
 	void LoadModel(const std::string& filePath);
 	ModelData GetModel(const std::string& filePath);
+	
 public:
 	// Getter
 	ModelData* GetModelData() { return modelData_; }
@@ -44,6 +46,8 @@ private:
 	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
 	//gltfファイルの読み込み
 	ModelData LoadModelFile(const std::string& directoryPath, const std::string& filename);
+	//拡張子まで入れて読み込む
+	ModelData LoadFile(const std::string& directoryPath, const std::string& filename);
 
 	Node ReadNode(aiNode* node);
 

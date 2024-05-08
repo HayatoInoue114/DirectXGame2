@@ -69,7 +69,12 @@ private:
 
 	void CreateModel();
 
+public:
+	//trueなら.obj || falseなら.gltf
+	bool isObj = true;
+
 private:
+	
 	//モデル読み込み
 	ModelData modelData_{};
 

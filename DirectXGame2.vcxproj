@@ -97,6 +97,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="object\Object3d\Animation\Animation.cpp" />
     <ClCompile Include="manager\CollisionManager\Collider\Collider.cpp" />
     <ClCompile Include="manager\CollisionManager\CollisionManager.cpp" />
     <ClCompile Include="math\Line\Catmull-Rom Spline\CatmullRom.cpp" />
@@ -138,6 +139,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="scene\IScene.cpp" />
     <ClCompile Include="scene\TitleScene.cpp" />
     <ClCompile Include="scene\TestScene.cpp" />
+    <ClCompile Include="utility\UtilityFunction\UtilityFunction.cpp" />
     <ClCompile Include="utility\FormatString\FormatString.cpp" />
     <ClCompile Include="manager\GameManager\GameManager.cpp" />
     <ClCompile Include="base\GraphicsRenderer\GraphicsRenderer.cpp" />
@@ -181,6 +183,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\TD3\Project\Math\MathOperations\MathOperations.h" />
+    <ClInclude Include="object\Object3d\Animation\Animation.h" />
     <ClInclude Include="manager\CollisionManager\CollisionConfig\CollisionConfig.h" />
     <ClInclude Include="manager\CollisionManager\Collider\Collider.h" />
     <ClInclude Include="math\Line\Catmull-Rom Spline\CatmullRom.h" />
@@ -235,6 +238,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="structure\VertexData\VertexData.h" />
     <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h" />
     <ClInclude Include="scene\TestScene.h" />
+    <ClInclude Include="utility\UtilityFunction\UtilityFunction.h" />
     <ClInclude Include="utility\FormatString\FormatString.h" />
     <ClInclude Include="manager\GameManager\GameManager.h" />
     <ClInclude Include="base\GraphicsRenderer\GraphicsRenderer.h" />

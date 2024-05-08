@@ -168,3 +168,35 @@ Vector3 Transform(const Vector3& vector, const Matrix4x4& matrix);
 Vector3 CatmullRomInterpolation(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Vector3& p3, float t);
 // CatmullRomスプライン曲線上の座標を得る
 Vector3 CatmullRomPosition(const std::vector<Vector3>& points, uint32_t index, float t);
+
+struct Quaternion {
+	float x;
+	float y;
+	float z;
+	float w;
+};
+
+Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
+
+Quaternion IdentityQuaternion();
+
+Quaternion Conjugete(const Quaternion& quaternion);
+
+float Norm(const Quaternion& v);
+
+Quaternion Normalize(const Quaternion& quaternion);
+
+Quaternion Inverse(const Quaternion& v);
+
+//任意回転軸を表すQuaternionの生成
+Quaternion MakeRotateAxisAngleQuaternion(const Vector3& axis, float angle);
+
+//ベクトルをQuaternionで回転させた結果のベクトルを求める
+Vector3 RotateVector(const Vector3& vector, const Quaternion& quaternion);
+
+//Quaternionから回転行列を求める
+Matrix4x4 MakeRotateMatrix(const Quaternion& q);
+
+float Dot(const Quaternion& q1, const Quaternion& q2);
+// 球面線形補間
+Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float t);

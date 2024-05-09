@@ -276,6 +276,9 @@
     <ClCompile Include="utility\UtilityFunction\UtilityFunction.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="manager\AnimationManager\AnimationManager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ShaderFile\Object3d.VS.hlsl" />
@@ -510,6 +513,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="utility\UtilityFunction\UtilityFunction.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="manager\AnimationManager\AnimationManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

@@ -18,10 +18,10 @@ std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& filename)
 	//model->SetTextureNum(modelName);
 	ModelManager::GetInstance()->LoadModel(filename);
 	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
-	if (ModelManager::GetInstance()->GetExtention(filename) == ".obj") {
+	if (GetExtention(filename) == ".obj") {
 		model->isObj = true;
 	}
-	if (ModelManager::GetInstance()->GetExtention(filename) == ".gltf") {
+	if (GetExtention(filename) == ".gltf") {
 		model->isObj = false;
 	}
 

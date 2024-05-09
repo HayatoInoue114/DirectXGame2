@@ -35,6 +35,14 @@ struct Vector3 {
 	float z;
 };
 
+
+struct Quaternion {
+	float x;
+	float y;
+	float z;
+	float w;
+};
+
 /// <summary>
 /// オブジェクトの位置・姿勢情報
 /// </summary>
@@ -70,6 +78,8 @@ Matrix4x4 MakeRotateZMatrix(float radian);
 Matrix4x4 MakeRotateXYZMatrix(const Vector3& rotate);
 //3次元アフィン変換行列
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Vector3& translate);
+
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
 
 float InverseNum(const Matrix4x4& m, int a, int b, int c, int d, int e, int f, int g, int h);
 float InverseNum2(const Matrix4x4& m, int a, int b, int c, int d, int e, int f);
@@ -169,13 +179,6 @@ Vector3 CatmullRomInterpolation(const Vector3& p0, const Vector3& p1, const Vect
 // CatmullRomスプライン曲線上の座標を得る
 Vector3 CatmullRomPosition(const std::vector<Vector3>& points, uint32_t index, float t);
 
-struct Quaternion {
-	float x;
-	float y;
-	float z;
-	float w;
-};
-
 Quaternion Multiply(const Quaternion& lhs, const Quaternion& rhs);
 
 Quaternion IdentityQuaternion();
@@ -200,3 +203,5 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& q);
 float Dot(const Quaternion& q1, const Quaternion& q2);
 // 球面線形補間
 Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float t);
+
+Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix);

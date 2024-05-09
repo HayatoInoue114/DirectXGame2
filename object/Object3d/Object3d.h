@@ -3,6 +3,8 @@
 #include "../../math/MyMath.h"
 #include "../Camera/Camera.h"
 #include "../../base/DirectX12/DirectX12.h"
+#include "Animation/Animation.h"
+#include "../../utility/UtilityFunction/UtilityFunction.h"
 
 class Object3d
 {
@@ -14,7 +16,9 @@ public:
 
 	void Draw();
 
-
+	void LoadAnimation(const std::string& filename);
+	void UpdateAnimation();
+	void ResetAnimation();
 public:
 	void SetModel(Model* model) { this->model_ = model; }
 	void SetParent(const WorldTransform* parent);
@@ -23,6 +27,21 @@ public:
 	void SetWorldTransform(const WorldTransform& world) { worldTransform_ = world; }
 	void SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
 	void SetTranslate(const Vector3& translate) { worldTransform_.translate = translate; }
+
+	/// <summary>
+	/// アニメーション開始
+	/// </summary>
+	/// <param name="isLoop">ループするかどうか</param>
+	void StartAnimation(bool isLoop = false) {
+		isStartAnimation_ = true;
+		isLoop_ = isLoop;
+	}
+	//アニメーション一時停止
+	void StopAnimation() { isStartAnimation_ = false; }
+	//アニメーションのループフラグを設定
+	void SetIsLoop(bool flag) { isLoop_ = flag; }
+	//アニメーション速度変更
+	void SetAnimationSpeed(float speed) { animationSpeed_ = speed; }
 private:
 	void CreateWVPMatrix();
 
@@ -44,5 +63,26 @@ private:
 	Matrix4x4 worldMatrix_{};
 
 	Matrix4x4 worldViewProjectionMatrix_{};
+
+	//アニメーション
+	std::unique_ptr<Animation> animation_;
+
+	//アニメーションタイム
+	float animationTime_ = 0.0f;
+
+	//アニメーション速度
+	float animationSpeed_ = 1.0f;
+
+	//アニメーション管理フラグ
+	bool isStartAnimation_ = false;
+
+	//ループ管理フラグ
+	bool isLoop_ = false;
+
+	//アニメーションの終点に到達したかどうか
+	bool isEndAnimation_ = false;
+
+	//アニメーションのマトリックス
+	Matrix4x4 localMatrix_;
 };
 

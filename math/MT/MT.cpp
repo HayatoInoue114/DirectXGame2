@@ -110,6 +110,21 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	return mat;
 }
 
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate) {
+
+	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
+
+	Matrix4x4 mat = {
+		scale.x * rotateMatrix.m[0][0],   scale.x * rotateMatrix.m[0][1],   scale.x * rotateMatrix.m[0][2],   0,
+		scale.y * rotateMatrix.m[1][0],   scale.y * rotateMatrix.m[1][1],   scale.y * rotateMatrix.m[1][2],   0,
+		scale.z * rotateMatrix.m[2][0],   scale.z * rotateMatrix.m[2][1],   scale.z * rotateMatrix.m[2][2],   0,
+		translate.x,translate.y,translate.z,1
+	};
+
+	return mat;
+
+}
+
 float InverseNum(const Matrix4x4& m, int a, int b, int c, int d, int e, int f, int g, int h) {
 	float resultNum;
 	resultNum = m.m[a - 1][b - 1] * m.m[c - 1][d - 1] * m.m[e - 1][f - 1] * m.m[g - 1][h - 1];
@@ -842,7 +857,7 @@ Matrix4x4 MakeRotateMatrix(const Quaternion& q) {
 	Matrix4x4 result = {
 		q.w * q.w + q.x * q.x - q.y * q.y - q.z * q.z,  2 * (q.x * q.y + q.w * q.z),  2 * (q.x * q.z - q.w * q.y),0,
 		2 * (q.x * q.y - q.w * q.z),  q.w * q.w - q.x * q.x + q.y * q.y - q.z * q.z,  2 * (q.y * q.z + q.w * q.x),0,
-		2 * (q.z * q.z + q.w * q.y), 2 * (q.y * q.z - q.w * q.x),q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z,0,
+		2 * (q.x * q.z + q.w * q.y), 2 * (q.y * q.z - q.w * q.x),q.w * q.w - q.x * q.x - q.y * q.y + q.z * q.z,0,
 		0,0,0,1
 	};
 
@@ -855,20 +870,80 @@ float Dot(const Quaternion& q1, const Quaternion& q2) {
 }
 
 // 球面線形補間
-Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float t) {
-	Quaternion q0 = q1;
-	float dot = Dot(q1, q2);
+Quaternion Slerp(const Quaternion& q0, const Quaternion& q1, float t) {
+	Quaternion q = q0;
+	float dot = Dot(q0, q1);
 	if (dot < 0.0f) {
-		q0 = -q0;
+		q = -q;
 		dot = -dot;
 	}
 	constexpr float EPSILON = 0.0001f;
 	if (dot >= 1.0f - EPSILON) {
-		return (1.0f - t) * q0 + t * q1;
+		return (1.0f - t) * q + t * q0;
 	}
 	float theta = std::acos(dot);
 	float sinTheta = 1.0f / std::sin(theta);
 	float scale1 = std::sin((1.0f - t) * theta) * sinTheta;
 	float scale2 = std::sin(t * theta) * sinTheta;
-	return (q0 * scale1) + (q2 * scale2);
+	return (q * scale1) + (q1 * scale2);
+}
+
+Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix) {
+
+	Quaternion qr = IdentityQuaternion();
+
+	float elem[4]{}; //0:x 1:y 2:z 3:w
+
+	elem[0] = matrix.m[0][0] - matrix.m[1][1] - matrix.m[2][2] + 1.0f;
+	elem[1] = -matrix.m[0][0] + matrix.m[1][1] - matrix.m[2][2] + 1.0f;
+	elem[2] = -matrix.m[0][0] - matrix.m[1][1] + matrix.m[2][2] + 1.0f;
+	elem[3] = matrix.m[0][0] + matrix.m[1][1] + matrix.m[2][2] + 1.0f;
+
+	//最大成分のインデックス
+	uint32_t biggestIndex = 0;
+	for (uint32_t i = 0; i < 4; i++) {
+		if (elem[i] > elem[biggestIndex]) {
+			biggestIndex = i;
+		}
+	}
+
+	float tmpQr[4]{}; //仮クォータニオン
+	float v = std::sqrtf(elem[biggestIndex]) * 0.5f;
+
+	tmpQr[biggestIndex] = v;
+
+	float multi = 0.25f / v;
+
+	switch (biggestIndex)
+	{
+	default:
+	case 0:
+		tmpQr[1] = (matrix.m[0][1] + matrix.m[1][0]) * multi;
+		tmpQr[2] = (matrix.m[2][0] + matrix.m[0][2]) * multi;
+		tmpQr[3] = (matrix.m[1][2] - matrix.m[2][1]) * multi;
+		break;
+	case 1:
+		tmpQr[0] = (matrix.m[0][1] + matrix.m[1][0]) * multi;
+		tmpQr[2] = (matrix.m[1][2] + matrix.m[2][1]) * multi;
+		tmpQr[3] = (matrix.m[2][0] - matrix.m[0][2]) * multi;
+		break;
+	case 2:
+		tmpQr[0] = (matrix.m[2][0] + matrix.m[0][2]) * multi;
+		tmpQr[1] = (matrix.m[1][2] + matrix.m[2][1]) * multi;
+		tmpQr[3] = (matrix.m[0][1] - matrix.m[1][0]) * multi;
+		break;
+	case 3:
+		tmpQr[0] = (matrix.m[1][2] - matrix.m[2][1]) * multi;
+		tmpQr[1] = (matrix.m[2][0] - matrix.m[0][2]) * multi;
+		tmpQr[2] = (matrix.m[0][1] - matrix.m[1][0]) * multi;
+		break;
+	}
+
+	qr.x = tmpQr[0];
+	qr.y = tmpQr[1];
+	qr.z = tmpQr[2];
+	qr.w = tmpQr[3];
+
+	return qr;
+
 }

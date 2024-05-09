@@ -13,6 +13,9 @@ void TestScene::Initialize() {
 
 	object_ = std::make_unique<Object3d>();
 	object_->Init(model_.get(),camera_.get());
+	object_->LoadAnimation("AnimatedCube/AnimatedCube.gltf");
+	object_->StartAnimation(true);
+	//object_->SetAnimationSpeed(10.0f);
 
 	domeModel_ = std::make_unique<Model>();
 	domeModel_ = Model::CreateModelFromObjPtr("skydome.obj");
@@ -23,6 +26,7 @@ void TestScene::Initialize() {
 
 void TestScene::Update() {
 	camera_->Update();
+	object_->UpdateAnimation();
 }
 
 void TestScene::Draw() {

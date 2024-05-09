@@ -14,19 +14,7 @@ Animation LoadAnimationFile(const std::string& fileName) {
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), 0);
 
 	//アニメーションが無い場合、assert
-	if (scene->mNumAnimations == 0) {
-
-		std::string text = "There is no animation in the file \n";
-
-		text += filePath;
-
-		MessageBox(NULL, ConvertString(text).c_str(), L"Animation - LoadAnimationFile", MB_OK);
-
-		return animation;
-
-		assert(false);
-
-	}
+	assert(scene->mNumAnimations != 0);
 
 	aiAnimation* animationAssimp = scene->mAnimations[0]; //最初のアニメーションだけ採用。今後複数対応するのもあり
 	animation.duration = float(animationAssimp->mDuration / animationAssimp->mTicksPerSecond); //時間の単位を秒に変換
@@ -47,7 +35,7 @@ Animation LoadAnimationFile(const std::string& fileName) {
 
 		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumRotationKeys; ++keyIndex) {
 			aiQuatKey& keyAssimp = nodeAnimationAssimp->mRotationKeys[keyIndex];
-			KeyframeQuaternion keyframe;
+			KeyframeQuaternion keyframe{};
 			keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond); //ここも秒に変換
 			keyframe.value = { keyAssimp.mValue.x, -keyAssimp.mValue.y, -keyAssimp.mValue.z, keyAssimp.mValue.w }; //右手->左手
 			nodeAnimation.rotate.keyFrames.push_back(keyframe);
@@ -55,7 +43,7 @@ Animation LoadAnimationFile(const std::string& fileName) {
 
 		for (uint32_t keyIndex = 0; keyIndex < nodeAnimationAssimp->mNumScalingKeys; ++keyIndex) {
 			aiVectorKey& keyAssimp = nodeAnimationAssimp->mScalingKeys[keyIndex];
-			KeyframeVector3 keyframe;
+			KeyframeVector3 keyframe{};
 			keyframe.time = float(keyAssimp.mTime / animationAssimp->mTicksPerSecond); //ここも秒に変換
 			keyframe.value = { keyAssimp.mValue.x, keyAssimp.mValue.y, keyAssimp.mValue.z }; //そのまま
 			nodeAnimation.scale.keyFrames.push_back(keyframe);

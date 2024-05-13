@@ -113,7 +113,6 @@ Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, floa
 			//範囲内を補間する
 			float t = (time - keyframes[index].time) / (keyframes[nextIndex].time - keyframes[index].time);
 			return Slerp(keyframes[index].value, keyframes[nextIndex].value, t);
-
 		}
 
 	}

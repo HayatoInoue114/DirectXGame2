@@ -412,21 +412,21 @@ inline Matrix4x4& operator*=(Matrix4x4& m1, const Matrix4x4& m2) {
 /// クォータニオン
 /// -------------------------------------------------------------------------
 inline Quaternion operator+(const Quaternion& q) {
-	return { +q.w, +q.x, +q.y, +q.z };
+	return { +q.x, +q.y, +q.z, +q.w };
 }
 inline Quaternion operator-(const Quaternion& q) {
-	return { -q.w, -q.x, -q.y, -q.z };
+	return {  -q.x, -q.y, -q.z,-q.w };
 }
 
 // 加算
 inline Quaternion operator+(const Quaternion& q, const float& n) {
-	return { q.w + n, q.x + n, q.y + n, q.z + n };
+	return { q.x + n, q.y + n, q.z + n ,q.w + n };
 }
 inline Quaternion operator+(const float& n, const Quaternion& q) {
-	return { q.w + n, q.x + n, q.y + n, q.z + n };
+	return { q.x + n, q.y + n, q.z + n, q.w + n };
 }
 inline Quaternion operator+(const Quaternion& q1, const Quaternion& q2) {
-	return { q1.w + q2.w, q1.x + q2.x, q1.y + q2.y, q1.z + q2.z };
+	return { q1.x + q2.x, q1.y + q2.y, q1.z + q2.z, q1.w + q2.w};
 }
 inline Quaternion& operator+=(Quaternion& q1, Quaternion& q2) {
 	return q1 = q1 + q2;
@@ -434,13 +434,13 @@ inline Quaternion& operator+=(Quaternion& q1, Quaternion& q2) {
 
 // 減算
 inline Quaternion operator-(const Quaternion& q, const float& n) {
-	return { q.w - n, q.x - n, q.y - n, q.z - n };
+	return { q.x - n, q.y - n, q.z - n, q.w - n };
 }
 inline Quaternion operator-(const float& n, const Quaternion& q) {
-	return { q.w - n, q.x - n, q.y - n, q.z - n };
+	return { q.x - n, q.y - n, q.z - n, q.w - n };
 }
 inline Quaternion operator-(const Quaternion& q1, const Quaternion& q2) {
-	return { q1.w - q2.w, q1.x - q2.x, q1.y - q2.y, q1.z - q2.z };
+	return { q1.x - q2.x, q1.y - q2.y, q1.z - q2.z, q1.w - q2.w };
 }
 inline Quaternion& operator-=(Quaternion& q1, Quaternion& q2) {
 	return q1 = q1 - q2;
@@ -448,17 +448,18 @@ inline Quaternion& operator-=(Quaternion& q1, Quaternion& q2) {
 
 // 乗算
 inline Quaternion operator*(const Quaternion& q, const float& s) {
-	return { q.w * s, q.x * s, q.y * s, q.z * s };
+	return { q.x * s, q.y * s, q.z * s,q.w * s };
 }
 inline Quaternion operator*(const float& s, const Quaternion& q) {
-	return { q.w * s, q.x * s, q.y * s, q.z * s };
+	return { q.x * s, q.y * s, q.z * s,q.w * s };
 }
 inline Quaternion operator*(const Quaternion& q1, const Quaternion& q2) {
 	return {
-		(q1.w * q2.w) - (q1.x * q2.x) - (q1.y * q2.y) - (q1.z * q2.z),
 		(q1.y * q2.z) - (q1.z * q2.y) + (q1.w * q2.x) + (q1.x * q2.w),
 		(q1.z * q2.x) - (q1.x * q2.z) + (q1.w * q2.y) + (q1.y * q2.w),
-		(q1.x * q2.y) - (q1.y * q2.x) + (q1.w * q2.z) + (q1.z * q2.w) };
+		(q1.x * q2.y) - (q1.y * q2.x) + (q1.w * q2.z) + (q1.z * q2.w),
+		(q1.w * q2.w) - (q1.x * q2.x) - (q1.y * q2.y) - (q1.z * q2.z)
+	};
 }
 inline Quaternion& operator*=(Quaternion& q1, Quaternion& q2) {
 	return q1 = q1 * q2;
@@ -466,9 +467,9 @@ inline Quaternion& operator*=(Quaternion& q1, Quaternion& q2) {
 
 // 除算
 inline Quaternion operator/(const Quaternion& q, const float& s) {
-	return { q.w / s, q.x / s, q.y / s, q.z / s };
+	return { q.x / s, q.y / s, q.z / s, q.w / s };
 }
 inline Quaternion operator/(const float& s, const Quaternion& q) {
-	return { q.w / s, q.x / s, q.y / s, q.z / s };
+	return { q.x / s, q.y / s, q.z / s, q.w / s };
 }
 

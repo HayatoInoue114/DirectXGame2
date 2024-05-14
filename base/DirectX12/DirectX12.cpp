@@ -142,8 +142,8 @@ void DirectX12::DescriptorHeap() {
 
 	//OffscreenのためのRTV
 	const Vector4 kRenderTargetClearValue{ 1.0f,0.0f,0.0f,1.0f }; //いったんわかりやすいように赤
-	auto renderTextureResource = CreateRenderTextureResource(device_, kCliantWidth, kCliantHeight, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, kRenderTargetClearValue);
-	device_->CreateRenderTargetView(renderTextureResource.Get(), &rtvDesc_, rtvHandle_[2]);
+	renderTextureResource_ = CreateRenderTextureResource(device_, kCliantWidth, kCliantHeight, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB, kRenderTargetClearValue);
+	device_->CreateRenderTargetView(renderTextureResource_.Get(), &rtvDesc_, rtvHandle_[2]);
 
 
 	//SRVの設定。FormatはResourceと同じにしておく
@@ -157,7 +157,7 @@ void DirectX12::DescriptorHeap() {
 	//rvDescriptorHeap = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_SRV, 1, false);
 
 	//SRVの生成
-	device_->CreateShaderResourceView(renderTextureResource.Get(), &renderTextureSrvDesc, rtvHandle_[2]);
+	device_->CreateShaderResourceView(renderTextureResource_.Get(), &renderTextureSrvDesc, rtvHandle_[2]);
 }
 
 void DirectX12::GetBackBuffer() {
@@ -254,6 +254,23 @@ void DirectX12::Barrier() {
 	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
 	//バリアを張る対象のリソース。現在のバックバッファに対して行う
 	barrier_.Transition.pResource = swapChainResource_[backBufferIndex_].Get();
+	//遷移前（現在）のResourceState
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	//遷移後のResourceState
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//TransitionBarrierを張る
+	commandList_->ResourceBarrier(1, &barrier_);
+}
+
+void DirectX12::BarrierForPostEffect() {
+	barrier_ = {};
+
+	//今回のバリアはTransition
+	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneしておく
+	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。現在のバックバッファに対して行う
+	barrier_.Transition.pResource = renderTextureResource_.Get();
 	//遷移前（現在）のResourceState
 	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 	//遷移後のResourceState
@@ -404,7 +421,7 @@ void DirectX12::PostDraw() {
 void DirectX12::PreDrawForPostEffect()
 {
 	GetBackBuffer();
-	Barrier();
+	BarrierForPostEffect();
 	ClearRTV();
 	SetRenderTargets();
 	ClearDepthBuffer();
@@ -413,15 +430,34 @@ void DirectX12::PreDrawForPostEffect()
 
 void DirectX12::PostDrawForPostEffect()
 {
-
+	PushImGuiDrawCommand();
+	ScreenDisplay();
+	CommandConfirm();
+	CommandKick();
+	UpdateFixFPS();
+	Signal();
+	NextFlameCommandList();
 }
 
 void DirectX12::PreDrawForSwapChain()
 {
+	GetBackBuffer();
+	Barrier();
+	ClearRTV();
+	SetRenderTargets();
+	ClearDepthBuffer();
+	SetImGuiDescriptorHeap();
 }
 
 void DirectX12::PostDrawForSwapChain()
 {
+	PushImGuiDrawCommand();
+	ScreenDisplay();
+	CommandConfirm();
+	CommandKick();
+	UpdateFixFPS();
+	Signal();
+	NextFlameCommandList();
 }
 
 

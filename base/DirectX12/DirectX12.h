@@ -122,6 +122,8 @@ private:
 
 	void Barrier();
 
+	void BarrierForPostEffect();
+
 	void ScreenDisplay();
 
 	void CommandConfirm();
@@ -196,6 +198,8 @@ private:
 	UINT backBufferIndex_{};
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResource_[2]{};
+
+	Microsoft::WRL::ComPtr<ID3D12Resource> renderTextureResource_;
 	//ID3D12Resource* swapChainResource_[2]{};
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier_{};

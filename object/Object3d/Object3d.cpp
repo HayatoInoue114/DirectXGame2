@@ -35,7 +35,7 @@ void Object3d::Draw()
 
 	if (model_) {
 		if (!model_->isObj) {
-			wvpData_->WVP = localMatrix_* worldViewProjectionMatrix_;
+			wvpData_->WVP = localMatrix_ * worldViewProjectionMatrix_;
 			wvpData_->World = localMatrix_ * worldMatrix_;
 
 			ImGui::Begin("3d");
@@ -101,36 +101,36 @@ void Object3d::UpdateAnimation()
 {
 	isEndAnimation_ = false;
 
-	//現在のアニメーションタイムをアニメーション速度分加算
-	animationTime_ += animationSpeed_ / 60.0f;
+	
 
-	//アニメーションの時間調整
-	animationTime_ = std::fmod(animationTime_, animation_->duration);
-	NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[model_->GetModelData().rootNode.name]; //rootNodeのanimationを取得
-	Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
-	Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
-	Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
-	localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
-	////アニメーションが存在していて、再生フラグが立っている時
-	//if (animation_ && isStartAnimation_ && animation_->nodeAnimations.size() != 0) {
+	
+	//アニメーションが存在していて、再生フラグが立っている時
+	if (animation_ && isStartAnimation_ && animation_->nodeAnimations.size() != 0) {
 
-	//	
+		//現在のアニメーションタイムをアニメーション速度分加算
+		animationTime_ += animationSpeed_ / 60.0f;
 
-	//	//アニメーションタイムが全体の尺を超えていたら終点とみなす
-	//	if (animationTime_ >= animation_->duration) {
+		//アニメーションタイムが全体の尺を超えていたら終点とみなす
+		if (animationTime_ >= animation_->duration) {
 
-	//		animationTime_ = animation_->duration;
+			animationTime_ = animation_->duration;
 
-	//		//ループしなければフラグを降ろす
-	//		if (!isLoop_) {
-	//			isStartAnimation_ = false;
-	//		}
+			//ループしなければフラグを降ろす
+			if (!isLoop_) {
+				isStartAnimation_ = false;
+			}
 
-	//		isEndAnimation_ = true;
-	//	}
+			isEndAnimation_ = true;
+		}
 
-	//	
-	//}
+		//アニメーションの時間調整
+		animationTime_ = std::fmod(animationTime_, animation_->duration);
+		NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[model_->GetModelData().rootNode.name]; //rootNodeのanimationを取得
+		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
+		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
+		localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+	}
 }
 
 void Object3d::ResetAnimation() 

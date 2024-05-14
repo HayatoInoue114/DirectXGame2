@@ -14,12 +14,17 @@ std::string GetFileNameWithoutExtension(const std::string& filePath)
 }
 
 void DrawMatrix4x4(const Matrix4x4& matrix) {
+#ifdef _DEBUG
     ImGui::Text("Matrix4x4:");
 
     for (int i = 0; i < 4; ++i) {
         ImGui::Text("%.3f, %.3f, %.3f, %.3f",
             matrix.m[i][0], matrix.m[i][1], matrix.m[i][2], matrix.m[i][3]);
     }
+#else
+    (void)title;
+    (void)matrix;
+#endif // DEBUG
 }
 
 void DrawMatrix4x4(const char* title, const Matrix4x4& matrix) {

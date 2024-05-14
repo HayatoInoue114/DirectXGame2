@@ -137,6 +137,7 @@ void DirectX12::DescriptorHeap() {
 	//２つ目を作る
 	device_->CreateRenderTargetView(swapChainResource_[1].Get(), &rtvDesc_, rtvHandle_[1]);
 
+	//3つ目を作る(Offscreen)
 	rtvHandle_[2].ptr = rtvHandle_[1].ptr + device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
 	//OffscreenのためのRTV
@@ -395,11 +396,33 @@ void DirectX12::PostDraw() {
 	ScreenDisplay();
 	CommandConfirm();
 	CommandKick();
-	UpdateFixFPS();
+	//UpdateFixFPS();
 	Signal();
 	NextFlameCommandList();
 }
 
+void DirectX12::PreDrawForPostEffect()
+{
+	GetBackBuffer();
+	Barrier();
+	ClearRTV();
+	SetRenderTargets();
+	ClearDepthBuffer();
+	SetImGuiDescriptorHeap();
+}
+
+void DirectX12::PostDrawForPostEffect()
+{
+
+}
+
+void DirectX12::PreDrawForSwapChain()
+{
+}
+
+void DirectX12::PostDrawForSwapChain()
+{
+}
 
 
 void DirectX12::CreateDepthStencilResource() {
@@ -466,6 +489,8 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectX12::CreateRenderTextureResource(Mi
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_RENDER_TARGET, &clearValue, IID_PPV_ARGS(&resource));
 	return resource;
 }
+
+
 
 ID3D12Resource* DirectX12::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;

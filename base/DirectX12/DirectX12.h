@@ -33,14 +33,34 @@ public:
 
 
 	/// <summary>
-/// 描画前処理
-/// </summary>
+	/// 描画前処理 
+	/// </summary>
 	void PreDraw();
 
 	/// <summary>
 	/// 描画後処理
 	/// </summary>
 	void PostDraw();
+
+	/// <summary>
+	/// 描画前処理 PostEffect用
+	/// </summary>
+	void PreDrawForPostEffect();
+
+	/// <summary>
+	/// 描画後処理 PostEffect用
+	/// </summary>
+	void PostDrawForPostEffect();
+
+	/// <summary>
+/// 描画前処理 SwapChain用
+/// </summary>
+	void PreDrawForSwapChain();
+
+	/// <summary>
+	/// 描画後処理 SwapChain用
+	/// </summary>
+	void PostDrawForSwapChain();
 
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 
@@ -66,7 +86,7 @@ public:
 
 	ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
 
-	
+
 
 	//D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
@@ -154,7 +174,7 @@ private:
 
 	//コマンドリストを生成する
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList_{};
-	
+
 	//スワップチェーンを生成する
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain_{};
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc_{};
@@ -172,14 +192,14 @@ private:
 	//RTVを２つ作るのでディスクリプタ２つ用意
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle_[3]{};
 
-	
+
 	UINT backBufferIndex_{};
-	
+
 	Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResource_[2]{};
 	//ID3D12Resource* swapChainResource_[2]{};
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier_{};
-	
+
 	//初期値0でFenceを作る
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_{};
 	uint64_t fenceValue_{};
@@ -222,7 +242,7 @@ private:
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
 
-	public:  //メンバ定数
+public:  //メンバ定数
 	//最大SRV 数（最大テクスチャ枚数）
 	static const uint32_t kMaxSRVCount;
 };

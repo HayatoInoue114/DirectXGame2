@@ -14,18 +14,11 @@ public:
 
 	void Initialize();
 
-	void Viewport();
-
-	void ScissorRect();
-
 	void DrawCall();
 
 	void SetRootSignatureAndPSO(int n);
 
 	void Release();
-
-	void RSSet();
-
 private:
 	void Dxc();
 
@@ -95,28 +88,12 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> particleVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particlePixelShaderBlob_{};
 
-	/*IDxcBlob* vertexShaderBlob_{};
-	IDxcBlob* pixelShaderBlob_{};
-	IDxcBlob* particleVertexShaderBlob_{};
-	IDxcBlob* particlePixelShaderBlob_{};*/
-
-	/*Microsoft::WRL::ComPtr<ID3DBlob> vertexShaderBlob_{};
-	Microsoft::WRL::ComPtr<ID3DBlob> pixelShaderBlob_{};
-
-	Microsoft::WRL::ComPtr<ID3DBlob> particleVertexShaderBlob_{};
-	Microsoft::WRL::ComPtr<ID3DBlob> particlePixelShaderBlob_{};*/
-
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{};
 
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[MAXPSO][3]{};
 
 	//実際に生成
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> PipelineManagerState_[MAXPSO]{};
-
-	//ビューポート
-	D3D12_VIEWPORT viewport_{};
-	//シザー矩形
-	D3D12_RECT scissorRect_{};
 
 	D3D12_DESCRIPTOR_RANGE descriptorRange_[MAXPSO][1]{};
 	D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing_[1]{};

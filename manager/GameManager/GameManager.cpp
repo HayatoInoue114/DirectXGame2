@@ -44,9 +44,6 @@ void GameManager::Initialize()
 	sceneArr_[sceneNum_]->Initialize();
 
 	transform_.Initialize();
-
-	graphicsRenderer_->Viewport();
-	graphicsRenderer_->ScissorRect();
 }
 
 
@@ -120,12 +117,14 @@ void GameManager::BeginFrame() {
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	directX12_->PreDraw();
+	directX12_->PreDrawForPostEffect();
+	directX12_->PreDrawForSwapChain();
 	graphicsRenderer_->DrawCall();
 }
 
 void GameManager::EndFrame() {
-	directX12_->PostDraw();
+	directX12_->PostDrawForPostEffect();
+	directX12_->PostDrawForSwapChain();
 }
 
 void GameManager::Finalize() {

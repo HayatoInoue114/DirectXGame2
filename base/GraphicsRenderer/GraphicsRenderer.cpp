@@ -1,4 +1,5 @@
 #include "GraphicsRenderer.h"
+#include <iostream>
 
 GraphicsRenderer* GraphicsRenderer::GetInstance() {
 	static GraphicsRenderer instance;
@@ -212,13 +213,6 @@ void GraphicsRenderer::InputLayout() {
 		inputLayoutDesc_[i].pInputElementDescs = inputElementDescs_[i];
 		inputLayoutDesc_[i].NumElements = _countof(inputElementDescs_[i]);
 	}
-	
-
-	for (int i = 0; i < MAXPSO; i++) {
-	
-		
-	}
-	
 }
 
 void GraphicsRenderer::BlendState() {
@@ -293,74 +287,105 @@ void GraphicsRenderer::BuildShader() {
 	assert(particlePixelShaderBlob_ != nullptr);
 }
 
+//void GraphicsRenderer::CreatePSO() {
+//	HRESULT hr;
+//
+//	for (int i = 0; i < MAXPSO; i++) {
+//		PipelineManagerStateDesc_[i] = {};
+//		PipelineManagerStateDesc_[i].pRootSignature = rootSignature_[i].Get();//RootSignature
+//		PipelineManagerStateDesc_[i].InputLayout = inputLayoutDesc_[i];//InputLayout
+//
+//		if (i == 0) {
+//			PipelineManagerStateDesc_[i].VS = { vertexShaderBlob_->GetBufferPointer(),
+//			vertexShaderBlob_->GetBufferSize() };//VertexShader
+//			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
+//			pixelShaderBlob_->GetBufferSize() };//PixelShader
+//		}
+//		if (i == 1) {
+//			PipelineManagerStateDesc_[i].VS = { particleVertexShaderBlob_->GetBufferPointer(),
+//			particleVertexShaderBlob_->GetBufferSize() };//VertexShader
+//			PipelineManagerStateDesc_[i].PS = { particlePixelShaderBlob_->GetBufferPointer(),
+//			particlePixelShaderBlob_->GetBufferSize() };//PixelShader
+//		}
+//		
+//		
+//		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState
+//		PipelineManagerStateDesc_[i].RasterizerState = rasterizerDesc_[i];//RasterizeState
+//		//書き込むRTVの情報
+//		PipelineManagerStateDesc_[i].NumRenderTargets = 1;
+//		PipelineManagerStateDesc_[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+//		//利用するトポロジ（形状）のタイプ。三角形
+//		PipelineManagerStateDesc_[i].PrimitiveTopologyType =
+//			D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+//		//どのように画面に色を打ち込むかの設定（気にしなくてよい）
+//		PipelineManagerStateDesc_[i].SampleDesc.Count = 1;
+//		PipelineManagerStateDesc_[i].SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+//
+//		//DepthStencilの設定
+//		PipelineManagerStateDesc_[i].DepthStencilState = depthStencilDesc_;
+//		PipelineManagerStateDesc_[i].DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+//
+//		PipelineManagerState_[i] = nullptr;
+//		hr = DirectX12::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&PipelineManagerStateDesc_[i],
+//			IID_PPV_ARGS(&PipelineManagerState_[i]));
+//		assert(SUCCEEDED(hr));
+//	}
+//}
 void GraphicsRenderer::CreatePSO() {
 	HRESULT hr;
 
 	for (int i = 0; i < MAXPSO; i++) {
 		PipelineManagerStateDesc_[i] = {};
-		PipelineManagerStateDesc_[i].pRootSignature = rootSignature_[i].Get();//RootSignature
-		PipelineManagerStateDesc_[i].InputLayout = inputLayoutDesc_[i];//InputLayout
+		PipelineManagerStateDesc_[i].pRootSignature = rootSignature_[i].Get(); // RootSignature
+		PipelineManagerStateDesc_[i].InputLayout = inputLayoutDesc_[i]; // InputLayout
 
 		if (i == 0) {
 			PipelineManagerStateDesc_[i].VS = { vertexShaderBlob_->GetBufferPointer(),
-			vertexShaderBlob_->GetBufferSize() };//VertexShader
+												vertexShaderBlob_->GetBufferSize() }; // VertexShader
 			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
-			pixelShaderBlob_->GetBufferSize() };//PixelShader
+												pixelShaderBlob_->GetBufferSize() }; // PixelShader
 		}
-		if (i == 1) {
+		else if (i == 1) {
 			PipelineManagerStateDesc_[i].VS = { particleVertexShaderBlob_->GetBufferPointer(),
-			particleVertexShaderBlob_->GetBufferSize() };//VertexShader
+												particleVertexShaderBlob_->GetBufferSize() }; // VertexShader
 			PipelineManagerStateDesc_[i].PS = { particlePixelShaderBlob_->GetBufferPointer(),
-			particlePixelShaderBlob_->GetBufferSize() };//PixelShader
+												particlePixelShaderBlob_->GetBufferSize() }; // PixelShader
 		}
-		
-		
-		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState
-		PipelineManagerStateDesc_[i].RasterizerState = rasterizerDesc_[i];//RasterizeState
-		//書き込むRTVの情報
+
+		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i]; // BlendState
+		PipelineManagerStateDesc_[i].RasterizerState = rasterizerDesc_[i]; // RasterizerState
+		// 書き込むRTVの情報
 		PipelineManagerStateDesc_[i].NumRenderTargets = 1;
-		PipelineManagerStateDesc_[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		//利用するトポロジ（形状）のタイプ。三角形
-		PipelineManagerStateDesc_[i].PrimitiveTopologyType =
-			D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		//どのように画面に色を打ち込むかの設定（気にしなくてよい）
+		PipelineManagerStateDesc_[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 必要なRTVフォーマットを設定
+		
+
+		// 利用するトポロジ（形状）のタイプ。三角形
+		PipelineManagerStateDesc_[i].PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		// どのように画面に色を打ち込むかの設定（気にしなくてよい）
 		PipelineManagerStateDesc_[i].SampleDesc.Count = 1;
 		PipelineManagerStateDesc_[i].SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
-		//DepthStencilの設定
+		// DepthStencilの設定
 		PipelineManagerStateDesc_[i].DepthStencilState = depthStencilDesc_;
 		PipelineManagerStateDesc_[i].DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+		// RTVフォーマットが正しく設定されているかを確認
+		//assert(PipelineManagerStateDesc_[i].RTVFormats[0] == DXGI_FORMAT_UNKNOWN);
 
 		PipelineManagerState_[i] = nullptr;
 		hr = DirectX12::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&PipelineManagerStateDesc_[i],
 			IID_PPV_ARGS(&PipelineManagerState_[i]));
+		if (FAILED(hr)) {
+			// エラーが発生した場合にエラーメッセージを出力
+			std::cerr << "Failed to create graphics pipeline state for index " << i << std::endl;
+		}
 		assert(SUCCEEDED(hr));
 	}
-	for (int i = 0; i < MAXPSO; i++) {
-	
-	}
-	
 }
 
-void GraphicsRenderer::Viewport() {
-	viewport_ = {};
-	//クライアント領域サイズと一緒にして画面残帯に表示
-	viewport_.Width = kCliantWidth;
-	viewport_.Height = kCliantHeight;
-	viewport_.TopLeftX = 0;
-	viewport_.TopLeftY = 0;
-	viewport_.MinDepth = 0.0f;
-	viewport_.MaxDepth = 1.0f;
-}
 
-void GraphicsRenderer::ScissorRect() {
-	scissorRect_ = {};
-	//基本的にビューポートと同じ矩形が構成されるようにする
-	scissorRect_.left = 0;
-	scissorRect_.right = kCliantWidth;
-	scissorRect_.top = 0;
-	scissorRect_.bottom = kCliantHeight;
-}
+
+
 
 void GraphicsRenderer::Initialize() {
 	Dxc();
@@ -384,13 +409,9 @@ void GraphicsRenderer::Release() {
 	vertexShaderBlob_->Release();*/
 }
 
-void GraphicsRenderer::RSSet() {
-	DirectX12::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);	//Viewportを設定
-	DirectX12::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);	//Scirssorを設定
-}
+
 
 void GraphicsRenderer::DrawCall() {
-	RSSet();
 	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 

@@ -122,7 +122,9 @@ private:
 
 	void Barrier();
 
-	void BarrierForPostEffect();
+	void PreBarrierForPostEffect();
+
+	void PostBarrierForPostEffect();
 
 	void ScreenDisplay();
 
@@ -138,6 +140,8 @@ private:
 
 	void SetRenderTargets();
 
+	void SetRenderTargetsForPostEffect();
+
 	void InitializeDescriptorSize();
 
 
@@ -149,6 +153,8 @@ private:
 
 	void ClearRTV();
 
+	void ClearRTVForPostEffect();
+
 	void CommandKick();
 
 	void Signal();
@@ -156,6 +162,12 @@ private:
 	void NextFlameCommandList();
 
 	void ClearDepthBuffer();
+
+	void Viewport();
+
+	void ScissorRect();
+
+	void RSSet();
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor);
 private:
@@ -245,6 +257,11 @@ private:
 
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
+
+	//ビューポート
+	D3D12_VIEWPORT viewport_{};
+	//シザー矩形
+	D3D12_RECT scissorRect_{};
 
 public:  //メンバ定数
 	//最大SRV 数（最大テクスチャ枚数）

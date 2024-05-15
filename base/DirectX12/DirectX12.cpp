@@ -9,6 +9,43 @@ DirectX12* DirectX12::GetInstance() {
 	return &instance;
 }
 
+///////////////////////////////////////初期化///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+void DirectX12::Init() {
+	//システムタイマーの精度を上げる
+	timeBeginPeriod(1);
+
+	InitializeFixFPS();
+	WindowsAPI::GetInstance()->Init();
+	DXGIFactory();
+	Adapter();
+	DebugLayer();
+	D3D12Device();
+
+	Error();
+	Command();
+	SwapChain();
+	DescriptorHeap();
+	CreateDepthStencilResource();
+	CreateDSV();
+
+	//ImGuiの初期化
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(WindowsAPI::GetInstance()->GetHwnd());
+	ImGui_ImplDX12_Init(device_.Get(),
+		swapChainDesc_.BufferCount,
+		rtvDesc_.Format,
+		srvDescriptorHeap_.Get(),
+		srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart(),
+		srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart());
+	Fence();
+
+	InitializeDescriptorSize();
+}
+
 void DirectX12::DXGIFactory() {
 	dxgiFactory_ = nullptr;
 
@@ -27,7 +64,7 @@ void DirectX12::Adapter() {
 		//ソフトウェアアダプタでなければ採用!
 		if (!(adapterDesc_.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
 			//採用したアダプタの情報をログに出力。wstringの方なので注意
-			Log(ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc_.Description)));			
+			Log(ConvertString(std::format(L"Use Adapter:{}\n", adapterDesc_.Description)));
 			break;
 		}
 		useAdapter_ = nullptr;//ソフトウェアアダプタの場合は見なかったことにする
@@ -52,7 +89,7 @@ void DirectX12::D3D12Device() {
 		//指定した機能レベルでデバイスが生成できたかを確認
 		if (SUCCEEDED(hr)) {
 			//生成できたのでログ出力を行ってループを抜ける
-			Log(std::format("featureLevel : {}\n", featureLevelStrings[i]));			
+			Log(std::format("featureLevel : {}\n", featureLevelStrings[i]));
 			break;
 		}
 	}
@@ -160,6 +197,42 @@ void DirectX12::DescriptorHeap() {
 	device_->CreateShaderResourceView(renderTextureResource_.Get(), &renderTextureSrvDesc, rtvHandle_[2]);
 }
 
+void DirectX12::InitializeFixFPS() {
+	//現在時間を記録する
+	reference_ = std::chrono::steady_clock::now();
+}
+
+void DirectX12::InitializeDescriptorSize() {
+	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
+}
+
+void DirectX12::CreateDepthStencilResource() {
+	//DepthStencilTextureをウインドウのサイズで作成
+	depthStencilResource_ = CreateDepthStencilTextureResource(device_.Get(), kCliantWidth, kCliantHeight);
+}
+
+void DirectX12::CreateDSV() {
+	dsvDescriptorHeap_ = nullptr;
+	dsvDescriptorHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
+
+	//DSVの設定
+	dsvDesc_ = {};
+	dsvDesc_.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本的にはResourceに合わせる
+	dsvDesc_.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
+	//DSVHeapの先頭にDSVを作る
+	device_->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc_, dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart());
+}
+
+///////////////////////////////////////初期化///////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+///////////////////////////////////////描画関係/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 void DirectX12::GetBackBuffer() {
 	//これから書き込むバックバッファのインデックスを取得
 	backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
@@ -175,7 +248,7 @@ void DirectX12::ClearRTV() {
 }
 
 void DirectX12::SetImGuiDescriptorHeap() {
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap_.Get()};
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap_.Get() };
 	commandList_->SetDescriptorHeaps(1, descriptorHeaps);
 }
 
@@ -183,7 +256,6 @@ void DirectX12::PushImGuiDrawCommand() {
 	//実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList_.Get());
 }
-
 
 void DirectX12::CommandKick() {
 	//GPUにコマンドリストの実行を行わせる
@@ -202,7 +274,7 @@ void DirectX12::NextFlameCommandList() {
 }
 
 void DirectX12::DebugLayer() {
-	#ifdef _DEBUG
+#ifdef _DEBUG
 	ID3D12Debug1* debugControllar = nullptr;
 	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugControllar)))) {
 		//デバッグレイヤーを有効化する
@@ -324,11 +396,6 @@ void DirectX12::Signal() {
 	}
 }
 
-void DirectX12::InitializeFixFPS() {
-	//現在時間を記録する
-	reference_ = std::chrono::steady_clock::now();
-}
-
 void DirectX12::UpdateFixFPS() {
 	// 1/60秒ぴったりの時間
 	const std::chrono::microseconds kMinTime(uint64_t(1000000.0f / 60.0f));
@@ -354,8 +421,19 @@ void DirectX12::UpdateFixFPS() {
 	reference_ = std::chrono::steady_clock::now();
 }
 
+void DirectX12::SetRenderTargets() {
+	dsvHandle_ = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	commandList_->OMSetRenderTargets(1, &rtvHandle_[backBufferIndex_], false, &dsvHandle_);
+}
+
+void DirectX12::ClearDepthBuffer() {
+	//指定した深度で画面全体をクリアする
+	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+}
 
 
+///////////////////////////////////////描画関係/////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 void DirectX12::Finalize() {
@@ -363,39 +441,7 @@ void DirectX12::Finalize() {
 	CloseWindow(WindowsAPI::GetInstance()->GetHwnd());
 }
 
-void DirectX12::Init() {
-	//システムタイマーの精度を上げる
-	timeBeginPeriod(1);
 
-	InitializeFixFPS();
-	WindowsAPI::GetInstance()->Init();
-	DXGIFactory();
-	Adapter();
-	DebugLayer();
-	D3D12Device();
-
-	Error();
-	Command();
-	SwapChain();
-	DescriptorHeap();
-	CreateDepthStencilResource();
-	CreateDSV();
-	
-	//ImGuiの初期化
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(WindowsAPI::GetInstance()->GetHwnd());
-	ImGui_ImplDX12_Init(device_.Get(),
-		swapChainDesc_.BufferCount,
-		rtvDesc_.Format,
-		srvDescriptorHeap_.Get(),
-		srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart(),
-		srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart());
-	Fence();
-
-	InitializeDescriptorSize();
-}
 
 void DirectX12::PreDraw() {
 	GetBackBuffer();
@@ -422,8 +468,8 @@ void DirectX12::PreDrawForPostEffect()
 {
 	GetBackBuffer();
 	BarrierForPostEffect();
-	ClearRTV();
 	SetRenderTargets();
+	ClearRTV();
 	ClearDepthBuffer();
 	SetImGuiDescriptorHeap();
 }
@@ -461,38 +507,14 @@ void DirectX12::PostDrawForSwapChain()
 }
 
 
-void DirectX12::CreateDepthStencilResource() {
-	//DepthStencilTextureをウインドウのサイズで作成
-	depthStencilResource_ = CreateDepthStencilTextureResource(device_.Get(), kCliantWidth, kCliantHeight);
-}
 
-void DirectX12::CreateDSV() {
-	dsvDescriptorHeap_ = nullptr;
-	dsvDescriptorHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
-	//DSVの設定
-	dsvDesc_ = {};
-	dsvDesc_.Format = DXGI_FORMAT_D24_UNORM_S8_UINT; // Format。基本的にはResourceに合わせる
-	dsvDesc_.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D; // 2dTexture
-	//DSVHeapの先頭にDSVを作る
-	device_->CreateDepthStencilView(depthStencilResource_.Get(), &dsvDesc_, dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart());
-}
 
-void DirectX12::SetRenderTargets() {
-	dsvHandle_ = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
-	commandList_->OMSetRenderTargets(1, &rtvHandle_[backBufferIndex_], false, &dsvHandle_);
-}
 
-void DirectX12::ClearDepthBuffer() {
-	//指定した深度で画面全体をクリアする
-	commandList_->ClearDepthStencilView(dsvHandle_, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-}
 
-void DirectX12::InitializeDescriptorSize() {
-	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
-}
+
+
+
 
 Microsoft::WRL::ComPtr<ID3D12Resource> DirectX12::CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor)
 {
@@ -525,8 +547,6 @@ Microsoft::WRL::ComPtr<ID3D12Resource> DirectX12::CreateRenderTextureResource(Mi
 		D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_RENDER_TARGET, &clearValue, IID_PPV_ARGS(&resource));
 	return resource;
 }
-
-
 
 ID3D12Resource* DirectX12::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
 	HRESULT hr;

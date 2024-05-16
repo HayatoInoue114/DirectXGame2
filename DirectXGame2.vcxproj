@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -97,7 +97,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="manager\AnimationManager\AnimationManager.cpp" />
+    <ClCompile Include="object\Line\Line.cpp" />
     <ClCompile Include="object\Object3d\Animation\Animation.cpp" />
     <ClCompile Include="manager\CollisionManager\Collider\Collider.cpp" />
     <ClCompile Include="manager\CollisionManager\CollisionManager.cpp" />
@@ -114,17 +114,14 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="math\Line\HermitePoly\HermitePoly.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="manager\ParticleManager\ParticleManager.cpp" />
-    <ClCompile Include="manager\PipelineManager\PiplineManager.cpp" />
     <ClCompile Include="manager\ModelManager\ModelManager.cpp" />
     <ClCompile Include="base\ResourceLeakCheck\ResourceLeakCheck.cpp" />
     <ClCompile Include="math\Transform\Transform.cpp" />
     <ClCompile Include="math\WorldTransform\WorldTransform.cpp" />
     <ClCompile Include="object\Object3d\Object3d.cpp" />
-    <ClCompile Include="object\ModelLine\ModelLine.cpp" />
     <ClCompile Include="object\Camera\Camera.cpp" />
     <ClCompile Include="object\Model\Model.cpp" />
-    <ClCompile Include="object\Primitive\Primitive\Primitive.cpp" />
-    <ClCompile Include="object\Primitive\PrimitiveCommon\PrimitiveCommon.cpp" />
+    <ClCompile Include="object\Primitive\Primitive.cpp" />
     <ClCompile Include="manager\PrimitiveManager\PrimitiveManager.cpp" />
     <ClCompile Include="object\Particle\ParticleCommon\ParticleCommon.cpp" />
     <ClCompile Include="Project\Bullet\EnemyBullet\EnemyBullet.cpp" />
@@ -184,7 +181,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\TD3\Project\Math\MathOperations\MathOperations.h" />
-    <ClInclude Include="manager\AnimationManager\AnimationManager.h" />
+    <ClInclude Include="object\Line\Line.h" />
     <ClInclude Include="object\Object3d\Animation\Animation.h" />
     <ClInclude Include="manager\CollisionManager\CollisionConfig\CollisionConfig.h" />
     <ClInclude Include="manager\CollisionManager\Collider\Collider.h" />
@@ -203,7 +200,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="math\Line\HermitePoly\HermitePoly.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="manager\ParticleManager\ParticleManager.h" />
-    <ClInclude Include="manager\PipelineManager\PiplineManager.h" />
     <ClInclude Include="manager\ModelManager\ModelManager.h" />
     <ClInclude Include="base\ResourceLeakCheck\ResourceLeakCheck.h" />
     <ClInclude Include="math\MathOperator\MathOperator.h" />
@@ -212,11 +208,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="math\Transform\Transform.h" />
     <ClInclude Include="math\WorldTransform\WorldTransform.h" />
     <ClInclude Include="object\Object3d\Object3d.h" />
-    <ClInclude Include="object\ModelLine\ModelLine.h" />
     <ClInclude Include="object\Camera\Camera.h" />
     <ClInclude Include="object\Model\Model.h" />
-    <ClInclude Include="object\Primitive\Primitive\Primitive.h" />
-    <ClInclude Include="object\Primitive\PrimitiveCommon\PrimitiveCommon.h" />
+    <ClInclude Include="object\Primitive\Primitive.h" />
     <ClInclude Include="manager\PrimitiveManager\PrimitiveManager.h" />
     <ClInclude Include="object\Particle\ParticleCommon\ParticleCommon.h" />
     <ClInclude Include="Project\Bullet\EnemyBullet\EnemyBullet.h" />
@@ -233,6 +227,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="scene\TitleScene.h" />
     <ClInclude Include="structure\AccField\AccField.h" />
     <ClInclude Include="structure\Emitter\Emitter.h" />
+    <ClInclude Include="structure\SkeletonData\SkeletonData.h" />
     <ClInclude Include="structure\Node\Node.h" />
     <ClInclude Include="structure\ParticleData\ParticleData.h" />
     <ClInclude Include="structure\ParticleForGPU\ParticleForGPU.h" />

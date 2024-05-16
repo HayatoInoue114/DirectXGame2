@@ -127,6 +127,5 @@ private:
 	Camera* camera_ = nullptr;
 
 	bool isParent_{};
-	
 };
 

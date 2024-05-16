@@ -1,6 +1,5 @@
 #pragma once
-#include "../../object/Primitive/Primitive/Primitive.h"
-//#include "../../object/Primitive/PrimitiveCommon/PrimitiveCommon.h"
+#include "../../object/Primitive/Primitive.h"
 #include "../../object/Camera/Camera.h"
 #include "../../object/Model/Model.h"
 #include "../../object/Particle/Particle.h"

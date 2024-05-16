@@ -3,9 +3,9 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
-void Sphere::Initialize(DirectX12* directX12, Light* light) {
-	directX12_ = directX12;
-	light_ = light;
+void Sphere::Initialize() {
+	directX12_ = DirectX12::GetInstance();
+	light_ = Light::Getinstance();
 
 	//Transform変数を作る
 	transform_.Initialize();
@@ -128,17 +128,20 @@ void Sphere::WriteDataToResource() {
 }
 
 void Sphere::CreateWVPMatrix() {
-	//cameraTransform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f,} };
-	cameraTransform_.Initialize();
-	cameraTransform_.translate = { 0.0f,0.0f,-10.0f };
-
-	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	cameramatrix_ = MakeAffineMatrix(cameraTransform_.scale, cameraTransform_.rotate, cameraTransform_.translate);
-	viewMatrix_ = Inverse(cameramatrix_);
-	projectionMatix_ = MakePerspectiveFovMatrix(0.45f, float(kCliantWidth) / float(kCliantHeight), 0.1f, 100.0f);
-	worldViewProjectionMatrix_ = Multiply(worldMatrix_, Multiply(viewMatrix_, projectionMatix_));
-	wvpData_->WVP = worldViewProjectionMatrix_;
-	wvpData_->World = worldMatrix_;
+	Matrix4x4 worldMatrix = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	Matrix4x4 worldViewProjectionMatrix{};
+	if (camera_) {
+		if (isParent) {
+			worldMatrix = Multiply(worldMatrix, camera_->GetWorldMatrix());
+		}
+		const Matrix4x4& viewProjectionMatrix = camera_->GetViewProjectionMatrix();
+		worldViewProjectionMatrix = Multiply(worldMatrix, viewProjectionMatrix);
+	}
+	else {
+		worldViewProjectionMatrix = worldMatrix;
+	}
+	wvpData_->WVP = worldViewProjectionMatrix;
+	wvpData_->World = worldMatrix;
 }
 
 void Sphere::SetMaterialData() {
@@ -162,6 +165,7 @@ void Sphere::Update(WorldTransform& transform, Vector4& color) {
 }
 
 void Sphere::Draw() {
+	CreateWVPMatrix();
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
@@ -175,7 +179,7 @@ void Sphere::Draw() {
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
-	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall_ ? directX12_->GetTextureSrvHandleGPU2() : directX12_->GetTextureSrvHandleGPU());
+	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[0]);
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, light_->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。

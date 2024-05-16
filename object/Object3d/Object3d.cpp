@@ -35,8 +35,8 @@ void Object3d::Draw()
 
 	if (model_) {
 		if (!model_->isObj) {
-			wvpData_->WVP = localMatrix_ * worldViewProjectionMatrix_;
-			wvpData_->World = localMatrix_ * worldMatrix_;
+			wvpData_->WVP = /*localMatrix_ * */worldViewProjectionMatrix_;
+			wvpData_->World = /*localMatrix_ * */worldMatrix_;
 
 			ImGui::Begin("3d");
 			ImGui::SliderFloat("anime", &animationTime_, 0.1f, 0.1f);
@@ -45,6 +45,10 @@ void Object3d::Draw()
 			DrawMatrix4x4("localMatrix", localMatrix_);
 			
 		}
+		if (skeleton_) {
+			DrawJoint(*skeleton_, camera_);
+		}
+		
 		model_->Draw();
 	}
 
@@ -95,15 +99,18 @@ void Object3d::LoadAnimation(const std::string& filename)
 	}
 
 	*animation_ = LoadAnimationFile(filename);
+
+	if (!skeleton_) {
+		skeleton_ = std::make_unique<Skeleton>();
+	}
+
+	*skeleton_ = CreateSkeleton(model_->GetModelData().rootNode);
 }
 
 void Object3d::UpdateAnimation()
 {
 	isEndAnimation_ = false;
 
-	
-
-	
 	//アニメーションが存在していて、再生フラグが立っている時
 	if (animation_ && isStartAnimation_ && animation_->nodeAnimations.size() != 0) {
 
@@ -125,11 +132,17 @@ void Object3d::UpdateAnimation()
 
 		//アニメーションの時間調整
 		animationTime_ = std::fmod(animationTime_, animation_->duration);
-		NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[model_->GetModelData().rootNode.name]; //rootNodeのanimationを取得
-		Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
-		Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
-		Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
-		localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
+
+		if (skeleton_) {
+			ApplyAnimation(*skeleton_, *animation_, animationTime_);
+			UpdateSkeleton(*skeleton_);
+		}
+
+		//NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[model_->GetModelData().rootNode.name]; //rootNodeのanimationを取得
+		//Vector3 translate = CalculateValue(rootNodeAnimation.translate.keyFrames, animationTime_);
+		//Quaternion rotate = CalculateValue(rootNodeAnimation.rotate.keyFrames, animationTime_);
+		//Vector3 scale = CalculateValue(rootNodeAnimation.scale.keyFrames, animationTime_);
+		//localMatrix_ = MakeAffineMatrix(scale, rotate, translate);
 	}
 }
 

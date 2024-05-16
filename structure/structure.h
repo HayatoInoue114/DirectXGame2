@@ -110,3 +110,4 @@
 #include "Emitter/Emitter.h"
 #include "AccField/AccField.h"
 #include "Node/Node.h"
+#include "SkeletonData/SkeletonData.h"

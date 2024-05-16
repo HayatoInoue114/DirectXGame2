@@ -28,6 +28,8 @@ public:
 	void SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
 	void SetTranslate(const Vector3& translate) { worldTransform_.translate = translate; }
 
+	void SetSkeleton(const Skeleton& skeleton) { *skeleton_ = skeleton; }
+
 	/// <summary>
 	/// アニメーション開始
 	/// </summary>
@@ -66,6 +68,9 @@ private:
 
 	//アニメーション
 	std::unique_ptr<Animation> animation_;
+
+	//Skeleton
+	std::unique_ptr<Skeleton> skeleton_;
 
 	//アニメーションタイム
 	float animationTime_ = 0.0f;

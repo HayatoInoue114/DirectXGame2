@@ -174,9 +174,6 @@
     <ClCompile Include="components\Audio\3DAudio\Audio3D.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="manager\PipelineManager\PiplineManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="manager\ModelManager\ModelManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -234,10 +231,7 @@
     <ClCompile Include="math\Transform\Transform.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="object\Primitive\Primitive\Primitive.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="object\Primitive\PrimitiveCommon\PrimitiveCommon.cpp">
+    <ClCompile Include="object\Primitive\Primitive.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="manager\PrimitiveManager\PrimitiveManager.cpp">
@@ -258,9 +252,6 @@
     <ClCompile Include="math\Line\HermitePoly\HermitePoly.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="object\ModelLine\ModelLine.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="manager\CollisionManager\CollisionManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -276,7 +267,7 @@
     <ClCompile Include="utility\UtilityFunction\UtilityFunction.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="manager\AnimationManager\AnimationManager.cpp">
+    <ClCompile Include="object\Line\Line.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -383,9 +374,6 @@
     <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="manager\PipelineManager\PiplineManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="manager\ModelManager\ModelManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -443,10 +431,7 @@
     <ClInclude Include="math\Transform\Transform.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="object\Primitive\Primitive\Primitive.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="object\Primitive\PrimitiveCommon\PrimitiveCommon.h">
+    <ClInclude Include="object\Primitive\Primitive.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="manager\PrimitiveManager\PrimitiveManager.h">
@@ -494,9 +479,6 @@
     <ClInclude Include="math\Line\HermitePoly\HermitePoly.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="object\ModelLine\ModelLine.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="manager\CollisionManager\Collider\Collider.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -515,7 +497,10 @@
     <ClInclude Include="utility\UtilityFunction\UtilityFunction.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="manager\AnimationManager\AnimationManager.h">
+    <ClInclude Include="structure\SkeletonData\SkeletonData.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="object\Line\Line.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

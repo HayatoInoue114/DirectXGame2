@@ -2,7 +2,7 @@
 #include "../../../structure/structure.h"
 #include <string>
 #include<map>
-
+#include "../../Sphere/Sphere.h"
 
 template <typename tValue>
 struct Keyframe {
@@ -31,9 +31,21 @@ struct Animation {
 	std::map<std::string, NodeAnimation> nodeAnimations;
 };
 
-
+//Animation
 Animation LoadAnimationFile(const std::string& fileName);
 
 Vector3 CalculateValue(const std::vector<KeyframeVector3>& keyframes, float time);
 
 Quaternion CalculateValue(const std::vector<KeyframeQuaternion>& keyframes, float time);
+
+
+//Skeleton
+Skeleton CreateSkeleton(const Node& rootNode);
+
+int32_t CreateJoint(const Node& node, const std::optional<int32_t>& parent, std::vector<Joint>& joints);
+
+void UpdateSkeleton(Skeleton& skeleton);
+
+void DrawJoint(Skeleton& skeleton,Camera* camera);
+
+void ApplyAnimation(Skeleton& skeleton, const Animation& animation, float animationTime);

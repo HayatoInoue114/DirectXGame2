@@ -9,11 +9,11 @@ void TestScene::Initialize() {
 	camera_->Initialize();
 	
 	model_ = std::make_unique<Model>();
-	model_ = Model::CreateModelFromObjPtr("AnimatedCube.gltf");
+	model_ = Model::CreateModelFromObjPtr("simpleSkin.gltf");
 
 	object_ = std::make_unique<Object3d>();
 	object_->Init(model_.get(),camera_.get());
-	object_->LoadAnimation("AnimatedCube/AnimatedCube.gltf");
+	object_->LoadAnimation("human/sneakWalk.gltf");
 	object_->StartAnimation(true);
 	//object_->SetAnimationSpeed(10.0f);
 
@@ -33,7 +33,6 @@ void TestScene::Draw() {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	dome_->Draw();
 	object_->Draw();
-	
 }
 
 void TestScene::Finalize() {

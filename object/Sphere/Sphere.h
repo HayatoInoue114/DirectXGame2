@@ -7,20 +7,28 @@
 #include "../../structure/Material/Material.h"
 #include "../../math/TransformationMatrix.h"
 #include "../../math/WorldTransform/WorldTransform.h"
-
+#include "../../manager/TextureManager/TextureManager.h"
+#include "../Camera/Camera.h"
 
 class Light;
 
 class Sphere
 {
 public:
-	void Initialize(DirectX12* directX12, Light* light);
+	void Initialize();
 
 	void Update(WorldTransform& transform, Vector4& color);
 
 	void Draw();
 
 	void ImGuiAdjustParameter();
+
+	void SetPosition(const Vector3& pos) { transform_.translate = pos; }
+	void SetScale(const Vector3& scale) { transform_.scale = scale; }
+
+	void SetCamera(Camera* camera) { camera_ = camera; }
+
+	bool isParent;
 
 private:
 	void CreateVertexResource();
@@ -38,6 +46,7 @@ private:
 	void SetMaterialData();
 
 private:
+	Camera* camera_;
 	Material* materialData_{};
 
 	Light* light_{};

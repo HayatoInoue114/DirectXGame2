@@ -5,6 +5,7 @@
 
 #include "../object/Object3d/Object3d.h"
 #include "../object/Camera/Camera.h"
+#include "../object/Sphere/Sphere.h"
 
 #include "IScene.h"
 
@@ -28,7 +29,5 @@ private:
 	std::unique_ptr<Object3d> dome_;
 
 	std::unique_ptr<Model> domeModel_;
-
-	//std::unique_ptr<Particle> particle_{};
 };
 

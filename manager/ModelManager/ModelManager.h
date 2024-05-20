@@ -6,6 +6,7 @@
 #include <assimp/postprocess.h>
 #include <map>
 #include "../../utility/UtilityFunction/UtilityFunction.h"
+#include "../../base/DirectX12/DirectX12.h"
 
 enum ModelName {
 	CUBE,

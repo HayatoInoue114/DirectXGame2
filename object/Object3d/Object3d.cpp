@@ -28,10 +28,7 @@ void Object3d::Draw()
 {
 	CreateWVPMatrix();
 
-	//wvp用のCBufferの場所を設定
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
-
+	
 
 	if (model_) {
 		if (!model_->isObj) {
@@ -48,7 +45,10 @@ void Object3d::Draw()
 		if (skeleton_) {
 			DrawJoint(*skeleton_, camera_);
 		}
-		
+		//wvp用のCBufferの場所を設定
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
+
 		model_->Draw();
 	}
 

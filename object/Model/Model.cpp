@@ -37,6 +37,7 @@ void Model::Initialize() {
 	CreateModel();
 	CreateMaterialResource();
 	CreateVertexBufferView();
+	CreateResourceView();
 
 	WriteDataToResource();
 
@@ -88,6 +89,20 @@ void Model::CreateModel() {
 
 }
 
+void Model::CreateResourceView()
+{
+	ID3D12Resource* indexResource = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(uint32_t) * modelData_.indices.size());
+	
+	indexBufferViewSprite_.BufferLocation = indexResource->GetGPUVirtualAddress();
+	indexBufferViewSprite_.SizeInBytes = UINT(sizeof(uint32_t) * modelData_.indices.size());
+	indexBufferViewSprite_.Format = DXGI_FORMAT_R32_UINT;
+
+	uint32_t* mappedIndex = nullptr;
+
+	indexResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
+	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+}
+
 void Model::Update() {
 	//ImGuiAdjustParameter();
 }
@@ -99,6 +114,7 @@ void Model::Draw() {
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
 
+	DirectX12::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferViewSprite_);
 	DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -107,7 +123,7 @@ void Model::Draw() {
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[modelName_]);
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
-	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(UINT(modelData_.vertices.size()), 1, 0, 0);
+	DirectX12::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }
 
 void Model::ImGuiAdjustParameter() {

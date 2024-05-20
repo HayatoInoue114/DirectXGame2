@@ -69,6 +69,8 @@ private:
 
 	void CreateModel();
 
+	void CreateResourceView();
+
 public:
 	//trueなら.obj || falseなら.gltf
 	bool isObj = true;
@@ -127,5 +129,7 @@ private:
 	Camera* camera_ = nullptr;
 
 	bool isParent_{};
+
+	D3D12_INDEX_BUFFER_VIEW indexBufferViewSprite_{};
 };
 

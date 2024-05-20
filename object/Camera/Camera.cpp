@@ -63,11 +63,11 @@ void Camera::Update() {
 
 	//上昇
 	if (Input::GetInstance()->PushKey(DIK_SPACE)) {
-		move.y = speed;
+		worldTransform_.translate.y += speed;
 	}
 	//下降
 	if (Input::GetInstance()->PushKey(DIK_LCONTROL)) {
-		move.y = -speed;
+		worldTransform_.translate.y -= speed;
 	}
 
 	//z軸移動

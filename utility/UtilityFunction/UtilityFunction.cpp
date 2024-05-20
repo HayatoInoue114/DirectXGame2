@@ -22,7 +22,6 @@ void DrawMatrix4x4(const Matrix4x4& matrix) {
             matrix.m[i][0], matrix.m[i][1], matrix.m[i][2], matrix.m[i][3]);
     }
 #else
-    (void)title;
     (void)matrix;
 #endif // DEBUG
 }
@@ -39,6 +38,16 @@ void DrawMatrix4x4(const char* title, const Matrix4x4& matrix) {
     ImGui::End();
 #else
     (void)title;
+    (void)matrix;
+#endif // DEBUG
+}
+
+void DrawVector3(const Vector3& v) {
+#ifdef _DEBUG
+    ImGui::Begin("test");
+    ImGui::Text("Vector3 : %d, %d, %d", v.x, v.y, v.z);
+    ImGui::End();
+#else
     (void)matrix;
 #endif // DEBUG
 }

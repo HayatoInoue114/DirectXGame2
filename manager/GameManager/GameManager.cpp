@@ -123,8 +123,8 @@ void GameManager::BeginFrame() {
 }
 
 void GameManager::EndFrame() {
-	directX12_->PostDrawForPostEffect();
 	directX12_->PostDrawForSwapChain();
+	directX12_->PostDrawForPostEffect();
 }
 
 void GameManager::Finalize() {

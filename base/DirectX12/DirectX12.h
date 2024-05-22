@@ -93,6 +93,20 @@ public:
 	//D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() { return srvDescriptorHeap_.Get(); }
+
+private:
+	void GetBackBuffer();
+	void ClearRTV();
+	void ClearRTVForPostEffect();
+	void Barrier();
+	void PreBarrierForPostEffect();
+	void PostBarrierForPostEffect();
+	void ScreenDisplay();
+	void CommandConfirm();
+	void SetRenderTargets();
+	void SetRenderTargetsForPostEffect();
+	void ClearDepthBuffer();
+
 private:
 	void DXGIFactory();
 
@@ -120,16 +134,6 @@ private:
 
 	void Error();
 
-	void Barrier();
-
-	void PreBarrierForPostEffect();
-
-	void PostBarrierForPostEffect();
-
-	void ScreenDisplay();
-
-	void CommandConfirm();
-
 	void Fence();
 
 	/*void Update();*/
@@ -138,30 +142,17 @@ private:
 
 	void CreateDSV();
 
-	void SetRenderTargets();
-
-	void SetRenderTargetsForPostEffect();
-
 	void InitializeDescriptorSize();
-
 
 	void SetImGuiDescriptorHeap();
 
 	void PushImGuiDrawCommand();
-
-	void GetBackBuffer();
-
-	void ClearRTV();
-
-	void ClearRTVForPostEffect();
 
 	void CommandKick();
 
 	void Signal();
 
 	void NextFlameCommandList();
-
-	void ClearDepthBuffer();
 
 	void Viewport();
 
@@ -214,7 +205,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> renderTextureResource_;
 	//ID3D12Resource* swapChainResource_[2]{};
 	//TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier_{};
+	D3D12_RESOURCE_BARRIER barrier_[3]{};
 
 	//初期値0でFenceを作る
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_{};
@@ -262,6 +253,9 @@ private:
 	D3D12_VIEWPORT viewport_{};
 	//シザー矩形
 	D3D12_RECT scissorRect_{};
+
+	D3D12_RESOURCE_STATES renderTextureState_ = D3D12_RESOURCE_STATE_COMMON;;
+	D3D12_RESOURCE_STATES backBufferState_[2] = { D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COMMON }; // assuming 2 back buffers
 
 public:  //メンバ定数
 	//最大SRV 数（最大テクスチャ枚数）

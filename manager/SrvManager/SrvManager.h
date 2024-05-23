@@ -1,6 +1,8 @@
 #pragma once
 #include "../../base/DirectX12/DirectX12.h"
 
+
+
 class SrvManager
 {
 public:
@@ -21,6 +23,8 @@ public:
 	void CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT format, UINT mipLevels);
 	//SRV生成（Structure Buffer用）
 	void CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride);
+
+	static const uint32_t kMaxSRVCount = 512;
 private:
 	
 

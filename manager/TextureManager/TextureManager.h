@@ -9,7 +9,7 @@
 #include "../../externals/DirectXTex/DirectXTex.h"
 #include <wrl.h>
 #include "../../structure/ModelData/ModelData.h"
-
+#include "../../manager/SrvManager/SrvManager.h"
 #include "../../base/DirectX12/DirectX12.h"
 
 #pragma comment(lib,"d3d12.lib")
@@ -70,8 +70,10 @@ public:
 	D3D12_GPU_DESCRIPTOR_HANDLE* GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
 
 private:
-	
+	//テクスチャデータ
+	std::vector<TextureData> textureDatas_;
 
+	SrvManager* srvManager_;
 
 	static const uint32_t kMaxImages = TEXTURENUM;
 

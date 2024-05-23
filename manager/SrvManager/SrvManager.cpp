@@ -1,7 +1,5 @@
 #include "SrvManager.h"
 
-const uint32_t SrvManager::kMaxSRVCount = 512;
-
 SrvManager* SrvManager::GetInstance()
 {
 	static SrvManager instance;

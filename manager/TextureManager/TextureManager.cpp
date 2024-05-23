@@ -8,6 +8,8 @@ TextureManager* TextureManager::GetInstance() {
 
 void TextureManager::Initialize() {
 	LoadAndTransferTexture();
+	srvManager_ = SrvManager::GetInstance();
+	textureDatas_.reserve(SrvManager::kMaxSRVCount);
 }
 
 DirectX::ScratchImage TextureManager::LoadTexture(const std::string& filePath) {

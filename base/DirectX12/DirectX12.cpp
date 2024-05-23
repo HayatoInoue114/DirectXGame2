@@ -153,10 +153,10 @@ void DirectX12::ClearRTV() {
 	commandList_->ClearRenderTargetView(rtvHandle_[backBufferIndex_], clearColor, 0, nullptr);
 }
 
-void DirectX12::SetImGuiDescriptorHeap() {
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap_.Get()};
-	commandList_->SetDescriptorHeaps(1, descriptorHeaps);
-}
+//void DirectX12::SetImGuiDescriptorHeap() {
+//	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap_.Get()};
+//	commandList_->SetDescriptorHeaps(1, descriptorHeaps);
+//}
 
 void DirectX12::PushImGuiDrawCommand() {
 	//実際のcommandListのImGuiの描画コマンドを積む
@@ -365,7 +365,6 @@ void DirectX12::PreDraw() {
 	ClearRTV();
 	SetRenderTargets();
 	ClearDepthBuffer();
-	SetImGuiDescriptorHeap();
 }
 
 void DirectX12::PostDraw() {

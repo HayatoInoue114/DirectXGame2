@@ -82,6 +82,7 @@
 #include "../../Input/Input.h"
 #include "../../math/WorldTransform/WorldTransform.h"
 #include "../ModelManager/ModelManager.h"
+#include "../SrvManager/SrvManager.h"
 
 #include "../../Project/Player/Player.h"
 #include "../../Project/Enemy/Enemy.h"
@@ -92,10 +93,6 @@
 #include "../../scene/GameScene.h"
 #include "../../scene/GameClearScene.h"
 #include "../../scene/TestScene.h"
-
-#define MAXTRIANGLE 1 //三角形の最大数
-#define MAXSPRITE 1 //スプライトの最大数
-#define MAXSPHERE 1 //球の最大数
 
 class Particle;
 
@@ -116,26 +113,7 @@ public:
 
 	void Finalize();
 
-	/*void Draw();
-
-	void Draw2D();
-	
-	void Draw3D();*/
-
-	void VariableInit();
-
-	/*enum Scene
-	{
-		TITLESCENE,
-		GAMESCENE,
-		GAMECLEARSCENE
-	};*/
-
 private:
-	//std::unique_ptr<Model> model_{};
-
-	//std::unique_ptr<Particle> particle_{};
-
 	Sprite* sprite_{};
 
 	TextureManager* textureManager_{};
@@ -164,11 +142,7 @@ private:
 
 	int preSceneNum_{};
 
-	Sprite* titleSprite_{};
-
-	Sprite* clearSprite_{};
-
-	WorldTransform transform_{};
+	SrvManager* srvManager_{};
 };
 
 

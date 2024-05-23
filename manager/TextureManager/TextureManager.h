@@ -32,6 +32,16 @@ enum TextureName {
 
 	TEXTURENUM
 };
+
+struct TextureData
+{
+	std::string filePath;
+	DirectX::TexMetadata metaData;
+	Microsoft::WRL::ComPtr<ID3D12Resource> resource;
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandleCPU;
+	D3D12_GPU_DESCRIPTOR_HANDLE srvHandleGPU;
+};
+
 class TextureManager
 {
 public:
@@ -44,10 +54,6 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& metadata);
 
 	// 中間リソースの生成
-	//Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(const Microsoft::WRL::ComPtr<ID3D12Device>& device, size_t sizeInBytes);
-
-	// TextureResourceにデータを転送する
-	//Microsoft::WRL::ComPtr<ID3D12Resource> UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>& texture, const DirectX::ScratchImage& mipImages);
 	void UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>& texture, const DirectX::ScratchImage& mipImages);
 
 	// textureを読んで転送する
@@ -58,13 +64,14 @@ public:
 
 	void CreateResouce();
 
-	//void CreateSRV();
-
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
 	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(const Microsoft::WRL::ComPtr<ID3D12DescriptorHeap>& descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 	D3D12_GPU_DESCRIPTOR_HANDLE* GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
+
 private:
+	
+
 
 	static const uint32_t kMaxImages = TEXTURENUM;
 

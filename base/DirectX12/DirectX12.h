@@ -116,8 +116,7 @@ private:
 
 	void InitializeDescriptorSize();
 
-
-	void SetImGuiDescriptorHeap();
+	//void SetImGuiDescriptorHeap();
 
 	void PushImGuiDrawCommand();
 
@@ -211,14 +210,15 @@ private:
 
 	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle_{};
 
-	uint32_t descriptorSizeSRV_{};
-	uint32_t descriptorSizeRTV_{};
-	uint32_t descriptorSizeDSV_{};
+	
 
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
 
 	public:  //メンバ定数
+	uint32_t descriptorSizeSRV_{};
+	uint32_t descriptorSizeRTV_{};
+	uint32_t descriptorSizeDSV_{};
 	//最大SRV 数（最大テクスチャ枚数）
 	static const uint32_t kMaxSRVCount;
 };

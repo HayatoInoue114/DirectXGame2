@@ -35,6 +35,9 @@ void GameManager::Initialize()
 
 	input_ = Input::GetInstance();
 	input_->GetInstance()->Initialize();
+	
+	srvManager_ = SrvManager::GetInstance();
+	srvManager_->GetInstance()->Init();
 
 #pragma endregion 基盤システムの初期化
 
@@ -42,8 +45,6 @@ void GameManager::Initialize()
 	sceneNum_ = TEST_SCENE;
 	// シーンごとの初期化
 	sceneArr_[sceneNum_]->Initialize();
-
-	transform_.Initialize();
 
 	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
@@ -96,16 +97,6 @@ void GameManager::Update() {
 	}
 	// 解放処理
 	Finalize();
-	//input_->GetInstance()->Update();
-
-
-
-#pragma region Update
-
-
-
-#pragma endregion Update
-
 
 }
 
@@ -113,8 +104,6 @@ void GameManager::Update() {
 void GameManager::Release() {
 
 }
-
-
 
 void GameManager::BeginFrame() {
 	ImGui_ImplDX12_NewFrame();
@@ -129,28 +118,4 @@ void GameManager::EndFrame() {
 }
 
 void GameManager::Finalize() {
-}
-
-///////////////////////////////////////////////////////////////Draw//////////////////////////////////
-//void GameManager::Draw2D() {
-//	graphicsRenderer_->SetRootSignatureAndPSO(0);
-//	//sprite_->Draw();
-//}
-//
-//void GameManager::Draw3D() {
-//	graphicsRenderer_->SetRootSignatureAndPSO(1);
-//	//model_->Draw(1);
-//}
-//
-//void GameManager::Draw() {
-//
-//	Draw2D();
-//
-//	Draw3D();
-//	
-//}
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-void GameManager::VariableInit() {
 }

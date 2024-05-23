@@ -137,6 +137,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="scene\IScene.cpp" />
     <ClCompile Include="scene\TitleScene.cpp" />
     <ClCompile Include="scene\TestScene.cpp" />
+    <ClCompile Include="object\Skinning\Skinning.cpp" />
+    <ClCompile Include="object\Skinning\SkinCluster\SkinCluster.cpp" />
+    <ClCompile Include="manager\SrvManager\SrvManager.cpp" />
     <ClCompile Include="utility\UtilityFunction\UtilityFunction.cpp" />
     <ClCompile Include="utility\FormatString\FormatString.cpp" />
     <ClCompile Include="manager\GameManager\GameManager.cpp" />
@@ -225,6 +228,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="scene\GameScene.h" />
     <ClInclude Include="scene\IScene.h" />
     <ClInclude Include="scene\TitleScene.h" />
+    <ClInclude Include="object\Skinning\Skinning.h" />
+    <ClInclude Include="object\Skinning\SkinCluster\SkinCluster.h" />
+    <ClInclude Include="manager\SrvManager\SrvManager.h" />
     <ClInclude Include="structure\AccField\AccField.h" />
     <ClInclude Include="structure\Emitter\Emitter.h" />
     <ClInclude Include="structure\SkeletonData\SkeletonData.h" />

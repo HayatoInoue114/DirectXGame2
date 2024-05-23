@@ -71,6 +71,8 @@ public:
 	//D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() { return srvDescriptorHeap_.Get(); }
+
+	uint32_t GetdescriptorSizeSRV() { return descriptorSizeSRV_; }
 private:
 	void DXGIFactory();
 
@@ -215,10 +217,12 @@ private:
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
 
-	public:  //メンバ定数
 	uint32_t descriptorSizeSRV_{};
 	uint32_t descriptorSizeRTV_{};
 	uint32_t descriptorSizeDSV_{};
+
+	public:  //メンバ定数
+	
 	//最大SRV 数（最大テクスチャ枚数）
 	static const uint32_t kMaxSRVCount;
 };

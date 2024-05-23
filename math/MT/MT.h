@@ -207,3 +207,5 @@ Quaternion Slerp(const Quaternion& q1, const Quaternion& q2, float t);
 Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix);
 
 //Vector3 GetTranslate(Matrix4x4 matrix) { return Vector3(matrix.m[3][0], matrix.m[3][1], matrix.m[3][2]); }
+
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);

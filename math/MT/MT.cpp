@@ -947,3 +947,25 @@ Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix) {
 	return qr;
 
 }
+
+// 3次元アフィン変換行列 (W = SRT)
+Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate) {
+	Matrix4x4 result{};
+
+	// 拡大縮小行列
+	Matrix4x4 scaleMatrix;
+	scaleMatrix = MakeScaleMatrix(scale);
+
+	// 回転行列(all)
+	Matrix4x4 rotateMatrix;
+	rotateMatrix = MakeRotateMatrix(rotate);
+
+	// 平行移動行列
+	Matrix4x4 translateMatrix;
+	translateMatrix = MakeTranslateMatrix(translate);
+
+	result = scaleMatrix * (rotateMatrix * translateMatrix);
+
+	return result;
+}
+

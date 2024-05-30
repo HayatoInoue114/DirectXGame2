@@ -277,8 +277,8 @@ void Particle::CreateSRV() {
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = MAXINSTANCE;
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
-	instancingSrvHandleCPU_ = TextureManager::GetInstance()->GetCPUDescriptorHandle(DirectX12::GetInstance()->GetSrvDescriptorHeap(), descriptorSizeSRV_, 3);
-	instancingSrvHandleGPU_ = TextureManager::GetInstance()->GetGPUDescriptorHandle(DirectX12::GetInstance()->GetSrvDescriptorHeap(), descriptorSizeSRV_, 3);
+	instancingSrvHandleCPU_ = TextureManager::GetInstance()->GetCPUDescriptorHandle(SrvManager::GetInstance()->Allocate());
+	instancingSrvHandleGPU_ = TextureManager::GetInstance()->GetGPUDescriptorHandle(SrvManager::GetInstance()->Allocate());
 	DirectX12::GetInstance()->GetDevice()->CreateShaderResourceView(instancingResource_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 }
 
@@ -399,7 +399,7 @@ void Particle::Draw(Camera* camera, uint32_t textureNum) {
 	//wvp用のCBufferの場所を設定
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU_);
 	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum]);
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetGPUDescriptorHandle(textureNum));
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。

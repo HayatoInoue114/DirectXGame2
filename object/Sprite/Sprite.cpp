@@ -198,7 +198,7 @@ void Sprite::Draw() {
 	//TransformationMatrixCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
 
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetTextureSrvHandleGPU()[textureNum_]);
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetGPUDescriptorHandle(textureNum_));
 	//描画！(DrawCall/ドローコール)
 	directX12_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }

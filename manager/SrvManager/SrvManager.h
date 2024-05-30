@@ -24,7 +24,7 @@ public:
 	//SRV生成（Structure Buffer用）
 	void CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride);
 
-	bool IsTextureLimitReached() {};
+	//bool IsTextureLimitReached() {};
 
 	static const uint32_t kMaxSRVCount = 512;
 private:

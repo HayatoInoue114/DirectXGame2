@@ -5,6 +5,6 @@ class Skinning
 {
 public:
 
-	void Update()
+	void Update();
 };
 

@@ -20,7 +20,7 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	}
 
 	//テクスチャ枚数上限チェック
-	assert(srvManager_->IsTextureLimitReached());
+	//assert(srvManager_->IsTextureLimitReached());
 
 	assert(textureDatas.size() + kSRVIndexTop < DirectX12::kMaxSRVCount);
 
@@ -55,8 +55,8 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 	}
 
 	uint32_t srvIndex = static_cast<uint32_t>(textureDatas.size() - 1) + kSRVIndexTop;
-	textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
-	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
+	textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(srvIndex);
+	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(srvIndex);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = textureData.metaData.format;
@@ -96,7 +96,7 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 	textureData.srvIndex = srvManager_->Allocate();
 	textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
 	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
-	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metaData.format, textureData.metaData.mipLevels);
+	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metaData.format, (UINT)textureData.metaData.mipLevels);
 }
 
 Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexMetadata& metadata) {
@@ -158,7 +158,7 @@ const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& fileP
 		}
 	}
 
-	return {};
+	throw std::runtime_error("Texture metadata not found for the specified file path: " + filePath);
 }
 
 uint32_t TextureManager::GetSrvIndex(const std::string& filePath) {

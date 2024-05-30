@@ -110,20 +110,20 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Vector3& rotate, const Ve
 	return mat;
 }
 
-Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate) {
-
-	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
-
-	Matrix4x4 mat = {
-		scale.x * rotateMatrix.m[0][0],   scale.x * rotateMatrix.m[0][1],   scale.x * rotateMatrix.m[0][2],   0,
-		scale.y * rotateMatrix.m[1][0],   scale.y * rotateMatrix.m[1][1],   scale.y * rotateMatrix.m[1][2],   0,
-		scale.z * rotateMatrix.m[2][0],   scale.z * rotateMatrix.m[2][1],   scale.z * rotateMatrix.m[2][2],   0,
-		translate.x,translate.y,translate.z,1
-	};
-
-	return mat;
-
-}
+//Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate) {
+//
+//	Matrix4x4 rotateMatrix = MakeRotateMatrix(rotate);
+//
+//	Matrix4x4 mat = {
+//		scale.x * rotateMatrix.m[0][0],   scale.x * rotateMatrix.m[0][1],   scale.x * rotateMatrix.m[0][2],   0,
+//		scale.y * rotateMatrix.m[1][0],   scale.y * rotateMatrix.m[1][1],   scale.y * rotateMatrix.m[1][2],   0,
+//		scale.z * rotateMatrix.m[2][0],   scale.z * rotateMatrix.m[2][1],   scale.z * rotateMatrix.m[2][2],   0,
+//		translate.x,translate.y,translate.z,1
+//	};
+//
+//	return mat;
+//
+//}
 
 float InverseNum(const Matrix4x4& m, int a, int b, int c, int d, int e, int f, int g, int h) {
 	float resultNum;

@@ -304,37 +304,101 @@ void DirectX12::CreateDSV() {
 ///////////////////////////////////////描画関係/////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-void DirectX12::PreDrawForPostEffect() {
-	GetBackBuffer();
-	PreBarrierForPostEffect();
-	SetRenderTargetsForPostEffect();
-	ClearRTVForPostEffect();
-	ClearDepthBuffer();
-	RSSet();
-	SetImGuiDescriptorHeap();
+void DirectX12::PreDraw() {
+	//これから書き込むバックバッファのインデックスを取得
+	backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
+
+	// Barrier
+	TransitionResource(swapChainResource_[backBufferIndex_], D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	// RTV
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+	commandList_->OMSetRenderTargets(1, &rtvHandle_[backBufferIndex_], false, &dsvHandle);
+
+	float clearColor[] = { 0.1f, 0.25f, 0.5f, 1.0f };
+	commandList_->ClearRenderTargetView(rtvHandle_[backBufferIndex_], clearColor, 0, nullptr);
+
+	// ImGui
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeaps[] = { srvDescriptorHeap_.Get() };
+	commandList_->SetDescriptorHeaps(1, descriptorHeaps->GetAddressOf());
 }
 
-void DirectX12::PostDrawForPostEffect() {
-	PostBarrierForPostEffect();
-}
+void DirectX12::PostDraw() {
+	PushImGuiDrawCommand();
 
-void DirectX12::PreDrawForSwapChain() {
-	GetBackBuffer();
-	Barrier();
-	ClearRTV();
-	SetRenderTargets();
-	SetImGuiDescriptorHeap();
-}
+	// Transition to present
+	TransitionResource(swapChainResource_[backBufferIndex_], D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 
-void DirectX12::PostDrawForSwapChain() {
 	ScreenDisplay();
 	CommandConfirm();
 	CommandKick();
-	UpdateFixFPS();
+
+	// UpdateFixFPS();
+
 	Signal();
-	RSSet();
-	PushImGuiDrawCommand();
 	NextFlameCommandList();
+}
+
+
+//////PostDraw///////
+void DirectX12::PreDrowForPostEffect()
+{
+	barrier_ = {};
+
+	// Transition barrier from PIXEL_SHADER_RESOURCE to RENDER_TARGET
+	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier_.Transition.pResource = renderTextureResource_.Get();
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier_.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+	commandList_->ResourceBarrier(1, &barrier_);
+
+	// Set Render Target
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	commandList_->OMSetRenderTargets(1, &rtvHandle_[2], false, &dsvHandle);
+
+	// Clear Render Target
+	float clearColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	commandList_->ClearRenderTargetView(rtvHandle_[2], clearColor, 0, nullptr);
+
+	// Clear Depth Buffer
+	commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+	// Set Descriptor Heaps for ImGui
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeaps[] = { srvDescriptorHeap_.Get() };
+	commandList_->SetDescriptorHeaps(1, descriptorHeaps->GetAddressOf());
+}
+
+void DirectX12::PostDrawForPostEffect() {
+	barrier_ = {};
+
+	// Transition barrier from RENDER_TARGET to PIXEL_SHADER_RESOURCE
+	barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier_.Transition.pResource = renderTextureResource_.Get();
+	barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
+	barrier_.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+
+	commandList_->ResourceBarrier(1, &barrier_);
+}
+//////PostDraw///////
+
+void DirectX12::TransitionResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState) {
+	if (beforeState != afterState) {
+		D3D12_RESOURCE_BARRIER barrier = {};
+		barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		barrier.Transition.pResource = resource.Get();
+		barrier.Transition.StateBefore = beforeState;
+		barrier.Transition.StateAfter = afterState;
+		barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		commandList_->ResourceBarrier(1, &barrier);
+	}
 }
 
 void DirectX12::GetBackBuffer() {
@@ -357,61 +421,29 @@ void DirectX12::ClearRTVForPostEffect() {
 
 void DirectX12::Barrier() {
 	if (backBufferState_[backBufferIndex_] != D3D12_RESOURCE_STATE_RENDER_TARGET) {
-		barrier_[0] = {};
+		barrier_ = {};
 
-		barrier_[0].Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		barrier_[0].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		barrier_[0].Transition.pResource = swapChainResource_[backBufferIndex_].Get();
-		barrier_[0].Transition.StateBefore = backBufferState_[backBufferIndex_];
-		barrier_[0].Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		barrier_[0].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+		barrier_.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+		barrier_.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+		barrier_.Transition.pResource = swapChainResource_[backBufferIndex_].Get();
+		barrier_.Transition.StateBefore = backBufferState_[backBufferIndex_];
+		barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barrier_.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
-		commandList_->ResourceBarrier(1, &barrier_[0]);
+		commandList_->ResourceBarrier(1, &barrier_);
 
 		backBufferState_[backBufferIndex_] = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	}
 }
 
-void DirectX12::PreBarrierForPostEffect() {
-	if (renderTextureState_ != D3D12_RESOURCE_STATE_RENDER_TARGET) {
-		barrier_[1] = {};
 
-		barrier_[1].Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		barrier_[1].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		barrier_[1].Transition.pResource = renderTextureResource_.Get();
-		barrier_[1].Transition.StateBefore = renderTextureState_;
-		barrier_[1].Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		barrier_[1].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-
-		commandList_->ResourceBarrier(1, &barrier_[1]);
-
-		renderTextureState_ = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	}
-}
-
-void DirectX12::PostBarrierForPostEffect() {
-	if (renderTextureState_ != D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE) {
-		barrier_[2] = {};
-
-		barrier_[2].Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-		barrier_[2].Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-		barrier_[2].Transition.pResource = renderTextureResource_.Get();
-		barrier_[2].Transition.StateBefore = renderTextureState_;
-		barrier_[2].Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-		barrier_[2].Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-
-		commandList_->ResourceBarrier(1, &barrier_[2]);
-
-		renderTextureState_ = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-	}
-}
 
 void DirectX12::ScreenDisplay() {
 	if (backBufferState_[backBufferIndex_] != D3D12_RESOURCE_STATE_PRESENT) {
-		barrier_[0].Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-		barrier_[0].Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+		barrier_.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+		barrier_.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 
-		commandList_->ResourceBarrier(1, &barrier_[0]);
+		commandList_->ResourceBarrier(1, &barrier_);
 
 		backBufferState_[backBufferIndex_] = D3D12_RESOURCE_STATE_PRESENT;
 	}
@@ -594,27 +626,6 @@ void DirectX12::Finalize() {
 	CloseWindow(WindowsAPI::GetInstance()->GetHwnd());
 }
 
-
-
-//void DirectX12::PreDraw() {
-//	GetBackBuffer();
-//	Barrier();
-//	ClearRTV();
-//	SetRenderTargets();
-//	ClearDepthBuffer();
-//	SetImGuiDescriptorHeap();
-//}
-
-//void DirectX12::PostDraw() {
-//	ClearRTV();
-//	PushImGuiDrawCommand();
-//	ScreenDisplay();
-//	CommandConfirm();
-//	CommandKick();
-//	//UpdateFixFPS();
-//	Signal();
-//	NextFlameCommandList();
-//}
 
 Microsoft::WRL::ComPtr<ID3D12Resource> DirectX12::CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor)
 {

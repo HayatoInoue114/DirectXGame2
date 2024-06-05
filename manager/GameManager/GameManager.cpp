@@ -117,14 +117,27 @@ void GameManager::BeginFrame() {
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	directX12_->PreDrawForPostEffect();
-	directX12_->PreDrawForSwapChain();
+
+	directX12_->PreDraw(); // 通常の描画準備
+	directX12_->RSSet();
 	graphicsRenderer_->DrawCall();
 }
 
 void GameManager::EndFrame() {
-	directX12_->PostDrawForSwapChain();
+	// 通常の描画終了処理
+	directX12_->PostDraw();
+
+	// ポストエフェクトの描画準備
+	directX12_->PreDrowForPostEffect();
+	directX12_->RSSet();
+	graphicsRenderer_->DrawCall(); // ポストエフェクトの描画
+
+	// ポストエフェクトの描画終了処理
 	directX12_->PostDrawForPostEffect();
+
+	// ImGui の描画コマンドをプッシュ
+	directX12_->RSSet();
+	ImGui::Render();
 }
 
 void GameManager::Finalize() {

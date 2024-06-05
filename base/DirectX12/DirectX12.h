@@ -43,24 +43,13 @@ public:
 	void PostDraw();
 
 	/// <summary>
-	/// 描画前処理 PostEffect用
-	/// </summary>
-	void PreDrawForPostEffect();
-
-	/// <summary>
 	/// 描画後処理 PostEffect用
 	/// </summary>
 	void PostDrawForPostEffect();
 
-	/// <summary>
-/// 描画前処理 SwapChain用
-/// </summary>
-	void PreDrawForSwapChain();
+	void PreDrowForPostEffect();
 
-	/// <summary>
-	/// 描画後処理 SwapChain用
-	/// </summary>
-	void PostDrawForSwapChain();
+	void TransitionResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
 
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 
@@ -94,13 +83,13 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() { return srvDescriptorHeap_.Get(); }
 
+	void RSSet();
+
 private:
 	void GetBackBuffer();
 	void ClearRTV();
 	void ClearRTVForPostEffect();
 	void Barrier();
-	void PreBarrierForPostEffect();
-	void PostBarrierForPostEffect();
 	void ScreenDisplay();
 	void CommandConfirm();
 	void SetRenderTargets();
@@ -158,7 +147,7 @@ private:
 
 	void ScissorRect();
 
-	void RSSet();
+
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor);
 private:
@@ -205,7 +194,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> renderTextureResource_;
 	//ID3D12Resource* swapChainResource_[2]{};
 	//TransitionBarrierの設定
-	D3D12_RESOURCE_BARRIER barrier_[3]{};
+	D3D12_RESOURCE_BARRIER barrier_{};
 
 	//初期値0でFenceを作る
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_{};

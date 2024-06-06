@@ -1,369 +1,341 @@
 #include "GraphicsRenderer.h"
+#include <d3d12.h>
+#include <dxcapi.h>
+#include <wrl.h>
+#include <stdexcept>
+#include <vector>
 
+// Singletonインスタンスの取得
 GraphicsRenderer* GraphicsRenderer::GetInstance() {
-	static GraphicsRenderer instance;
-
-	return &instance;
+    static GraphicsRenderer instance;
+    return &instance;
 }
 
-
-void GraphicsRenderer::Dxc() {
-	HRESULT hr;
-	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
-	assert(SUCCEEDED(hr));
-	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
-	assert(SUCCEEDED(hr));
-	hr = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
-	assert(SUCCEEDED(hr));
-}
-
-IDxcBlob* GraphicsRenderer::CompileShader(
-	//CompilerするShaderファイルへのパス
-	const std::wstring& filePath,
-	//Compilerに使用するProfile
-	const wchar_t* profile,
-	//初期化で生成したものを3つ
-	IDxcUtils* dxcUtils,
-	IDxcCompiler3* dxcCompiler,
-	IDxcIncludeHandler* includeHandler)
- {
-	HRESULT hr;
-	Log(ConvertString(std::format(L"Begin CompileShader,path:{},profile:{}\n", filePath, profile)));
-	hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource_);
-	assert(SUCCEEDED(hr));
-
-	DxcBuffer shaderSourceBuffer = {};
-	shaderSourceBuffer.Ptr = shaderSource_->GetBufferPointer();
-	shaderSourceBuffer.Size = shaderSource_->GetBufferSize();
-	shaderSourceBuffer.Encoding = DXC_CP_UTF8;
-
-	LPCWSTR arguments[] = {
-		filePath.c_str(),
-		L"-E", L"main",
-		L"-T", profile,
-		L"-Zi", L"-Qembed_debug",
-		L"-Od",
-		L"-Zpr",
-	};
-
-	hr = dxcCompiler->Compile(
-		&shaderSourceBuffer,
-		arguments,
-		_countof(arguments),
-		includeHandler,
-		IID_PPV_ARGS(&shaderResult_)
-	);
-	assert(SUCCEEDED(hr));
-
-	shaderResult_->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError_), nullptr);
-	if (shaderError_ != nullptr && shaderError_->GetStringLength() != 0) {
-		Log(shaderError_->GetStringPointer());
-		assert(false);
-	}
-
-	hr = shaderResult_->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob_), nullptr);
-	assert(SUCCEEDED(hr));
-
-	Log(ConvertString(std::format(L"Compile Succeeded,path:{},profile:{}\n", filePath, profile)));
-
-	shaderSource_->Release();
-	shaderResult_->Release();
-
-	return shaderBlob_;
-}
-
-void GraphicsRenderer::CreateRootSignature() {
-	HRESULT hr;
-
-	for (int i = 0; i < MAXPSO - 1; i++) {
-		descriptorRange_[i][0].BaseShaderRegister = 0;
-		descriptorRange_[i][0].NumDescriptors = 1;
-		descriptorRange_[i][0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		descriptorRange_[i][0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-	}
-
-	for (int i = 0; i < MAXPSO; i++) {
-		//RootSignature作成
-		descriptionRootSignature_[i] = {};
-		descriptionRootSignature_[i].Flags =
-			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-
-		descriptorRangeForInstancing_[0] = {};
-		descriptorRangeForInstancing_[0].BaseShaderRegister = 0; //0から始まる
-		descriptorRangeForInstancing_[0].NumDescriptors = 1;
-		descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; //SRVを使う
-		descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; //Offsetを自動計算
-
-		//RootParameter作成。複数設定できるので配列。
-
-		D3D12_ROOT_PARAMETER rootParameters[MAXPSO][5] = {};
-
-		rootParameters[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[i][0].Descriptor.ShaderRegister = 0;
-
-		rootParameters[i][3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[i][3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[i][3].Descriptor.ShaderRegister = 1;
-
-		if (i == 0) {
-			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][1].Descriptor.ShaderRegister = 0;
-
-			rootParameters[i][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters[i][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters[i][2].DescriptorTable.pDescriptorRanges = descriptorRange_[i];
-			rootParameters[i][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_[i]);
-
-			rootParameters[i][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters[i][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][4].Descriptor.ShaderRegister = 1;
-		}
-
-		rootParameters[1][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		rootParameters[1][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		rootParameters[1][1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-		rootParameters[1][1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
-
-		rootParameters[1][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		rootParameters[1][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[1][2].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-		rootParameters[1][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
-
-		rootParameters[1][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[1][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		rootParameters[1][4].Descriptor.ShaderRegister = 1;
-
-		descriptionRootSignature_[i].pParameters = rootParameters[i];
-		descriptionRootSignature_[i].NumParameters = _countof(rootParameters[i]);
-
-		staticSamplers_[i][0] = {};
-		staticSamplers_[i][0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; //バイリニアフィルタ
-		staticSamplers_[i][0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; //0~1の範囲外をリピート
-		staticSamplers_[i][0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		staticSamplers_[i][0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		staticSamplers_[i][0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; //比較しない
-		staticSamplers_[i][0].MaxLOD = D3D12_FLOAT32_MAX; //ありったけのMixmapを使う
-		staticSamplers_[i][0].ShaderRegister = 0; //レジスタ番号0を使う
-		staticSamplers_[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
-
-		descriptionRootSignature_[i].pStaticSamplers = staticSamplers_[i];
-		descriptionRootSignature_[i].NumStaticSamplers = _countof(staticSamplers_[i]);
-
-		signatureBlob_[i] = nullptr;
-		errorBlob_[i] = nullptr;
-		hr = D3D12SerializeRootSignature(&descriptionRootSignature_[i],
-			D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_[i], &errorBlob_[i]);
-		if (FAILED(hr)) {
-			Log(reinterpret_cast<char*>(errorBlob_[i]->GetBufferPointer()));
-			assert(false);
-		}
-
-		rootSignature_[i] = nullptr;
-		hr = DirectX12::GetInstance()->GetDevice()->CreateRootSignature(0, signatureBlob_[i]->GetBufferPointer(),
-			signatureBlob_[i]->GetBufferSize(), IID_PPV_ARGS(rootSignature_[i].GetAddressOf()));
-		assert(SUCCEEDED(hr));
-	}
-
-	
-}
-
-void GraphicsRenderer::InputLayout() {
-	for (int i = 0; i < MAXPSO; i++) {
-		inputElementDescs_[i][0] = {};
-		inputElementDescs_[i][0].SemanticName = "POSITION";
-		inputElementDescs_[i][0].SemanticIndex = 0;
-		inputElementDescs_[i][0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		inputElementDescs_[i][0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-		inputElementDescs_[i][1] = {};
-		inputElementDescs_[i][1].SemanticName = "TEXCOORD";
-		inputElementDescs_[i][1].SemanticIndex = 0;
-		inputElementDescs_[i][1].Format = DXGI_FORMAT_R32G32_FLOAT;
-		inputElementDescs_[i][1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-		inputElementDescs_[i][2] = {};
-		inputElementDescs_[i][2].SemanticName = "NORMAL";
-		inputElementDescs_[i][2].SemanticIndex = 0;
-		inputElementDescs_[i][2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-		inputElementDescs_[i][2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-
-		inputLayoutDesc_[i] = {};
-		inputLayoutDesc_[i].pInputElementDescs = inputElementDescs_[i];
-		inputLayoutDesc_[i].NumElements = _countof(inputElementDescs_[i]);
-	}
-}
-
-void GraphicsRenderer::BlendState() {
-	blendDesc_[0].RenderTarget[0].RenderTargetWriteMask =
-		D3D12_COLOR_WRITE_ENABLE_ALL;
-	for (int i = 1; i < MAXPSO; i++) {
-		// すべての色要素を書き込む
-		blendDesc_[i].RenderTarget[0].RenderTargetWriteMask =
-			D3D12_COLOR_WRITE_ENABLE_ALL;
-		blendDesc_[i].RenderTarget[0].BlendEnable = true;
-		blendDesc_[i].RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-		blendDesc_[i].RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
-		blendDesc_[i].RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
-	}
-
-	// ブレンドモードの設定
-
-	//// ノーマル
-	//blendDesc_[6].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	//blendDesc_[6].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	//blendDesc_[6].RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
-
-	//// 加算
-	//blendDesc_[2].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	//blendDesc_[2].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	//blendDesc_[2].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
-
-	//// 減算
-	//blendDesc_[3].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	//blendDesc_[3].RenderTarget[0].BlendOp = D3D12_BLEND_OP_REV_SUBTRACT;
-	//blendDesc_[3].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
-
-	//// 乗算
-	//blendDesc_[4].RenderTarget[0].SrcBlend = D3D12_BLEND_ZERO;
-	//blendDesc_[4].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	//blendDesc_[4].RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;
-
-	//// スクリーン
-	//blendDesc_[5].RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
-	//blendDesc_[5].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	//blendDesc_[5].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
-
-	// particle
-	blendDesc_[1].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
-	blendDesc_[1].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc_[1].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
-}
-
-void GraphicsRenderer::ResterizerState() {
-	for (int i = 0; i < MAXPSO; i++) {
-		rasterizerDesc_[i] = {};
-		//裏面（時計回り）を表示しない
-		rasterizerDesc_[i].CullMode = D3D12_CULL_MODE_BACK;
-		//三角形の中を塗りつぶす
-		rasterizerDesc_[i].FillMode = D3D12_FILL_MODE_SOLID;
-	}
-}
-
-void GraphicsRenderer::BuildShader() {
-	//Shaderをコンパイルする
-	vertexShaderBlob_ = CompileShader(L"./ShaderFile/Object3d.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-	assert(vertexShaderBlob_ != nullptr);
-
-	pixelShaderBlob_ = CompileShader(L"./ShaderFile/Object3d.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-	assert(pixelShaderBlob_ != nullptr);
-
-	//Particle
-	particleVertexShaderBlob_ = CompileShader(L"./ShaderFile/Particle.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-	assert(particleVertexShaderBlob_ != nullptr);
-
-	particlePixelShaderBlob_ = CompileShader(L"./ShaderFile/Particle.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-	assert(particlePixelShaderBlob_ != nullptr);
-}
-
-void GraphicsRenderer::CreatePSO() {
-	HRESULT hr;
-
-	for (int i = 0; i < MAXPSO; i++) {
-		PipelineManagerStateDesc_[i] = {};
-		PipelineManagerStateDesc_[i].pRootSignature = rootSignature_[i].Get();//RootSignature
-		PipelineManagerStateDesc_[i].InputLayout = inputLayoutDesc_[i];//InputLayout
-
-		if (i == 0) {
-			PipelineManagerStateDesc_[i].VS = { vertexShaderBlob_->GetBufferPointer(),
-			vertexShaderBlob_->GetBufferSize() };//VertexShader
-			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
-			pixelShaderBlob_->GetBufferSize() };//PixelShader
-		}
-		if (i == 1) {
-			PipelineManagerStateDesc_[i].VS = { particleVertexShaderBlob_->GetBufferPointer(),
-			particleVertexShaderBlob_->GetBufferSize() };//VertexShader
-			PipelineManagerStateDesc_[i].PS = { particlePixelShaderBlob_->GetBufferPointer(),
-			particlePixelShaderBlob_->GetBufferSize() };//PixelShader
-		}
-		
-		
-		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState
-		PipelineManagerStateDesc_[i].RasterizerState = rasterizerDesc_[i];//RasterizeState
-		//書き込むRTVの情報
-		PipelineManagerStateDesc_[i].NumRenderTargets = 1;
-		PipelineManagerStateDesc_[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		//利用するトポロジ（形状）のタイプ。三角形
-		PipelineManagerStateDesc_[i].PrimitiveTopologyType =
-			D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		//どのように画面に色を打ち込むかの設定（気にしなくてよい）
-		PipelineManagerStateDesc_[i].SampleDesc.Count = 1;
-		PipelineManagerStateDesc_[i].SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-		//DepthStencilの設定
-		PipelineManagerStateDesc_[i].DepthStencilState = depthStencilDesc_;
-		PipelineManagerStateDesc_[i].DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-		PipelineManagerState_[i] = nullptr;
-		hr = DirectX12::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&PipelineManagerStateDesc_[i],
-			IID_PPV_ARGS(&PipelineManagerState_[i]));
-		assert(SUCCEEDED(hr));
-	}
-	for (int i = 0; i < MAXPSO; i++) {
-	
-	}
-	
-}
-
-void GraphicsRenderer::Viewport() {
-	viewport_ = {};
-	//クライアント領域サイズと一緒にして画面残帯に表示
-	viewport_.Width = kCliantWidth;
-	viewport_.Height = kCliantHeight;
-	viewport_.TopLeftX = 0;
-	viewport_.TopLeftY = 0;
-	viewport_.MinDepth = 0.0f;
-	viewport_.MaxDepth = 1.0f;
-}
-
-void GraphicsRenderer::ScissorRect() {
-	scissorRect_ = {};
-	//基本的にビューポートと同じ矩形が構成されるようにする
-	scissorRect_.left = 0;
-	scissorRect_.right = kCliantWidth;
-	scissorRect_.top = 0;
-	scissorRect_.bottom = kCliantHeight;
-}
-
+// 初期化
 void GraphicsRenderer::Initialize() {
-	Dxc();
-	CreateRootSignature();
-	InputLayout();
-	BlendState();
-	ResterizerState();
-	BuildShader();
-	DepthStencilState();
-	CreatePSO();
+    InitializeDxc();
+    CreateRootSignatures();
+    DefineInputLayout();
+    ConfigureBlendState();
+    ConfigureRasterizerState();
+    BuildShaders();
+    CreatePipelineStateObjects();
+    ConfigureDepthStencilState();
 }
 
-void GraphicsRenderer::DrawCall() {
-	DirectX12::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);	//Viewportを設定
-	DirectX12::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);	//Scirssorを設定
-	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+// Dxcの初期化
+void GraphicsRenderer::InitializeDxc() {
+    HRESULT hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils_));
+    if (FAILED(hr)) {
+        throw std::runtime_error("Failed to create DXC Utils");
+    }
+
+    hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler_));
+    if (FAILED(hr)) {
+        throw std::runtime_error("Failed to create DXC Compiler");
+    }
+
+    hr = dxcUtils_->CreateDefaultIncludeHandler(&includeHandler_);
+    if (FAILED(hr)) {
+        throw std::runtime_error("Failed to create default include handler");
+    }
 }
 
-void GraphicsRenderer::SetRootSignatureAndPSO(int n) {
-	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[n].Get());
-	DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[n].Get());	//PSOを設定
+// シェーダーのコンパイル
+IDxcBlob* GraphicsRenderer::CompileShader(
+    const std::wstring& filePath,
+    const wchar_t* profile,
+    IDxcUtils* dxcUtils,
+    IDxcCompiler3* dxcCompiler,
+    IDxcIncludeHandler* includeHandler
+) {
+    // シェーダーファイルの読み込み
+    Microsoft::WRL::ComPtr<IDxcBlobEncoding> shaderSource;
+    HRESULT hr = dxcUtils->LoadFile(filePath.c_str(), nullptr, &shaderSource);
+    if (FAILED(hr)) {
+        throw std::runtime_error("Failed to load shader file");
+    }
+
+    DxcBuffer sourceBuffer = { shaderSource->GetBufferPointer(), shaderSource->GetBufferSize(), DXC_CP_UTF8 };
+
+    // コンパイル
+    Microsoft::WRL::ComPtr<IDxcResult> shaderResult;
+    hr = dxcCompiler->Compile(&sourceBuffer, nullptr, 0, nullptr, IID_PPV_ARGS(&shaderResult));
+    if (FAILED(hr)) {
+        throw std::runtime_error("Failed to compile shader");
+    }
+
+    shaderResult->GetStatus(&hr);
+    if (FAILED(hr)) {
+        throw std::runtime_error("Shader compilation failed");
+    }
+
+    Microsoft::WRL::ComPtr<IDxcBlob> shaderBlob;
+    hr = shaderResult->GetResult(&shaderBlob);
+    if (FAILED(hr)) {
+        throw std::runtime_error("Failed to get shader blob");
+    }
+
+    return shaderBlob.Detach();
 }
 
-void GraphicsRenderer::DepthStencilState() {
-	depthStencilDesc_ = {};
-	//Depthの機能を有効化する
-	depthStencilDesc_.DepthEnable = true;
-	//書き込みをします
-	depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
-	//比較関数はLessEqual。つまり、近ければ描画される
-	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
+void InitializeShaderConfig(ShaderConfig& config, bool isDefault) {
+    config.descriptorRanges[0] = { D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND };
+
+    D3D12_ROOT_PARAMETER param = {};
+    param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+    param.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+    param.Descriptor.ShaderRegister = 0;
+    config.rootParameters[0] = param;
+
+    param.Descriptor.ShaderRegister = 1;
+    config.rootParameters[1] = param;
+
+    if (isDefault) {
+        param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+        param.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+        param.Descriptor.ShaderRegister = 0;
+        config.rootParameters[2] = param;
+
+        param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+        param.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+        param.DescriptorTable = { 1, config.descriptorRanges.data() };
+        config.rootParameters[3] = param;
+
+        param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+        param.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+        param.Descriptor.ShaderRegister = 1;
+        config.rootParameters[4] = param;
+    }
+    else {
+        param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+        param.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+        param.DescriptorTable = { 1, config.descriptorRanges.data() };
+        config.rootParameters[2] = param;
+
+        param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+        param.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+        param.DescriptorTable = { 1, config.descriptorRanges.data() };
+        config.rootParameters[3] = param;
+
+        param.ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+        param.ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+        param.Descriptor.ShaderRegister = 1;
+        config.rootParameters[4] = param;
+    }
+
+    D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
+    rootSignatureDesc.NumParameters = static_cast<UINT>(config.rootParameters.size());
+    rootSignatureDesc.pParameters = config.rootParameters.data();
+    rootSignatureDesc.NumStaticSamplers = static_cast<UINT>(config.staticSamplers.size());
+    rootSignatureDesc.pStaticSamplers = config.staticSamplers.data();
+    rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+    D3D12_RENDER_TARGET_BLEND_DESC defaultBlendDesc = {};
+    defaultBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+    config.blendDesc.RenderTarget[0] = defaultBlendDesc;
+    if (!isDefault) {
+        config.blendDesc.RenderTarget[0].BlendEnable = true;
+        config.blendDesc.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+        config.blendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+        config.blendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+        config.blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+        config.blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+        config.blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+    }
+
+    D3D12_RASTERIZER_DESC defaultRasterizerDesc = {};
+    defaultRasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+    defaultRasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+    config.rasterizerDesc = defaultRasterizerDesc;
+
+    config.inputElementDescs[0] = { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+    config.inputElementDescs[1] = { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
+    config.inputElementDescs[2] = { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 };
 }
 
+void GraphicsRenderer::CreateRootSignatures() {
+    HRESULT hr;
+
+    std::array<ShaderConfig, MAXPSO> shaderConfigs;
+    for (int i = 0; i < MAXPSO; ++i) {
+        bool isDefault = (i == 0);
+        InitializeShaderConfig(shaderConfigs[i], isDefault);
+
+        D3D12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
+        rootSignatureDesc.NumParameters = static_cast<UINT>(shaderConfigs[i].rootParameters.size());
+        rootSignatureDesc.pParameters = shaderConfigs[i].rootParameters.data();
+        rootSignatureDesc.NumStaticSamplers = static_cast<UINT>(shaderConfigs[i].staticSamplers.size());
+        rootSignatureDesc.pStaticSamplers = shaderConfigs[i].staticSamplers.data();
+        rootSignatureDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+        hr = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlobs_[i], &errorBlobs_[i]);
+        if (FAILED(hr)) {
+            Log(reinterpret_cast<char*>(errorBlobs_[i]->GetBufferPointer()));
+            assert(false);
+        }
+
+        hr = DirectX12::GetInstance()->GetDevice()->CreateRootSignature(0, signatureBlobs_[i]->GetBufferPointer(), signatureBlobs_[i]->GetBufferSize(), IID_PPV_ARGS(&rootSignatures_[i]));
+        assert(SUCCEEDED(hr));
+    }
+}
+
+// 入力レイアウトの定義
+void GraphicsRenderer::DefineInputLayout() {
+    for (int i = 0; i < MAXPSO; ++i) {
+        inputElementDescs_[i] = {
+            D3D12_INPUT_ELEMENT_DESC{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+            D3D12_INPUT_ELEMENT_DESC{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+            D3D12_INPUT_ELEMENT_DESC{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+        };
+
+        inputLayoutDescs_[i] = { inputElementDescs_[i].data(), static_cast<UINT>(inputElementDescs_[i].size()) };
+    }
+}
+
+// 入力レイアウトの定義
+void GraphicsRenderer::DefineInputLayout() {
+    for (int i = 0; i < MAXPSO; ++i) {
+        inputElementDescs_[i] = {
+            D3D12_INPUT_ELEMENT_DESC{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+            D3D12_INPUT_ELEMENT_DESC{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+            D3D12_INPUT_ELEMENT_DESC{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D12_APPEND_ALIGNED_ELEMENT, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+        };
+
+        inputLayoutDescs_[i] = { inputElementDescs_[i].data(), static_cast<UINT>(inputElementDescs_[i].size()) };
+    }
+}
+
+void GraphicsRenderer::ConfigureBlendState() {
+    // デフォルトのブレンドステートを定義
+    D3D12_RENDER_TARGET_BLEND_DESC defaultBlendDesc = {};
+    defaultBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+    // デフォルト設定を全ブレンドディスクリプタに適用
+    for (auto& blendDesc : blendDescs_) {
+        blendDesc.RenderTarget[0] = defaultBlendDesc;
+    }
+
+    // 特定のPSOに対するブレンド設定の調整
+    for (int i = 1; i < MAXPSO; ++i) {
+        blendDescs_[i].RenderTarget[0].BlendEnable = true;
+        blendDescs_[i].RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+        blendDescs_[i].RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
+        blendDescs_[i].RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+
+        if (i == 1) {
+            blendDescs_[i].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+            blendDescs_[i].RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+            blendDescs_[i].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+        }
+    }
+}
+
+
+void GraphicsRenderer::CreateRasterizerStates() {
+    D3D12_RASTERIZER_DESC defaultRasterizerDesc = {};
+    defaultRasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+    defaultRasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+    for (int i = 0; i < MAXPSO; ++i) {
+        rasterizerDesc_[i] = defaultRasterizerDesc;
+    }
+}
+
+void GraphicsRenderer::CompileShaders() {
+    vertexShaderBlob_ = CompileShader(L"./ShaderFile/Object3d.VS.hlsl", L"vs_6_0");
+    pixelShaderBlob_ = CompileShader(L"./ShaderFile/Object3d.PS.hlsl", L"ps_6_0");
+    particleVertexShaderBlob_ = CompileShader(L"./ShaderFile/Particle.VS.hlsl", L"vs_6_0");
+    particlePixelShaderBlob_ = CompileShader(L"./ShaderFile/Particle.PS.hlsl", L"ps_6_0");
+}
+
+void GraphicsRenderer::CreatePSOs() {
+    HRESULT hr;
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+    psoDesc.VS = { vertexShaderBlob_->GetBufferPointer(), vertexShaderBlob_->GetBufferSize() };
+    psoDesc.PS = { pixelShaderBlob_->GetBufferPointer(), pixelShaderBlob_->GetBufferSize() };
+    psoDesc.SampleMask = UINT_MAX;
+    psoDesc.RasterizerState = rasterizerDesc_[0];
+    psoDesc.BlendState = blendDesc_[0];
+    psoDesc.DepthStencilState.DepthEnable = true;
+    psoDesc.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+    psoDesc.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+    psoDesc.DepthStencilState.StencilEnable = false;
+    psoDesc.InputLayout = inputLayoutDesc_[0];
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    psoDesc.NumRenderTargets = 1;
+    psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+    psoDesc.SampleDesc.Count = 1;
+    psoDesc.pRootSignature = rootSignature_[0];
+
+    hr = DirectX12::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState_[0]));
+    assert(SUCCEEDED(hr));
+
+    psoDesc.VS = { particleVertexShaderBlob_->GetBufferPointer(), particleVertexShaderBlob_->GetBufferSize() };
+    psoDesc.PS = { particlePixelShaderBlob_->GetBufferPointer(), particlePixelShaderBlob_->GetBufferSize() };
+    psoDesc.RasterizerState = rasterizerDesc_[1];
+    psoDesc.BlendState = blendDesc_[1];
+    psoDesc.InputLayout = inputLayoutDesc_[1];
+    psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+    psoDesc.pRootSignature = rootSignature_[1];
+
+    hr = DirectX12::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&psoDesc, IID_PPV_ARGS(&pipelineState_[1]));
+    assert(SUCCEEDED(hr));
+}
+
+void GraphicsRenderer::CreateDepthStencilState() {
+    depthStencilDesc_.DepthEnable = true;
+    depthStencilDesc_.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+    depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+    depthStencilDesc_.StencilEnable = false;
+}
+
+void GraphicsRenderer::ConfigureViewport() {
+    viewport_ = { 0.0f, 0.0f, static_cast<float>(windowWidth_), static_cast<float>(windowHeight_), 0.0f, 1.0f };
+}
+
+void GraphicsRenderer::ConfigureScissorRect() {
+    scissorRect_ = { 0, 0, windowWidth_, windowHeight_ };
+}
+
+void GraphicsRenderer::SetPipelineState(PipelineStateObject pso) {
+    assert(pso < MAXPSO);
+    auto* cmdList = DirectX12::GetInstance()->GetCommandList();
+    cmdList->SetPipelineState(pipelineState_[pso].Get());
+    cmdList->SetGraphicsRootSignature(rootSignature_[pso].Get());
+    cmdList->RSSetViewports(1, &viewport_);
+    cmdList->RSSetScissorRects(1, &scissorRect_);
+    cmdList->IASetPrimitiveTopology(pso == PARTICLE ? D3D_PRIMITIVE_TOPOLOGY_POINTLIST : D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    cmdList->OMSetBlendFactor(blendFactor_);
+}
+
+void GraphicsRenderer::StartDraw() {
+    auto* dx12 = DirectX12::GetInstance();
+    auto* cmdList = dx12->GetCommandList();
+    auto* rtvHandle = dx12->GetRTVHandle();
+    auto* dsvHandle = dx12->GetDSVHandle();
+    auto* swapChain = dx12->GetSwapChain();
+
+    CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(dx12->GetBackBuffer(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+    cmdList->ResourceBarrier(1, &barrier);
+    cmdList->OMSetRenderTargets(1, rtvHandle, false, dsvHandle);
+
+    FLOAT clearColor[] = { 0.1f, 0.25f, 0.5f, 0.0f };
+    cmdList->ClearRenderTargetView(*rtvHandle, clearColor, 0, nullptr);
+    cmdList->ClearDepthStencilView(*dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+}
+
+void GraphicsRenderer::FinishDraw() {
+    auto* dx12 = DirectX12::GetInstance();
+    auto* cmdList = dx12->GetCommandList();
+    auto* swapChain = dx12->GetSwapChain();
+
+    CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(dx12->GetBackBuffer(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+    cmdList->ResourceBarrier(1, &barrier);
+    swapChain->Present(1, 0);
+}
+
+void GraphicsRenderer::Log(const std::string& message) {
+    std::ofstream logFile("GraphicsRenderer.log", std::ios_base::app);
+    logFile << message;
+}

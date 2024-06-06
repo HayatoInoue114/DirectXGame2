@@ -3,7 +3,7 @@
 #include <wrl.h>
 #include <dxcapi.h>
 
-#define MAXPSO 2
+#define MAXPSO 3
 
 class DirectX12;
 
@@ -21,8 +21,6 @@ public:
 	void DrawCall();
 
 	void SetRootSignatureAndPSO(int n);
-
-	void Release();
 
 private:
 	void Dxc();
@@ -53,29 +51,20 @@ private:
 	void DepthStencilState();
 
 private:
-	//DirectX12* directX12_;
 	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_{};
-	//IDxcUtils* dxcUtils_{};
 	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_{};
-	//IDxcCompiler3* dxcCompiler_{};
 	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_{};
-	//IDxcIncludeHandler* includeHandler_{};
 
-	//Microsoft::WRL::ComPtr<IDxcBlobEncoding> shaderSource_{};
 	IDxcBlobEncoding* shaderSource_{};
-	//Microsoft::WRL::ComPtr<IDxcResult> shaderResult_{};
 	Microsoft::WRL::ComPtr<IDxcBlobUtf8> shaderError_{};
-	//Microsoft::WRL::ComPtr<IDxcBlob> shaderBlob_{};
 
 	IDxcResult* shaderResult_{};
-	//IDxcBlobUtf8* shaderError_{};
 	IDxcBlob* shaderBlob_{};
 
 	//シリアライズしてバイナリにする
 	Microsoft::WRL::ComPtr<ID3DBlob> signatureBlob_[MAXPSO]{};
 	Microsoft::WRL::ComPtr<ID3DBlob> errorBlob_[MAXPSO]{};
-	/*ID3DBlob* signatureBlob_[MAXPSO]{};
-	ID3DBlob* errorBlob_[MAXPSO]{};*/
+
 	//バイナリを元に生成
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature_[MAXPSO]{};
 
@@ -92,17 +81,6 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particleVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particlePixelShaderBlob_{};
-
-	/*IDxcBlob* vertexShaderBlob_{};
-	IDxcBlob* pixelShaderBlob_{};
-	IDxcBlob* particleVertexShaderBlob_{};
-	IDxcBlob* particlePixelShaderBlob_{};*/
-
-	/*Microsoft::WRL::ComPtr<ID3DBlob> vertexShaderBlob_{};
-	Microsoft::WRL::ComPtr<ID3DBlob> pixelShaderBlob_{};
-
-	Microsoft::WRL::ComPtr<ID3DBlob> particleVertexShaderBlob_{};
-	Microsoft::WRL::ComPtr<ID3DBlob> particlePixelShaderBlob_{};*/
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{};
 

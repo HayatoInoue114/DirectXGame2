@@ -19,7 +19,7 @@ struct SkinClusterData
 {
 	std::vector<Matrix4x4> inverseBindPoseMatrices;
 	Microsoft::WRL::ComPtr<ID3D12Resource> influenceResource;
-	D3D12_VERTEX_BUFFER_VIEW influenceBufferView;
+	D3D12_VERTEX_BUFFER_VIEW influenceBufferView = {};
 	std::span<VertexInfluence> mappedInfluence;
 	Microsoft::WRL::ComPtr<ID3D12Resource> paletteResource;
 	std::span<WellForGPU> mappedPalette;

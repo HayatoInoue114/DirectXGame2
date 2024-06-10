@@ -51,6 +51,13 @@ private:
 	void DepthStencilState();
 
 private:
+	enum class PSOName : uint32_t
+	{
+		Object3d,
+		Particle,
+		Skinning
+	};
+
 	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_{};
 	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_{};
 	Microsoft::WRL::ComPtr<IDxcIncludeHandler> includeHandler_{};
@@ -81,10 +88,11 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particleVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particlePixelShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> SkinningVertexShaderBlob_{};
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{};
 
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[MAXPSO][3]{};
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[MAXPSO][5]{};
 
 	//実際に生成
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> PipelineManagerState_[MAXPSO]{};

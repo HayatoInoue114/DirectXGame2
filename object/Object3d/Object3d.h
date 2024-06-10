@@ -88,6 +88,8 @@ private:
 	bool isEndAnimation_ = false;
 
 	//アニメーションのマトリックス
-	Matrix4x4 localMatrix_;
-};
+	Matrix4x4 localMatrix_{};
 
+	SkinCluster skinCluster_{};
+	SkinClusterData skinClusterData_{};
+};

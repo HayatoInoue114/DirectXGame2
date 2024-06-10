@@ -16,6 +16,7 @@
 #include "../../manager/ModelManager/ModelManager.h"
 #include "../../math/Transform/Transform.h"
 #include "../Camera/Camera.h"
+#include "../Skinning/SkinCluster/SkinCluster.h"
 
 class Model
 {
@@ -37,7 +38,7 @@ public:
 
 	//static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 
-	
+	bool isSkinning = false;
 
 public:  //セッター
 	void SetTransformS(const TransformS& transform) { worldTransform_.scale = transform.scale,worldTransform_.rotate = transform.rotate,worldTransform_.translate = transform.translate; }
@@ -56,6 +57,7 @@ public:  //セッター
 	const Vector3& GetTranslate() const { return worldTransform_.translate; }
 	const Vector3& GetScale() const { return worldTransform_.scale; }
 	const ModelData& GetModelData() const { return modelData_; }
+	const D3D12_VERTEX_BUFFER_VIEW& GetVBV() const { return vertexBufferView_; }
 private:
 	//void CreateVertexResource();
 
@@ -131,5 +133,7 @@ private:
 	bool isParent_{};
 
 	D3D12_INDEX_BUFFER_VIEW indexBufferViewSprite_{};
+
+	SkinCluster skinCluster_{};
 };
 

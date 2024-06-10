@@ -1,7 +1,7 @@
 #include "SkinCluster.h"
 #include <assert.h>
 
-void SkinCluster::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Skeleton& skeleton,const ModelData& modelData) {
+SkinClusterData SkinCluster::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Skeleton& skeleton,const ModelData& modelData) {
 	
 	SkinClusterData skinCluster;
 
@@ -71,6 +71,7 @@ void SkinCluster::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, con
 			}
 		}
 	}
+	return skinCluster;
 }
 
 void SkinCluster::Update(SkinClusterData& skinCluster, const Skeleton& skeleton) {
@@ -86,5 +87,4 @@ void SkinCluster::Update(SkinClusterData& skinCluster, const Skeleton& skeleton)
 			Transpose(Inverse(skinCluster.mappedPalette[jointIndex].skeletonSpaceMatrix));
 
 	}
-
 }

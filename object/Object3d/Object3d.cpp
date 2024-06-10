@@ -3,12 +3,14 @@
 void Object3d::Init()
 {
 	CreateTransformationMatrixResource();
+
 }
 
 void Object3d::Init(Model* model)
 {
 	model_ = model;
 	CreateTransformationMatrixResource();
+	skinClusterData_ = skinCluster_.Create(DirectX12::GetInstance()->GetDevice(), *skeleton_, model_->GetModelData());
 }
 
 void Object3d::Init(Camera* camera)
@@ -22,6 +24,7 @@ void Object3d::Init(Model* model,Camera* camera)
 	camera_ = camera;
 	model_ = model;
 	CreateTransformationMatrixResource();
+	skinClusterData_ = skinCluster_.Create(DirectX12::GetInstance()->GetDevice(), *skeleton_, model_->GetModelData());
 }
 
 void Object3d::Draw()
@@ -45,9 +48,16 @@ void Object3d::Draw()
 		if (skeleton_) {
 			DrawJoint(*skeleton_, camera_);
 		}
+
+		D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
+			model_->GetVBV(),
+			skinClusterData_.influenceBufferView
+		};
 		//wvp用のCBufferの場所を設定
+		DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
+
 
 		model_->Draw();
 	}
@@ -136,6 +146,7 @@ void Object3d::UpdateAnimation()
 		if (skeleton_) {
 			ApplyAnimation(*skeleton_, *animation_, animationTime_);
 			UpdateSkeleton(*skeleton_);
+			skinCluster_.Update(skinClusterData_, *skeleton_);
 		}
 
 		//NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[model_->GetModelData().rootNode.name]; //rootNodeのanimationを取得

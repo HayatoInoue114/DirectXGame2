@@ -5,6 +5,8 @@ class Skinning
 {
 public:
 
-	void Update();
+	void Draw();
+private:
+	SkinCluster skinCluster_;
 };
 

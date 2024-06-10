@@ -43,6 +43,7 @@ void Model::Initialize() {
 
 
 	SetMaterialData();
+
 }
 
 void Model::CreateVertexBufferView() {
@@ -114,8 +115,12 @@ void Model::Draw() {
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
 	materialData_->uvTransform = uvTransformMatrix_;
 
+
+
 	DirectX12::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferViewSprite_);
-	DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);	//VBVを設定
+	//if (!isSkinning) {
+	//	DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);	//VBVを設定
+	//}
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());

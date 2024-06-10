@@ -96,7 +96,7 @@ void GraphicsRenderer::CreateRootSignature() {
 
 		//RootParameter作成。複数設定できるので配列。
 
-		D3D12_ROOT_PARAMETER rootParameters[MAXPSO][5] = {};
+		D3D12_ROOT_PARAMETER rootParameters[MAXPSO][6] = {};
 
 		rootParameters[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -308,10 +308,6 @@ void GraphicsRenderer::CreatePSO() {
 			IID_PPV_ARGS(&PipelineManagerState_[i]));
 		assert(SUCCEEDED(hr));
 	}
-	for (int i = 0; i < MAXPSO; i++) {
-	
-	}
-	
 }
 
 void GraphicsRenderer::Viewport() {

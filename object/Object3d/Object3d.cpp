@@ -3,7 +3,6 @@
 void Object3d::Init()
 {
 	CreateTransformationMatrixResource();
-
 }
 
 void Object3d::Init(Model* model)
@@ -57,7 +56,7 @@ void Object3d::Draw()
 		DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
-
+		//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5,)
 
 		model_->Draw();
 	}

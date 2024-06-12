@@ -77,14 +77,11 @@ void TitleScene::Update() {
 //}
 
 void TitleScene::Draw2D() {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	sprite_->Draw();
 	//black_->Draw();
 }
 
 void TitleScene::Draw3D() {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
-	//model_->Draw(1);
 }
 
 void TitleScene::Draw() {

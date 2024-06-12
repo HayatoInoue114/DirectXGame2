@@ -1,6 +1,7 @@
 #include "Particle.h"
 #include <assert.h>
 #include "../../manager/ModelManager/ModelManager.h"
+#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 #include <numbers>
 
 ModelData Particle::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
@@ -315,6 +316,7 @@ void Particle::Update() {
 }
 
 void Particle::Draw(Camera* camera, uint32_t textureNum) {
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
 	CreateWVPMatrix();
 	// カメラ行列
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(Vector3{ 1,1,1 }, camera->GetRotate(), camera->GetTranslate());

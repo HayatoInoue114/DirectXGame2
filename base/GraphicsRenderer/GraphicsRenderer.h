@@ -5,8 +5,6 @@
 
 #define MAXPSO 2
 
-class DirectX12;
-
 class GraphicsRenderer
 {
 public:
@@ -15,6 +13,8 @@ public:
 	void Initialize();
 
 	void DrawCall();
+
+	void RSSet();
 
 	void SetRootSignatureAndPSO(int n);
 
@@ -46,6 +46,9 @@ private:
 	void CreatePSO();
 
 	void DepthStencilState();
+
+	void Viewport();
+	void ScissorRect();
 
 private:
 	//DirectX12* directX12_;
@@ -101,4 +104,9 @@ private:
 	D3D12_STATIC_SAMPLER_DESC staticSamplers_[MAXPSO][1]{};
 
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc_{};
+
+	//ビューポート
+	D3D12_VIEWPORT viewport_{};
+	//シザー矩形
+	D3D12_RECT scissorRect_{};
 };

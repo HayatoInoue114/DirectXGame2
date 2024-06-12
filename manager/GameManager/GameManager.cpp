@@ -60,7 +60,6 @@ void GameManager::Update() {
 		}
 		else {
 			// 描画前の処理
-			BeginFrame();
 
 			// シーンチェック
 			preSceneNum_ = sceneNum_;
@@ -74,36 +73,35 @@ void GameManager::Update() {
 				sceneArr_[sceneNum_]->Initialize();
 			}
 
+			directX12_->PreDrawForPostEffect();
+			graphicsRenderer_->RSSet();
+			graphicsRenderer_->DrawCall();
+
 			///
 			/// 更新処理
 			/// 	
 			sceneArr_[sceneNum_]->Update();
-
-			// ImGuiのパラメータを入れている
-
 			///
 			/// 描画処理
 			/// 
 			sceneArr_[sceneNum_]->Draw();
+
+			directX12_->PostDrawForPostEffect();
+
+			BeginFrame();
+			directX12_->PreDraw();
+			sceneArr_[sceneNum_]->Draw();
+			graphicsRenderer_->RSSet();
+			ImGui::Begin("a");
+			ImGui::End();
 			ImGui::Render();
 			// 描画後の処理
-			EndFrame();
+			directX12_->PostDraw();
 
 		}
 	}
 	// 解放処理
 	Finalize();
-	//input_->GetInstance()->Update();
-
-
-
-#pragma region Update
-
-
-
-#pragma endregion Update
-
-
 }
 
 
@@ -117,27 +115,11 @@ void GameManager::BeginFrame() {
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-
-	directX12_->PreDraw(); // 通常の描画準備
-	directX12_->RSSet();
-	graphicsRenderer_->DrawCall();
 }
 
 void GameManager::EndFrame() {
 	// 通常の描画終了処理
 	directX12_->PostDraw();
-
-	// ポストエフェクトの描画準備
-	directX12_->PreDrowForPostEffect();
-	directX12_->RSSet();
-	graphicsRenderer_->DrawCall(); // ポストエフェクトの描画
-
-	// ポストエフェクトの描画終了処理
-	directX12_->PostDrawForPostEffect();
-
-	// ImGui の描画コマンドをプッシュ
-	directX12_->RSSet();
-	ImGui::Render();
 }
 
 void GameManager::Finalize() {
@@ -162,7 +144,3 @@ void GameManager::Finalize() {
 //	
 //}
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-void GameManager::VariableInit() {
-}

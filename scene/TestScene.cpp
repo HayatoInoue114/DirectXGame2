@@ -14,11 +14,11 @@ void TestScene::Initialize() {
 	object_ = std::make_unique<Object3d>();
 	object_->Init(model_.get(),camera_.get());
 
-	domeModel_ = std::make_unique<Model>();
-	domeModel_ = Model::CreateModelFromObjPtr("skydome.obj");
+	/*domeModel_ = std::make_unique<Model>();
+	domeModel_ = Model::CreateModelFromObjPtr("skydome.obj");*/
 
-	dome_ = std::make_unique<Object3d>();
-	dome_->Init(domeModel_.get(),camera_.get());
+	/*dome_ = std::make_unique<Object3d>();
+	dome_->Init(domeModel_.get(),camera_.get());*/
 }
 
 void TestScene::Update() {
@@ -26,8 +26,7 @@ void TestScene::Update() {
 }
 
 void TestScene::Draw() {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
-	dome_->Draw();
+	//dome_->Draw();
 	object_->Draw();
 	
 }

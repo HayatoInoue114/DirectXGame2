@@ -91,7 +91,7 @@ void Triangle::Update(WorldTransform& transform, Vector4& color) {
 }
 
 void Triangle::Draw() {
-
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

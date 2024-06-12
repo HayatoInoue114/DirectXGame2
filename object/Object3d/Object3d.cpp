@@ -1,4 +1,5 @@
 #include "Object3d.h"
+#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 void Object3d::Init()
 {
@@ -26,6 +27,7 @@ void Object3d::Init(Model* model,Camera* camera)
 
 void Object3d::Draw()
 {
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	CreateWVPMatrix();
 
 	//wvp用のCBufferの場所を設定

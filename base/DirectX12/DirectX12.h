@@ -47,9 +47,7 @@ public:
 	/// </summary>
 	void PostDrawForPostEffect();
 
-	void PreDrowForPostEffect();
-
-	void TransitionResource(Microsoft::WRL::ComPtr<ID3D12Resource> resource, D3D12_RESOURCE_STATES beforeState, D3D12_RESOURCE_STATES afterState);
+	void PreDrawForPostEffect();
 
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 
@@ -62,39 +60,13 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSRVDescriptorHeap() { return srvDescriptorHeap_; }
 
-	//void LoadAndTransferTexture();
-
-	//ID3D12Resource* CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata);
-
-	//void UploadTextureData(ID3D12Resource* texture, const DirectX::ScratchImage& mipImages);
-
-	//void CreateSRV();
-
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
 	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU2() { return textureSrvHandleGPU2_; }
 
 	ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
 
-
-
-	//D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
-	//D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() { return srvDescriptorHeap_.Get(); }
-
-	void RSSet();
-
 private:
-	void GetBackBuffer();
-	void ClearRTV();
-	void ClearRTVForPostEffect();
-	void Barrier();
-	void ScreenDisplay();
-	void CommandConfirm();
-	void SetRenderTargets();
-	void SetRenderTargetsForPostEffect();
-	void ClearDepthBuffer();
 
 private:
 	void DXGIFactory();
@@ -115,17 +87,11 @@ private:
 	//FPS固定更新
 	void UpdateFixFPS();
 
-	/*void RTV();*/
-
-
-
 	void DebugLayer();
 
 	void Error();
 
 	void Fence();
-
-	/*void Update();*/
 
 	void CreateDepthStencilResource();
 
@@ -133,20 +99,7 @@ private:
 
 	void InitializeDescriptorSize();
 
-	void SetImGuiDescriptorHeap();
-
-	void PushImGuiDrawCommand();
-
-	void CommandKick();
-
 	void Signal();
-
-	void NextFlameCommandList();
-
-	void Viewport();
-
-	void ScissorRect();
-
 
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor);
@@ -237,11 +190,6 @@ private:
 
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
-
-	//ビューポート
-	D3D12_VIEWPORT viewport_{};
-	//シザー矩形
-	D3D12_RECT scissorRect_{};
 
 	D3D12_RESOURCE_STATES renderTextureState_ = D3D12_RESOURCE_STATE_COMMON;;
 	D3D12_RESOURCE_STATES backBufferState_[2] = { D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COMMON }; // assuming 2 back buffers

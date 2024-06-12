@@ -8,7 +8,6 @@
 #include "../../math/TransformationMatrix.h"
 #include "../../math/WorldTransform/WorldTransform.h"
 
-
 class Light;
 
 class Sphere

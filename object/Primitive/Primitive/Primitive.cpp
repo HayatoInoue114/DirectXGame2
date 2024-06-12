@@ -1,4 +1,5 @@
 #include "Primitive.h"
+#include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 void Primitive::Initialize() {
 	worldTransform_.Initialize();
@@ -40,7 +41,7 @@ void Primitive::Update() {
 }
 
 void Primitive::Draw() {
-	//GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	if (model_) {
 		model_->SetWVP(wvpData_);
 		model_->Draw();

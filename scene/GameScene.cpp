@@ -144,7 +144,6 @@ void GameScene::Update() {
 }
 
 void GameScene::Draw2D() {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	player_->DrawUI();
 
 	skydome_->Draw();
@@ -164,7 +163,6 @@ void GameScene::Draw2D() {
 }
 
 void GameScene::Draw3D() {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
 }
 
 

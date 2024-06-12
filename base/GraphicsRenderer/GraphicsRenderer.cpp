@@ -104,12 +104,6 @@ void GraphicsRenderer::CreateRootSignature() {
 		descriptionRootSignature_[i].Flags =
 			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-		//DescriptorRange
-		//descriptorRange_[0] = {};
-		//descriptorRange_[0].BaseShaderRegister = 0; //0から始まる
-		//descriptorRange_[0].NumDescriptors = 1;
-		//descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; //SRVを使う
-		//descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; //Offsetを自動計算
 		descriptorRangeForInstancing_[0] = {};
 		descriptorRangeForInstancing_[0].BaseShaderRegister = 0; //0から始まる
 		descriptorRangeForInstancing_[0].NumDescriptors = 1;
@@ -409,11 +403,15 @@ void GraphicsRenderer::Release() {
 	vertexShaderBlob_->Release();*/
 }
 
-
-
 void GraphicsRenderer::DrawCall() {
-	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	
 }
+
+void GraphicsRenderer::RSSet() {
+	DirectX12::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);	//Viewportを設定
+	DirectX12::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);	//Scirssorを設定
+}
+
 
 void GraphicsRenderer::SetRootSignatureAndPSO(int n) {
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要

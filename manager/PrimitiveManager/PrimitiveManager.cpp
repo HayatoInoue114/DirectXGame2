@@ -1,5 +1,5 @@
 #include "PrimitiveManager.h"
-#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
+
 
 void PrimitiveManager::Initialize() {
 
@@ -85,26 +85,23 @@ void PrimitiveManager::Draw()
 
 void PrimitiveManager::Draw2D()
 {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
-	dome_->Draw();
-	player_->Draw();
-	//player_->DrawUI();
-	
-	//player_->DrawUI();
-	for (Enemy* enemy : enemies_) {
-		enemy->Draw();
-	}
+	//dome_->Draw();
+	//player_->Draw();
+	////player_->DrawUI();
+	//
+	////player_->DrawUI();
+	//for (Enemy* enemy : enemies_) {
+	//	enemy->Draw();
+	//}
 
-	//// 弾描画
-	for (EnemyBullet* bullet : enemyBullets_) {
-		bullet->Draw();
-	}
+	////// 弾描画
+	//for (EnemyBullet* bullet : enemyBullets_) {
+	//	bullet->Draw();
+	//}
 }
 
 void PrimitiveManager::Draw3D()
 {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
-	//particle_.Draw(railCamera_->GetCamera(), UVCHECKER);
 }
 
 void PrimitiveManager::AddEnemyBullet(EnemyBullet* enemyBullet) {

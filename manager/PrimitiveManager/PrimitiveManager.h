@@ -1,6 +1,5 @@
 #pragma once
 #include "../../object/Primitive/Primitive/Primitive.h"
-//#include "../../object/Primitive/PrimitiveCommon/PrimitiveCommon.h"
 #include "../../object/Camera/Camera.h"
 #include "../../object/Model/Model.h"
 #include "../../object/Particle/Particle.h"
@@ -9,7 +8,7 @@
 #include "../../Project/Player/Player.h"
 #include "../../Project/Enemy/Enemy.h"
 #include "../../object/Object3d/Object3d.h"
-
+#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 #include <memory>
 
 

@@ -1,5 +1,6 @@
 #include "Sphere.h"
 #include "../../components/Light/Light.h"
+#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -162,6 +163,7 @@ void Sphere::Update(WorldTransform& transform, Vector4& color) {
 }
 
 void Sphere::Draw() {
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));

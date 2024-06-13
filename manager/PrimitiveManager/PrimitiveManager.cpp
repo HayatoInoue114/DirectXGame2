@@ -1,5 +1,5 @@
 #include "PrimitiveManager.h"
-
+#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 void PrimitiveManager::Initialize() {
 

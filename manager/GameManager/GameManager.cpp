@@ -1,4 +1,5 @@
 #include "GameManager.h"
+#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 GameManager::GameManager() {
 	// 各シーンの配列
@@ -73,9 +74,9 @@ void GameManager::Update() {
 				sceneArr_[sceneNum_]->Initialize();
 			}
 
-			directX12_->PreDrawForPostEffect();
+			/*directX12_->PreDrawForPostEffect();
 			graphicsRenderer_->RSSet();
-			graphicsRenderer_->DrawCall();
+			graphicsRenderer_->DrawCall();*/
 
 			///
 			/// 更新処理
@@ -84,9 +85,9 @@ void GameManager::Update() {
 			///
 			/// 描画処理
 			/// 
-			sceneArr_[sceneNum_]->Draw();
+			/*sceneArr_[sceneNum_]->Draw();
 
-			directX12_->PostDrawForPostEffect();
+			directX12_->PostDrawForPostEffect();*/
 
 			BeginFrame();
 			directX12_->PreDraw();

@@ -1,6 +1,6 @@
 #include "Sprite.h"
-#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 #include "../../manager/TextureManager/TextureManager.h"
+#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 /// <summary>
 /// スプライト生成

@@ -6,9 +6,10 @@
 #include "../../structure/VertexData/VertexData.h"
 #include "../../structure/Material/Material.h"
 #include "../../math/WorldTransform/WorldTransform.h"
-#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 #pragma comment(lib,"dxcompiler.lib")
+
+class GraphicsRenderer;
 
 struct TriangleData
 {

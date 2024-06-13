@@ -10,6 +10,7 @@
 #include "../manager/PrimitiveManager/PrimitiveManager.h"
 
 class Enemy;
+class GraphicsRenderer;
 
 /// <summary>
 /// ゲームシーン

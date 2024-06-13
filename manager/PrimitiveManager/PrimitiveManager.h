@@ -8,9 +8,9 @@
 #include "../../Project/Player/Player.h"
 #include "../../Project/Enemy/Enemy.h"
 #include "../../object/Object3d/Object3d.h"
-#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 #include <memory>
 
+class GraphicsRenderer;
 
 class PrimitiveManager
 {

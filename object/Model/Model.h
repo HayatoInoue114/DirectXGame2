@@ -18,6 +18,8 @@
 #include "../Camera/Camera.h"
 #include "../../utility/UtilityFunction/UtilityFunction.h"
 
+class GraphicsRenderer;
+
 class Model
 {
 public:

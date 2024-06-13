@@ -1,4 +1,5 @@
 #include "Triangle.h"
+#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	directX12_ = directX12;

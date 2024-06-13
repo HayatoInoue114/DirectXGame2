@@ -7,6 +7,8 @@
 #include "../../../math/MyMath.h"
 //#include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
 
+class GraphicsRenderer;
+
 class Primitive
 {
 public:

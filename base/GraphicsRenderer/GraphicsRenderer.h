@@ -47,8 +47,8 @@ private:
 
 	void DepthStencilState();
 
-	void Viewport();
-	void ScissorRect();
+	/*void Viewport();
+	void ScissorRect();*/
 
 private:
 	//DirectX12* directX12_;

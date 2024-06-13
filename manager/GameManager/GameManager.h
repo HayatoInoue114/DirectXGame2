@@ -1,6 +1,5 @@
 #pragma once
 #include "../../base/DirectX12/DirectX12.h"
-#include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 #include "../../base/WindowsAPI/WindowsAPI.h"
 #include "../../object/Traiangle/Triangle.h"
 #include "../../manager/ImGuiManager/ImGuiManager.h"
@@ -28,6 +27,7 @@
 #define MAXSPRITE 1 //スプライトの最大数
 #define MAXSPHERE 1 //球の最大数
 
+class GraphicsRenderer;
 class Particle;
 
 class GameManager

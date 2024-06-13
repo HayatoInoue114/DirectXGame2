@@ -16,6 +16,7 @@
 #include "../../structure/structure.h"
 #include "../Camera/Camera.h"
 
+class GraphicsRenderer;
 
 #define MAXINSTANCE 10 // インスタンス数
 

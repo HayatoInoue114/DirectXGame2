@@ -4,6 +4,8 @@
 #include "../Camera/Camera.h"
 #include "../../base/DirectX12/DirectX12.h"
 
+class GraphicsRenderer;
+
 class Object3d
 {
 public:

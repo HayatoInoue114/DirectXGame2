@@ -305,7 +305,7 @@ void DirectX12::PostDraw() {
 }
 
 
-//////PostDraw///////
+//////PostEffect///////
 void DirectX12::PreDrawForPostEffect() {
 	// バリアを張る
 	D3D12_RESOURCE_BARRIER barrier = {};

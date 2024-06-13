@@ -241,7 +241,9 @@ void DirectX12::CreateDSV() {
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓描画関係↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓//
 
 void DirectX12::PreDraw() {
-	GetBackBuffer();
+	//これから書き込むバックバッファのインデックスを取得
+	backBufferIndex_ = swapChain_->GetCurrentBackBufferIndex();
+
 	Barrier();
 	ClearRTV();
 	SetRenderTargets();

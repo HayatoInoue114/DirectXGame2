@@ -91,6 +91,9 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> particleVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particlePixelShaderBlob_{};
 
+	Microsoft::WRL::ComPtr<IDxcBlob> CopyImageVertexShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> PixelShaderBlob_{};
+
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{};
 
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[MAXPSO][3]{};

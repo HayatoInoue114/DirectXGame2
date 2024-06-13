@@ -303,6 +303,10 @@ void GraphicsRenderer::BuildShader() {
 
 	particlePixelShaderBlob_ = CompileShader(L"./ShaderFile/Particle.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(particlePixelShaderBlob_ != nullptr);
+
+	//Skinning
+	SkinningVertexShaderBlob_ = CompileShader(L"./ShaderFile/SkinningObject3d.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+	assert(SkinningVertexShaderBlob_ != nullptr);
 }
 
 void GraphicsRenderer::CreatePSO() {
@@ -310,49 +314,48 @@ void GraphicsRenderer::CreatePSO() {
 
 	for (int i = 0; i < MAXPSO; i++) {
 		PipelineManagerStateDesc_[i] = {};
-		PipelineManagerStateDesc_[i].pRootSignature = rootSignature_[i].Get(); // RootSignature
-		PipelineManagerStateDesc_[i].InputLayout = inputLayoutDesc_[i]; // InputLayout
+		PipelineManagerStateDesc_[i].pRootSignature = rootSignature_[i].Get();//RootSignature
+		PipelineManagerStateDesc_[i].InputLayout = inputLayoutDesc_[i];//InputLayout
 
 		if (i == 0) {
 			PipelineManagerStateDesc_[i].VS = { vertexShaderBlob_->GetBufferPointer(),
-												vertexShaderBlob_->GetBufferSize() }; // VertexShader
+			vertexShaderBlob_->GetBufferSize() };//VertexShader
 			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
-												pixelShaderBlob_->GetBufferSize() }; // PixelShader
+			pixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
-		else if (i == 1) {
+		if (i == 1) {
 			PipelineManagerStateDesc_[i].VS = { particleVertexShaderBlob_->GetBufferPointer(),
-												particleVertexShaderBlob_->GetBufferSize() }; // VertexShader
+			particleVertexShaderBlob_->GetBufferSize() };//VertexShader
 			PipelineManagerStateDesc_[i].PS = { particlePixelShaderBlob_->GetBufferPointer(),
-												particlePixelShaderBlob_->GetBufferSize() }; // PixelShader
+			particlePixelShaderBlob_->GetBufferSize() };//PixelShader
+		}
+		if (i == 2) {
+			PipelineManagerStateDesc_[i].VS = { SkinningVertexShaderBlob_->GetBufferPointer(),
+			SkinningVertexShaderBlob_->GetBufferSize() };//VertexShader
+			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
+			pixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
 
-		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i]; // BlendState
-		PipelineManagerStateDesc_[i].RasterizerState = rasterizerDesc_[i]; // RasterizerState
-		// 書き込むRTVの情報
-		PipelineManagerStateDesc_[i].NumRenderTargets = 1;
-		PipelineManagerStateDesc_[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // 必要なRTVフォーマットを設定
-		
 
-		// 利用するトポロジ（形状）のタイプ。三角形
-		PipelineManagerStateDesc_[i].PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-		// どのように画面に色を打ち込むかの設定（気にしなくてよい）
+		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState
+		PipelineManagerStateDesc_[i].RasterizerState = rasterizerDesc_[i];//RasterizeState
+		//書き込むRTVの情報
+		PipelineManagerStateDesc_[i].NumRenderTargets = 1;
+		PipelineManagerStateDesc_[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		//利用するトポロジ（形状）のタイプ。三角形
+		PipelineManagerStateDesc_[i].PrimitiveTopologyType =
+			D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+		//どのように画面に色を打ち込むかの設定（気にしなくてよい）
 		PipelineManagerStateDesc_[i].SampleDesc.Count = 1;
 		PipelineManagerStateDesc_[i].SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
 
-		// DepthStencilの設定
+		//DepthStencilの設定
 		PipelineManagerStateDesc_[i].DepthStencilState = depthStencilDesc_;
 		PipelineManagerStateDesc_[i].DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
-
-		// RTVフォーマットが正しく設定されているかを確認
-		//assert(PipelineManagerStateDesc_[i].RTVFormats[0] == DXGI_FORMAT_UNKNOWN);
 
 		PipelineManagerState_[i] = nullptr;
 		hr = DirectX12::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&PipelineManagerStateDesc_[i],
 			IID_PPV_ARGS(&PipelineManagerState_[i]));
-		if (FAILED(hr)) {
-			// エラーが発生した場合にエラーメッセージを出力
-			std::cerr << "Failed to create graphics pipeline state for index " << i << std::endl;
-		}
 		assert(SUCCEEDED(hr));
 	}
 }

@@ -307,6 +307,13 @@ void GraphicsRenderer::BuildShader() {
 	//Skinning
 	SkinningVertexShaderBlob_ = CompileShader(L"./ShaderFile/SkinningObject3d.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(SkinningVertexShaderBlob_ != nullptr);
+
+	//CopyImage
+	CopyImageVertexShaderBlob_ = CompileShader(L"./ShaderFile/CopyImage.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+	assert(particleVertexShaderBlob_ != nullptr);
+
+	CopyImagePixelShaderBlob_ = CompileShader(L"./ShaderFile/CopyImage.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+	assert(particlePixelShaderBlob_ != nullptr);
 }
 
 void GraphicsRenderer::CreatePSO() {

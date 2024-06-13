@@ -410,6 +410,7 @@ void GraphicsRenderer::DrawCall() {
 void GraphicsRenderer::RSSet() {
 	DirectX12::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);	//Viewportを設定
 	DirectX12::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);	//Scirssorを設定
+	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 
@@ -429,3 +430,22 @@ void GraphicsRenderer::DepthStencilState() {
 	depthStencilDesc_.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 }
 
+void GraphicsRenderer::Viewport() {
+	viewport_ = {};
+	//クライアント領域サイズと一緒にして画面残帯に表示
+	viewport_.Width = kCliantWidth;
+	viewport_.Height = kCliantHeight;
+	viewport_.TopLeftX = 0;
+	viewport_.TopLeftY = 0;
+	viewport_.MinDepth = 0.0f;
+	viewport_.MaxDepth = 1.0f;
+}
+
+void GraphicsRenderer::ScissorRect() {
+	scissorRect_ = {};
+	//基本的にビューポートと同じ矩形が構成されるようにする
+	scissorRect_.left = 0;
+	scissorRect_.right = kCliantWidth;
+	scissorRect_.top = 0;
+	scissorRect_.bottom = kCliantHeight;
+}

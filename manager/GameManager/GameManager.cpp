@@ -61,10 +61,11 @@ void GameManager::Update() {
 		}
 		else {
 			// 描画前の処理
+			BeginFrame();
 
 			// シーンチェック
 			preSceneNum_ = sceneNum_;
-			//sceneNum_ = sceneArr_[sceneNum_]->GetSceneNum();
+			sceneNum_ = sceneArr_[sceneNum_]->GetSceneNum();
 
 			input_->Update();
 
@@ -89,9 +90,8 @@ void GameManager::Update() {
 
 			directX12_->PostDrawForPostEffect();*/
 
-			BeginFrame();
-			directX12_->PreDraw();
-			graphicsRenderer_->RSSet();
+			
+			
 			sceneArr_[sceneNum_]->Draw();
 			ImGui::Begin("a");
 			ImGui::End();
@@ -116,6 +116,8 @@ void GameManager::BeginFrame() {
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+	directX12_->PreDraw();
+	graphicsRenderer_->RSSet();
 }
 
 void GameManager::EndFrame() {

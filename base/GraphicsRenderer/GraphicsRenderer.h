@@ -3,7 +3,7 @@
 #include <wrl.h>
 #include <dxcapi.h>
 
-#define MAXPSO 2
+#define MAXPSO 3
 
 class GraphicsRenderer
 {
@@ -12,13 +12,14 @@ public:
 
 	void Initialize();
 
-	void DrawCall();
-
 	void RSSet();
 
 	void SetRootSignatureAndPSO(int n);
 
 	void Release();
+
+	void Viewport();
+	void ScissorRect();
 private:
 	void Dxc();
 
@@ -47,8 +48,7 @@ private:
 
 	void DepthStencilState();
 
-	void Viewport();
-	void ScissorRect();
+
 
 private:
 	//DirectX12* directX12_;

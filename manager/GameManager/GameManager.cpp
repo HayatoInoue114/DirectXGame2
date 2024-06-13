@@ -45,6 +45,9 @@ void GameManager::Initialize()
 	sceneArr_[sceneNum_]->Initialize();
 
 	transform_.Initialize();
+
+	graphicsRenderer_->ScissorRect();
+	graphicsRenderer_->Viewport();
 }
 
 
@@ -75,10 +78,9 @@ void GameManager::Update() {
 				sceneArr_[sceneNum_]->Initialize();
 			}
 
-			/*directX12_->PreDrawForPostEffect();
+			directX12_->PreDrawForPostEffect();
 			graphicsRenderer_->RSSet();
-			graphicsRenderer_->DrawCall();*/
-
+			
 			///
 			/// 更新処理
 			/// 	
@@ -86,13 +88,14 @@ void GameManager::Update() {
 			///
 			/// 描画処理
 			/// 
-			/*sceneArr_[sceneNum_]->Draw();
-
-			directX12_->PostDrawForPostEffect();*/
-
-			
-			
 			sceneArr_[sceneNum_]->Draw();
+
+			directX12_->PostDrawForPostEffect();
+
+			
+			directX12_->PreDraw();
+			graphicsRenderer_->RSSet();
+			//sceneArr_[sceneNum_]->Draw();
 			ImGui::Begin("a");
 			ImGui::End();
 			ImGui::Render();
@@ -116,8 +119,6 @@ void GameManager::BeginFrame() {
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	directX12_->PreDraw();
-	graphicsRenderer_->RSSet();
 }
 
 void GameManager::EndFrame() {

@@ -95,7 +95,36 @@ private:
 
 	void CreateDepthStencilResource();
 
+	/// <summary>
+	/// /////
+	/// </summary>
 	void CreateDSV();
+
+	void SetRenderTargets();
+
+	void ClearDepthBuffer();
+
+	void Barrier();
+
+	void ScreenDisplay();
+
+	void CommandConfirm();
+
+	void GetBackBuffer();
+
+	void ClearRTV();
+
+	void SetImGuiDescriptorHeap();
+
+	void PushImGuiDrawCommand();
+
+	void CommandKick();
+
+	void NextFlameCommandList();
+
+	/// <summary>
+	/// //////
+	/// </summary>
 
 	void InitializeDescriptorSize();
 

@@ -240,6 +240,24 @@ void DirectX12::CreateDSV() {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓描画関係↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓//
 
+void DirectX12::PreDraw() {
+	GetBackBuffer();
+	Barrier();
+	ClearRTV();
+	SetRenderTargets();
+	ClearDepthBuffer();
+}
+
+void DirectX12::PostDraw() {
+	PushImGuiDrawCommand();
+	ScreenDisplay();
+	CommandConfirm();
+	CommandKick();
+	UpdateFixFPS();
+	Signal();
+	NextFlameCommandList();
+}
+
 
 void DirectX12::PreDraw() {
 	//これから書き込むバックバッファのインデックスを取得

@@ -80,6 +80,11 @@ void GraphicsRenderer::CreateRootSignature() {
 		descriptorRange_[i][0].NumDescriptors = 1;
 		descriptorRange_[i][0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 		descriptorRange_[i][0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+		descriptorRange_[i][1].BaseShaderRegister = 1;
+		descriptorRange_[i][1].NumDescriptors = 1;
+		descriptorRange_[i][1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+		descriptorRange_[i][1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 	}
 
 	descriptorRangeForInstancing_[0] = {};
@@ -102,18 +107,15 @@ void GraphicsRenderer::CreateRootSignature() {
 		rootParameters[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[i][0].Descriptor.ShaderRegister = 0;
-
 		// texture
 		rootParameters[i][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 		rootParameters[i][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[i][2].DescriptorTable.pDescriptorRanges = descriptorRange_[i];
 		rootParameters[i][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_[i]);
-
 		// Light
 		rootParameters[i][3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[i][3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[i][3].Descriptor.ShaderRegister = 1;
-
 		// camera
 		rootParameters[i][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[i][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
@@ -141,17 +143,18 @@ void GraphicsRenderer::CreateRootSignature() {
 		if (i == 2) {
 			rootParameters[2][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters[2][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[2][1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
-
-			// matrixPalette
-			rootParameters[2][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
+			rootParameters[2][1].Descriptor.ShaderRegister = 1;
+			//Palette
+			rootParameters[2][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[2][5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[2][5].Descriptor.ShaderRegister = 2; // ここを 2 に設定
+			rootParameters[2][5].Descriptor.ShaderRegister = 0;
+			rootParameters[2][5].DescriptorTable.pDescriptorRanges = descriptorRange_[i];
+			rootParameters[2][5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_[i]);
 		}
 
 		// rootSignatureに設定
 		descriptionRootSignature_[i].pParameters = rootParameters[i];
-		descriptionRootSignature_[i].NumParameters = (i == 2) ? 6 : 5; // 6 for Skinning, 5 for others
+		descriptionRootSignature_[i].NumParameters = (i == 2) ? 5 : 4; // スキニングには5つ、それ以外には4つのパラメータを設定
 
 		staticSamplers_[i][0] = {};
 		staticSamplers_[i][0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; //バイリニアフィルタ

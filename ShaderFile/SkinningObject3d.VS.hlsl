@@ -16,7 +16,7 @@ struct Well
 };
 
 // 定数バッファと構造化バッファの定義
-ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b0);
+ConstantBuffer<TransformationMatrix> gTransformationMatrix : register(b1);
 StructuredBuffer<Well> gMatrixPalette : register(t0);
 
 // VertexShaderInput 構造体の定義

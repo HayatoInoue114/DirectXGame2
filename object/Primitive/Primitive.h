@@ -4,7 +4,8 @@
 #include "../../math/TransformationMatrix.h"
 #include "../Model/Model.h"
 #include "../../../math/MyMath.h"
-//#include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
+
+class GraphicsRenderer;
 
 class Primitive
 {

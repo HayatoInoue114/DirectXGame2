@@ -1,5 +1,6 @@
 #include "Sphere.h"
 #include "../../components/Light/Light.h"
+#include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 

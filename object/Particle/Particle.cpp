@@ -2,6 +2,7 @@
 #include <assert.h>
 #include "../../manager/ModelManager/ModelManager.h"
 #include <numbers>
+#include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 ModelData Particle::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
 	ModelData modelData; // 構築するModelData

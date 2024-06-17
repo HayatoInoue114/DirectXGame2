@@ -1,4 +1,5 @@
 #include "Primitive.h"
+#include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 void Primitive::Initialize() {
 	worldTransform_.Initialize();

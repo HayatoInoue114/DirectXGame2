@@ -6,6 +6,8 @@
 #include "Animation/Animation.h"
 #include "../../utility/UtilityFunction/UtilityFunction.h"
 
+class GraphicsRenderer;
+
 class Object3d
 {
 public:

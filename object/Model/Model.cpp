@@ -1,5 +1,6 @@
 #include "Model.h"
 #include <assert.h>
+#include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 Model* Model::CreateModelFromObj(int modelName) {
 	Model* model = new Model();
@@ -110,6 +111,7 @@ void Model::Update() {
 
 void Model::Draw() {
 	//パラメータからUVTransform用の行列を生成する
+	//GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));

@@ -30,7 +30,6 @@ void TestScene::Update() {
 }
 
 void TestScene::Draw() {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(2);
 	dome_->Draw();
 	object_->Draw();
 }

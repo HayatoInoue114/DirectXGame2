@@ -11,6 +11,7 @@
 #include "../Camera/Camera.h"
 
 class Light;
+class GraphicsRenderer;
 
 class Sphere
 {

@@ -1,4 +1,5 @@
 #include "Object3d.h"
+#include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
 
 void Object3d::Init()
 {
@@ -30,12 +31,18 @@ void Object3d::Draw()
 {
 	CreateWVPMatrix();
 
-	
-
 	if (model_) {
+		//もしアニメーションを使うならSkinningShaderを使う(それ以外ならObject3d)
+		if (animation_) {
+			GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(2);
+		}
+		else {
+			GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
+		}
+
 		if (!model_->isObj) {
-			wvpData_->WVP = /*localMatrix_ * */worldViewProjectionMatrix_;
-			wvpData_->World = /*localMatrix_ * */worldMatrix_;
+			wvpData_->WVP = worldViewProjectionMatrix_;
+			wvpData_->World = worldMatrix_;
 
 			ImGui::Begin("3d");
 			ImGui::SliderFloat("anime", &animationTime_, 0.1f, 0.1f);

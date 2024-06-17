@@ -10,6 +10,8 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
+class GraphicsRenderer;
+
 struct TriangleData
 {
 	VertexData Left;

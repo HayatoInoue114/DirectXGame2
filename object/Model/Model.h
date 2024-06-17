@@ -18,6 +18,8 @@
 #include "../Camera/Camera.h"
 #include "../Skinning/SkinCluster/SkinCluster.h"
 
+class GraphicsRenderer;
+
 class Model
 {
 public:

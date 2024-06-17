@@ -144,7 +144,7 @@ void GraphicsRenderer::CreateRootSignature() {
 			rootParameters[2][1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
 
 			// matrixPalette
-			rootParameters[2][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[2][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_SRV;
 			rootParameters[2][5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 			rootParameters[2][5].Descriptor.ShaderRegister = 2; // ここを 2 に設定
 		}
@@ -182,11 +182,7 @@ void GraphicsRenderer::CreateRootSignature() {
 	}
 }
 
-
-
-
 void GraphicsRenderer::InputLayout() {
-	// Define the common input layout for all PSOs
 	for (int i = 0; i < MAXPSO; i++) {
 		inputElementDescs_[i][0].SemanticName = "POSITION";
 		inputElementDescs_[i][0].SemanticIndex = 0;
@@ -213,7 +209,7 @@ void GraphicsRenderer::InputLayout() {
 		inputElementDescs_[i][2].InstanceDataStepRate = 0;
 	}
 
-	// Define the skinned input layout specifically
+	//skinnning
 	inputElementDescs_[2][3].SemanticName = "WEIGHT";
 	inputElementDescs_[2][3].SemanticIndex = 0;
 	inputElementDescs_[2][3].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -241,19 +237,19 @@ void GraphicsRenderer::InputLayout() {
 	}
 }
 
-
-
 void GraphicsRenderer::BlendState() {
-	blendDesc_[0].RenderTarget[0].RenderTargetWriteMask =
-		D3D12_COLOR_WRITE_ENABLE_ALL;
-	for (int i = 1; i < MAXPSO; i++) {
+	for (int i = 0; i < MAXPSO; i++) {
 		// すべての色要素を書き込む
-		blendDesc_[i].RenderTarget[0].RenderTargetWriteMask =
-			D3D12_COLOR_WRITE_ENABLE_ALL;
+		blendDesc_[i].RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 		blendDesc_[i].RenderTarget[0].BlendEnable = true;
 		blendDesc_[i].RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
 		blendDesc_[i].RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 		blendDesc_[i].RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+
+		// ノーマルブレンドの設定（デフォルト）
+		blendDesc_[i].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blendDesc_[i].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+		blendDesc_[i].RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
 	}
 
 	// ブレンドモードの設定

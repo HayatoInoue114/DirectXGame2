@@ -147,9 +147,8 @@ void GraphicsRenderer::CreateRootSignature() {
 			//Palette
 			rootParameters[2][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[2][5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[2][5].Descriptor.ShaderRegister = 0;
-			rootParameters[2][5].DescriptorTable.pDescriptorRanges = descriptorRange_[i];
-			rootParameters[2][5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_[i]);
+			rootParameters[2][5].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+			rootParameters[2][5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 		}
 
 		// rootSignatureに設定
@@ -326,18 +325,21 @@ void GraphicsRenderer::CreatePSO() {
 		PipelineManagerStateDesc_[i].pRootSignature = rootSignature_[i].Get();//RootSignature
 		PipelineManagerStateDesc_[i].InputLayout = inputLayoutDesc_[i];//InputLayout
 
+		//Object3d
 		if (i == 0) {
 			PipelineManagerStateDesc_[i].VS = { vertexShaderBlob_->GetBufferPointer(),
 			vertexShaderBlob_->GetBufferSize() };//VertexShader
 			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
 			pixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
+		//Particle
 		if (i == 1) {
 			PipelineManagerStateDesc_[i].VS = { particleVertexShaderBlob_->GetBufferPointer(),
 			particleVertexShaderBlob_->GetBufferSize() };//VertexShader
 			PipelineManagerStateDesc_[i].PS = { particlePixelShaderBlob_->GetBufferPointer(),
 			particlePixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
+		//Skinning
 		if (i == 2) {
 			PipelineManagerStateDesc_[i].VS = { SkinningVertexShaderBlob_->GetBufferPointer(),
 			SkinningVertexShaderBlob_->GetBufferSize() };//VertexShader

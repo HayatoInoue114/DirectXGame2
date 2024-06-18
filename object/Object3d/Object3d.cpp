@@ -63,7 +63,7 @@ void Object3d::Draw()
 		DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
-		//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5,)
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, skinClusterData_.paletteResource->GetGPUVirtualAddress());
 
 		model_->Draw();
 	}

@@ -282,7 +282,7 @@
     <FxCompile Include="ShaderFile\Object3d.PS.hlsl" />
     <FxCompile Include="ShaderFile\Particle.VS.hlsl" />
     <FxCompile Include="ShaderFile\Particle.PS.hlsl" />
-    <FxCompile Include="ShaderFile\Copylmage.PS.hlsl" />
+    <FxCompile Include="ShaderFile\CopyImage.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\DirectX12\DirectX12.h">
@@ -520,7 +520,7 @@
   <ItemGroup>
     <None Include="ShaderFile\Object3d.hlsli" />
     <None Include="ShaderFile\Particle.hlsli" />
-    <None Include="ShaderFile\Copylmage.hlsli" />
-    <None Include="ShaderFile\Copylmage.VS.hlsl" />
+    <None Include="ShaderFile\CopyImage.hlsli" />
+    <None Include="ShaderFile\CopyImage.VS.hlsl" />
   </ItemGroup>
 </Project>

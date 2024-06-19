@@ -1,4 +1,4 @@
-#include "Copylmage.hlsli"
+#include "CopyImage.hlsli"
 
 static const int kNumVertex = 3;
 static const float4 kPositions[kNumVertex] =
@@ -9,11 +9,11 @@ static const float4 kPositions[kNumVertex] =
 };
 static const float2 kTexcoords[kNumVertex] =
 {
-    { -1.0f, 1.0f, 0.0f, 1.0f }, //左上
-    { 3.0f, 1.0f, 0.0f, 1.0f }, // 右上
-    { -1.0f, -3.0f, 0.0f, 1.0f } //左下
+    { 0.0f, 0.0f }, //左上
+    { 2.0f, 0.0f }, // 右上
+    { 0.0f, 2.0f } //左下
 };
-VertexShaderOutput main(int vertexId : SV_VertexID)
+VertexShaderOutput main(uint32_t vertexId : SV_VertexID)
 {
     VertexShaderOutput output;
     output.position = kPositions[vertexId];

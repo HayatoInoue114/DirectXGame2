@@ -276,6 +276,8 @@ void DirectX12::PostDrawForPostEffect() {
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
 	commandList_->ResourceBarrier(1, &barrier);
+
+	commandList_->SetGraphicsRootSignature(GraphicsRenderer::GetInstance()->)
 }
 void DirectX12::CreateDepthStencilResource() {
 	//DepthStencilTextureをウインドウのサイズで作成

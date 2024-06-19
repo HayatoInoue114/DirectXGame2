@@ -91,7 +91,7 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 void GraphicsRenderer::CreateRootSignature() {
 	HRESULT hr;
 
-	for (int i = 0; i < MAXPSO - 1; i++) {
+	for (int i = 0; i < MAXPSO; i++) {
 		descriptorRange_[i][0].BaseShaderRegister = 0;
 		descriptorRange_[i][0].NumDescriptors = 1;
 		descriptorRange_[i][0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
@@ -99,94 +99,75 @@ void GraphicsRenderer::CreateRootSignature() {
 	}
 
 	for (int i = 0; i < MAXPSO; i++) {
-		//RootSignature作成
+		// RootSignature作成
 		descriptionRootSignature_[i] = {};
 		descriptionRootSignature_[i].Flags =
 			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 		descriptorRangeForInstancing_[0] = {};
-		descriptorRangeForInstancing_[0].BaseShaderRegister = 0; //0から始まる
+		descriptorRangeForInstancing_[0].BaseShaderRegister = 0; // 0から始まる
 		descriptorRangeForInstancing_[0].NumDescriptors = 1;
-		descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; //SRVを使う
-		descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; //Offsetを自動計算
+		descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+		descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
-		//RootParameter作成。複数設定できるので配列。
+		// RootParameter作成。複数設定できるので配列。
+		D3D12_ROOT_PARAMETER rootParameters[6] = {};
 
-	// RootParameter作成。複数設定できるので配列。
-		D3D12_ROOT_PARAMETER rootParameters[MAXPSO][6] = {};
-
-		//*  共通  *//
 		// Material
-		rootParameters[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[i][0].Descriptor.ShaderRegister = 0;
+		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[0].Descriptor.ShaderRegister = 0;
+
+		// wvp / SRV
+		if (i == 0) {
+			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
+		}
+		else if (i == 1) {
+			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+			rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+		}
+		else if (i == 2) {
+			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
+
+			rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[5].Descriptor.ShaderRegister = 2; // ここを 2 に設定
+		}
 
 		// texture
-		rootParameters[i][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		rootParameters[i][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[i][2].DescriptorTable.pDescriptorRanges = descriptorRange_[i];
-		rootParameters[i][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_[i]);
+		rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange_[i];
+		rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_[i]);
 
 		// Light
-		rootParameters[i][3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[i][3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[i][3].Descriptor.ShaderRegister = 1;
+		rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[3].Descriptor.ShaderRegister = 1;
 
 		// camera
-		rootParameters[i][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[i][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		rootParameters[i][4].Descriptor.ShaderRegister = 0; // ここを 0 に設定
+		rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		rootParameters[4].Descriptor.ShaderRegister = 0; // ここを 0 に設定
 
-		//*  Object3d  *//
-		if (i == 0) {
-			// wvp
-			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
-		}
-
-		//*  Particle  *//
-		if (i == 1) {
-			// SRV
-			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[i][1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
-		}
-
-		//*  Skinning  *//
-		if (i == 2) {
-			// wvp
-			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
-		}
-
-		//*  Offscreen  *//
-		if (i == 3) {
-			// wvp
-			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
-
-			// matrixPalette
-			rootParameters[i][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters[i][5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][5].Descriptor.ShaderRegister = 2; // ここを 2 に設定
-		}
-
-		descriptionRootSignature_[i].pParameters = rootParameters[i];
-		descriptionRootSignature_[i].NumParameters = _countof(rootParameters[i]);
+		descriptionRootSignature_[i].pParameters = rootParameters;
+		descriptionRootSignature_[i].NumParameters = (i == 2) ? 6 : 5; // スキニングには6つ、それ以外には5つのパラメータを設定
 
 		staticSamplers_[i][0] = {};
-		staticSamplers_[i][0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; //バイリニアフィルタ
-		staticSamplers_[i][0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; //0~1の範囲外をリピート
+		staticSamplers_[i][0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; // バイリニアフィルタ
+		staticSamplers_[i][0].AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP; // 0~1の範囲外をリピート
 		staticSamplers_[i][0].AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 		staticSamplers_[i][0].AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-		staticSamplers_[i][0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; //比較しない
-		staticSamplers_[i][0].MaxLOD = D3D12_FLOAT32_MAX; //ありったけのMixmapを使う
-		staticSamplers_[i][0].ShaderRegister = 0; //レジスタ番号0を使う
-		staticSamplers_[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; //PixelShaderで使う
+		staticSamplers_[i][0].ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER; // 比較しない
+		staticSamplers_[i][0].MaxLOD = D3D12_FLOAT32_MAX; // ありったけのMixmapを使う
+		staticSamplers_[i][0].ShaderRegister = 0; // レジスタ番号0を使う
+		staticSamplers_[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL; // PixelShaderで使う
 
 		descriptionRootSignature_[i].pStaticSamplers = staticSamplers_[i];
 		descriptionRootSignature_[i].NumStaticSamplers = _countof(staticSamplers_[i]);
@@ -205,9 +186,8 @@ void GraphicsRenderer::CreateRootSignature() {
 			signatureBlob_[i]->GetBufferSize(), IID_PPV_ARGS(rootSignature_[i].GetAddressOf()));
 		assert(SUCCEEDED(hr));
 	}
-
-	
 }
+
 
 void GraphicsRenderer::InputLayout() {
 	for (int i = 0; i < MAXPSO; i++) {
@@ -230,23 +210,29 @@ void GraphicsRenderer::InputLayout() {
 		inputLayoutDesc_[i] = {};
 		inputLayoutDesc_[i].pInputElementDescs = inputElementDescs_[i];
 		inputLayoutDesc_[i].NumElements = _countof(inputElementDescs_[i]);
+
+		if (i == 2) {
+			inputLayoutDesc_[i].pInputElementDescs = nullptr;
+			inputLayoutDesc_[i].NumElements = 0;
+		}
 	}
 }
 
 void GraphicsRenderer::BlendState() {
-	blendDesc_[0].RenderTarget[0].RenderTargetWriteMask =
-		D3D12_COLOR_WRITE_ENABLE_ALL;
+	blendDesc_[0].RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+	blendDesc_[0].RenderTarget[0].BlendEnable = FALSE; // デフォルトではブレンドを無効に
+
 	for (int i = 1; i < MAXPSO; i++) {
 		// すべての色要素を書き込む
-		blendDesc_[i].RenderTarget[0].RenderTargetWriteMask =
-			D3D12_COLOR_WRITE_ENABLE_ALL;
-		blendDesc_[i].RenderTarget[0].BlendEnable = true;
+		blendDesc_[i].RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+		blendDesc_[i].RenderTarget[0].BlendEnable = TRUE;
+		blendDesc_[i].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
+		blendDesc_[i].RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
+		blendDesc_[i].RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 		blendDesc_[i].RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
-		blendDesc_[i].RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 		blendDesc_[i].RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ZERO;
+		blendDesc_[i].RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 	}
-
-	// ブレンドモードの設定
 
 	//// ノーマル
 	//blendDesc_[6].RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
@@ -305,15 +291,15 @@ void GraphicsRenderer::BuildShader() {
 	assert(particlePixelShaderBlob_ != nullptr);
 
 	//Skinning
-	SkinningVertexShaderBlob_ = CompileShader(L"./ShaderFile/SkinningObject3d.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-	assert(SkinningVertexShaderBlob_ != nullptr);
+	/*SkinningVertexShaderBlob_ = CompileShader(L"./ShaderFile/SkinningObject3d.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+	assert(SkinningVertexShaderBlob_ != nullptr);*/
 
 	//CopyImage
 	CopyImageVertexShaderBlob_ = CompileShader(L"./ShaderFile/CopyImage.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-	assert(particleVertexShaderBlob_ != nullptr);
+	assert(CopyImageVertexShaderBlob_ != nullptr);
 
 	CopyImagePixelShaderBlob_ = CompileShader(L"./ShaderFile/CopyImage.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
-	assert(particlePixelShaderBlob_ != nullptr);
+	assert(CopyImagePixelShaderBlob_ != nullptr);
 }
 
 void GraphicsRenderer::CreatePSO() {
@@ -336,14 +322,17 @@ void GraphicsRenderer::CreatePSO() {
 			PipelineManagerStateDesc_[i].PS = { particlePixelShaderBlob_->GetBufferPointer(),
 			particlePixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
+		//if (i == 2) {
+		//	//PipelineManagerStateDesc_[i].VS = { SkinningVertexShaderBlob_->GetBufferPointer(),
+		//	//SkinningVertexShaderBlob_->GetBufferSize() };//VertexShader
+		//	//PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
+		//	//pixelShaderBlob_->GetBufferSize() };//PixelShader
+		//}
 		if (i == 2) {
-			PipelineManagerStateDesc_[i].VS = { SkinningVertexShaderBlob_->GetBufferPointer(),
-			SkinningVertexShaderBlob_->GetBufferSize() };//VertexShader
-			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
-			pixelShaderBlob_->GetBufferSize() };//PixelShader
-		}
-		if (i == 3) {
-
+			PipelineManagerStateDesc_[i].VS = { CopyImageVertexShaderBlob_->GetBufferPointer(),
+			CopyImageVertexShaderBlob_->GetBufferSize() };//VertexShader
+			PipelineManagerStateDesc_[i].PS = { CopyImagePixelShaderBlob_->GetBufferPointer(),
+			CopyImagePixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
 
 		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState

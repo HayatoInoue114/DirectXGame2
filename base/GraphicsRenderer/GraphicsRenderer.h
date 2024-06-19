@@ -3,7 +3,7 @@
 #include <wrl.h>
 #include <dxcapi.h>
 
-#define MAXPSO 4
+#define MAXPSO 3
 
 class GraphicsRenderer
 {

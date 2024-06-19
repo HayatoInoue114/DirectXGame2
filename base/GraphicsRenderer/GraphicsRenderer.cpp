@@ -342,7 +342,9 @@ void GraphicsRenderer::CreatePSO() {
 			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
 			pixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
+		if (i == 3) {
 
+		}
 
 		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState
 		PipelineManagerStateDesc_[i].RasterizerState = rasterizerDesc_[i];//RasterizeState

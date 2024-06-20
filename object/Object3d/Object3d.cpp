@@ -10,7 +10,6 @@ void Object3d::Init(Model* model)
 {
 	model_ = model;
 	CreateTransformationMatrixResource();
-	skinClusterData_ = skinCluster_.Create(DirectX12::GetInstance()->GetDevice(), *skeleton_, model_->GetModelData());
 }
 
 void Object3d::Init(Camera* camera)
@@ -24,7 +23,6 @@ void Object3d::Init(Model* model,Camera* camera)
 	camera_ = camera;
 	model_ = model;
 	CreateTransformationMatrixResource();
-	skinClusterData_ = skinCluster_.Create(DirectX12::GetInstance()->GetDevice(), *skeleton_, model_->GetModelData());
 }
 
 void Object3d::Draw()
@@ -33,6 +31,7 @@ void Object3d::Draw()
 
 	if (model_) {
 		//もしアニメーションを使うならSkinningShaderを使う(それ以外ならObject3d)
+		
 		if (animation_) {
 			GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(2);
 		}
@@ -57,13 +56,15 @@ void Object3d::Draw()
 
 		D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
 			model_->GetVBV(),
-			skinClusterData_.influenceBufferView
+			skinCluster_.influenceBufferView
 		};
 		//wvp用のCBufferの場所を設定
 		DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
-		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(5, skinClusterData_.paletteResource->GetGPUVirtualAddress());
+		if (animation_) {
+			DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(5, skinCluster_.paletteSrvHandle.second);
+		}
 
 		model_->Draw();
 	}
@@ -121,6 +122,8 @@ void Object3d::LoadAnimation(const std::string& filename)
 	}
 
 	*skeleton_ = CreateSkeleton(model_->GetModelData().rootNode);
+
+	skinCluster_ = CreateSkinCluster(DirectX12::GetInstance()->GetDevice(), *skeleton_, model_->GetModelData());
 }
 
 void Object3d::UpdateAnimation()
@@ -152,7 +155,7 @@ void Object3d::UpdateAnimation()
 		if (skeleton_) {
 			ApplyAnimation(*skeleton_, *animation_, animationTime_);
 			UpdateSkeleton(*skeleton_);
-			skinCluster_.Update(skinClusterData_, *skeleton_);
+			UpdateSkinCluster(skinCluster_, *skeleton_);
 		}
 
 		//NodeAnimation& rootNodeAnimation = animation_->nodeAnimations[model_->GetModelData().rootNode.name]; //rootNodeのanimationを取得

@@ -178,7 +178,7 @@ void Sprite::Update() {
 }
 
 void Sprite::Draw() {
-	
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	if (isInvisible_) {
 		return;
 	}

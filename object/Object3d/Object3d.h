@@ -93,5 +93,4 @@ private:
 	Matrix4x4 localMatrix_{};
 
 	SkinCluster skinCluster_{};
-	SkinClusterData skinClusterData_{};
 };

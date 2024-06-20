@@ -28,7 +28,7 @@ uint32_t SrvManager::Allocate()
 {
 	// return する番号を一旦記録しておく
 	int index = useIndex;
-	// 磁界のために番号を1進める
+	// 次回のために番号を1進める
 	useIndex++;
 	// 上で記録した番号をreturn
 	return index;

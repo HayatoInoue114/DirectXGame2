@@ -123,7 +123,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="object\Model\Model.cpp" />
     <ClCompile Include="object\Primitive\Primitive.cpp" />
     <ClCompile Include="manager\PrimitiveManager\PrimitiveManager.cpp" />
-    <ClCompile Include="object\Particle\ParticleCommon\ParticleCommon.cpp" />
     <ClCompile Include="Project\Bullet\EnemyBullet\EnemyBullet.cpp" />
     <ClCompile Include="Project\Bullet\PlayerBullet\PlayerBullet.cpp" />
     <ClCompile Include="Project\Enemy\Enemy.cpp" />
@@ -219,7 +218,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="object\Model\Model.h" />
     <ClInclude Include="object\Primitive\Primitive.h" />
     <ClInclude Include="manager\PrimitiveManager\PrimitiveManager.h" />
-    <ClInclude Include="object\Particle\ParticleCommon\ParticleCommon.h" />
     <ClInclude Include="Project\Bullet\EnemyBullet\EnemyBullet.h" />
     <ClInclude Include="Project\Bullet\PlayerBullet\PlayerBullet.h" />
     <ClInclude Include="Project\Enemy\Enemy.h" />

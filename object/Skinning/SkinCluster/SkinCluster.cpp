@@ -1,9 +1,9 @@
 #include "SkinCluster.h"
 #include <assert.h>
 
-SkinClusterData SkinCluster::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Skeleton& skeleton,const ModelData& modelData) {
+SkinCluster CreateSkinCluster(const Microsoft::WRL::ComPtr<ID3D12Device>& device, const Skeleton& skeleton,const ModelData& modelData) {
 	
-	SkinClusterData skinCluster;
+	SkinCluster skinCluster;
 
 	//palette用のResourceを確保
 	skinCluster.paletteResource = DirectX12::GetInstance()->CreateBufferResource(device.Get(), sizeof(WellForGPU) * skeleton.joints.size());
@@ -74,7 +74,7 @@ SkinClusterData SkinCluster::Create(const Microsoft::WRL::ComPtr<ID3D12Device>& 
 	return skinCluster;
 }
 
-void SkinCluster::Update(SkinClusterData& skinCluster, const Skeleton& skeleton) {
+void UpdateSkinCluster(SkinCluster& skinCluster, const Skeleton& skeleton) {
 
 	for (size_t jointIndex = 0; jointIndex < skeleton.joints.size(); ++jointIndex) {
 

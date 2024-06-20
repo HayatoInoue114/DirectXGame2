@@ -166,6 +166,7 @@ void Sphere::Update(WorldTransform& transform, Vector4& color) {
 }
 
 void Sphere::Draw() {
+	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	CreateWVPMatrix();
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);

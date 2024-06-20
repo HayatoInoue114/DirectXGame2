@@ -80,11 +80,6 @@ void GraphicsRenderer::CreateRootSignature() {
 		descriptorRange_[i][0].NumDescriptors = 1;
 		descriptorRange_[i][0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
 		descriptorRange_[i][0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-
-		descriptorRange_[i][1].BaseShaderRegister = 1;
-		descriptorRange_[i][1].NumDescriptors = 1;
-		descriptorRange_[i][1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		descriptorRange_[i][1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 	}
 
 	descriptorRangeForInstancing_[0] = {};
@@ -93,14 +88,16 @@ void GraphicsRenderer::CreateRootSignature() {
 	descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 	descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
+	// RootParameter作成。複数設定できるので配列。
+	D3D12_ROOT_PARAMETER rootParameters[MAXPSO][6] = {};
+
 	for (int i = 0; i < MAXPSO; i++) {
 		// RootSignature作成
 		descriptionRootSignature_[i] = {};
 		descriptionRootSignature_[i].Flags =
 			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-		// RootParameter作成。複数設定できるので配列。
-		D3D12_ROOT_PARAMETER rootParameters[MAXPSO][6] = {};
+		
 
 		//*  共通  *//
 		// Material
@@ -124,36 +121,36 @@ void GraphicsRenderer::CreateRootSignature() {
 		//*  Object3d  *//
 		// wvp
 		if (i == 0) {
-			rootParameters[0][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters[0][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[0][1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
+			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[i][1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
 		}
 
 		//*  Particle  *//
 		// SRV
 		if (i == 1) {
-			rootParameters[1][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters[1][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[1][1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[1][1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[i][1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+			rootParameters[i][1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 		}
 
 		//*  Skinning  *//
 		// wvp
 		if (i == 2) {
-			rootParameters[2][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters[2][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[2][1].Descriptor.ShaderRegister = 1;
+			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[i][1].Descriptor.ShaderRegister = 1;
 			//Palette
-			rootParameters[2][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters[2][5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[2][5].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[2][5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+			rootParameters[i][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[i][5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[i][5].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+			rootParameters[i][5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 		}
 
 		// rootSignatureに設定
 		descriptionRootSignature_[i].pParameters = rootParameters[i];
-		descriptionRootSignature_[i].NumParameters = (i == 2) ? 5 : 4; // スキニングには5つ、それ以外には4つのパラメータを設定
+		descriptionRootSignature_[i].NumParameters = (i == 2) ? 6 : 5; // スキニングには6つ、それ以外には5つのパラメータを設定
 
 		staticSamplers_[i][0] = {};
 		staticSamplers_[i][0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; //バイリニアフィルタ

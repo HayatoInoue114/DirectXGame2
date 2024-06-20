@@ -1,4 +1,5 @@
 #include "DirectX12.h"
+#include "../../manager/SrvManager/SrvManager.h"
 
 const uint32_t DirectX12::kMaxSRVCount = 512;
 
@@ -104,7 +105,6 @@ void DirectX12::SwapChain() {
 void DirectX12::DescriptorHeap() {
 	rtvDescriptorHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
 	rtvDescriptorHeapDesc_ = {};
-	srvDescriptorHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true);
 
 	rtvDescriptorHeapDesc_.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;	//レンダーターゲットビュー用
 	rtvDescriptorHeapDesc_.NumDescriptors = 2;	//ダブルバッファように二つ、多くても別に構わない
@@ -340,6 +340,7 @@ void DirectX12::Init() {
 	Command();
 	SwapChain();
 	DescriptorHeap();
+	SrvManager::GetInstance()->Init();
 	CreateDepthStencilResource();
 	CreateDSV();
 	
@@ -348,12 +349,13 @@ void DirectX12::Init() {
 	ImGui::CreateContext();
 	ImGui::StyleColorsDark();
 	ImGui_ImplWin32_Init(WindowsAPI::GetInstance()->GetHwnd());
+	uint32_t index = SrvManager::GetInstance()->Allocate();
 	ImGui_ImplDX12_Init(device_.Get(),
 		swapChainDesc_.BufferCount,
 		rtvDesc_.Format,
-		srvDescriptorHeap_.Get(),
-		srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart(),
-		srvDescriptorHeap_->GetGPUDescriptorHandleForHeapStart());
+		SrvManager::GetInstance()->GetDescriptorHeap(),
+		SrvManager::GetInstance()->GetCPUDescriptorHandle(index),
+		SrvManager::GetInstance()->GetGPUDescriptorHandle(index));
 	Fence();
 
 	InitializeDescriptorSize();
@@ -363,6 +365,7 @@ void DirectX12::PreDraw() {
 	GetBackBuffer();
 	Barrier();
 	ClearRTV();
+	SrvManager::GetInstance()->PreDraw();
 	SetRenderTargets();
 	ClearDepthBuffer();
 }

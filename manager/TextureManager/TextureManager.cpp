@@ -54,10 +54,6 @@ void TextureManager::LoadTexture(const std::string& filePath) {
 		assert(SUCCEEDED(hr));
 	}
 
-	uint32_t srvIndex = static_cast<uint32_t>(textureDatas.size() - 1) + kSRVIndexTop;
-	textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(srvIndex);
-	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(srvIndex);
-
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = textureData.metaData.format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -129,14 +125,12 @@ Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(con
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE TextureManager::GetCPUDescriptorHandle(uint32_t index) {
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = DirectX12::GetInstance()->GetSrvDescriptorHeap()->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (DirectX12::GetInstance()->GetdescriptorSizeSRV() * index);
+	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = srvManager_->GetCPUDescriptorHandle(index);
 	return handleCPU;
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE TextureManager::GetGPUDescriptorHandle(uint32_t index) {
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = DirectX12::GetInstance()->GetSrvDescriptorHeap()->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (DirectX12::GetInstance()->GetdescriptorSizeSRV() * index);
+	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = srvManager_->GetGPUDescriptorHandle(index);
 	return handleGPU;
 }
 

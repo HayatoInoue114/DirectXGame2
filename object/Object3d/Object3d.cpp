@@ -33,10 +33,10 @@ void Object3d::Draw()
 		//もしアニメーションを使うならSkinningShaderを使う(それ以外ならObject3d)
 		
 		if (animation_) {
-			GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(2);
+			GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(GraphicsRenderer::Skinning);
 		}
 		else {
-			GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
+			GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(GraphicsRenderer::Object3d);
 		}
 
 		if (!model_->isObj) {

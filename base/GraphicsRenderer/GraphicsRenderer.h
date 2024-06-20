@@ -7,6 +7,7 @@
 
 class DirectX12;
 
+
 class GraphicsRenderer
 {
 public:
@@ -21,6 +22,13 @@ public:
 	void DrawCall();
 
 	void SetRootSignatureAndPSO(int n);
+
+	enum PSOName
+	{
+		Object3d,
+		Particle,
+		Skinning
+	};
 
 private:
 	void Dxc();
@@ -51,12 +59,6 @@ private:
 	void DepthStencilState();
 
 private:
-	enum class PSOName : uint32_t
-	{
-		Object3d,
-		Particle,
-		Skinning
-	};
 
 	Microsoft::WRL::ComPtr<IDxcUtils> dxcUtils_{};
 	Microsoft::WRL::ComPtr<IDxcCompiler3> dxcCompiler_{};

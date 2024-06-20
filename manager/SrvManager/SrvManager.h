@@ -27,6 +27,8 @@ public:
 	//bool IsTextureLimitReached() {};
 
 	static const uint32_t kMaxSRVCount = 512;
+
+	ID3D12DescriptorHeap *GetDescriptorHeap() { return descriptorHeap.Get(); }
 private:
 	
 

@@ -1,4 +1,6 @@
 #include "GraphicsRenderer.h"
+#include <string>
+#include <format>
 
 GraphicsRenderer* GraphicsRenderer::GetInstance() {
 	static GraphicsRenderer instance;
@@ -88,69 +90,67 @@ void GraphicsRenderer::CreateRootSignature() {
 	descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 	descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
-	// RootParameter作成。複数設定できるので配列。
-	D3D12_ROOT_PARAMETER rootParameters[MAXPSO][6] = {};
-
 	for (int i = 0; i < MAXPSO; i++) {
 		// RootSignature作成
 		descriptionRootSignature_[i] = {};
 		descriptionRootSignature_[i].Flags =
 			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
-		
+		// RootParameter作成。複数設定できるので配列。
+		D3D12_ROOT_PARAMETER rootParameters[6] = {};
 
 		//*  共通  *//
 		// Material
-		rootParameters[i][0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[i][0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[i][0].Descriptor.ShaderRegister = 0;
+		rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[0].Descriptor.ShaderRegister = 0;
 		// texture
-		rootParameters[i][2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-		rootParameters[i][2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[i][2].DescriptorTable.pDescriptorRanges = descriptorRange_[i];
-		rootParameters[i][2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_[i]);
+		rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+		rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+		rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 		// Light
-		rootParameters[i][3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[i][3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[i][3].Descriptor.ShaderRegister = 1;
+		rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+		rootParameters[3].Descriptor.ShaderRegister = 1;
 		// camera
-		rootParameters[i][4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[i][4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		rootParameters[i][4].Descriptor.ShaderRegister = 0; // ここを 0 に設定
+		rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+		rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+		rootParameters[4].Descriptor.ShaderRegister = 0; // ここを 0 に設定
 
 		//*  Object3d  *//
 		// wvp
-		if (i == 0) {
-			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
+		if (i == Object3d) {
+			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
 		}
 
 		//*  Particle  *//
 		// SRV
-		if (i == 1) {
-			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[i][1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+		if (i == Particle) {
+			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+			rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 		}
 
 		//*  Skinning  *//
 		// wvp
-		if (i == 2) {
-			rootParameters[i][1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-			rootParameters[i][1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][1].Descriptor.ShaderRegister = 1;
+		if (i == Skinning) {
+			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[1].Descriptor.ShaderRegister = 1;
 			//Palette
-			rootParameters[i][5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters[i][5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[i][5].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[i][5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+			rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+			rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 		}
 
 		// rootSignatureに設定
-		descriptionRootSignature_[i].pParameters = rootParameters[i];
-		descriptionRootSignature_[i].NumParameters = (i == 2) ? 6 : 5; // スキニングには6つ、それ以外には5つのパラメータを設定
+		descriptionRootSignature_[i].pParameters = rootParameters;
+		descriptionRootSignature_[i].NumParameters = (i == Skinning) ? 6 : 5; // スキニングには6つ、それ以外には5つのパラメータを設定
 
 		staticSamplers_[i][0] = {};
 		staticSamplers_[i][0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; //バイリニアフィルタ
@@ -178,6 +178,8 @@ void GraphicsRenderer::CreateRootSignature() {
 		hr = DirectX12::GetInstance()->GetDevice()->CreateRootSignature(0, signatureBlob_[i]->GetBufferPointer(),
 			signatureBlob_[i]->GetBufferSize(), IID_PPV_ARGS(rootSignature_[i].GetAddressOf()));
 		assert(SUCCEEDED(hr));
+		std::wstring rootname = std::format(L"RootParam{}", i);
+		rootSignature_[i]->SetName(rootname.c_str());
 	}
 }
 
@@ -323,21 +325,21 @@ void GraphicsRenderer::CreatePSO() {
 		PipelineManagerStateDesc_[i].InputLayout = inputLayoutDesc_[i];//InputLayout
 
 		//Object3d
-		if (i == 0) {
+		if (i == Object3d) {
 			PipelineManagerStateDesc_[i].VS = { vertexShaderBlob_->GetBufferPointer(),
 			vertexShaderBlob_->GetBufferSize() };//VertexShader
 			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
 			pixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
 		//Particle
-		if (i == 1) {
+		if (i == Particle) {
 			PipelineManagerStateDesc_[i].VS = { particleVertexShaderBlob_->GetBufferPointer(),
 			particleVertexShaderBlob_->GetBufferSize() };//VertexShader
 			PipelineManagerStateDesc_[i].PS = { particlePixelShaderBlob_->GetBufferPointer(),
 			particlePixelShaderBlob_->GetBufferSize() };//PixelShader
 		}
 		//Skinning
-		if (i == 2) {
+		if (i == Skinning) {
 			PipelineManagerStateDesc_[i].VS = { SkinningVertexShaderBlob_->GetBufferPointer(),
 			SkinningVertexShaderBlob_->GetBufferSize() };//VertexShader
 			PipelineManagerStateDesc_[i].PS = { pixelShaderBlob_->GetBufferPointer(),
@@ -407,6 +409,10 @@ void GraphicsRenderer::DrawCall() {
 
 void GraphicsRenderer::SetRootSignatureAndPSO(int n) {
 	//RootSignatureを設定。PSOに設定しているけど別途設定が必要
+	wchar_t* name = new wchar_t[512];
+	//name.resize(20);
+	UINT s = 512;
+	rootSignature_[n]->GetPrivateData(WKPDID_D3DDebugObjectNameW, &s, (void*)name);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[n].Get());
 	DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[n].Get());	//PSOを設定
 }

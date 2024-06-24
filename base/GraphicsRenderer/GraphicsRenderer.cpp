@@ -97,7 +97,7 @@ void GraphicsRenderer::CreateRootSignature() {
 			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 		// RootParameter作成。複数設定できるので配列。
-		D3D12_ROOT_PARAMETER rootParameters[6] = {};
+		D3D12_ROOT_PARAMETER rootParameters[5] = {};
 
 		//*  共通  *//
 		// Material
@@ -113,10 +113,6 @@ void GraphicsRenderer::CreateRootSignature() {
 		rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[3].Descriptor.ShaderRegister = 1;
-		// camera
-		rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
-		rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-		rootParameters[4].Descriptor.ShaderRegister = 0; // ここを 0 に設定
 
 		//*  Object3d  *//
 		// wvp
@@ -142,15 +138,15 @@ void GraphicsRenderer::CreateRootSignature() {
 			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 			rootParameters[1].Descriptor.ShaderRegister = 1;
 			//Palette
-			rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+			rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[4].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+			rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 		}
 
 		// rootSignatureに設定
 		descriptionRootSignature_[i].pParameters = rootParameters;
-		descriptionRootSignature_[i].NumParameters = (i == Skinning) ? 6 : 5; // スキニングには6つ、それ以外には5つのパラメータを設定
+		descriptionRootSignature_[i].NumParameters = (i == Skinning) ? 5 : 4; // スキニングには5つ、それ以外には4つのパラメータを設定
 
 		staticSamplers_[i][0] = {};
 		staticSamplers_[i][0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; //バイリニアフィルタ

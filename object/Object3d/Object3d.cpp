@@ -32,9 +32,9 @@ void Object3d::Draw()
 	if (model_) {
 		//もしアニメーションを使うならSkinningShaderを使う(それ以外ならObject3d)
 		
-		if (skeleton_) {
+		/*if (skeleton_) {
 			DrawJoint(*skeleton_, camera_);
-		}
+		}*/
 
 		if (animation_) {
 			GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(GraphicsRenderer::Skinning);
@@ -64,7 +64,7 @@ void Object3d::Draw()
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 		if (animation_) {
-			DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(5, skinCluster_.paletteSrvHandle.second);
+			DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(4, skinCluster_.paletteSrvHandle.second);
 		}
 
 		model_->Draw();

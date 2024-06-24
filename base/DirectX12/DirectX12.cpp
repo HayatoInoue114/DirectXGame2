@@ -1,5 +1,6 @@
 #include "DirectX12.h"
 #include "../../manager/SrvManager/SrvManager.h"
+#include <thread>
 
 const uint32_t DirectX12::kMaxSRVCount = 512;
 

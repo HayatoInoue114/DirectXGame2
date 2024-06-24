@@ -37,6 +37,7 @@ void Model::Initialize() {
 
 	CreateModel();
 	CreateMaterialResource();
+
 	CreateVertexBufferView();
 	CreateResourceView();
 
@@ -103,6 +104,10 @@ void Model::CreateResourceView()
 
 	indexResource->Map(0, nullptr, reinterpret_cast<void**>(&mappedIndex));
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
+}
+
+void Model::LoadTexture()
+{
 }
 
 void Model::Update() {

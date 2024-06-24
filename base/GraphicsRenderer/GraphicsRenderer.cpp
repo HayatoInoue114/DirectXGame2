@@ -77,13 +77,6 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 void GraphicsRenderer::CreateRootSignature() {
 	HRESULT hr;
 
-	for (int i = 0; i < MAXPSO; i++) {
-		descriptorRange_[i][0].BaseShaderRegister = 0;
-		descriptorRange_[i][0].NumDescriptors = 1;
-		descriptorRange_[i][0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-		descriptorRange_[i][0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
-	}
-
 	descriptorRangeForInstancing_[0] = {};
 	descriptorRangeForInstancing_[0].BaseShaderRegister = 0; // 0から始まる
 	descriptorRangeForInstancing_[0].NumDescriptors = 1;
@@ -113,13 +106,14 @@ void GraphicsRenderer::CreateRootSignature() {
 		rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 		rootParameters[3].Descriptor.ShaderRegister = 1;
+		//camera
 
 		//*  Object3d  *//
 		// wvp
 		if (i == Object3d) {
 			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
+			rootParameters[1].Descriptor.ShaderRegister = 0;
 		}
 
 		//*  Particle  *//
@@ -136,7 +130,7 @@ void GraphicsRenderer::CreateRootSignature() {
 		if (i == Skinning) {
 			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[1].Descriptor.ShaderRegister = 1;
+			rootParameters[1].Descriptor.ShaderRegister = 0;
 			//Palette
 			rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
@@ -283,13 +277,11 @@ void GraphicsRenderer::BlendState() {
 }
 
 void GraphicsRenderer::ResterizerState() {
-	for (int i = 0; i < MAXPSO; i++) {
-		rasterizerDesc_[i] = {};
-		//裏面（時計回り）を表示しない
-		rasterizerDesc_[i].CullMode = D3D12_CULL_MODE_BACK;
-		//三角形の中を塗りつぶす
-		rasterizerDesc_[i].FillMode = D3D12_FILL_MODE_SOLID;
-	}
+	rasterizerDesc_ = {};
+	//裏面（時計回り）を表示しない
+	rasterizerDesc_.CullMode = D3D12_CULL_MODE_BACK;
+	//三角形の中を塗りつぶす
+	rasterizerDesc_.FillMode = D3D12_FILL_MODE_SOLID;
 }
 
 void GraphicsRenderer::BuildShader() {
@@ -344,7 +336,7 @@ void GraphicsRenderer::CreatePSO() {
 		
 		
 		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState
-		PipelineManagerStateDesc_[i].RasterizerState = rasterizerDesc_[i];//RasterizeState
+		PipelineManagerStateDesc_[i].RasterizerState = rasterizerDesc_;//RasterizeState
 		//書き込むRTVの情報
 		PipelineManagerStateDesc_[i].NumRenderTargets = 1;
 		PipelineManagerStateDesc_[i].RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;

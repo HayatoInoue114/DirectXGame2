@@ -1,5 +1,6 @@
 #include "ModelManager.h"
 #include <cassert>
+#include "../TextureManager/TextureManager.h"
 
 ModelManager* ModelManager::GetInstance() {
 	static ModelManager instance;
@@ -219,6 +220,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 					aiString textureFilePath;
 					material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
 					modelData.material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
+					TextureManager::GetInstance()->LoadTexture("", GetFileNameWithoutExtension(filename) + "/" + GetFileNameWithoutExtension(filename) + ".png");
 				}
 			}
 		}

@@ -84,7 +84,7 @@ private:
 	//BlendStateの設定
 	D3D12_BLEND_DESC blendDesc_[MAXPSO]{};
 	//RasiterzerStateの設定
-	D3D12_RASTERIZER_DESC rasterizerDesc_[MAXPSO]{};
+	D3D12_RASTERIZER_DESC rasterizerDesc_{};
 
 	Microsoft::WRL::ComPtr<IDxcBlob> vertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob_{};
@@ -104,7 +104,7 @@ private:
 	//シザー矩形
 	D3D12_RECT scissorRect_{};
 
-	D3D12_DESCRIPTOR_RANGE descriptorRange_[MAXPSO][2]{};
+	D3D12_DESCRIPTOR_RANGE descriptorRange_[2]{};
 	D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing_[1]{};
 	D3D12_DESCRIPTOR_RANGE descriptorRangeForPalette_[1]{};
 

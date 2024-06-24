@@ -106,6 +106,7 @@ private:
 
 	D3D12_DESCRIPTOR_RANGE descriptorRange_[MAXPSO][2]{};
 	D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing_[1]{};
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForPalette_[1]{};
 
 	D3D12_STATIC_SAMPLER_DESC staticSamplers_[MAXPSO][1]{};
 

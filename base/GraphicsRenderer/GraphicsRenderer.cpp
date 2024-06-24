@@ -90,6 +90,12 @@ void GraphicsRenderer::CreateRootSignature() {
 	descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 	descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
+	descriptorRangeForPalette_[0] = {};
+	descriptorRangeForPalette_[0].BaseShaderRegister = 0; // 0から始まる
+	descriptorRangeForPalette_[0].NumDescriptors = 1;
+	descriptorRangeForPalette_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+	descriptorRangeForPalette_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
+
 	for (int i = 0; i < MAXPSO; i++) {
 		// RootSignature作成
 		descriptionRootSignature_[i] = {};
@@ -124,6 +130,12 @@ void GraphicsRenderer::CreateRootSignature() {
 			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 			rootParameters[1].Descriptor.ShaderRegister = 1; // ここを 1 に設定
+
+			//Palette
+			rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForPalette_;
+			rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForPalette_);
 		}
 
 		//*  Particle  *//
@@ -133,6 +145,12 @@ void GraphicsRenderer::CreateRootSignature() {
 			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
 			rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
 			rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+
+			//Palette
+			rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForPalette_;
+			rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForPalette_);
 		}
 
 		//*  Skinning  *//
@@ -144,13 +162,13 @@ void GraphicsRenderer::CreateRootSignature() {
 			//Palette
 			rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+			rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForPalette_;
+			rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForPalette_);
 		}
 
 		// rootSignatureに設定
 		descriptionRootSignature_[i].pParameters = rootParameters;
-		descriptionRootSignature_[i].NumParameters = (i == Skinning) ? 6 : 5; // スキニングには6つ、それ以外には5つのパラメータを設定
+		descriptionRootSignature_[i].NumParameters = 6; // スキニングには6つ、それ以外には5つのパラメータを設定
 
 		staticSamplers_[i][0] = {};
 		staticSamplers_[i][0].Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR; //バイリニアフィルタ

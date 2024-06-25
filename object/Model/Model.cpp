@@ -45,7 +45,6 @@ void Model::Initialize() {
 
 
 	SetMaterialData();
-
 }
 
 void Model::CreateVertexBufferView() {

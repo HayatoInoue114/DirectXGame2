@@ -12,9 +12,10 @@ void SrvManager::Init()
 
 	//ディスクリプタヒープの生成
 	descriptorHeap = directX12->CreateDescriptorHeap(directX12->GetDevice().Get(), D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, kMaxSRVCount, true);
+	assert(descriptorHeap);
 	//ディスクリプタ1個分のサイズを取得して記録
 	descriptorSize = directX12->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
+	assert(descriptorSize > 0);
 }
 
 void SrvManager::PreDraw()
@@ -22,6 +23,7 @@ void SrvManager::PreDraw()
 	//描画用のDesscriptorHeapの設定
 	ID3D12DescriptorHeap* descriptorHeaps[] = { descriptorHeap.Get() };
 	directX12->GetCommandList()->SetDescriptorHeaps(1, descriptorHeaps);
+	assert(descriptorHeap);
 }
 
 uint32_t SrvManager::Allocate()

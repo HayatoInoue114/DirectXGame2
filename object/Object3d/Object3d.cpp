@@ -51,7 +51,7 @@ void Object3d::Draw()
 			ImGui::SliderFloat("anime", &animationTime_, 0.1f, 0.1f);
 			ImGui::End();
 
-			DrawMatrix4x4("localMatrix", localMatrix_);
+			DrawMatrix4x4("localMatrix", worldViewProjectionMatrix_);
 			
 		}
 

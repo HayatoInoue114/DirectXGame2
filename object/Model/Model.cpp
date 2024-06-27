@@ -137,6 +137,7 @@ void Model::Draw() {
 	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetGPUDescriptorHandle(modelName_));
 	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvIndex(GetFileNameWithoutExtension(fileName_), fileName_));
 
+	//SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(4, srvIndex_);
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	DirectX12::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }

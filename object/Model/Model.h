@@ -17,6 +17,7 @@
 #include "../../math/Transform/Transform.h"
 #include "../Camera/Camera.h"
 #include "../Skinning/SkinCluster/SkinCluster.h"
+#include "../../structure/structure.h"
 
 class GraphicsRenderer;
 
@@ -52,6 +53,7 @@ public:  //セッター
 	void SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
 	void SetTranslate(const Vector3& translate) { worldTransform_.translate = translate; }
 	void SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
+	void SetSkeleton(Skeleton* skeleton) { skeleton_ = skeleton; }
 
 	//ゲッター
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
@@ -141,5 +143,7 @@ private:
 	SkinCluster skinCluster_{};
 
 	std::string fileName_{};
+
+	Skeleton* skeleton_;
 };
 

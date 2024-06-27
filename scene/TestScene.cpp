@@ -17,11 +17,11 @@ void TestScene::Initialize() {
 	object_->StartAnimation(true);
 	//object_->SetAnimationSpeed(10.0f);
 
-	/*domeModel_ = std::make_unique<Model>();
+	domeModel_ = std::make_unique<Model>();
 	domeModel_ = Model::CreateModelFromObjPtr("skydome.obj");
 
 	dome_ = std::make_unique<Object3d>();
-	dome_->Init(domeModel_.get(),camera_.get());*/
+	dome_->Init(domeModel_.get(),camera_.get());
 }
 
 void TestScene::Update() {
@@ -30,7 +30,7 @@ void TestScene::Update() {
 }
 
 void TestScene::Draw() {
-	//dome_->Draw();
+	dome_->Draw();
 	object_->Draw();
 }
 

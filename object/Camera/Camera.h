@@ -35,10 +35,10 @@ private:
 	Matrix4x4 projectionMatrix_;
 	Matrix4x4 viewProjectionMatrix_;
 
-	float FovY_;
-	float aspectRatio_;
-	float nearClip_;
-	float farClip_;
+	float FovY_{};
+	float aspectRatio_{};
+	float nearClip_{};
+	float farClip_{};
 
 };
 

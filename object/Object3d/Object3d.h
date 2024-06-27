@@ -19,6 +19,7 @@ public:
 	void Draw();
 
 	void LoadAnimation(const std::string& filename);
+	void CreateResourceView();
 	void UpdateAnimation();
 	void ResetAnimation();
 public:
@@ -46,6 +47,8 @@ public:
 	void SetIsLoop(bool flag) { isLoop_ = flag; }
 	//アニメーション速度変更
 	void SetAnimationSpeed(float speed) { animationSpeed_ = speed; }
+
+	Skeleton* GetSkelton() { return skeleton_.get(); }
 private:
 	void CreateWVPMatrix();
 
@@ -93,4 +96,9 @@ private:
 	Matrix4x4 localMatrix_{};
 
 	SkinCluster skinCluster_{};
+
+	// 構造化バッファのリソース
+	Microsoft::WRL::ComPtr<ID3D12Resource> structuredBufferResource_{};
+	// SRVのインデックス
+	uint32_t srvIndex_{};
 };

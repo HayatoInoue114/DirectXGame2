@@ -30,14 +30,8 @@ void GameManager::Initialize()
 	textureManager_ = TextureManager::GetInstance();
 	textureManager_->GetInstance()->Initialize();
 
-	modelManager_ = ModelManager::GetInstance();
-	modelManager_->GetInstance()->Initialize();
-
 	input_ = Input::GetInstance();
 	input_->GetInstance()->Initialize();
-	
-	srvManager_ = SrvManager::GetInstance();
-	srvManager_->GetInstance()->Init();
 
 #pragma endregion 基盤システムの初期化
 

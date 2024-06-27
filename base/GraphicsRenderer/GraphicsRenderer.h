@@ -104,7 +104,7 @@ private:
 	//シザー矩形
 	D3D12_RECT scissorRect_{};
 
-	D3D12_DESCRIPTOR_RANGE descriptorRange_[2]{};
+	D3D12_DESCRIPTOR_RANGE descriptorRange_[1]{};
 	D3D12_DESCRIPTOR_RANGE descriptorRangeForInstancing_[1]{};
 	D3D12_DESCRIPTOR_RANGE descriptorRangeForPalette_[1]{};
 

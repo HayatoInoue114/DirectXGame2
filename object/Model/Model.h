@@ -139,5 +139,7 @@ private:
 	D3D12_INDEX_BUFFER_VIEW indexBufferViewSprite_{};
 
 	SkinCluster skinCluster_{};
+
+	std::string fileName_{};
 };
 

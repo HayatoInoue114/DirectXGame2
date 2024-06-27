@@ -1,6 +1,7 @@
 #include "Model.h"
 #include <assert.h>
 #include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
+#include "../../manager/SrvManager/SrvManager.h"
 
 Model* Model::CreateModelFromObj(int modelName) {
 	Model* model = new Model();
@@ -15,6 +16,7 @@ Model* Model::CreateModelFromObj(int modelName) {
 std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& filename) {
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
+	model->fileName_ = filename;
 	// モデルの読み込み
 	//model->SetTextureNum(modelName);
 	ModelManager::GetInstance()->LoadModel(filename);
@@ -133,7 +135,8 @@ void Model::Draw() {
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
 	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(modelName_));
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetGPUDescriptorHandle(modelName_));
+	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetGPUDescriptorHandle(modelName_));
+	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvIndex(GetFileNameWithoutExtension(fileName_), fileName_));
 
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	DirectX12::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);

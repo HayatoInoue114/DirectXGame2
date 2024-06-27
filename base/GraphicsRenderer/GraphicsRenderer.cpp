@@ -77,13 +77,22 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 void GraphicsRenderer::CreateRootSignature() {
 	HRESULT hr;
 
-	descriptorRangeForInstancing_[0] = {};
-	descriptorRangeForInstancing_[0].BaseShaderRegister = 0; // 0から始まる
-	descriptorRangeForInstancing_[0].NumDescriptors = 1;
-	descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
-	descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
 	for (int i = 0; i < MAXPSO; i++) {
+
+		descriptorRange_[0] = {};
+		descriptorRange_[0].BaseShaderRegister = 0; // 0から始まる
+		descriptorRange_[0].NumDescriptors = 1;
+		descriptorRange_[0].RegisterSpace = 0;
+		descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+		descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
+
+		descriptorRangeForInstancing_[0] = {};
+		descriptorRangeForInstancing_[0].BaseShaderRegister = 0; // 0から始まる
+		descriptorRangeForInstancing_[0].NumDescriptors = 1;
+		descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+		descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
+
 		// RootSignature作成
 		descriptionRootSignature_[i] = {};
 		descriptionRootSignature_[i].Flags =
@@ -100,8 +109,8 @@ void GraphicsRenderer::CreateRootSignature() {
 		// texture
 		rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 		rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-		rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+		rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange_;
+		rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
 		// Light
 		rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 		rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;

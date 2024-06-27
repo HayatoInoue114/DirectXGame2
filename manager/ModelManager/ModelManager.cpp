@@ -7,15 +7,6 @@ ModelManager* ModelManager::GetInstance() {
 	return &instance;
 }
 
-void ModelManager::Initialize() {
-	/*modelData_[CUBE] = LoadObjFile("resources","cube");
-	modelData_[SPHERE] = LoadObjFile("resources","skydome");
-	modelData_[SKYDOME] = LoadObjFile("resources","skydome");
-	modelData_[PLAYER] = LoadObjFile("resources","player");
-	modelData_[ENEMY] = LoadObjFile("resources","enemy");
-	modelData_[PLANE] = LoadModelFile("resources/GLTFPlane", "GLTFPlane");*/
-}
-
 ModelData ModelManager::LoadObj(const std::string& filename) {
 	ModelData modelData; // 構築するModelData
 	std::vector<Vector4> positions; // 位置
@@ -220,7 +211,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 					aiString textureFilePath;
 					material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
 					modelData.material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
-					TextureManager::GetInstance()->LoadTexture("", GetFileNameWithoutExtension(filename) + "/" + GetFileNameWithoutExtension(filename) + ".png");
+					TextureManager::GetInstance()->LoadTexture("/" + GetFileNameWithoutExtension(filename), GetFileNameWithoutExtension(filename) + ".png");
 				}
 			}
 		}

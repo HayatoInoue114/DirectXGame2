@@ -30,9 +30,6 @@ public:
 	// シングルトン
 	static ModelManager* GetInstance();
 
-	// 初期化
-	void Initialize();
-
 	void LoadModel(const std::string& filePath);
 	ModelData GetModel(const std::string& filePath);
 	

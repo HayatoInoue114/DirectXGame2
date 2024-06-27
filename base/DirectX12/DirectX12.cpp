@@ -1,6 +1,7 @@
 #include "DirectX12.h"
 #include "../../manager/SrvManager/SrvManager.h"
 #include <thread>
+#include <iostream>
 
 const uint32_t DirectX12::kMaxSRVCount = 512;
 
@@ -167,6 +168,10 @@ void DirectX12::PushImGuiDrawCommand() {
 
 void DirectX12::CommandKick() {
 	//GPUにコマンドリストの実行を行わせる
+	if (!commandList_) {
+		std::cerr << "Command list is not valid." << std::endl;
+		return;
+	}
 	ID3D12CommandList* commandLists[] = { commandList_.Get() };
 	commandQueue_->ExecuteCommandLists(1, commandLists);
 	//GPUとSの画面の交換を行うよう通知する
@@ -376,7 +381,7 @@ void DirectX12::PostDraw() {
 	ScreenDisplay();
 	CommandConfirm();
 	CommandKick();
-	UpdateFixFPS();
+	//UpdateFixFPS();
 	Signal();
 	NextFlameCommandList();
 }

@@ -64,8 +64,8 @@ void Object3d::Draw()
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 		if (animation_) {
-			//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(4, skinCluster_.paletteSrvHandle.second);
-			SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(4, srvIndex_);
+			DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(4, skinCluster_.paletteSrvHandle.second);
+			//SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(4, srvIndex_);
 		}
 
 		model_->Draw();
@@ -124,23 +124,23 @@ void Object3d::LoadAnimation(const std::string& filename)
 	}
 
 	*skeleton_ = CreateSkeleton(model_->GetModelData().rootNode);
-	CreateResourceView();
+	//CreateResourceView();
 	
 
 	skinCluster_ = CreateSkinCluster(DirectX12::GetInstance()->GetDevice(), *skeleton_, model_->GetModelData());
 }
 
-void Object3d::CreateResourceView() {
-	// 構造化バッファ用のリソースを作成
-	size_t bufferSize = sizeof(Joint) * skeleton_->joints.size();
-	structuredBufferResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), bufferSize);
-
-	// SRVのインデックスを取得
-	srvIndex_ = SrvManager::GetInstance()->Allocate();
-
-	// 構造化バッファ用のSRVを作成
-	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(srvIndex_, structuredBufferResource_.Get(), (UINT)skeleton_->joints.size(), sizeof(Joint));
-}
+//void Object3d::CreateResourceView() {
+//	// 構造化バッファ用のリソースを作成
+//	size_t bufferSize = sizeof(Joint) * skeleton_->joints.size();
+//	structuredBufferResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), bufferSize);
+//
+//	// SRVのインデックスを取得
+//	srvIndex_ = SrvManager::GetInstance()->Allocate();
+//
+//	// 構造化バッファ用のSRVを作成
+//	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(srvIndex_, structuredBufferResource_.Get(), (UINT)skeleton_->joints.size(), sizeof(Joint));
+//}
 
 void Object3d::UpdateAnimation()
 {

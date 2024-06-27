@@ -34,7 +34,7 @@ void Camera::Initialize() {
 	FovY_ = 0.45f;
 	aspectRatio_ = (float(kCliantWidth) / float(kCliantHeight));
 	nearClip_ = 0.1f;
-	farClip_ = 100.0f;
+	farClip_ = 1000.0f;
 	worldMatrix_ = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
 	viewMatrix_ = Inverse(worldMatrix_);
 	projectionMatrix_ = MakePerspectiveFovMatrix(FovY_, aspectRatio_, nearClip_, farClip_);

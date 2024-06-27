@@ -41,12 +41,9 @@ public:
 
 	//static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 
-	bool isSkinning = false;
-
 public:  //セッター
 	void SetTransformS(const TransformS& transform) { worldTransform_.scale = transform.scale,worldTransform_.rotate = transform.rotate,worldTransform_.translate = transform.translate; }
 	void SetWorldTransform(const WorldTransform& worldTransform) { worldTransform_ = worldTransform; }
-	void SetWVP(const TransformationMatrix& wvp) { *wvpData_ = wvp; }
 	void SetTextureNum(uint32_t num) { modelName_ = num; }
 	void SetColor(const Vector4& color) { materialData_->color = color; }
 	void SetCamera(Camera* camera) { camera_ = camera; }
@@ -103,9 +100,6 @@ private:
 	VertexData* vertexData_{};
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_{};
-
-	ID3D12Resource* wvpResource_{};
-	TransformationMatrix* wvpData_{};
 
 	//Transform transform_{};
 	WorldTransform worldTransform_{};

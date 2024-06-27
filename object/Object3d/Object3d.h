@@ -19,7 +19,7 @@ public:
 	void Draw();
 
 	void LoadAnimation(const std::string& filename);
-	void CreateResourceView();
+	//void CreateResourceView();
 	void UpdateAnimation();
 	void ResetAnimation();
 public:
@@ -32,6 +32,8 @@ public:
 	void SetTranslate(const Vector3& translate) { worldTransform_.translate = translate; }
 
 	void SetSkeleton(const Skeleton& skeleton) { *skeleton_ = skeleton; }
+
+	void SetScale(const Vector3& scale) { worldTransform_.scale = scale; }
 
 	/// <summary>
 	/// アニメーション開始

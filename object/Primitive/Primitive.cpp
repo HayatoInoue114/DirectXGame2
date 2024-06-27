@@ -41,7 +41,6 @@ void Primitive::Update() {
 void Primitive::Draw() {
 	//GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	if (model_) {
-		model_->SetWVP(wvpData_);
 		model_->Draw();
 	}
 }

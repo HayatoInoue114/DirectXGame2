@@ -205,14 +205,15 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 				uint32_t vertexIndex = face.mIndices[element];
 				modelData.indices.push_back(vertexIndex);
 			}
-			for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
-				aiMaterial* material = scene->mMaterials[materialIndex];
-				if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
-					aiString textureFilePath;
-					material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-					modelData.material.textureFilePath = directoryPath + "/" + textureFilePath.C_Str();
-					TextureManager::GetInstance()->LoadTexture("/" + GetFileNameWithoutExtension(filename), GetFileNameWithoutExtension(filename) + ".png");
-				}
+		}
+
+		for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
+			aiMaterial* material = scene->mMaterials[materialIndex];
+			if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+				aiString textureFilePath;
+				material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+				modelData.material.textureFilePath = directoryPath + "/" + GetFileNameWithoutExtension(filename) + "/" + textureFilePath.C_Str();
+				TextureManager::GetInstance()->LoadTexture("/" + GetFileNameWithoutExtension(filename), textureFilePath.C_Str());
 			}
 		}
 

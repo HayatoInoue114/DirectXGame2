@@ -29,11 +29,11 @@ public:
 
 
 private:
-	WorldTransform worldTransform_;
-	Matrix4x4 worldMatrix_;
-	Matrix4x4 viewMatrix_;
-	Matrix4x4 projectionMatrix_;
-	Matrix4x4 viewProjectionMatrix_;
+	WorldTransform worldTransform_{};
+	Matrix4x4 worldMatrix_{};
+	Matrix4x4 viewMatrix_{};
+	Matrix4x4 projectionMatrix_{};
+	Matrix4x4 viewProjectionMatrix_{};
 
 	float FovY_{};
 	float aspectRatio_{};

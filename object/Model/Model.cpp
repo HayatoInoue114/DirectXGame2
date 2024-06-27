@@ -135,7 +135,8 @@ void Model::Draw() {
 	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
 	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(modelName_));
 	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetGPUDescriptorHandle(modelName_));
-	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvIndex(GetFileNameWithoutExtension(fileName_), fileName_));
+	uint32_t srvIndex = TextureManager::GetInstance()->GetSrvIndex(modelData_.material.textureFilePath);
+	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, srvIndex);
 
 	//SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(4, srvIndex_);
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。

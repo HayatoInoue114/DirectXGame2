@@ -29,5 +29,8 @@ private:
 	std::unique_ptr<Object3d> dome_;
 
 	std::unique_ptr<Model> domeModel_;
+
+	std::unique_ptr<Model> model1_;
+
 };
 

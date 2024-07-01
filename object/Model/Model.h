@@ -37,7 +37,11 @@ public:
 
 	static Model* CreateModelFromObj(int modelName);
 
+	//ファイル名と使う中身が同じ名前の場合これを使う
 	static std::unique_ptr<Model> CreateModelFromObjPtr(const std::string& filename);
+
+	//ファイル名と使う中身が違う名前の場合これを使う
+	static std::unique_ptr<Model> CreateModelFromObjPtr(const std::string& directoryPath, const std::string& filename);
 
 	//static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 

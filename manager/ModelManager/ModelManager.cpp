@@ -174,11 +174,78 @@ ModelData ModelManager::LoadModelFile(const std::string& directoryPath, const st
 }
 
 //主にこれを使う
+ModelData ModelManager::LoadFile(const std::string& filename) {
+	ModelData modelData;
+	Assimp::Importer importer;
+
+	std::string filePath = "resources/" + GetFileNameWithoutExtension(filename) + "/" + filename;
+	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
+	assert(scene->HasMeshes());
+
+	for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
+		aiMesh* mesh = scene->mMeshes[meshIndex];
+		assert(mesh->HasNormals());
+		assert(mesh->HasTextureCoords(0));
+		modelData.vertices.resize(mesh->mNumVertices);
+		for (uint32_t vertexIndex = 0; vertexIndex < mesh->mNumVertices; ++vertexIndex) {
+			aiVector3D& position = mesh->mVertices[vertexIndex];
+			aiVector3D& normal = mesh->mNormals[vertexIndex];
+			aiVector3D& texcoord = mesh->mTextureCoords[0][vertexIndex];
+
+			modelData.vertices[vertexIndex].position = { -position.x,position.y,position.z,1.0f };
+			modelData.vertices[vertexIndex].normal = { -normal.x,normal.y,normal.z };
+			modelData.vertices[vertexIndex].texcoord = { texcoord.x,texcoord.y };
+		}
+
+		for (uint32_t faceIndex = 0; faceIndex < mesh->mNumFaces; ++faceIndex) {
+			aiFace& face = mesh->mFaces[faceIndex];
+			assert(face.mNumIndices == 3);
+
+			for (uint32_t element = 0; element < face.mNumIndices; ++element) {
+				uint32_t vertexIndex = face.mIndices[element];
+				modelData.indices.push_back(vertexIndex);
+			}
+		}
+
+		for (uint32_t materialIndex = 0; materialIndex < scene->mNumMaterials; ++materialIndex) {
+			aiMaterial* material = scene->mMaterials[materialIndex];
+			if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
+				aiString textureFilePath;
+				material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
+				modelData.material.textureFilePath = "resources/" + GetFileNameWithoutExtension(filename) + "/" + textureFilePath.C_Str();
+				TextureManager::GetInstance()->LoadTexture("/" + GetFileNameWithoutExtension(filename), textureFilePath.C_Str());
+			}
+		}
+
+		for (uint32_t boneIndex = 0; boneIndex < mesh->mNumBones; ++boneIndex) {
+			aiBone* bone = mesh->mBones[boneIndex];
+			std::string jointName = bone->mName.C_Str();
+			JointWeightData& jointWeightData = modelData.skinClusterData[jointName];
+
+			aiMatrix4x4 bindPoseMatrixAssimp = bone->mOffsetMatrix.Inverse();
+			aiVector3D scale, translate;
+			aiQuaternion rotate;
+			bindPoseMatrixAssimp.Decompose(scale, rotate, translate);
+			Matrix4x4 bindposeMatrix = MakeAffineMatrix(
+				{ scale.x,scale.y,scale.z }, { rotate.x,-rotate.y,-rotate.z,rotate.w }, { -translate.x,translate.y,translate.z });
+			jointWeightData.inverseBindPoseMatrix = Inverse(bindposeMatrix);
+
+			for (uint32_t weightIndex = 0; weightIndex < bone->mNumWeights; ++weightIndex) {
+				jointWeightData.vertexWeights.push_back({ bone->mWeights[weightIndex].mWeight,bone->mWeights[weightIndex].mVertexId });
+			}
+		}
+	}
+	if (GetExtention(filePath) == ".gltf") {
+		modelData.rootNode = ReadNode(scene->mRootNode);
+	}
+
+	return modelData;
+}
 ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::string& filename) {
 	ModelData modelData;
 	Assimp::Importer importer;
 
-	std::string filePath = directoryPath + "/" + GetFileNameWithoutExtension(filename) + "/" + filename;
+	std::string filePath = "resources/" + directoryPath + "/" + filename;
 	const aiScene* scene = importer.ReadFile(filePath.c_str(), aiProcess_FlipWindingOrder | aiProcess_FlipUVs);
 	assert(scene->HasMeshes());
 
@@ -213,7 +280,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 				aiString textureFilePath;
 				material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
 				modelData.material.textureFilePath = directoryPath + "/" + GetFileNameWithoutExtension(filename) + "/" + textureFilePath.C_Str();
-				TextureManager::GetInstance()->LoadTexture("/" + GetFileNameWithoutExtension(filename), textureFilePath.C_Str());
+				TextureManager::GetInstance()->LoadTexture("/" + GetFileNameWithoutExtension(directoryPath), textureFilePath.C_Str());
 			}
 		}
 
@@ -271,7 +338,19 @@ void ModelManager::LoadModel(const std::string& filePath) {
 	}
 	ModelData modelData;
 
-	modelData = LoadFile("resources", filePath);
+	modelData = LoadFile(filePath);
+
+	modelDatas.insert(std::make_pair(filePath, std::move(modelData)));
+}
+
+void ModelManager::LoadModel(const std::string& directoryPath, const std::string& filePath) {
+	//読み込み済みモデルを検索
+	if (modelDatas.contains(filePath)) {
+		return;
+	}
+	ModelData modelData;
+
+	modelData = LoadFile(directoryPath, filePath);
 
 	modelDatas.insert(std::make_pair(filePath, std::move(modelData)));
 }

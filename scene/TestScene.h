@@ -23,8 +23,13 @@ private:
 	std::unique_ptr<Camera> camera_;
 
 	std::unique_ptr<Object3d> object_;
-
 	std::unique_ptr<Model> model_;
+
+	std::unique_ptr<Object3d> object1_;
+	std::unique_ptr<Model> model1_;
+
+	std::unique_ptr<Object3d> object2_;
+	std::unique_ptr<Model> model2_;
 
 	std::unique_ptr<Object3d> dome_;
 

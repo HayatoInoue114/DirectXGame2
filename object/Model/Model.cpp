@@ -13,13 +13,32 @@ Model* Model::CreateModelFromObj(int modelName) {
 	return model;
 }
 
+//ファイル名と使う中身が同じ名前の場合これを使う
 std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& filename) {
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
 	model->fileName_ = filename;
 	// モデルの読み込み
-	//model->SetTextureNum(modelName);
 	ModelManager::GetInstance()->LoadModel(filename);
+	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
+	if (GetExtention(filename) == ".obj") {
+		model->isObj = true;
+	}
+	if (GetExtention(filename) == ".gltf") {
+		model->isObj = false;
+	}
+
+	model->Initialize();
+	return model;
+}
+
+//ファイル名と使う中身が違う名前の場合これを使う
+std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& directoryPath, const std::string& filename) {
+	std::unique_ptr<Model> model;
+	model = std::make_unique<Model>();
+	model->fileName_ = filename;
+	// モデルの読み込み
+	ModelManager::GetInstance()->LoadModel(directoryPath, filename);
 	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
 	if (GetExtention(filename) == ".obj") {
 		model->isObj = true;
@@ -86,8 +105,6 @@ void Model::SetMaterialData() {
 }
 
 void Model::CreateModel() {
-	//モデル読み込み
-	//modelData_ = LoadObjFile("resources", "axis");
 	//頂点リソースを作る
 	vertexResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), sizeof(VertexData) * modelData_.vertices.size());
 
@@ -117,7 +134,6 @@ void Model::Update() {
 
 void Model::Draw() {
 	//パラメータからUVTransform用の行列を生成する
-	//GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeTranslateMatrix(uvTransform_.translate));
@@ -126,15 +142,10 @@ void Model::Draw() {
 
 
 	DirectX12::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferViewSprite_);
-	//if (!isSkinning) {
-	//	DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView_);	//VBVを設定
-	//}
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
-	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(modelName_));
-	//DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetGPUDescriptorHandle(modelName_));
 	uint32_t srvIndex = TextureManager::GetInstance()->GetSrvIndex(modelData_.material.textureFilePath);
 	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, srvIndex);
 

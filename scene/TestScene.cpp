@@ -22,7 +22,7 @@ void TestScene::Initialize() {
 	object1_->Init(model1_.get(), camera_.get());
 	object1_->LoadAnimation("walk/sneakWalk.gltf");
 	object1_->StartAnimation(true);
-	object1_->SetAnimationSpeed(1.0f);
+	object1_->SetAnimationSpeed(2.0f);
 
 	model2_ = std::make_unique<Model>();
 	model2_ = Model::CreateModelFromObjPtr("simpleSkin.gltf");
@@ -30,7 +30,7 @@ void TestScene::Initialize() {
 	object2_->Init(model2_.get(), camera_.get());
 	object2_->LoadAnimation("simpleSkin/simpleSkin.gltf");
 	object2_->StartAnimation(true);
-	object2_->SetAnimationSpeed(1.0f);
+	object2_->SetAnimationSpeed(3.0f);
 
 	domeModel_ = std::make_unique<Model>();
 	domeModel_ = Model::CreateModelFromObjPtr("skydome.obj");

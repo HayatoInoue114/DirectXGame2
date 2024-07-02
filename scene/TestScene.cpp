@@ -52,9 +52,9 @@ void TestScene::Update() {
 
 void TestScene::Draw() {
 	dome_->Draw();
-	//object_->Draw();
+	object_->Draw();
 	object1_->Draw();
-	//object2_->Draw();
+	object2_->Draw();
 }
 
 void TestScene::Finalize() {

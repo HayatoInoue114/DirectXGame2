@@ -241,6 +241,7 @@ ModelData ModelManager::LoadFile(const std::string& filename) {
 
 	return modelData;
 }
+
 ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::string& filename) {
 	ModelData modelData;
 	Assimp::Importer importer;
@@ -279,7 +280,7 @@ ModelData ModelManager::LoadFile(const std::string& directoryPath, const std::st
 			if (material->GetTextureCount(aiTextureType_DIFFUSE) != 0) {
 				aiString textureFilePath;
 				material->GetTexture(aiTextureType_DIFFUSE, 0, &textureFilePath);
-				modelData.material.textureFilePath = directoryPath + "/" + GetFileNameWithoutExtension(filename) + "/" + textureFilePath.C_Str();
+				modelData.material.textureFilePath = "resources/" + directoryPath + "/" + textureFilePath.C_Str();
 				TextureManager::GetInstance()->LoadTexture("/" + GetFileNameWithoutExtension(directoryPath), textureFilePath.C_Str());
 			}
 		}

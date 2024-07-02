@@ -1,8 +1,6 @@
 #pragma once
 #include "../../base/DirectX12/DirectX12.h"
 
-
-
 class SrvManager
 {
 public:
@@ -36,7 +34,7 @@ private:	///	メンバ変数 ///
 
 	DirectX12* directX12 = nullptr;
 	//SRV用ディスクリプタサイズ
-	uint32_t descriptorSize;
+	uint32_t descriptorSize{};
 	//SRV用ディスクリプタヒープ
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap;
 	//次に使用するSRVインデックス

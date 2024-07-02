@@ -969,3 +969,17 @@ Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const
 	return result;
 }
 
+Vector3 GetFrontVector(Vector3 rotate) {
+	Matrix4x4 wM = MakeRotateXYZMatrix(rotate);
+	Vector3 dir = { 0.0f,0.0f,1.0f };
+	return Normalize(Multiply(dir, wM));
+}
+
+//Vector3 GetRotateForVector(Vector3 vector) {
+//	// Y軸周り角度(0y)
+//	worldTransform_.rotate.y = std::atan2(velocity_.x, velocity_.z);
+//
+//	velocityXZ_ = std::sqrt(velocity_.x * velocity_.x + velocity_.z * velocity_.z);
+//	// X軸周り角度(0x)
+//	worldTransform_.rotate.x = std::atan2(-velocity_.y, velocityXZ_);
+//}

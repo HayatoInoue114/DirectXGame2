@@ -1,5 +1,6 @@
 #include "Object3d.h"
 #include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
+#include "../../Input/Input.h"
 
 void Object3d::Init()
 {
@@ -130,20 +131,27 @@ void Object3d::LoadAnimation(const std::string& filename)
 	skinCluster_ = CreateSkinCluster(DirectX12::GetInstance()->GetDevice(), *skeleton_, model_->GetModelData());
 }
 
-//void Object3d::CreateResourceView() {
-//	// 構造化バッファ用のリソースを作成
-//	size_t bufferSize = sizeof(Joint) * skeleton_->joints.size();
-//	structuredBufferResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), bufferSize);
-//
-//	// SRVのインデックスを取得
-//	srvIndex_ = SrvManager::GetInstance()->Allocate();
-//
-//	// 構造化バッファ用のSRVを作成
-//	SrvManager::GetInstance()->CreateSRVforStructuredBuffer(srvIndex_, structuredBufferResource_.Get(), (UINT)skeleton_->joints.size(), sizeof(Joint));
-//}
-
 void Object3d::UpdateAnimation()
 {
+	// キャラクターの移動ベクトル
+	Vector3 move = { 0, 0, 0 };
+
+	Vector3 rotate = {};
+
+	// キャラクターの移動の速さ
+	const float kCharacterSpeed = 0.2f;
+
+	//ゲームパッドの状態を得る変数（XINPUT）
+	XINPUT_STATE joyState;
+
+	//ゲームパッド状態取得
+	if (Input::GetInstance()->GetJoystickState(joyState)) {
+		move.x += (float)joyState.Gamepad.sThumbLX / SHRT_MAX * kCharacterSpeed;
+		move.z += (float)joyState.Gamepad.sThumbLY / SHRT_MAX * kCharacterSpeed;
+	}
+
+	worldTransform_.translate += move;
+
 	isEndAnimation_ = false;
 
 	//アニメーションが存在していて、再生フラグが立っている時

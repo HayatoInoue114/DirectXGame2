@@ -209,3 +209,6 @@ Quaternion ConvertFromRotateMatrix(const Matrix4x4& matrix);
 //Vector3 GetTranslate(Matrix4x4 matrix) { return Vector3(matrix.m[3][0], matrix.m[3][1], matrix.m[3][2]); }
 
 Matrix4x4 MakeAffineMatrix(const Vector3& scale, const Quaternion& rotate, const Vector3& translate);
+
+//正面へのベクトルを取る関数
+Vector3 GetFrontVector(Vector3 rotate);

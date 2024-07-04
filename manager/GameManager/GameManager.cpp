@@ -40,8 +40,8 @@ void GameManager::Initialize()
 	// シーンごとの初期化
 	sceneArr_[sceneNum_]->Initialize();
 
-	graphicsRenderer_->Viewport();
 	graphicsRenderer_->ScissorRect();
+	graphicsRenderer_->Viewport();
 }
 
 
@@ -62,7 +62,7 @@ void GameManager::Update() {
 
 			// シーンチェック
 			preSceneNum_ = sceneNum_;
-			//sceneNum_ = sceneArr_[sceneNum_]->GetSceneNum();
+			sceneNum_ = sceneArr_[sceneNum_]->GetSceneNum();
 
 			input_->Update();
 
@@ -72,26 +72,34 @@ void GameManager::Update() {
 				sceneArr_[sceneNum_]->Initialize();
 			}
 
+			directX12_->PreDrawForPostEffect();
+			graphicsRenderer_->RSSet();
+
 			///
 			/// 更新処理
 			/// 	
 			sceneArr_[sceneNum_]->Update();
-
-			// ImGuiのパラメータを入れている
-
 			///
 			/// 描画処理
 			/// 
 			sceneArr_[sceneNum_]->Draw();
+
+			directX12_->PostDrawForPostEffect();
+
+
+			directX12_->PreDraw();
+			graphicsRenderer_->RSSet();
+			//sceneArr_[sceneNum_]->Draw();
+			ImGui::Begin("a");
+			ImGui::End();
 			ImGui::Render();
 			// 描画後の処理
-			EndFrame();
+			directX12_->PostDraw();
 
 		}
 	}
 	// 解放処理
 	Finalize();
-
 }
 
 
@@ -99,17 +107,19 @@ void GameManager::Release() {
 
 }
 
+
+
 void GameManager::BeginFrame() {
 	ImGui_ImplDX12_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	directX12_->PreDraw();
-	graphicsRenderer_->DrawCall();
 }
 
 void GameManager::EndFrame() {
+	// 通常の描画終了処理
 	directX12_->PostDraw();
 }
 
 void GameManager::Finalize() {
 }
+

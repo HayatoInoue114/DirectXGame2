@@ -124,10 +124,6 @@ void Model::CreateResourceView()
 	std::memcpy(mappedIndex, modelData_.indices.data(), sizeof(uint32_t) * modelData_.indices.size());
 }
 
-void Model::LoadTexture()
-{
-}
-
 void Model::Update() {
 	//ImGuiAdjustParameter();
 }

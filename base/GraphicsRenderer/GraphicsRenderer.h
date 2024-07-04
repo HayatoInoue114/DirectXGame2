@@ -5,9 +5,6 @@
 
 #define MAXPSO 3
 
-class DirectX12;
-
-
 class GraphicsRenderer
 {
 public:
@@ -15,11 +12,11 @@ public:
 
 	void Initialize();
 
+	void RSSet();
+
 	void Viewport();
 
 	void ScissorRect();
-
-	void DrawCall();
 
 	void SetRootSignatureAndPSO(int n);
 

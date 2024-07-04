@@ -398,7 +398,7 @@ void GraphicsRenderer::Initialize() {
 	CreatePSO();
 }
 
-void GraphicsRenderer::DrawCall() {
+void GraphicsRenderer::RSSet() {
 	DirectX12::GetInstance()->GetCommandList()->RSSetViewports(1, &viewport_);	//Viewportを設定
 	DirectX12::GetInstance()->GetCommandList()->RSSetScissorRects(1, &scissorRect_);	//Scirssorを設定
 	DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

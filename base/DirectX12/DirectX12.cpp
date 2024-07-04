@@ -3,7 +3,6 @@
 #include <thread>
 #include <iostream>
 
-const uint32_t DirectX12::kMaxSRVCount = 512;
 
 DirectX12* DirectX12::GetInstance() {
 	static DirectX12 instance;
@@ -106,22 +105,9 @@ void DirectX12::SwapChain() {
 
 void DirectX12::DescriptorHeap() {
 	// RTVディスクリプタヒープの作成
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-	rtvHeapDesc.NumDescriptors = 3; // 必要なRTVの数を指定
-	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	rtvDescriptorHeap_ = CreateDescriptorHeap(device_.Get(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 3, false);
 
-	HRESULT hr = device_->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap_));
-	assert(SUCCEEDED(hr));
-
-	// SRVディスクリプタヒープの作成
-	D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-	srvHeapDesc.NumDescriptors = kMaxSRVCount; // 必要なSRVの数を指定
-	srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-	hr = device_->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvDescriptorHeap_));
-	assert(SUCCEEDED(hr));
+	HRESULT hr;
 
 	// SwapChainからResourceを取得
 	hr = swapChain_->GetBuffer(0, IID_PPV_ARGS(&swapChainResource_[0]));
@@ -155,7 +141,8 @@ void DirectX12::DescriptorHeap() {
 	device_->CreateRenderTargetView(renderTextureResource_.Get(), &rtvDesc_, rtvHandle_[2]);
 
 	// SRVディスクリプタの初期位置を取得
-	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = srvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
+	srvIndex_ = SrvManager::GetInstance()->Allocate();
+	D3D12_CPU_DESCRIPTOR_HANDLE srvHandle = SrvManager::GetInstance()->GetCPUDescriptorHandle(srvIndex_);
 
 	// SRVの設定
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
@@ -183,16 +170,10 @@ void DirectX12::ClearRTV() {
 	commandList_->ClearRenderTargetView(rtvHandle_[backBufferIndex_], clearColor, 0, nullptr);
 }
 
-//void DirectX12::SetImGuiDescriptorHeap() {
-//	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap_.Get()};
-//	commandList_->SetDescriptorHeaps(1, descriptorHeaps);
-//}
-
 void DirectX12::PushImGuiDrawCommand() {
 	//実際のcommandListのImGuiの描画コマンドを積む
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList_.Get());
 }
-
 
 void DirectX12::CommandKick() {
 	//GPUにコマンドリストの実行を行わせる
@@ -296,7 +277,6 @@ void DirectX12::Fence() {
 	fenceValue_ = 0;
 
 	HRESULT hr = device_->CreateFence(fenceValue_, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
-	/*hr = device->GetDeviceRemovedReason();*/
 	assert(SUCCEEDED(hr));
 
 	//FenceのSignalを待つためのイベントを作成する
@@ -373,8 +353,8 @@ void DirectX12::Init() {
 	Error();
 	Command();
 	SwapChain();
-	DescriptorHeap();
 	SrvManager::GetInstance()->Init();
+	DescriptorHeap();
 	CreateDepthStencilResource();
 	CreateDSV();
 	
@@ -420,13 +400,6 @@ void DirectX12::PreDraw() {
 	//指定した色で画面全体をクリアする
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };	//青っぽい色、RGBAの順
 	commandList_->ClearRenderTargetView(rtvHandle_[backBufferIndex_], clearColor, 0, nullptr);
-
-	SrvManager::GetInstance()->PreDraw();
-
-	//ImGui
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeaps[] = { srvDescriptorHeap_.Get() };
-	commandList_->SetDescriptorHeaps(1, descriptorHeaps->GetAddressOf());
-
 
 	dsvHandle_ = dsvDescriptorHeap_->GetCPUDescriptorHandleForHeapStart();
 	commandList_->OMSetRenderTargets(1, &rtvHandle_[backBufferIndex_], false, &dsvHandle_);
@@ -492,9 +465,7 @@ void DirectX12::PreDrawForPostEffect() {
 	// クリアデプスバッファ
 	commandList_->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
-	// ImGuiのディスクリプタヒープをセット
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeaps[] = { srvDescriptorHeap_.Get() };
-	commandList_->SetDescriptorHeaps(1, descriptorHeaps->GetAddressOf());
+	SrvManager::GetInstance()->PreDraw();
 }
 
 void DirectX12::PostDrawForPostEffect() {
@@ -540,7 +511,6 @@ void DirectX12::ClearDepthBuffer() {
 }
 
 void DirectX12::InitializeDescriptorSize() {
-	descriptorSizeSRV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 }

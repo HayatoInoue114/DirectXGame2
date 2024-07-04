@@ -283,6 +283,11 @@
     <FxCompile Include="ShaderFile\Particle.VS.hlsl" />
     <FxCompile Include="ShaderFile\Particle.PS.hlsl" />
     <FxCompile Include="ShaderFile\SkinningObject3d.VS.hlsl" />
+    <FxCompile Include="ShaderFile\CopyImage.VS.hlsl" />
+    <FxCompile Include="ShaderFile\Grayscale.PS.hlsl" />
+    <FxCompile Include="ShaderFile\Vignette.PS.hlsl" />
+    <FxCompile Include="ShaderFile\BoxFilter.PS.hlsl" />
+    <FxCompile Include="ShaderFile\GaussianFilter.PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="base\DirectX12\DirectX12.h">
@@ -526,5 +531,7 @@
   <ItemGroup>
     <None Include="ShaderFile\Object3d.hlsli" />
     <None Include="ShaderFile\Particle.hlsli" />
+    <None Include="ShaderFile\CopyImage.PS.hlsl" />
+    <None Include="ShaderFile\CopyImage.hlsli" />
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 uint32_t TextureManager::kSRVIndexTop = 1;
 
 void TextureManager::Initialize() {
-	textureDatas.reserve(DirectX12::kMaxSRVCount);
+	textureDatas.reserve(SrvManager::kMaxSRVCount);
 	srvManager_ = SrvManager::GetInstance();
 }
 

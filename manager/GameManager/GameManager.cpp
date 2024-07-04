@@ -89,7 +89,7 @@ void GameManager::Update() {
 
 			directX12_->PreDraw();
 			graphicsRenderer_->RSSet();
-			//sceneArr_[sceneNum_]->Draw();
+			graphicsRenderer_->DrawCall();
 			ImGui::Begin("a");
 			ImGui::End();
 			ImGui::Render();

@@ -53,12 +53,9 @@ public:
 
 	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 
-
-	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU() { return textureSrvHandleGPU_; }
-	D3D12_GPU_DESCRIPTOR_HANDLE GetTextureSrvHandleGPU2() { return textureSrvHandleGPU2_; }
-
 	ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
 
+	uint32_t GetSrvIndex() { return srvIndex_; }
 private:
 	void DXGIFactory();
 
@@ -169,26 +166,11 @@ private:
 	//FenceのSignalを待つためのイベントを作成する
 	HANDLE fenceEvent_{};
 
-
-
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap_{};
-
 	DirectX::TexMetadata metadata_{};
 	DirectX::TexMetadata metadata2_{};
 
 	ID3D12Resource* textureResource_{};
 	ID3D12Resource* textureResource2_{};
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc_{};
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc2_{};
-
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU_{};
-
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU_{};
-
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU2_{};
-
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU2_{};
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> depthStencilResource_{};
 
@@ -202,16 +184,11 @@ private:
 	//記録時間(FPS固定用)
 	std::chrono::steady_clock::time_point reference_;
 
-	uint32_t descriptorSizeSRV_{};
 	uint32_t descriptorSizeRTV_{};
 	uint32_t descriptorSizeDSV_{};
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> renderTextureResource_;
 
-
-	public:  //メンバ定数
-	
-	//最大SRV 数（最大テクスチャ枚数）
-	static const uint32_t kMaxSRVCount;
+	uint32_t srvIndex_;
 };
 

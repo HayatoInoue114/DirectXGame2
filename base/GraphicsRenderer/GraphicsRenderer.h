@@ -3,7 +3,7 @@
 #include <wrl.h>
 #include <dxcapi.h>
 
-#define MAXPSO 3
+#define MAXPSO GraphicsRenderer::MaxPSO
 
 class GraphicsRenderer
 {
@@ -13,6 +13,8 @@ public:
 	void Initialize();
 
 	void RSSet();
+
+	void DrawCall();
 
 	void Viewport();
 
@@ -24,7 +26,14 @@ public:
 	{
 		Object3d,
 		Particle,
-		Skinning
+		Skinning,
+		CopyImage,
+		Grayscale,
+		Vignette,
+		BoxFilter,
+
+
+		MaxPSO
 	};
 
 private:
@@ -87,7 +96,12 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> pixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particleVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particlePixelShaderBlob_{};
-	Microsoft::WRL::ComPtr<IDxcBlob> SkinningVertexShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> skinningVertexShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> copyImageVertexShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> copyImagePixelShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> grayscalePixelShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> boxFilterPixelShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> vignettePixelShaderBlob_{};
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{};
 

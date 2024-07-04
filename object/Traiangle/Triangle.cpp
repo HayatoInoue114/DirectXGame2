@@ -1,5 +1,7 @@
 #include "Triangle.h"
 #include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
+#include "../../manager/SrvManager/SrvManager.h"
+#include "../../manager/TextureManager/TextureManager.h"
 
 void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	directX12_ = directX12;
@@ -100,7 +102,7 @@ void Triangle::Draw() {
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2はrootParameter[2]である。
-	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall ? directX12_->GetTextureSrvHandleGPU2() : directX12_->GetTextureSrvHandleGPU());
+	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, SrvManager::GetInstance()->GetGPUDescriptorHandle(TextureManager::GetInstance()->GetTextureIndexByFilePath("","white.png")));
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }

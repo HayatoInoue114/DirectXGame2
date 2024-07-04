@@ -278,8 +278,9 @@ void Particle::CreateSRV() {
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = MAXINSTANCE;
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(ParticleForGPU);
-	instancingSrvHandleCPU_ = TextureManager::GetInstance()->GetCPUDescriptorHandle(SrvManager::GetInstance()->Allocate());
-	instancingSrvHandleGPU_ = TextureManager::GetInstance()->GetGPUDescriptorHandle(SrvManager::GetInstance()->Allocate());
+	uint32_t index = SrvManager::GetInstance()->Allocate();
+	instancingSrvHandleCPU_ = TextureManager::GetInstance()->GetCPUDescriptorHandle(index);
+	instancingSrvHandleGPU_ = TextureManager::GetInstance()->GetGPUDescriptorHandle(index);
 	DirectX12::GetInstance()->GetDevice()->CreateShaderResourceView(instancingResource_.Get(), &instancingSrvDesc, instancingSrvHandleCPU_);
 }
 

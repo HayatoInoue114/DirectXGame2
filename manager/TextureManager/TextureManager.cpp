@@ -124,7 +124,8 @@ Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(con
 	heapProperties.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 	//Resourceを生成する
 	ID3D12Resource* resource = nullptr;
-	HRESULT hr = DirectX12::GetInstance()->GetDevice()->CreateCommittedResource(
+	HRESULT hr;
+	hr = DirectX12::GetInstance()->GetDevice()->CreateCommittedResource(
 		&heapProperties,
 		D3D12_HEAP_FLAG_NONE,
 		&resourceDesc,

@@ -12,6 +12,8 @@ class Object3d
 {
 public:
 	void Init();
+	void Init(const std::string& filename);
+	void Init(const std::string& filename, Camera* camera);
 	void Init(Model* model);
 	void Init(Camera* camera);
 	void Init(Model* model, Camera* camera);

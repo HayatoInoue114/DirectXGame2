@@ -586,6 +586,7 @@ void GraphicsRenderer::DrawCall()
 {
 	ImGui::Begin("PostEffect");
 	
+	ImGui::Checkbox("GrayScale", &isCopyImage);
 	ImGui::Checkbox("GrayScale", &isGrayScale);
 	ImGui::Checkbox("Vignette", &isVignette);
 	ImGui::Checkbox("BoxFilte", &isBoxFilte);
@@ -594,14 +595,16 @@ void GraphicsRenderer::DrawCall()
 	ImGui::End();
 
 	//基本の色で描画（ポストエフェクト無し）
-	SetRootSignatureAndPSO(CopyImage);
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[CopyImage].Get());
-	DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[CopyImage].Get());
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(0, SrvManager::GetInstance()->GetGPUDescriptorHandle(DirectX12::GetInstance()->GetSrvIndex()));
-	//頂点3つ描画
-	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
-
-	if (isGrayScale) {
+	if (isCopyImage) {
+		SetRootSignatureAndPSO(CopyImage);
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[CopyImage].Get());
+		DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[CopyImage].Get());
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(0, SrvManager::GetInstance()->GetGPUDescriptorHandle(DirectX12::GetInstance()->GetSrvIndex()));
+		//頂点3つ描画
+		DirectX12::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+	}
+	else if (isGrayScale) 
+	{
 		SetRootSignatureAndPSO(Grayscale);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[Grayscale].Get());
 		DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[Grayscale].Get());
@@ -609,7 +612,8 @@ void GraphicsRenderer::DrawCall()
 		//頂点3つ描画
 		DirectX12::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 	}
-	if (isVignette) {
+	else if (isVignette) 
+	{
 		SetRootSignatureAndPSO(Vignette);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[Vignette].Get());
 		DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[Vignette].Get());
@@ -617,7 +621,8 @@ void GraphicsRenderer::DrawCall()
 		//頂点3つ描画
 		DirectX12::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 	}
-	if (isBoxFilte) {
+	else if (isBoxFilte) 
+	{
 		SetRootSignatureAndPSO(BoxFilter);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[BoxFilter].Get());
 		DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[BoxFilter].Get());
@@ -625,7 +630,8 @@ void GraphicsRenderer::DrawCall()
 		//頂点3つ描画
 		DirectX12::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 	}
-	if (isLuminanceBasedOutline) {
+	else if (isLuminanceBasedOutline) 
+	{
 		SetRootSignatureAndPSO(LuminanceBasedOutline);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[LuminanceBasedOutline].Get());
 		DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[LuminanceBasedOutline].Get());

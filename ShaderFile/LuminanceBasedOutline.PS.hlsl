@@ -8,6 +8,13 @@ struct PixelShaderOutput
     float4 color : SV_TARGET0;
 };
 
+static const float2 kIndex3x3[3][3] =
+{
+    { { -1.0f, -1.0f }, { 0.0f, -1.0f }, { 1.0f, -1.0f } },
+    { { -1.0f, 0.0f }, { 0.0f, 0.0f }, { 1.0f, 0.0f } },
+    { { -1.0f, 1.0f }, { 0.0f, 1.0f }, { 1.0f, 1.0f } },
+};
+
 static const float kPrewittHorizontalKernel[3][3] =
 {
     { -1.0f / 6.0f, 0.0f, 1.0f / 6.0f },
@@ -15,11 +22,11 @@ static const float kPrewittHorizontalKernel[3][3] =
     { -1.0f / 6.0f, 0.0f, 1.0f / 6.0f },
 };
 
-static const float2 kPrewittVerticalKernel[3][3] =
+static const float kPrewittVerticalKernel[3][3] =
 {
-    { -1.0f / 6.0f , -1.0f / 6.0f ,  -1.0f / 6.0f },
-    { 0.0f , 0.0f, 0.0f ,  1.0f, 0.0f },
-    { 1.0f / 6.0f ,  1.0f / 6.0f,  1.0f / 6.0f },
+    { -1.0f / 6.0f, -1.0f / 6.0f, -1.0f / 6.0f },
+    { 0.0f, 0.0f, 0.0f },
+    { 1.0f / 6.0f, 1.0f / 6.0f, 1.0f / 6.0f },
 };
 
 float Luminance(float3 v)
@@ -29,7 +36,11 @@ float Luminance(float3 v)
 
 PixelShaderOutput main(VertexShaderOutput input)
 {
+    int width, height;
+    gTexture.GetDimensions(width, height);
+    float2 uvStepSize = float2(rcp((float) width), rcp((float) height));
     float2 difference = float2(0.0f, 0.0f);
+    
     for (int x = 0; x < 3; ++x)
     {
         for (int y = 0; y < 3; ++y)
@@ -45,7 +56,7 @@ PixelShaderOutput main(VertexShaderOutput input)
     weight = saturate(weight);
     
     PixelShaderOutput output;
-    output.color.rgb = weight;
+    output.color.rgb = weight; /*(1.0f - weight) * gTexture.Sample(gSamplerLinear, input.texcoord).rgb;*/
     output.color.a = 1.0f;
     
     return output;

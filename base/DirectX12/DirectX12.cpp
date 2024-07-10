@@ -462,7 +462,7 @@ void DirectX12::PreDrawForPostEffect() {
 	commandList_->OMSetRenderTargets(1, &rtvHandle_[2], false, &dsvHandle);
 
 	// クリアレンダーターゲット
-	float clearColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
 	commandList_->ClearRenderTargetView(rtvHandle_[2], clearColor, 0, nullptr);
 
 	// クリアデプスバッファ

@@ -128,4 +128,5 @@ private:
 	bool isGrayScale{};
 	bool isVignette{};
 	bool isBoxFilte{};
+	bool isLuminanceBasedOutline{};
 };

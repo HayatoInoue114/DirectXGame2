@@ -229,6 +229,17 @@ void GraphicsRenderer::CreateRootSignature() {
 			descriptionRootSignature_[i].pParameters = rootParameters;
 			descriptionRootSignature_[i].NumParameters = 1;
 			break;
+		case LuminanceBasedOutline:
+			// srv
+			rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange_;
+			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+
+			// rootSignatureに設定
+			descriptionRootSignature_[i].pParameters = rootParameters;
+			descriptionRootSignature_[i].NumParameters = 1;
+			break;
 		}
 
 		staticSamplers_[i][0] = {};
@@ -307,23 +318,48 @@ void GraphicsRenderer::InputLayout() {
 			inputElementDescs_[i][4].InstanceDataStepRate = 0;
 		}
 	}
+	
 
 	// Set input layout descriptions
 	for (int i = 0; i < MAXPSO; i++) {
 		// 各PSOの要素数を決定
 		UINT numElements = (i == Skinning) ? 5 : 3;  // skinningには5個の要素数
-
-		if (i == CopyImage || i == Grayscale || i == Vignette || i == BoxFilter) {
+		
+		switch (i)
+		{
+		case CopyImage:
 			inputLayoutDesc_[i] = {};
 			inputLayoutDesc_[i].pInputElementDescs = nullptr;
 			inputLayoutDesc_[i].NumElements = 0;
-		}
-		else {
+			break;
+		case Grayscale:
+			inputLayoutDesc_[i] = {};
+			inputLayoutDesc_[i].pInputElementDescs = nullptr;
+			inputLayoutDesc_[i].NumElements = 0;
+			break;
+		case Vignette:
+			inputLayoutDesc_[i] = {};
+			inputLayoutDesc_[i].pInputElementDescs = nullptr;
+			inputLayoutDesc_[i].NumElements = 0;
+			break;
+		case BoxFilter:
+			inputLayoutDesc_[i] = {};
+			inputLayoutDesc_[i].pInputElementDescs = nullptr;
+			inputLayoutDesc_[i].NumElements = 0;
+				break;
+		case LuminanceBasedOutline:
+			inputLayoutDesc_[i] = {};
+			inputLayoutDesc_[i].pInputElementDescs = nullptr;
+			inputLayoutDesc_[i].NumElements = 0;
+			break;
+
+		//postEffect以外（object3d等）
+		default:
 			inputLayoutDesc_[i] = {};
 			inputLayoutDesc_[i].pInputElementDescs = inputElementDescs_[i];
 			inputLayoutDesc_[i].NumElements = numElements;
+			break;
 		}
-	
 	}
 }
 
@@ -417,6 +453,10 @@ void GraphicsRenderer::BuildShader() {
 	//BoxFilter
 	boxFilterPixelShaderBlob_ = CompileShader(L"./ShaderFile/BoxFilter.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(boxFilterPixelShaderBlob_ != nullptr);
+
+	//LuminanceBasedOutline
+	luminanceBasedOutlinePSBlob_ = CompileShader(L"./ShaderFile/LuminanceBasedOutline.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+	assert(luminanceBasedOutlinePSBlob_ != nullptr);
 }
 
 void GraphicsRenderer::CreatePSO() {
@@ -493,7 +533,7 @@ void GraphicsRenderer::CreatePSO() {
 
 		//DepthStencilの設定
 		PipelineManagerStateDesc_[i].DepthStencilState = depthStencilDesc_;
-		if (i == CopyImage || i == Grayscale || i == Vignette || i == BoxFilter) {
+		if (i == CopyImage || i == Grayscale || i == Vignette || i == BoxFilter || i == LuminanceBasedOutline) {
 			PipelineManagerStateDesc_[i].DepthStencilState.DepthEnable = false;
 		}
 		PipelineManagerStateDesc_[i].DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -546,21 +586,21 @@ void GraphicsRenderer::DrawCall()
 {
 	ImGui::Begin("PostEffect");
 	
-	ImGui::Checkbox("CopyImage", &isCopyImage);
 	ImGui::Checkbox("GrayScale", &isGrayScale);
 	ImGui::Checkbox("Vignette", &isVignette);
 	ImGui::Checkbox("BoxFilte", &isBoxFilte);
-	
+	ImGui::Checkbox("BoxFilte", &isLuminanceBasedOutline);
+
 	ImGui::End();
 
-	if (isCopyImage) {
-		SetRootSignatureAndPSO(CopyImage);
-		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[CopyImage].Get());
-		DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[CopyImage].Get());
-		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(0, SrvManager::GetInstance()->GetGPUDescriptorHandle(DirectX12::GetInstance()->GetSrvIndex()));
-		//頂点3つ描画
-		DirectX12::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
-	}
+	//基本の色で描画（ポストエフェクト無し）
+	SetRootSignatureAndPSO(CopyImage);
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[CopyImage].Get());
+	DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[CopyImage].Get());
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(0, SrvManager::GetInstance()->GetGPUDescriptorHandle(DirectX12::GetInstance()->GetSrvIndex()));
+	//頂点3つ描画
+	DirectX12::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+
 	if (isGrayScale) {
 		SetRootSignatureAndPSO(Grayscale);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[Grayscale].Get());
@@ -581,6 +621,14 @@ void GraphicsRenderer::DrawCall()
 		SetRootSignatureAndPSO(BoxFilter);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[BoxFilter].Get());
 		DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[BoxFilter].Get());
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(0, SrvManager::GetInstance()->GetGPUDescriptorHandle(DirectX12::GetInstance()->GetSrvIndex()));
+		//頂点3つ描画
+		DirectX12::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+	}
+	if (isLuminanceBasedOutline) {
+		SetRootSignatureAndPSO(LuminanceBasedOutline);
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootSignature(rootSignature_[LuminanceBasedOutline].Get());
+		DirectX12::GetInstance()->GetCommandList()->SetPipelineState(PipelineManagerState_[LuminanceBasedOutline].Get());
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(0, SrvManager::GetInstance()->GetGPUDescriptorHandle(DirectX12::GetInstance()->GetSrvIndex()));
 		//頂点3つ描画
 		DirectX12::GetInstance()->GetCommandList()->DrawInstanced(3, 1, 0, 0);

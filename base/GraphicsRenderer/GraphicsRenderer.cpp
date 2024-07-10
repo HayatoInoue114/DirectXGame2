@@ -403,7 +403,7 @@ void GraphicsRenderer::BuildShader() {
 	//CopyImage(今は複数のポストエフェクトを使えないのでここのPSを書き換えてるだけ)
 	copyImageVertexShaderBlob_ = CompileShader(L"./ShaderFile/CopyImage.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(copyImageVertexShaderBlob_ != nullptr);
-	copyImagePixelShaderBlob_ = CompileShader(L"./ShaderFile/Grayscale.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+	copyImagePixelShaderBlob_ = CompileShader(L"./ShaderFile/Vignette.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(copyImagePixelShaderBlob_ != nullptr);
 
 	//Grayscale

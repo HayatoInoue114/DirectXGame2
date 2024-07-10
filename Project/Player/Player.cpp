@@ -16,7 +16,8 @@ void Player::Initialize(Model* model, Vector3 playerPosition) {
 	//assert(model);
 
 	// 引数として受け取ったデータをメンバ変数に記録する
-	model_ = model;
+	object_ = std::make_unique<Object3d>();
+	object_->Init(model);
 
 	//reticleTextureHandle_ = Sprite::Create();
 
@@ -37,10 +38,10 @@ void Player::Initialize(Model* model, Vector3 playerPosition) {
 	sprite2DReticle_ = Sprite::CreateUnique({ 640, 360, 50 }, { 100,100 }, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();
-	model_->SetTranslate(playerPosition);
+	object_->SetTranslate(playerPosition);
 	worldTransform_.translate = playerPosition;
 
-	reticleModel_ = Model::CreateModelFromObjPtr("cube");
+	reticleModel_ = Model::CreateModelPtr("cube.obj");
 	reticleModel_->SetCamera(camera_);
 	reticleModel_->SetParent(&camera_->GetWorldTransform());
 	Vector3 pos = worldTransform3DReticle_.translate;
@@ -137,7 +138,7 @@ void Player::Update() {
 	worldTransform_.translate.y =
 		std::clamp(worldTransform_.translate.y, -kMoveLimitY, kMoveLimitY);
 
-	model_->SetWorldTransform(worldTransform_);
+	object_->SetWorldTransform(worldTransform_);
 
 	if (input_->PushKeyTrigger(DIK_SPACE)) {
 		static int a = 0;
@@ -227,7 +228,7 @@ void Player::Draw() {
 
 	reticleModel_->Draw();
 
-	model_->Draw();
+	object_->Draw();
 }
 
 void Player::Attack() {
@@ -250,7 +251,9 @@ void Player::Attack() {
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 		Model* model{};
-		model = Model::CreateModelFromObj(CUBE);
+		model = Model::CreateModel("cube.obj");
+		//Object3d* object{};
+		
 
 		// 弾を生成し、初期化
 		PlayerBullet* newBullet = new PlayerBullet();
@@ -274,7 +277,7 @@ void Player::Attack() {
 		velocity = TransformNormal(velocity, worldTransform_.matWorld_);
 
 		Model* model{};
-		model = Model::CreateModelFromObj(CUBE);
+		model = Model::CreateModel("cube.obj");
 		
 
 		Vector3 newPos = GetWorldPosition();

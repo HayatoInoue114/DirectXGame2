@@ -31,9 +31,9 @@ public:
 
 	void LoadModel(const std::string& filename);
 
-	static Particle* CreateModelFromObj(int modelName);
+	static Particle* CreateModel(const std::string& filename);
 
-	static std::unique_ptr<Particle> CreateModelFromObjPtr(int modelName);
+	static std::unique_ptr<Particle> CreateModelPtr(const std::string& filename);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> GetInstancingResource() { return instancingResource_; }
 

@@ -31,7 +31,7 @@ public:
 		Grayscale,
 		Vignette,
 		BoxFilter,
-		LuminanceBasedOutline,
+		//LuminanceBasedOutline,
 
 		MaxPSO
 	};

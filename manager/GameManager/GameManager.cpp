@@ -36,7 +36,7 @@ void GameManager::Initialize()
 #pragma endregion 基盤システムの初期化
 
 	////////////   *初期シーンの設定*   ////////////
-	sceneNum_ = TEST_SCENE;
+	sceneNum_ = GAME_SCENE;
 	// シーンごとの初期化
 	sceneArr_[sceneNum_]->Initialize();
 
@@ -90,7 +90,8 @@ void GameManager::Update() {
 			directX12_->PreDraw();
 			graphicsRenderer_->RSSet();
 			graphicsRenderer_->DrawCall();
-			ImGui::Begin("a");
+			ImGui::Begin("Scene");
+			ImGui::Text("%d", sceneNum_);
 			ImGui::End();
 			ImGui::Render();
 			// 描画後の処理

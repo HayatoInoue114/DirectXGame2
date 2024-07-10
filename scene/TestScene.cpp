@@ -9,12 +9,12 @@ void TestScene::Initialize() {
 	camera_->Initialize();
 	
 	model_ = std::make_unique<Model>();
-	model_ = Model::CreateModelFromObjPtr("walk.gltf");
+	model_ = Model::CreateModelPtr("walk.gltf");
 	object_ = std::make_unique<Object3d>();
 	object_->Init("walk.gltf",camera_.get());
-	object_->LoadAnimation("walk/walk.gltf");
+	/*object_->LoadAnimation("walk/walk.gltf");
 	object_->StartAnimation(true);
-	object_->SetAnimationSpeed(1.0f);
+	object_->SetAnimationSpeed(1.0f);*/
 
 	/*model1_ = std::make_unique<Model>();
 	model1_ = Model::CreateModelFromObjPtr("walk","sneakWalk.gltf");
@@ -33,7 +33,7 @@ void TestScene::Initialize() {
 	object2_->SetAnimationSpeed(3.0f);*/
 
 	domeModel_ = std::make_unique<Model>();
-	domeModel_ = Model::CreateModelFromObjPtr("skydome.obj");
+	domeModel_ = Model::CreateModelPtr("skydome.obj");
 
 	dome_ = std::make_unique<Object3d>();
 	dome_->Init(domeModel_.get(), camera_.get());
@@ -41,7 +41,7 @@ void TestScene::Initialize() {
 
 void TestScene::Update() {
 	camera_->Update();
-	object_->UpdateAnimation();
+	//object_->UpdateAnimation();
 	/*object1_->UpdateAnimation();
 	object2_->UpdateAnimation();
 
@@ -51,7 +51,7 @@ void TestScene::Update() {
 }
 
 void TestScene::Draw() {
-	//dome_->Draw();
+	dome_->Draw();
 	object_->Draw();
 	/*object1_->Draw();
 	object2_->Draw();*/

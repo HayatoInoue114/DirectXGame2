@@ -403,7 +403,7 @@ void GraphicsRenderer::BuildShader() {
 	//CopyImage(今は複数のポストエフェクトを使えないのでここのPSを書き換えてるだけ)
 	copyImageVertexShaderBlob_ = CompileShader(L"./ShaderFile/CopyImage.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(copyImageVertexShaderBlob_ != nullptr);
-	copyImagePixelShaderBlob_ = CompileShader(L"./ShaderFile/Vignette.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+	copyImagePixelShaderBlob_ = CompileShader(L"./ShaderFile/CopyImage.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(copyImagePixelShaderBlob_ != nullptr);
 
 	//Grayscale
@@ -471,12 +471,12 @@ void GraphicsRenderer::CreatePSO() {
 			PipelineManagerStateDesc_[i].PS = { boxFilterPixelShaderBlob_->GetBufferPointer(),
 			boxFilterPixelShaderBlob_->GetBufferSize() };//PixelShader
 			break;
-		case LuminanceBasedOutline:
-			PipelineManagerStateDesc_[i].VS = { copyImageVertexShaderBlob_->GetBufferPointer(),
-			copyImageVertexShaderBlob_->GetBufferSize() };//VertexShader
-			PipelineManagerStateDesc_[i].PS = { luminanceBasedOutlinePSBlob_->GetBufferPointer(),
-			luminanceBasedOutlinePSBlob_->GetBufferSize() };//PixelShader
-			break;
+		//case LuminanceBasedOutline:
+		//	PipelineManagerStateDesc_[i].VS = { copyImageVertexShaderBlob_->GetBufferPointer(),
+		//	copyImageVertexShaderBlob_->GetBufferSize() };//VertexShader
+		//	PipelineManagerStateDesc_[i].PS = { luminanceBasedOutlinePSBlob_->GetBufferPointer(),
+		//	luminanceBasedOutlinePSBlob_->GetBufferSize() };//PixelShader
+		//	break;
 		}
 		
 		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState

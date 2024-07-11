@@ -44,7 +44,7 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 	textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
 	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = UploadTextureData(textureData.resource, mipImages).Get();
+	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = UploadTextureData(textureData.resource, mipImages);
 
 	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metaData.format, (UINT)textureData.metaData.mipLevels);
 
@@ -96,8 +96,8 @@ Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::UploadTextureData(const M
 	std::vector<D3D12_SUBRESOURCE_DATA> subresources;
 	DirectX::PrepareUpload(DirectX12::GetInstance()->GetDevice().Get(), mipImages.GetImages(), mipImages.GetImageCount(), mipImages.GetMetadata(), subresources);
 	uint64_t intermediateSize = GetRequiredIntermediateSize(texture.Get(), 0, UINT(subresources.size()));
-	ID3D12Resource* intermediateResource = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), intermediateSize);
-	UpdateSubresources(DirectX12::GetInstance()->GetCommandList().Get(), texture.Get(), intermediateResource, 0, 0, UINT(subresources.size()), subresources.data());
+	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice().Get(), intermediateSize);
+	UpdateSubresources(DirectX12::GetInstance()->GetCommandList().Get(), texture.Get(), intermediateResource.Get(), 0, 0, UINT(subresources.size()), subresources.data());
 	//Textureへの転送後は利用できるようD3D12＿RESOURCE＿STATE_COPY_DESTからD3D12＿RESOURCE_STATE_GENERIC_READへResourceStateを変更する
 	D3D12_RESOURCE_BARRIER barrier{};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;

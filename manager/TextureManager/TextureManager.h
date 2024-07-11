@@ -1,5 +1,7 @@
 #pragma once
 #include <d3d12.h>
+#include "../../externals/DirectXTex/d3dx12.h"
+#include <vector>
 #include <dxgi1_6.h>
 #include <cassert>
 #include "../../utility/FormatString/FormatString.h"
@@ -17,23 +19,6 @@
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
 
-enum TextureName {
-	UVCHECKER,
-	MONSTERBALL,
-	//PLAYER,
-	//ENEMY,
-	RETICLE,
-	PLAYERBULLET,
-	ENEMYBULLET,
-	SKYDOMETEX,
-	CLEAR,
-	TITLESPRITE,
-	BLACK,
-	CIRCLE,
-
-	TEXTURENUM
-};
-
 struct TextureData
 {
 	DirectX::TexMetadata metaData;
@@ -49,7 +34,6 @@ public:
 	static TextureManager* GetInstance();
 
 	void Initialize();
-	//void LoadTexture(const std::string& filePath);
 	void LoadTexture(const std::string& directoryPath, const std::string& fileName);
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& matadata);
 	uint32_t GetTextureIndexByFilePath(const std::string& directoryPath, const std::string& fileName);

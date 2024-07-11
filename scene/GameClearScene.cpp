@@ -5,7 +5,7 @@
 void GameClearScene::Initialize() {
 	input_ = Input::GetInstance();
 
-	sprite_ = Sprite::Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, CLEAR);
+	//sprite_ = Sprite::Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, CLEAR);
 
 	transform_.Initialize();
 }

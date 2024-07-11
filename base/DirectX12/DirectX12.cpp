@@ -2,7 +2,7 @@
 #include "../../manager/SrvManager/SrvManager.h"
 #include <thread>
 #include <iostream>
-
+#include "../../manager/TextureManager/TextureManager.h"
 
 DirectX12* DirectX12::GetInstance() {
 	static DirectX12 instance;
@@ -333,10 +333,6 @@ void DirectX12::UpdateFixFPS() {
 	reference_ = std::chrono::steady_clock::now();
 }
 
-
-
-
-
 void DirectX12::Finalize() {
 	CloseHandle(fenceEvent_);
 	CloseWindow(WindowsAPI::GetInstance()->GetHwnd());
@@ -482,8 +478,6 @@ void DirectX12::PostDrawForPostEffect() {
 	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 
 	commandList_->ResourceBarrier(1, &barrier);
-
-	//commandList_->SetGraphicsRootSignature(GraphicsRenderer::GetInstance()->)
 }
 
 void DirectX12::CreateDepthStencilResource() {
@@ -517,7 +511,6 @@ void DirectX12::InitializeDescriptorSize() {
 	descriptorSizeRTV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 	descriptorSizeDSV_ = device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV);
 }
-
 
 Microsoft::WRL::ComPtr<ID3D12Resource> DirectX12::CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor)
 {
@@ -589,7 +582,6 @@ ID3D12DescriptorHeap* DirectX12::CreateDescriptorHeap(ID3D12Device* device, D3D1
 	assert(SUCCEEDED(hr));
 	return descriptorHeap;
 }
-
 
 ID3D12Resource* DirectX12::CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height) {
 	//生成するResourceの設定

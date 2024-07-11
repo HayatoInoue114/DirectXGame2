@@ -35,7 +35,7 @@ void Player::Initialize(Model* model, Vector3 playerPosition) {
 	// スプライト生成
 	/*sprite2DReticle_ = new Sprite;
 	sprite2DReticle_ = sprite2DReticle_->Create({ 640, 360, 0 }, { 10,10 }, { 0,0,0,1 }, RETICLE);*/
-	sprite2DReticle_ = Sprite::CreateUnique({ 640, 360, 50 }, { 100,100 }, { 1,1,1,1 }, RETICLE);
+	//sprite2DReticle_ = Sprite::CreateUnique({ 640, 360, 50 }, { 100,100 }, { 1,1,1,1 }, RETICLE);
 
 	worldTransform_.Initialize();
 	object_->SetTranslate(playerPosition);

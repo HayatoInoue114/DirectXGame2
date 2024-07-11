@@ -11,7 +11,7 @@ void TestScene::Initialize() {
 	model_ = std::make_unique<Model>();
 	model_ = Model::CreateModelPtr("walk.gltf");
 	object_ = std::make_unique<Object3d>();
-	object_->Init("walk.gltf",camera_.get());
+	object_->Init(model_.get(), camera_.get());
 	/*object_->LoadAnimation("walk/walk.gltf");
 	object_->StartAnimation(true);
 	object_->SetAnimationSpeed(1.0f);*/
@@ -41,7 +41,7 @@ void TestScene::Initialize() {
 
 void TestScene::Update() {
 	camera_->Update();
-	//object_->UpdateAnimation();
+	object_->UpdateAnimation();
 	/*object1_->UpdateAnimation();
 	object2_->UpdateAnimation();
 

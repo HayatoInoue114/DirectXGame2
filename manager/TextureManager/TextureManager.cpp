@@ -43,9 +43,10 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 	textureData.srvIndex = srvManager_->Allocate();
 	textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
 	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
-	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metaData.format, (UINT)textureData.metaData.mipLevels);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = UploadTextureData(textureData.resource, mipImages).Get();
+
+	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metaData.format, (UINT)textureData.metaData.mipLevels);
 
 	/*for (size_t mipLevel = 0; mipLevel < textureData.metaData.mipLevels; ++mipLevel) {
 		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);

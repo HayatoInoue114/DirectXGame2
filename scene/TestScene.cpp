@@ -9,7 +9,7 @@ void TestScene::Initialize() {
 	camera_->Initialize();
 	
 	model_ = std::make_unique<Model>();
-	model_ = Model::CreateModelFromObjPtr("walk.gltf");
+	model_ = Model::CreateModelPtr("walk.gltf");
 	object_ = std::make_unique<Object3d>();
 	object_->Init("walk.gltf",camera_.get());
 	object_->LoadAnimation("walk/walk.gltf");

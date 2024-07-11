@@ -511,12 +511,12 @@ void GraphicsRenderer::CreatePSO() {
 			PipelineManagerStateDesc_[i].PS = { boxFilterPixelShaderBlob_->GetBufferPointer(),
 			boxFilterPixelShaderBlob_->GetBufferSize() };//PixelShader
 			break;
-		case LuminanceBasedOutline:
-			PipelineManagerStateDesc_[i].VS = { copyImageVertexShaderBlob_->GetBufferPointer(),
-			copyImageVertexShaderBlob_->GetBufferSize() };//VertexShader
-			PipelineManagerStateDesc_[i].PS = { luminanceBasedOutlinePSBlob_->GetBufferPointer(),
-			luminanceBasedOutlinePSBlob_->GetBufferSize() };//PixelShader
-			break;
+		//case LuminanceBasedOutline:
+		//	PipelineManagerStateDesc_[i].VS = { copyImageVertexShaderBlob_->GetBufferPointer(),
+		//	copyImageVertexShaderBlob_->GetBufferSize() };//VertexShader
+		//	PipelineManagerStateDesc_[i].PS = { luminanceBasedOutlinePSBlob_->GetBufferPointer(),
+		//	luminanceBasedOutlinePSBlob_->GetBufferSize() };//PixelShader
+		//	break;
 		}
 		
 		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState

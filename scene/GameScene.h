@@ -99,7 +99,6 @@ private: // メンバ変数
 	uint32_t textureHandle = 0;
 
 	// 3Dモデルデータ
-	Model* model = nullptr;
 	std::unique_ptr<Model> playerModel_;
 	std::unique_ptr<Model> enemyModel_;
 

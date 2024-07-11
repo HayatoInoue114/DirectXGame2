@@ -3,29 +3,50 @@
 #include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
 #include "../../manager/SrvManager/SrvManager.h"
 
-Model* Model::CreateModelFromObj(int modelName) {
-	Model* model = new Model();
+//ファイル名と使う中身が同じ名前の場合これを使う
+Model* Model::CreateModel(const std::string& filename) {
+	Model* model = new Model;
+	model->fileName_ = filename;
 	// モデルの読み込み
-
-	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
+	ModelManager::GetInstance()->LoadModel(filename);
+	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
+	std::string extension = GetExtention(filename);
+	if (extension == ".obj") {
+		model->isObj = true;
+	}
+	else if (extension == ".gltf") {
+		model->isObj = false;
+	}
+	else if (extension == "") {
+		std::cerr << "Warning: The file '" << filename << "' has no extension. Please check the file name.（拡張子を書いてください）" << std::endl;
+	}
+	else {
+		std::cerr << "Warning: The file '" << filename << "' has an unrecognized extension ' (認識できない拡張子があります)" << extension << "'." << std::endl;
+	}
 
 	model->Initialize();
 	return model;
 }
 
-//ファイル名と使う中身が同じ名前の場合これを使う
-std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& filename) {
+std::unique_ptr<Model> Model::CreateModelPtr(const std::string& filename) {
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
 	model->fileName_ = filename;
 	// モデルの読み込み
 	ModelManager::GetInstance()->LoadModel(filename);
 	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
-	if (GetExtention(filename) == ".obj") {
+	std::string extension = GetExtention(filename);
+	if (extension == ".obj") {
 		model->isObj = true;
 	}
-	if (GetExtention(filename) == ".gltf") {
+	else if (extension == ".gltf") {
 		model->isObj = false;
+	}
+	else if (extension == "") {
+		std::cerr << "Warning: The file '" << filename << "' has no extension. Please check the file name.（拡張子を書いてください）" << std::endl;
+	}
+	else {
+		std::cerr << "Warning: The file '" << filename << "' has an unrecognized extension ' (認識できない拡張子があります)" << extension << "'." << std::endl;
 	}
 
 	model->Initialize();
@@ -33,18 +54,25 @@ std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& filename)
 }
 
 //ファイル名と使う中身が違う名前の場合これを使う
-std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& directoryPath, const std::string& filename) {
+std::unique_ptr<Model> Model::CreateModelPtr(const std::string& directoryPath, const std::string& filename) {
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
 	model->fileName_ = filename;
 	// モデルの読み込み
 	ModelManager::GetInstance()->LoadModel(directoryPath, filename);
 	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
-	if (GetExtention(filename) == ".obj") {
+	std::string extension = GetExtention(filename);
+	if (extension == ".obj") {
 		model->isObj = true;
 	}
-	if (GetExtention(filename) == ".gltf") {
+	else if (extension == ".gltf") {
 		model->isObj = false;
+	}
+	else if (extension == "") {
+		std::cerr << "Warning: The file '" << filename << "' has no extension. Please check the file name.（拡張子を書いてください）" << std::endl;
+	}
+	else {
+		std::cerr << "Warning: The file '" << filename << "' has an unrecognized extension ' (認識できない拡張子があります)" << extension << "'." << std::endl;
 	}
 
 	model->Initialize();

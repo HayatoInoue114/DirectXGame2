@@ -9,16 +9,16 @@ void Object3d::Init()
 
 void Object3d::Init(const std::string& filename)
 {
-	std::unique_ptr<Model> model;
-	model = Model::CreateModelFromObjPtr(filename);
+	std::unique_ptr<Model> model = std::make_unique<Model>();
+	model = Model::CreateModelPtr(filename);
 	model_ = model.get();
 	CreateTransformationMatrixResource();
 }
 
 void Object3d::Init(const std::string& filename, Camera* camera)
 {
-	std::unique_ptr<Model> model = std::make_unique<Model>();
-	model = Model::CreateModelFromObjPtr(filename);
+	std::unique_ptr<Model> model;
+	model = Model::CreateModelPtr(filename);
 	model_ = model.get();
 	camera_ = camera;
 	CreateTransformationMatrixResource();

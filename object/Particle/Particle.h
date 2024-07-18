@@ -15,6 +15,7 @@
 #include "../../math/WorldTransform/WorldTransform.h"
 #include "../../structure/structure.h"
 #include "../Camera/Camera.h"
+#include "../../manager/SrvManager/SrvManager.h"
 
 class GraphicsRenderer;
 

@@ -1,4 +1,5 @@
 #include "TextureManager.h"
+#include "../../manager/SrvManager/SrvManager.h"
 
 uint32_t TextureManager::kSRVIndexTop = 1;
 
@@ -28,13 +29,22 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 	// テクスチャファイルを読んでプログラムで扱えるようにする
 	DirectX::ScratchImage image{};
 	std::wstring filePathW = ConvertString("resources" + directoryPath + "/" + fileName);
-	HRESULT hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
-	assert(SUCCEEDED(hr));
+	HRESULT hr;
+	if (filePathW.ends_with(L".dds")) {// .ddsで終わっていたらddsとみなす。 より安全な方法はいくらでもあるので余裕があれば対応すると良い
+		hr = DirectX::LoadFromDDSFile(filePathW.c_str(), DirectX::DDS_FLAGS_NONE, nullptr, image);
+	}
+	else {
+		hr = DirectX::LoadFromWICFile(filePathW.c_str(), DirectX::WIC_FLAGS_FORCE_SRGB, nullptr, image);
+	}
 
 	// ミニマップの生成
 	DirectX::ScratchImage mipImages{};
-	hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
-	assert(SUCCEEDED(hr));
+	if (DirectX::IsCompressed(image.GetMetadata().format)) {// 圧縮フォーマットかどうかを調べる
+		mipImages = std::move(image); // 圧縮フォーマットならそのまま使うのでmoveする
+	}
+	else {
+		hr = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 4, mipImages);
+	}
 
 	// 追加したテクスチャデータの参照を取得
 	TextureData& textureData = textureDatas["resources" + directoryPath + "/" + fileName];
@@ -46,19 +56,9 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = UploadTextureData(textureData.resource, mipImages);
 
-	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData.metaData.format, (UINT)textureData.metaData.mipLevels);
+	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData);
 
-	/*for (size_t mipLevel = 0; mipLevel < textureData.metaData.mipLevels; ++mipLevel) {
-		const DirectX::Image* img = mipImages.GetImage(mipLevel, 0, 0);
-		hr = textureData.resource->WriteToSubresource(
-			UINT(mipLevel),
-			nullptr,
-			img->pixels,
-			UINT(img->rowPitch),
-			UINT(img->slicePitch)
-		);
-		assert(SUCCEEDED(hr));
-	}*/
+
 }
 
 Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexMetadata& metadata) {

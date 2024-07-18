@@ -275,6 +275,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="structure\ParticleForGPU\ParticleForGPU.h" />
     <ClInclude Include="structure\SkinCluster\SkinCluster.h" />
     <ClInclude Include="structure\structure.h" />
+    <ClInclude Include="structure\TextureData\TextureData.h" />
     <ClInclude Include="structure\VertexData\VertexData.h" />
     <ClInclude Include="structure\XAudio2_Buffer\XAudio2_Buffer.h" />
     <ClInclude Include="scene\TestScene.h" />

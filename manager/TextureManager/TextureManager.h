@@ -11,13 +11,14 @@
 #include "../../externals/DirectXTex/DirectXTex.h"
 #include <wrl.h>
 #include "../../structure/ModelData/ModelData.h"
-#include "../../manager/SrvManager/SrvManager.h"
 #include "../../base/DirectX12/DirectX12.h"
 #include <unordered_map>
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
+
+class SrvManager;
 
 struct TextureData
 {

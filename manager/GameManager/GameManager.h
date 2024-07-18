@@ -69,7 +69,7 @@ private:
 
 	Input* input_{};
 
-	int sceneNum_{};
+	//int sceneNum_{};
 
 	int preSceneNum_{};
 

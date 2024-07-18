@@ -36,9 +36,9 @@ void GameManager::Initialize()
 #pragma endregion 基盤システムの初期化
 
 	////////////   *初期シーンの設定*   ////////////
-	sceneNum_ = GAME_SCENE;
+	IScene::sceneNum = TEST_SCENE;
 	// シーンごとの初期化
-	sceneArr_[sceneNum_]->Initialize();
+	sceneArr_[IScene::sceneNum]->Initialize();
 
 	graphicsRenderer_->ScissorRect();
 	graphicsRenderer_->Viewport();
@@ -61,15 +61,15 @@ void GameManager::Update() {
 			BeginFrame();
 
 			// シーンチェック
-			preSceneNum_ = sceneNum_;
-			sceneNum_ = sceneArr_[sceneNum_]->GetSceneNum();
+			preSceneNum_ = IScene::sceneNum;
+			IScene::sceneNum = sceneArr_[IScene::sceneNum]->GetSceneNum();
 
 			input_->Update();
 
 			//シーン変更チェック
-			if (sceneNum_ != preSceneNum_) {
+			if (IScene::sceneNum != preSceneNum_) {
 				sceneArr_[preSceneNum_]->Finalize();
-				sceneArr_[sceneNum_]->Initialize();
+				sceneArr_[IScene::sceneNum]->Initialize();
 			}
 
 			directX12_->PreDrawForPostEffect();
@@ -78,11 +78,11 @@ void GameManager::Update() {
 			///
 			/// 更新処理
 			/// 	
-			sceneArr_[sceneNum_]->Update();
+			sceneArr_[IScene::sceneNum]->Update();
 			///
 			/// 描画処理
 			/// 
-			sceneArr_[sceneNum_]->Draw();
+			sceneArr_[IScene::sceneNum]->Draw();
 
 			directX12_->PostDrawForPostEffect();
 
@@ -91,7 +91,7 @@ void GameManager::Update() {
 			graphicsRenderer_->RSSet();
 			graphicsRenderer_->DrawCall();
 			ImGui::Begin("Scene");
-			ImGui::Text("%d", sceneNum_);
+			ImGui::Text("%d", IScene::sceneNum);
 			ImGui::End();
 			ImGui::Render();
 			// 描画後の処理

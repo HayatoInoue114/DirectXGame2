@@ -78,8 +78,6 @@ private:
 
 	void CreateResourceView();
 
-	void LoadTexture();
-
 public:
 	//trueなら.obj || falseなら.gltf
 	bool isObj = true;

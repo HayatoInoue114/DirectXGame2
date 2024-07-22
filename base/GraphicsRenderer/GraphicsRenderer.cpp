@@ -240,6 +240,26 @@ void GraphicsRenderer::CreateRootSignature() {
 		//	descriptionRootSignature_[i].pParameters = rootParameters;
 		//	descriptionRootSignature_[i].NumParameters = 1;
 		//	break;
+		case Skybox:
+			// Material
+			rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			rootParameters[0].Descriptor.ShaderRegister = 0;
+			// wvp
+			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[1].Descriptor.ShaderRegister = 0;
+			// texture
+			rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange_;
+			rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+			//camera
+
+			// rootSignatureに設定
+			descriptionRootSignature_[i].pParameters = rootParameters;
+			descriptionRootSignature_[i].NumParameters = 3;
+			break;
 		}
 
 		staticSamplers_[i][0] = {};
@@ -275,29 +295,49 @@ void GraphicsRenderer::CreateRootSignature() {
 
 void GraphicsRenderer::InputLayout() {
 	for (int i = 0; i < MAXPSO; i++) {
-		inputElementDescs_[i][0].SemanticName = "POSITION";
-		inputElementDescs_[i][0].SemanticIndex = 0;
-		inputElementDescs_[i][0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-		inputElementDescs_[i][0].InputSlot = 0;
-		inputElementDescs_[i][0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-		inputElementDescs_[i][0].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
-		inputElementDescs_[i][0].InstanceDataStepRate = 0;
+		if (i != Skybox) {
+			inputElementDescs_[i][0].SemanticName = "POSITION";
+			inputElementDescs_[i][0].SemanticIndex = 0;
+			inputElementDescs_[i][0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			inputElementDescs_[i][0].InputSlot = 0;
+			inputElementDescs_[i][0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+			inputElementDescs_[i][0].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+			inputElementDescs_[i][0].InstanceDataStepRate = 0;
 
-		inputElementDescs_[i][1].SemanticName = "TEXCOORD";
-		inputElementDescs_[i][1].SemanticIndex = 0;
-		inputElementDescs_[i][1].Format = DXGI_FORMAT_R32G32_FLOAT;
-		inputElementDescs_[i][1].InputSlot = 0;
-		inputElementDescs_[i][1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-		inputElementDescs_[i][1].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
-		inputElementDescs_[i][1].InstanceDataStepRate = 0;
+			inputElementDescs_[i][1].SemanticName = "TEXCOORD";
+			inputElementDescs_[i][1].SemanticIndex = 0;
+			inputElementDescs_[i][1].Format = DXGI_FORMAT_R32G32_FLOAT;
+			inputElementDescs_[i][1].InputSlot = 0;
+			inputElementDescs_[i][1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+			inputElementDescs_[i][1].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+			inputElementDescs_[i][1].InstanceDataStepRate = 0;
 
-		inputElementDescs_[i][2].SemanticName = "NORMAL";
-		inputElementDescs_[i][2].SemanticIndex = 0;
-		inputElementDescs_[i][2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-		inputElementDescs_[i][2].InputSlot = 0;
-		inputElementDescs_[i][2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
-		inputElementDescs_[i][2].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
-		inputElementDescs_[i][2].InstanceDataStepRate = 0;
+			inputElementDescs_[i][2].SemanticName = "NORMAL";
+			inputElementDescs_[i][2].SemanticIndex = 0;
+			inputElementDescs_[i][2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
+			inputElementDescs_[i][2].InputSlot = 0;
+			inputElementDescs_[i][2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+			inputElementDescs_[i][2].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+			inputElementDescs_[i][2].InstanceDataStepRate = 0;
+		}
+		else {
+			inputElementDescs_[i][0].SemanticName = "POSITION";
+			inputElementDescs_[i][0].SemanticIndex = 0;
+			inputElementDescs_[i][0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+			inputElementDescs_[i][0].InputSlot = 0;
+			inputElementDescs_[i][0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+			inputElementDescs_[i][0].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+			inputElementDescs_[i][0].InstanceDataStepRate = 0;
+
+			inputElementDescs_[i][1].SemanticName = "TEXCOORD";
+			inputElementDescs_[i][1].SemanticIndex = 0;
+			inputElementDescs_[i][1].Format = DXGI_FORMAT_R32G32_FLOAT;
+			inputElementDescs_[i][1].InputSlot = 0;
+			inputElementDescs_[i][1].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+			inputElementDescs_[i][1].InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+			inputElementDescs_[i][1].InstanceDataStepRate = 0;
+		}
+		
 
 		//skinnning
 		if (i == Skinning) {
@@ -324,6 +364,9 @@ void GraphicsRenderer::InputLayout() {
 	for (int i = 0; i < MAXPSO; i++) {
 		// 各PSOの要素数を決定
 		UINT numElements = (i == Skinning) ? 5 : 3;  // skinningには5個の要素数
+		if (i == Skybox) {
+			numElements = 2;
+		}
 		
 		switch (i)
 		{
@@ -352,7 +395,11 @@ void GraphicsRenderer::InputLayout() {
 			inputLayoutDesc_[i].pInputElementDescs = nullptr;
 			inputLayoutDesc_[i].NumElements = 0;
 			break;*/
-
+		case Skybox:
+			inputLayoutDesc_[i] = {};
+			inputLayoutDesc_[i].pInputElementDescs = inputElementDescs_[i];
+			inputLayoutDesc_[i].NumElements = numElements;
+			break;
 		//postEffect以外（object3d等）
 		default:
 			inputLayoutDesc_[i] = {};
@@ -457,6 +504,12 @@ void GraphicsRenderer::BuildShader() {
 	//LuminanceBasedOutline
 	luminanceBasedOutlinePSBlob_ = CompileShader(L"./ShaderFile/LuminanceBasedOutline.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
 	assert(luminanceBasedOutlinePSBlob_ != nullptr);
+
+	//Shaderをコンパイルする
+	SkyboxVSBlob_ = CompileShader(L"./ShaderFile/Skybox.VS.hlsl", L"vs_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+	assert(SkyboxVSBlob_ != nullptr);
+	SkyboxPSBlob_ = CompileShader(L"./ShaderFile/Skybox.PS.hlsl", L"ps_6_0", dxcUtils_.Get(), dxcCompiler_.Get(), includeHandler_.Get());
+	assert(SkyboxPSBlob_ != nullptr);
 }
 
 void GraphicsRenderer::CreatePSO() {
@@ -517,6 +570,12 @@ void GraphicsRenderer::CreatePSO() {
 		//	PipelineManagerStateDesc_[i].PS = { luminanceBasedOutlinePSBlob_->GetBufferPointer(),
 		//	luminanceBasedOutlinePSBlob_->GetBufferSize() };//PixelShader
 		//	break;
+		case Skybox:
+			PipelineManagerStateDesc_[i].VS = { SkyboxVSBlob_->GetBufferPointer(),
+			SkyboxVSBlob_->GetBufferSize() };//VertexShader
+			PipelineManagerStateDesc_[i].PS = { SkyboxPSBlob_->GetBufferPointer(),
+			SkyboxPSBlob_->GetBufferSize() };//PixelShader
+			break;
 		}
 		
 		PipelineManagerStateDesc_[i].BlendState = blendDesc_[i];//BlendState
@@ -584,14 +643,14 @@ void GraphicsRenderer::RSSet() {
 
 void GraphicsRenderer::DrawCall()
 {
-	ImGui::Begin("PostEffect");
-	
-	ImGui::Checkbox("GrayScale", &isGrayScale);
-	ImGui::Checkbox("Vignette", &isVignette);
-	ImGui::Checkbox("BoxFilte", &isBoxFilte);
-	//ImGui::Checkbox("isLuminanceBasedOutline", &isLuminanceBasedOutline);
+	//ImGui::Begin("PostEffect");
+	//
+	//ImGui::Checkbox("GrayScale", &isGrayScale);
+	//ImGui::Checkbox("Vignette", &isVignette);
+	//ImGui::Checkbox("BoxFilte", &isBoxFilte);
+	////ImGui::Checkbox("isLuminanceBasedOutline", &isLuminanceBasedOutline);
 
-	ImGui::End();
+	//ImGui::End();
 
 	//基本の色で描画（ポストエフェクト無し）
 	SetRootSignatureAndPSO(CopyImage);

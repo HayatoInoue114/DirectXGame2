@@ -14,6 +14,11 @@ TextureManager* TextureManager::GetInstance() {
 	return &instance;
 }
 
+/// <summary>
+/// Textureを読み込む関数(resourceはつけなくていい)
+/// </summary>
+/// <param name="filePath"></param>
+/// <returns></returns>
 void TextureManager::LoadTexture(const std::string& directoryPath, const std::string& fileName) {
 	// 読み込み済みテクスチャを検索
 	if (textureDatas.contains("resources" + directoryPath + "/" + fileName)) {

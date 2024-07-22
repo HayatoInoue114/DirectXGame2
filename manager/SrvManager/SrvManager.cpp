@@ -65,9 +65,9 @@ void SrvManager::CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResou
 	// ↑までは一緒。 metadataから cubemapかどうかを取得できるので利用して分岐
 	if (textureData.metaData.IsCubemap()) {
 		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-			srvDesc.TextureCube.MostDetailedMip = 0; // union TextureCubelɔth Texture2d%2
-			srvDesc.TextureCube.MipLevels = UINT_MAX;
-			srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+		srvDesc.TextureCube.MostDetailedMip = 0; // union TextureCubelɔth Texture2d%2
+		srvDesc.TextureCube.MipLevels = UINT_MAX;
+		srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
 	}
 	else {
 		srvDesc.Format = textureData.metaData.format;

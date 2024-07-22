@@ -35,6 +35,11 @@ public:
 	static TextureManager* GetInstance();
 
 	void Initialize();
+	/// <summary>
+	/// Textureを読み込む関数(resourceはつけなくていい)
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
 	void LoadTexture(const std::string& directoryPath, const std::string& fileName);
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& matadata);
 	uint32_t GetTextureIndexByFilePath(const std::string& directoryPath, const std::string& fileName);

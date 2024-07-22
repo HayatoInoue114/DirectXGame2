@@ -90,9 +90,6 @@ void GameManager::Update() {
 			directX12_->PreDraw();
 			graphicsRenderer_->RSSet();
 			graphicsRenderer_->DrawCall();
-			ImGui::Begin("Scene");
-			ImGui::Text("%d", IScene::sceneNum);
-			ImGui::End();
 			ImGui::Render();
 			// 描画後の処理
 			directX12_->PostDraw();

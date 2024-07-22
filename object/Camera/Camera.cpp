@@ -86,17 +86,17 @@ void Camera::Update() {
 	}
 
 	//Y軸回転
-	if (Input::GetInstance()->PushKey(DIK_Q)) {
+	if (Input::GetInstance()->PushKey(DIK_Q) || Input::GetInstance()->PushKey(DIK_LEFT)) {
 		worldTransform_.rotate.y -= rotateSpeed;
 	}
-	if (Input::GetInstance()->PushKey(DIK_E)) {
+	if (Input::GetInstance()->PushKey(DIK_E) || Input::GetInstance()->PushKey(DIK_RIGHT)) {
 		worldTransform_.rotate.y += rotateSpeed;
 	}
 	//x軸回転
-	if (Input::GetInstance()->PushKey(DIK_I)) {
+	if (Input::GetInstance()->PushKey(DIK_I) || Input::GetInstance()->PushKey(DIK_UP)) {
 		worldTransform_.rotate.x -= rotateSpeed;
 	}
-	if (Input::GetInstance()->PushKey(DIK_K)) {
+	if (Input::GetInstance()->PushKey(DIK_K) || Input::GetInstance()->PushKey(DIK_DOWN)) {
 		worldTransform_.rotate.x += rotateSpeed;
 	}
 	//z軸回転

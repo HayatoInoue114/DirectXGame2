@@ -14,17 +14,17 @@
 //	, viewProjectionMatrix_(Multiply(viewMatrix_, projectionMatrix_))
 //{}
 
-//Camera::Camera() {
-//	worldTransform_.Initialize();
-//	FovY_ = 0.45f;
-//	aspectRatio_ = (float(kCliantWidth) / float(kCliantHeight));
-//	nearClip_ = 0.1f;
-//	farClip_ = 100.0f;
-//	worldMatrix_ = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
-//	viewMatrix_ = Inverse(worldMatrix_);
-//	projectionMatrix_ = MakePerspectiveFovMatrix(FovY_, aspectRatio_, nearClip_, farClip_);
-//	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
-//}
+Camera::Camera() {
+	worldTransform_.Initialize();
+	FovY_ = 0.45f;
+	aspectRatio_ = (float(kCliantWidth) / float(kCliantHeight));
+	nearClip_ = 0.1f;
+	farClip_ = 100.0f;
+	worldMatrix_ = MakeAffineMatrix(worldTransform_.scale, worldTransform_.rotate, worldTransform_.translate);
+	viewMatrix_ = Inverse(worldMatrix_);
+	projectionMatrix_ = MakePerspectiveFovMatrix(FovY_, aspectRatio_, nearClip_, farClip_);
+	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
+}
 
 void Camera::Initialize() {
 	worldTransform_.Initialize();
@@ -39,6 +39,7 @@ void Camera::Initialize() {
 	viewMatrix_ = Inverse(worldMatrix_);
 	projectionMatrix_ = MakePerspectiveFovMatrix(FovY_, aspectRatio_, nearClip_, farClip_);
 	viewProjectionMatrix_ = Multiply(viewMatrix_, projectionMatrix_);
+	cameraForGPUResource_ = DirectX12::GetInstance()->CreateBufferResource(sizeof(CameraForGPU));
 }
 
 void Camera::Update() {
@@ -116,6 +117,8 @@ void Camera::Update() {
 	};
 
 	worldTransform_.translate += move;
+
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());
 
 	/*ImGui::Begin("Camera");
 	ImGui::DragFloat3("translate", &worldTransform_.translate.x, -0.01f, 0.01f);

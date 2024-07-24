@@ -78,18 +78,18 @@ void Skybox::Initialize() {
 
 void Skybox::CreateResourceView()
 {
+	// インデックスバッファのリソースを作成
 	indexResource_ = directX12_->CreateBufferResource(directX12_->GetDevice().Get(), sizeof(uint32_t) * (UINT)kNumIndices_);
 
 	indexBufferView_ = {};
-	//リソースの先頭アドレスから使う
+	// リソースの先頭アドレスから使用
 	indexBufferView_.BufferLocation = indexResource_->GetGPUVirtualAddress();
-	//使用するリソースのサイズはインデックス6つ分のサイズ
+	// 使用するリソースのサイズはインデックスの数 * uint32_tのサイズ
 	indexBufferView_.SizeInBytes = sizeof(uint32_t) * (UINT)kNumIndices_;
-	//インデックスは:uint32_tとする
+	// インデックスフォーマットはuint32_tとする
 	indexBufferView_.Format = DXGI_FORMAT_R32_UINT;
 
-	//インデックスリソースにデータを書き込む
-	indexData_ = nullptr;
+	// インデックスリソースにデータを書き込む
 	indexResource_->Map(0, nullptr, reinterpret_cast<void**>(&indexData_));
 }
 

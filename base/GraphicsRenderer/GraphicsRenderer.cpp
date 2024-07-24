@@ -125,10 +125,13 @@ void GraphicsRenderer::CreateRootSignature() {
 			rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 			rootParameters[3].Descriptor.ShaderRegister = 1;
 			//camera
+			rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			rootParameters[4].Descriptor.ShaderRegister = 2;
 
 			// rootSignatureに設定
 			descriptionRootSignature_[i].pParameters = rootParameters;
-			descriptionRootSignature_[i].NumParameters = 4;
+			descriptionRootSignature_[i].NumParameters = 5;
 			break;
 		
 		case Particle:

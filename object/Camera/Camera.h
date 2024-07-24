@@ -1,10 +1,11 @@
 #pragma once
 #include "../../math/MyMath.h"
+#include "../../structure/structure.h"
 
 class Camera
 {
 public:
-	//Camera();
+	Camera();
 	void Initialize();
 	void Update();
 	
@@ -40,5 +41,6 @@ private:
 	float nearClip_{};
 	float farClip_{};
 
+	Microsoft::WRL::ComPtr<ID3D12Resource> cameraForGPUResource_;
 };
 

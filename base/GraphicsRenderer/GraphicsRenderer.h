@@ -31,7 +31,8 @@ public:
 		Grayscale,
 		Vignette,
 		BoxFilter,
-		//LuminanceBasedOutline,
+		LuminanceBasedOutline,
+		//DepthBasedOutline,
 
 		MaxPSO
 	};
@@ -103,8 +104,9 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> boxFilterPixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> vignettePixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> luminanceBasedOutlinePSBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> depthBasedOutlinePSBlob_{};
 
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{};
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{}; 
 
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[MAXPSO][5]{};
 
@@ -129,4 +131,5 @@ private:
 	bool isVignette{};
 	bool isBoxFilte{};
 	bool isLuminanceBasedOutline{};
+	bool isDepthBasedOutline{};
 };

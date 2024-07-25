@@ -90,7 +90,7 @@ void GraphicsRenderer::CreateRootSignature() {
 		descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
 		descriptorRangeForInstancing_[0] = {};
-		descriptorRangeForInstancing_[0].BaseShaderRegister = 0; // 0から始まる
+		descriptorRangeForInstancing_[0].BaseShaderRegister = 1;
 		descriptorRangeForInstancing_[0].NumDescriptors = 1;
 		descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
 		descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
@@ -101,7 +101,7 @@ void GraphicsRenderer::CreateRootSignature() {
 			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 		// RootParameter作成。複数設定できるので配列。
-		D3D12_ROOT_PARAMETER rootParameters[5] = {};
+		D3D12_ROOT_PARAMETER rootParameters[7] = {};
 
 		//*  共通  *//
 		switch (i)
@@ -128,10 +128,15 @@ void GraphicsRenderer::CreateRootSignature() {
 			rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 			rootParameters[4].Descriptor.ShaderRegister = 2;
+			// textureCube
+			rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+			rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 
 			// rootSignatureに設定
 			descriptionRootSignature_[i].pParameters = rootParameters;
-			descriptionRootSignature_[i].NumParameters = 5;
+			descriptionRootSignature_[i].NumParameters = 6;
 			break;
 		
 		case Particle:
@@ -142,8 +147,8 @@ void GraphicsRenderer::CreateRootSignature() {
 			// srv
 			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+			rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRange_;
+			rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
 			// texture
 			rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -177,17 +182,27 @@ void GraphicsRenderer::CreateRootSignature() {
 			rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 			rootParameters[3].Descriptor.ShaderRegister = 1;
+			//camera
+			rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			rootParameters[4].Descriptor.ShaderRegister = 2;
+			// textureCube
+			rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
+			rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
 			//Palette
-			rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[4].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+			rootParameters[6].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[6].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[6].DescriptorTable.pDescriptorRanges = descriptorRange_;
+			rootParameters[6].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
 
 			// rootSignatureに設定
 			descriptionRootSignature_[i].pParameters = rootParameters;
-			descriptionRootSignature_[i].NumParameters = 5;
+			descriptionRootSignature_[i].NumParameters = 7;
 			break;
 
+#pragma region PostEffect
 		case CopyImage:
 			// srv
 			rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
@@ -243,6 +258,8 @@ void GraphicsRenderer::CreateRootSignature() {
 		//	descriptionRootSignature_[i].pParameters = rootParameters;
 		//	descriptionRootSignature_[i].NumParameters = 1;
 		//	break;
+
+#pragma endregion PostEffect
 		case Skybox:
 			// Material
 			rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
@@ -283,14 +300,22 @@ void GraphicsRenderer::CreateRootSignature() {
 		hr = D3D12SerializeRootSignature(&descriptionRootSignature_[i],
 			D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob_[i], &errorBlob_[i]);
 		if (FAILED(hr)) {
-			Log(reinterpret_cast<char*>(errorBlob_[i]->GetBufferPointer()));
+			if (errorBlob_[i]) {
+				Log(reinterpret_cast<char*>(errorBlob_[i]->GetBufferPointer()));
+			}
+			else {
+				Log("Unknown error occurred during root signature serialization.");
+			}
 			assert(false);
 		}
 
 		rootSignature_[i] = nullptr;
 		hr = DirectX12::GetInstance()->GetDevice()->CreateRootSignature(0, signatureBlob_[i]->GetBufferPointer(),
 			signatureBlob_[i]->GetBufferSize(), IID_PPV_ARGS(rootSignature_[i].GetAddressOf()));
-		assert(SUCCEEDED(hr));
+		if (FAILED(hr)) {
+			Log("Failed to create root signature.");
+			assert(false);
+		}
 		std::wstring rootname = std::format(L"RootParam{}", i);
 		rootSignature_[i]->SetName(rootname.c_str());
 	}

@@ -171,7 +171,9 @@ void Model::Draw() {
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
 	uint32_t srvIndex = TextureManager::GetInstance()->GetSrvIndex(modelData_.material.textureFilePath);
+	uint32_t srvIndexForMap = TextureManager::GetInstance()->GetSrvIndex("","rostock_laage_airport_4k.dds");
 	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, srvIndex);
+	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(5, srvIndexForMap);
 
 	//SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(4, srvIndex_);
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。

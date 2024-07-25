@@ -41,7 +41,7 @@ void TestScene::Initialize() {
 	skybox_ = std::make_unique<Skybox>();
 	skybox_->Initialize();
 	skybox_->SetCamera(camera_.get());
-	skybox_->SetScale({ 100,100,100 });
+	skybox_->SetScale({ 1000,1000,1000 });
 }
 
 void TestScene::Update() {
@@ -56,8 +56,8 @@ void TestScene::Update() {
 }
 
 void TestScene::Draw() {
-	/*dome_->Draw();
-	object_->Draw();*/
+	//dome_->Draw();
+	object_->Draw();
 	skybox_->Draw();
 	/*object1_->Draw();
 	object2_->Draw();*/

@@ -61,9 +61,45 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = UploadTextureData(textureData.resource, mipImages);
 
+	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
+	hr = DirectX12::GetInstance()->GetCommandList()->Close();
+	assert(SUCCEEDED(hr));
+	//GPUにコマンドリストの実行を行わせる
+	ID3D12CommandList* commandLists[] = { DirectX12::GetInstance()->GetCommandList().Get() };
+	DirectX12::GetInstance()->GetCommandQueue()->ExecuteCommandLists(1, commandLists);
+
+	//初期値0でFenceを作る
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence{};
+	uint64_t fenceValue{};
+	//FenceのSignalを待つためのイベントを作成する
+	HANDLE fenceEvent{};
+	hr = DirectX12::GetInstance()->GetDevice()->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	assert(SUCCEEDED(hr));
+	//FenceのSignalを待つためのイベントを作成する
+	fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	assert(fenceEvent != nullptr);
+
+	//Fenceの値を更新
+	fenceValue++;
+	//GPUがここまでたどり着いたときに、Fenceの値を指定した値に代入するようにSignalを送る
+	DirectX12::GetInstance()->GetCommandQueue()->Signal(fence.Get(), fenceValue);
+
+	//Fenceの値が出したSignal値にたどり着いているか確認する
+	//GetCompletedValueの初期値はFence作成時に渡した初期値
+	if (fence->GetCompletedValue() < fenceValue) {
+		//指定したSignalにたどり着いていないので、たどり着くまで待つようにイベントを設定する
+		fence->SetEventOnCompletion(fenceValue, fenceEvent);
+		//イベントを待つ
+		WaitForSingleObject(fenceEvent, INFINITE);
+	}
+
+	//次のフレーム用のコマンドリストを準備
+	hr = DirectX12::GetInstance()->GetCommandAllocator()->Reset();
+	assert(SUCCEEDED(hr));
+	hr = DirectX12::GetInstance()->GetCommandList()->Reset(DirectX12::GetInstance()->GetCommandAllocator().Get(), nullptr);
+	assert(SUCCEEDED(hr));
+
 	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData);
-
-
 }
 
 Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexMetadata& metadata) {
@@ -149,7 +185,7 @@ const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& fileP
 }
 
 uint32_t TextureManager::GetSrvIndex(const std::string& filePath) {
-	TextureData& textureData = textureDatas[filePath];
+	TextureData& textureData = textureDatas["resources/" + filePath];
 	// 何も書いてないならデフォルトテクスチャの番号を返す
 	if (filePath.size() == 0) {
 		textureData = textureDatas["resources/black.png"];

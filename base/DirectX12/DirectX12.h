@@ -45,6 +45,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateRenderTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, uint32_t width, uint32_t height, DXGI_FORMAT format, const Vector4& clearColor);
 
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
+	ID3D12Resource* CreateBufferResource(size_t sizeInBytes);
 
 
 	Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() { return device_; }
@@ -56,6 +57,10 @@ public:
 	ID3D12Resource* CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height);
 
 	uint32_t GetSrvIndex() { return srvIndex_; }
+
+	Microsoft::WRL::ComPtr<ID3D12CommandQueue> GetCommandQueue() { return commandQueue_; }
+
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> GetCommandAllocator() { return commandAllocator_; }
 private:
 	void DXGIFactory();
 

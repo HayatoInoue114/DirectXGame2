@@ -7,6 +7,7 @@
 void Skybox::Initialize() {
 	directX12_ = DirectX12::GetInstance();
 	light_ = Light::Getinstance();
+	TextureManager::GetInstance()->LoadTexture("", "rostock_laage_airport_4k.dds");
 
 	//Transform変数を作る
 	transform_.Initialize();
@@ -179,7 +180,6 @@ void Skybox::Draw() {
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
-	TextureManager::GetInstance()->LoadTexture("", "rostock_laage_airport_4k.dds");
 	uint32_t index = TextureManager::GetInstance()->GetSrvIndex("","rostock_laage_airport_4k.dds");
 	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetGPUDescriptorHandle(index));
 	//描画！(DrawCall/ドローコール)

@@ -2,6 +2,10 @@
 #include "../../math/MyMath.h"
 #include "../../structure/structure.h"
 
+struct CameraForGPU {
+	Vector3 worldPosition;
+};
+
 class Camera
 {
 public:
@@ -35,6 +39,8 @@ private:
 	Matrix4x4 viewMatrix_{};
 	Matrix4x4 projectionMatrix_{};
 	Matrix4x4 viewProjectionMatrix_{};
+
+	CameraForGPU* position{};
 
 	float FovY_{};
 	float aspectRatio_{};

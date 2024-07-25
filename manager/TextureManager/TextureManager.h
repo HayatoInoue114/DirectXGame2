@@ -58,7 +58,7 @@ public:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>& texture, const DirectX::ScratchImage& mipImages);
 private:
-	SrvManager* srvManager_;
+	SrvManager* srvManager_{};
 
 	static uint32_t kSRVIndexTop;
 

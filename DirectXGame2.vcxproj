@@ -97,6 +97,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="manager\FileManager\FileManager.cpp" />
     <ClCompile Include="object\Line\Line.cpp" />
     <ClCompile Include="object\Object3d\Animation\Animation.cpp" />
     <ClCompile Include="manager\CollisionManager\Collider\Collider.cpp" />
@@ -226,6 +227,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\TD3\Project\Math\MathOperations\MathOperations.h" />
+    <ClInclude Include="manager\FileManager\FileManager.h" />
     <ClInclude Include="object\Line\Line.h" />
     <ClInclude Include="object\Object3d\Animation\Animation.h" />
     <ClInclude Include="manager\CollisionManager\CollisionConfig\CollisionConfig.h" />

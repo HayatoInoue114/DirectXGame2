@@ -59,7 +59,7 @@ private:
 	void CreateTransformationMatrixResource();
 public:
 	bool isParent_ = false;
-
+	bool isLight = false;
 private:
 	Model* model_ = nullptr;
 

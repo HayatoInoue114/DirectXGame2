@@ -12,9 +12,9 @@ void TestScene::Initialize() {
 	model_ = Model::CreateModelPtr("walk.gltf");
 	object_ = std::make_unique<Object3d>();
 	object_->Init(model_.get(), camera_.get());
-	/*object_->LoadAnimation("walk/walk.gltf");
+	object_->LoadAnimation("walk/walk.gltf");
 	object_->StartAnimation(true);
-	object_->SetAnimationSpeed(1.0f);*/
+	object_->SetAnimationSpeed(1.0f);
 
 	/*model1_ = std::make_unique<Model>();
 	model1_ = Model::CreateModelFromObjPtr("walk","sneakWalk.gltf");

@@ -56,4 +56,6 @@ void Light::AdjustParameter() {
 	ImGui::SliderFloat3("Lighting.direction", &directionalLightData_->direction.x, -1, 1);
 	ImGui::ColorEdit3("Lighting.color", &directionalLightData_->color.x);
 	ImGui::SliderFloat("Lighting.intensity", &directionalLightData_->intensity, 0, 1);
+
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
 }

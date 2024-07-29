@@ -80,9 +80,11 @@ void Object3d::Draw()
 		//wvp用のCBufferの場所を設定
 		DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
+		/*if (isLight) {
+			DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
+		}*/
 		if (animation_) {
-			DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(4, skinCluster_.paletteSrvHandle.second);
+			DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(5, skinCluster_.paletteSrvHandle.second);
 			//SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(4, srvIndex_);
 		}
 

@@ -78,22 +78,25 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 
 void GraphicsRenderer::CreateRootSignature() {
 	HRESULT hr;
+	D3D12_DESCRIPTOR_RANGE descriptorRange[1]{};
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForTexture[1]{};
+	D3D12_DESCRIPTOR_RANGE descriptorRangeForPalette[1]{};
 
 
 	for (int i = 0; i < MAXPSO; i++) {
 
-		descriptorRange_[0] = {};
-		descriptorRange_[0].BaseShaderRegister = 0; // 0から始まる
-		descriptorRange_[0].NumDescriptors = 1;
-		descriptorRange_[0].RegisterSpace = 0;
-		descriptorRange_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
-		descriptorRange_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
+		descriptorRange[0] = {};
+		descriptorRange[0].BaseShaderRegister = 0; // 0から始まる
+		descriptorRange[0].NumDescriptors = 1;
+		descriptorRange[0].RegisterSpace = 0;
+		descriptorRange[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+		descriptorRange[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
-		descriptorRangeForInstancing_[0] = {};
-		descriptorRangeForInstancing_[0].BaseShaderRegister = 0; // 0から始まる
-		descriptorRangeForInstancing_[0].NumDescriptors = 1;
-		descriptorRangeForInstancing_[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
-		descriptorRangeForInstancing_[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
+		descriptorRangeForTexture[0] = {};
+		descriptorRangeForTexture[0].BaseShaderRegister = 1; // 0から始まる
+		descriptorRangeForTexture[0].NumDescriptors = 1;
+		descriptorRangeForTexture[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV; // SRVを使う
+		descriptorRangeForTexture[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND; // Offsetを自動計算
 
 		// RootSignature作成
 		descriptionRootSignature_[i] = {};
@@ -101,7 +104,7 @@ void GraphicsRenderer::CreateRootSignature() {
 			D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 		// RootParameter作成。複数設定できるので配列。
-		D3D12_ROOT_PARAMETER rootParameters[5] = {};
+		D3D12_ROOT_PARAMETER rootParameters[7] = {};
 
 		//*  共通  *//
 		switch (i)
@@ -118,8 +121,8 @@ void GraphicsRenderer::CreateRootSignature() {
 			// texture
 			rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange_;
-			rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+			rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange;
+			rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 			// Light
 			rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -128,16 +131,16 @@ void GraphicsRenderer::CreateRootSignature() {
 			rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 			rootParameters[4].Descriptor.ShaderRegister = 2;
-			// textureCube
-			rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+			//// textureCube
+			//rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			//rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			//rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForTexture;
+			//rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForTexture);
 
 
 			// rootSignatureに設定
 			descriptionRootSignature_[i].pParameters = rootParameters;
-			descriptionRootSignature_[i].NumParameters = 4;
+			descriptionRootSignature_[i].NumParameters = 5;
 			break;
 		
 		case Particle:
@@ -148,13 +151,13 @@ void GraphicsRenderer::CreateRootSignature() {
 			// srv
 			rootParameters[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+			rootParameters[1].DescriptorTable.pDescriptorRanges = descriptorRange;
+			rootParameters[1].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 			// texture
 			rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange_;
-			rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+			rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange;
+			rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 			// Light
 			rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
@@ -177,29 +180,38 @@ void GraphicsRenderer::CreateRootSignature() {
 			// texture
 			rootParameters[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange_;
-			rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+			rootParameters[2].DescriptorTable.pDescriptorRanges = descriptorRange;
+			rootParameters[2].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 			// Light
 			rootParameters[3].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
 			rootParameters[3].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
 			rootParameters[3].Descriptor.ShaderRegister = 1;
+			//camera
+			rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+			rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			rootParameters[4].Descriptor.ShaderRegister = 2;
+			//// textureCube
+			//rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			//rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+			//rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRangeForTexture;
+			//rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForTexture);
 			//Palette
-			rootParameters[4].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-			rootParameters[4].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-			rootParameters[4].DescriptorTable.pDescriptorRanges = descriptorRangeForInstancing_;
-			rootParameters[4].DescriptorTable.NumDescriptorRanges = _countof(descriptorRangeForInstancing_);
+			rootParameters[5].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+			rootParameters[5].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+			rootParameters[5].DescriptorTable.pDescriptorRanges = descriptorRange;
+			rootParameters[5].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 
 			// rootSignatureに設定
 			descriptionRootSignature_[i].pParameters = rootParameters;
-			descriptionRootSignature_[i].NumParameters = 5;
+			descriptionRootSignature_[i].NumParameters = 6;
 			break;
 
 		case CopyImage:
 			// srv
 			rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange_;
-			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
+			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 
 			// rootSignatureに設定
 			descriptionRootSignature_[i].pParameters = rootParameters;
@@ -209,8 +221,8 @@ void GraphicsRenderer::CreateRootSignature() {
 			// srv
 			rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange_;
-			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
+			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 
 			// rootSignatureに設定
 			descriptionRootSignature_[i].pParameters = rootParameters;
@@ -220,8 +232,8 @@ void GraphicsRenderer::CreateRootSignature() {
 			// srv
 			rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange_;
-			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
+			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 
 			// rootSignatureに設定
 			descriptionRootSignature_[i].pParameters = rootParameters;
@@ -231,8 +243,8 @@ void GraphicsRenderer::CreateRootSignature() {
 			// srv
 			rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange_;
-			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
+			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 
 			// rootSignatureに設定
 			descriptionRootSignature_[i].pParameters = rootParameters;
@@ -242,8 +254,8 @@ void GraphicsRenderer::CreateRootSignature() {
 			// srv
 			rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 			rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange_;
-			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+			rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
+			rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 
 			// rootSignatureに設定
 			descriptionRootSignature_[i].pParameters = rootParameters;
@@ -257,8 +269,8 @@ void GraphicsRenderer::CreateRootSignature() {
 		//	// srv
 		//	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 		//	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-		//	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange_;
-		//	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange_);
+		//	rootParameters[0].DescriptorTable.pDescriptorRanges = descriptorRange;
+		//	rootParameters[0].DescriptorTable.NumDescriptorRanges = _countof(descriptorRange);
 
 		//	// rootSignatureに設定
 		//	descriptionRootSignature_[i].pParameters = rootParameters;

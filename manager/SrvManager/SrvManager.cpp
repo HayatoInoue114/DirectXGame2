@@ -70,8 +70,6 @@ void SrvManager::CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResou
 		srvDesc.TextureCube.ResourceMinLODClamp = 0.0f;
 	}
 	else {
-		srvDesc.Format = textureData.metaData.format;
-		srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 		srvDesc.Texture2D.MipLevels = (UINT)textureData.metaData.mipLevels;
 	}

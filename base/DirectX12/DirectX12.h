@@ -61,6 +61,8 @@ public:
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> GetCommandQueue() { return commandQueue_; }
 
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> GetCommandAllocator() { return commandAllocator_; }
+
+	Microsoft::WRL::ComPtr<IDXGISwapChain4> GetSwapChain() { return swapChain_; }
 private:
 	void DXGIFactory();
 
@@ -121,6 +123,9 @@ private:
 	void NextFlameCommandList();
 
 	void ClearDepthBuffer();
+
+public:
+		uint64_t fenceValue_{};
 private:
 	Microsoft::WRL::ComPtr<ID3D12Device> device_{};
 	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory_{};
@@ -166,7 +171,7 @@ private:
 	
 	//初期値0でFenceを作る
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence_{};
-	uint64_t fenceValue_{};
+	
 
 	//FenceのSignalを待つためのイベントを作成する
 	HANDLE fenceEvent_{};

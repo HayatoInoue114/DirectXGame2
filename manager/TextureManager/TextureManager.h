@@ -57,6 +57,9 @@ public:
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(const std::string& filePath);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>& texture, const DirectX::ScratchImage& mipImages);
+
+private:
+	void ExecuteAndSyncCommandList();
 private:
 	SrvManager* srvManager_{};
 
@@ -72,5 +75,6 @@ private:
 	TextureManager(TextureManager&) = delete;
 	TextureManager& operator=(TextureManager&) = delete;
 
+	uint64_t fenceValue{};
 };
 

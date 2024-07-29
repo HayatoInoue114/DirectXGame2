@@ -55,11 +55,25 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 	TextureData& textureData = textureDatas["resources" + directoryPath + "/" + fileName];
 	textureData.metaData = mipImages.GetMetadata();
 	textureData.resource = CreateTextureResource(textureData.metaData);
+	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = UploadTextureData(textureData.resource, mipImages);
 	textureData.srvIndex = srvManager_->Allocate();
 	textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
 	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
 
-	Microsoft::WRL::ComPtr<ID3D12Resource> intermediateResource = UploadTextureData(textureData.resource, mipImages);
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	//今回のバリアはTransition
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	//Noneしておく
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	//バリアを張る対象のリソース。現在のバックバッファに対して行う
+	barrier.Transition.pResource = intermediateResource.Get();
+	//遷移前（現在）のResourceState
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	//遷移後のResourceState
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	//TransitionBarrierを張る
+	DirectX12::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
 
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
 	hr = DirectX12::GetInstance()->GetCommandList()->Close();
@@ -67,10 +81,9 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 	//GPUにコマンドリストの実行を行わせる
 	ID3D12CommandList* commandLists[] = { DirectX12::GetInstance()->GetCommandList().Get() };
 	DirectX12::GetInstance()->GetCommandQueue()->ExecuteCommandLists(1, commandLists);
-
 	//初期値0でFenceを作る
 	Microsoft::WRL::ComPtr<ID3D12Fence> fence{};
-	uint64_t fenceValue{};
+
 	//FenceのSignalを待つためのイベントを作成する
 	HANDLE fenceEvent{};
 	hr = DirectX12::GetInstance()->GetDevice()->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
@@ -93,6 +106,7 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 		WaitForSingleObject(fenceEvent, INFINITE);
 	}
 
+	DirectX12::GetInstance()->GetSwapChain()->Present(1, 0);
 	//次のフレーム用のコマンドリストを準備
 	hr = DirectX12::GetInstance()->GetCommandAllocator()->Reset();
 	assert(SUCCEEDED(hr));
@@ -100,6 +114,11 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 	assert(SUCCEEDED(hr));
 
 	srvManager_->CreateSRVforTexture2D(textureData.srvIndex, textureData.resource.Get(), textureData);
+}
+
+void TextureManager::ExecuteAndSyncCommandList()
+{
+	
 }
 
 Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::CreateTextureResource(const DirectX::TexMetadata& metadata) {
@@ -151,6 +170,7 @@ Microsoft::WRL::ComPtr<ID3D12Resource> TextureManager::UploadTextureData(const M
 	return intermediateResource;
 
 }
+
 
 
 D3D12_CPU_DESCRIPTOR_HANDLE TextureManager::GetCPUDescriptorHandle(uint32_t index) {

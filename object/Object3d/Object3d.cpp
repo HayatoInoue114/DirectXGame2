@@ -65,12 +65,6 @@ void Object3d::Draw()
 			wvpData_->WVP = worldViewProjectionMatrix_;
 			wvpData_->World = worldMatrix_;
 
-			ImGui::Begin("3d");
-			ImGui::SliderFloat("anime", &animationTime_, 0.1f, 0.1f);
-			ImGui::End();
-
-			DrawMatrix4x4("localMatrix", worldViewProjectionMatrix_);
-			
 		}
 
 		D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {

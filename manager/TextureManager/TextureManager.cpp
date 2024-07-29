@@ -60,21 +60,6 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 	textureData.srvHandleCPU = srvManager_->GetCPUDescriptorHandle(textureData.srvIndex);
 	textureData.srvHandleGPU = srvManager_->GetGPUDescriptorHandle(textureData.srvIndex);
 
-
-	D3D12_RESOURCE_BARRIER barrier = {};
-	//今回のバリアはTransition
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//Noneしておく
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	//バリアを張る対象のリソース。現在のバックバッファに対して行う
-	barrier.Transition.pResource = intermediateResource.Get();
-	//遷移前（現在）のResourceState
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	//遷移後のResourceState
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//TransitionBarrierを張る
-	DirectX12::GetInstance()->GetCommandList()->ResourceBarrier(1, &barrier);
-
 	//コマンドリストの内容を確定させる。全てのコマンドを積んでからCloseすること
 	hr = DirectX12::GetInstance()->GetCommandList()->Close();
 	assert(SUCCEEDED(hr));
@@ -106,7 +91,6 @@ void TextureManager::LoadTexture(const std::string& directoryPath, const std::st
 		WaitForSingleObject(fenceEvent, INFINITE);
 	}
 
-	DirectX12::GetInstance()->GetSwapChain()->Present(1, 0);
 	//次のフレーム用のコマンドリストを準備
 	hr = DirectX12::GetInstance()->GetCommandAllocator()->Reset();
 	assert(SUCCEEDED(hr));
@@ -205,20 +189,12 @@ const DirectX::TexMetadata& TextureManager::GetMetaData(const std::string& fileP
 }
 
 uint32_t TextureManager::GetSrvIndex(const std::string& filePath) {
-	TextureData& textureData = textureDatas["resources/" + filePath];
-	// 何も書いてないならデフォルトテクスチャの番号を返す
-	if (filePath.size() == 0) {
-		textureData = textureDatas["resources/black.png"];
-	}
+	TextureData& textureData = textureDatas[filePath];
 	return textureData.srvIndex;
 }
 
 uint32_t TextureManager::GetSrvIndex(const std::string& directoryPath, const std::string& fileName) {
 	TextureData& textureData = textureDatas["resources" + directoryPath + "/" + fileName];
-	// 何も書いてないならデフォルトテクスチャの番号を返す
-	if (fileName.size() == 0) {
-		textureData = textureDatas["resources/black.png"];
-	}
 	return textureData.srvIndex;
 }
 

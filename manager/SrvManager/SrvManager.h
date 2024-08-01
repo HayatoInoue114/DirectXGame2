@@ -1,5 +1,7 @@
 #pragma once
 #include "../../base/DirectX12/DirectX12.h"
+#include "../../structure/structure.h"
+#include "../TextureManager/TextureManager.h"
 
 class SrvManager
 {
@@ -18,7 +20,7 @@ public:
 	void SetGraphicsRootDescriptorTable(UINT RootParameterIndex, uint32_t srvIndex);
 
 	// SRV生成（テクスチャ用）
-	void CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, DXGI_FORMAT format, UINT mipLevels);
+	void CreateSRVforTexture2D(uint32_t srvIndex, ID3D12Resource* pResource, TextureData& textureData);
 	//SRV生成（Structure Buffer用）
 	void CreateSRVforStructuredBuffer(uint32_t srvIndex, ID3D12Resource* pResource, UINT numElements, UINT structureByteStride);
 

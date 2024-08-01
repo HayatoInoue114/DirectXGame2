@@ -31,8 +31,11 @@ public:
 		Grayscale,
 		Vignette,
 		BoxFilter,
-		LuminanceBasedOutline,
 		//DepthBasedOutline,
+		//LuminanceBasedOutline,
+		Skybox,
+
+
 
 		MaxPSO
 	};
@@ -98,6 +101,7 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> particleVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particlePixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> skinningVertexShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> skinningPixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> copyImageVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> copyImagePixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> grayscalePixelShaderBlob_{};
@@ -105,6 +109,8 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> vignettePixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> luminanceBasedOutlinePSBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> depthBasedOutlinePSBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> SkyboxVSBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> SkyboxPSBlob_{};
 
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{}; 
 

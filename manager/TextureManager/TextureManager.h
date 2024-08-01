@@ -11,13 +11,14 @@
 #include "../../externals/DirectXTex/DirectXTex.h"
 #include <wrl.h>
 #include "../../structure/ModelData/ModelData.h"
-#include "../../manager/SrvManager/SrvManager.h"
 #include "../../base/DirectX12/DirectX12.h"
 #include <unordered_map>
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
+
+class SrvManager;
 
 struct TextureData
 {
@@ -34,6 +35,11 @@ public:
 	static TextureManager* GetInstance();
 
 	void Initialize();
+	/// <summary>
+	/// Textureを読み込む関数(resourceはつけなくていい)
+	/// </summary>
+	/// <param name="filePath"></param>
+	/// <returns></returns>
 	void LoadTexture(const std::string& directoryPath, const std::string& fileName);
 	Microsoft::WRL::ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& matadata);
 	uint32_t GetTextureIndexByFilePath(const std::string& directoryPath, const std::string& fileName);
@@ -51,8 +57,11 @@ public:
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU(const std::string& filePath);
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> UploadTextureData(const Microsoft::WRL::ComPtr<ID3D12Resource>& texture, const DirectX::ScratchImage& mipImages);
+
 private:
-	SrvManager* srvManager_;
+	void ExecuteAndSyncCommandList();
+private:
+	SrvManager* srvManager_{};
 
 	static uint32_t kSRVIndexTop;
 
@@ -66,5 +75,6 @@ private:
 	TextureManager(TextureManager&) = delete;
 	TextureManager& operator=(TextureManager&) = delete;
 
+	uint64_t fenceValue{};
 };
 

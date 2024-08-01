@@ -75,6 +75,7 @@
     <ClCompile Include="manager\TextureManager\TextureManager.cpp" />
     <ClCompile Include="object\Traiangle\Triangle.cpp" />
     <ClCompile Include="base\WindowsAPI\WindowsAPI.cpp" />
+    <ClCompile Include="manager\FileManager\FileManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\TD3\Project\Math\MathOperations\MathOperations.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="object\Traiangle\Triangle.h" />
     <ClInclude Include="math\Vector4.h" />
     <ClInclude Include="base\WindowsAPI\WindowsAPI.h" />
+    <ClInclude Include="manager\FileManager\FileManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ShaderFile\CopyImage.hlsli" />

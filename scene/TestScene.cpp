@@ -12,13 +12,14 @@ void TestScene::Initialize() {
 	model_ = Model::CreateModelPtr("walk.gltf");
 	object_ = std::make_unique<Object3d>();
 	object_->Init(model_.get(), camera_.get());
+	//object_->LoadAnimation("walk/walk.gltf");
+	//object_->StartAnimation(true);
+	//object_->SetAnimationSpeed(1.0f);
 
 	s_ = std::make_unique<Sprite>();
 	s_ = Sprite::CreateUnique({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, "monsterBall.png");
 	s_->Initialize();
-	//object_->LoadAnimation("walk/walk.gltf");
-	//object_->StartAnimation(true);
-	//object_->SetAnimationSpeed(1.0f);
+	
 
 	/*model1_ = std::make_unique<Model>();
 	model1_ = Model::CreateModelFromObjPtr("walk","sneakWalk.gltf");
@@ -63,7 +64,7 @@ void TestScene::Draw() {
 	//dome_->Draw();
 	skybox_->Draw();
 	object_->Draw();
-	//s_->Draw();
+	s_->Draw();
 	/*object1_->Draw();
 	object2_->Draw();*/
 }

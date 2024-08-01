@@ -100,6 +100,7 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> particleVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particlePixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> skinningVertexShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> skinningPixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> copyImageVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> copyImagePixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> grayscalePixelShaderBlob_{};

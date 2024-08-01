@@ -546,5 +546,6 @@
     <None Include="ShaderFile\CopyImage.PS.hlsl" />
     <None Include="ShaderFile\CopyImage.hlsli" />
     <None Include="ShaderFile\Skybox.hlsli" />
+    <None Include="ShaderFile\SkinningObject3d.PS.hlsl" />
   </ItemGroup>
 </Project>

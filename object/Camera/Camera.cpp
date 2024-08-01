@@ -131,10 +131,10 @@ void Camera::Update() {
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(GraphicsRenderer::Skinning);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());*/
 
-	/*ImGui::Begin("Camera");
+	ImGui::Begin("Camera");
 	ImGui::DragFloat3("translate", &worldTransform_.translate.x, -0.01f, 0.01f);
 	ImGui::DragFloat3("rotate", &worldTransform_.rotate.x, -0.01f, 0.01f);
-	ImGui::End();*/
+	ImGui::End();
 
 	
 }

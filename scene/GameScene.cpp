@@ -29,13 +29,11 @@ GameScene::~GameScene() {
 void GameScene::Initialize() {
 	input_ = Input::GetInstance();
 
-	model = Model:: CreateModelFromObj(CUBE);
-
 	worldTransform_.Initialize();
 	worldTransform_.scale = { 10,10,1 };
 
 	// 3Dモデルの生成
-	modelSkydome_ = Model::CreateModelFromObjPtr("skydome");
+	modelSkydome_ = Model::CreateModelPtr("skydome.obj");
 
 	//// レールカメラの生成
 	railCamera_ = std::make_unique<RailCamera>();
@@ -46,7 +44,7 @@ void GameScene::Initialize() {
 
 	//textureHandle = PLAYER;
 	// 自キャラの初期化
-	playerModel_ = Model::CreateModelFromObjPtr("cube");
+	playerModel_ = Model::CreateModelPtr("cube.obj");
 
 	
 
@@ -144,7 +142,6 @@ void GameScene::Update() {
 }
 
 void GameScene::Draw2D() {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	player_->DrawUI();
 
 	skydome_->Draw();
@@ -164,7 +161,7 @@ void GameScene::Draw2D() {
 }
 
 void GameScene::Draw3D() {
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(1);
+
 }
 
 
@@ -286,7 +283,7 @@ void GameScene::AddEnemyBullet(EnemyBullet* enemhyBullet) {
 void GameScene::EnemySpawn(Vector3 position) {
 	Enemy* newEnemy = new Enemy();
 	Model* newModel{};
-	newModel = Model::CreateModelFromObj(ENEMY);
+	newModel = Model::CreateModel("enemy.obj");
 	newModel->SetColor({ 1,0,0,1 });
 	newEnemy->SetPlayer(player_.get());
 	newEnemy->Initialize(newModel, position);
@@ -391,7 +388,7 @@ void GameScene::EnemyFire() {
 		velocity_ = TransformNormal(velocity_, worldTransform_.matWorld_);
 
 		Model* newModel{};
-		newModel = Model::CreateModelFromObj(CUBE);
+		newModel = Model::CreateModel("cube.obj");
 		newModel->SetColor({ 1,1,0,1 });
 
 		// 弾を生成し、初期化

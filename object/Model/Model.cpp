@@ -3,29 +3,50 @@
 #include "../../../base/GraphicsRenderer/GraphicsRenderer.h"
 #include "../../manager/SrvManager/SrvManager.h"
 
-Model* Model::CreateModelFromObj(int modelName) {
-	Model* model = new Model();
+//ファイル名と使う中身が同じ名前の場合これを使う
+Model* Model::CreateModel(const std::string& filename) {
+	Model* model = new Model;
+	model->fileName_ = filename;
 	// モデルの読み込み
-
-	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
+	ModelManager::GetInstance()->LoadModel(filename);
+	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
+	std::string extension = GetExtention(filename);
+	if (extension == ".obj") {
+		model->isObj = true;
+	}
+	else if (extension == ".gltf") {
+		model->isObj = false;
+	}
+	else if (extension == "") {
+		std::cerr << "Warning: The file '" << filename << "' has no extension. Please check the file name.（拡張子を書いてください）" << std::endl;
+	}
+	else {
+		std::cerr << "Warning: The file '" << filename << "' has an unrecognized extension ' (認識できない拡張子があります)" << extension << "'." << std::endl;
+	}
 
 	model->Initialize();
 	return model;
 }
 
-//ファイル名と使う中身が同じ名前の場合これを使う
-std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& filename) {
+std::unique_ptr<Model> Model::CreateModelPtr(const std::string& filename) {
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
 	model->fileName_ = filename;
 	// モデルの読み込み
 	ModelManager::GetInstance()->LoadModel(filename);
 	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
-	if (GetExtention(filename) == ".obj") {
+	std::string extension = GetExtention(filename);
+	if (extension == ".obj") {
 		model->isObj = true;
 	}
-	if (GetExtention(filename) == ".gltf") {
+	else if (extension == ".gltf") {
 		model->isObj = false;
+	}
+	else if (extension == "") {
+		std::cerr << "Warning: The file '" << filename << "' has no extension. Please check the file name.（拡張子を書いてください）" << std::endl;
+	}
+	else {
+		std::cerr << "Warning: The file '" << filename << "' has an unrecognized extension ' (認識できない拡張子があります)" << extension << "'." << std::endl;
 	}
 
 	model->Initialize();
@@ -33,18 +54,25 @@ std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& filename)
 }
 
 //ファイル名と使う中身が違う名前の場合これを使う
-std::unique_ptr<Model> Model::CreateModelFromObjPtr(const std::string& directoryPath, const std::string& filename) {
+std::unique_ptr<Model> Model::CreateModelPtr(const std::string& directoryPath, const std::string& filename) {
 	std::unique_ptr<Model> model;
 	model = std::make_unique<Model>();
 	model->fileName_ = filename;
 	// モデルの読み込み
 	ModelManager::GetInstance()->LoadModel(directoryPath, filename);
 	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
-	if (GetExtention(filename) == ".obj") {
+	std::string extension = GetExtention(filename);
+	if (extension == ".obj") {
 		model->isObj = true;
 	}
-	if (GetExtention(filename) == ".gltf") {
+	else if (extension == ".gltf") {
 		model->isObj = false;
+	}
+	else if (extension == "") {
+		std::cerr << "Warning: The file '" << filename << "' has no extension. Please check the file name.（拡張子を書いてください）" << std::endl;
+	}
+	else {
+		std::cerr << "Warning: The file '" << filename << "' has an unrecognized extension ' (認識できない拡張子があります)" << extension << "'." << std::endl;
 	}
 
 	model->Initialize();
@@ -143,9 +171,9 @@ void Model::Draw() {
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 	//SRV用のDescriptorTableの先頭を設定。2は:rootParameter[2]である。
 	uint32_t srvIndex = TextureManager::GetInstance()->GetSrvIndex(modelData_.material.textureFilePath);
+	uint32_t srvIndexForMap = TextureManager::GetInstance()->GetSrvIndex("","rostock_laage_airport_4k.dds");
 	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, srvIndex);
-
-	//SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(4, srvIndex_);
+	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(5, srvIndexForMap);
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。
 	DirectX12::GetInstance()->GetCommandList()->DrawIndexedInstanced(UINT(modelData_.indices.size()), 1, 0, 0, 0);
 }

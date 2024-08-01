@@ -31,6 +31,10 @@ public:
 		Grayscale,
 		Vignette,
 		BoxFilter,
+		//DepthBasedOutline,
+		//LuminanceBasedOutline,
+		Skybox,
+
 
 
 		MaxPSO
@@ -97,13 +101,18 @@ private:
 	Microsoft::WRL::ComPtr<IDxcBlob> particleVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> particlePixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> skinningVertexShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> skinningPixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> copyImageVertexShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> copyImagePixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> grayscalePixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> boxFilterPixelShaderBlob_{};
 	Microsoft::WRL::ComPtr<IDxcBlob> vignettePixelShaderBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> luminanceBasedOutlinePSBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> depthBasedOutlinePSBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> SkyboxVSBlob_{};
+	Microsoft::WRL::ComPtr<IDxcBlob> SkyboxPSBlob_{};
 
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{};
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineManagerStateDesc_[MAXPSO]{}; 
 
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs_[MAXPSO][5]{};
 
@@ -122,4 +131,11 @@ private:
 	D3D12_STATIC_SAMPLER_DESC staticSamplers_[MAXPSO][1]{};
 
 	D3D12_DEPTH_STENCIL_DESC depthStencilDesc_{};
+
+	bool isCopyImage{};
+	bool isGrayScale{};
+	bool isVignette{};
+	bool isBoxFilte{};
+	bool isLuminanceBasedOutline{};
+	bool isDepthBasedOutline{};
 };

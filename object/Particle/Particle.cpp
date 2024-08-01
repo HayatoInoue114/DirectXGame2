@@ -104,25 +104,24 @@ Microsoft::WRL::ComPtr<ID3D12Resource> Particle::CreateBufferResource(const Micr
 	return vertexResource;
 }
 
-Particle* Particle::CreateModelFromObj(int modelName) {
+Particle* Particle::CreateModel(const std::string& filename) {
 	Particle* model = new Particle();
 
 	model->Initialize();
 	// モデルの読み込み
 
-	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
-
+	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
 	
 	return model;
 }
 
-std::unique_ptr<Particle> Particle::CreateModelFromObjPtr(int modelName) {
+std::unique_ptr<Particle> Particle::CreateModelPtr(const std::string& filename) {
 	std::unique_ptr<Particle> model;
 	model = std::make_unique<Particle>();
 	model->Initialize();
 	
 	// モデルの読み込み
-	model->modelData_ = ModelManager::GetInstance()->GetModelData()[modelName];
+	model->modelData_ = ModelManager::GetInstance()->GetModel(filename);
 
 	
 	return model;

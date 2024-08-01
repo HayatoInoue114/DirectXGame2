@@ -7,7 +7,7 @@ void PrimitiveManager::Initialize() {
 	railCamera_->Initialize({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 0.0f });
 
 	player_ = std::make_unique<Player>();
-	model_ = Model::CreateModelFromObjPtr("cube");
+	model_ = Model::CreateModelPtr("cube.obj");
 	// 自キャラとレールカメラの親子関係を結ぶ
 	model_->SetCamera(railCamera_->GetCamera());
 	model_->SetParent(&railCamera_->GetWorldTransform());
@@ -19,7 +19,7 @@ void PrimitiveManager::Initialize() {
 	player_->Initialize(model_.get(), playerPosition);
 
 	domeModel_ = std::make_unique<Model>();
-	domeModel_ = Model::CreateModelFromObjPtr("skydome");
+	domeModel_ = Model::CreateModelPtr("skydome.obj");
 	domeModel_->SetCamera(railCamera_->GetCamera());
 
 	dome_ = std::make_unique<Skydome>();
@@ -115,7 +115,7 @@ void PrimitiveManager::AddEnemyBullet(EnemyBullet* enemyBullet) {
 void PrimitiveManager::EnemySpawn(Vector3 position) {
 	Enemy* newEnemy = new Enemy();
 	Model* newModel{};
-	newModel = Model::CreateModelFromObj(ENEMY);
+	newModel = Model::CreateModel("enemy.obj");
 	newModel->SetColor({ 1,0,0,1 });
 	newModel->SetCamera(railCamera_->GetCamera());
 	newModel->SetParent(&railCamera_->GetWorldTransform());
@@ -222,7 +222,7 @@ void PrimitiveManager::EnemyFire() {
 		velocity_ = TransformNormal(velocity_, player_->GetWorldTransform().matWorld_);
 
 		Model* newModel{};
-		newModel = Model::CreateModelFromObj(CUBE);
+		newModel = Model::CreateModel("cube.obj");
 		newModel->SetColor({ 1,1,0,1 });
 
 		// 弾を生成し、初期化

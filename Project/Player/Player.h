@@ -8,6 +8,7 @@
 #include <list>
 #include "../../manager/ModelManager/ModelManager.h"
 #include "../RailCamera/RailCamera.h"
+#include "../../object/Object3d/Object3d.h"
 
 class Particle;
 
@@ -89,8 +90,8 @@ private:
 	
 	// ワールド変換データ
 	WorldTransform worldTransform_;
-	// モデル
-	Model* model_ = nullptr;
+	//object
+	std::unique_ptr<Object3d> object_;
 	// テクスチャハンドル
 	uint32_t textureHandle_ = 0u;
 	// キーボード入力

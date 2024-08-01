@@ -24,7 +24,7 @@ public:
 	void ImGuiAdjustParameter();
 
 	static Sprite* Create(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
-	static std::unique_ptr<Sprite> CreateUnique(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum);
+	static std::unique_ptr<Sprite> CreateUnique(Vector3 position, Vector2 size, Vector4 color, const std::string& filename);
 
 	// セッター
 	void SetWorldTransform(const WorldTransform& transform) { worldTransform_ = transform; }
@@ -36,6 +36,7 @@ public:
 	void SetSize(const Vector2& size) { size_ = size; }
 	void SetPosition(const Vector2& position) { worldTransform_.translate.x = position.x; worldTransform_.translate.y = position.y; }
 	void SetTextureNum(uint32_t num) { textureNum_ = num; }
+	void SetFileName(const std::string& filename) { filename_ = filename; }
 
 	// ゲッター
 	const WorldTransform& GetWorldTransform() const { return worldTransform_; }
@@ -127,5 +128,7 @@ private:
 	uint32_t textureNum_;
 
 	WorldTransform worldTransform_;
+
+	std::string filename_;
 };
 

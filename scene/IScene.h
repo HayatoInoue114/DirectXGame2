@@ -18,6 +18,8 @@ public:
 	virtual void Finalize() = 0;
 	int GetSceneNum() { return sceneNum; }
 	void SetSceneNum(int num) { sceneNum = num; }
-private:
+
 	static int sceneNum;
+protected:
+	
 };

@@ -22,5 +22,5 @@ void ParticleManager::Update() {
 void ParticleManager::Draw() {
 	//GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(0);
 	particle_.SetWVP(wvpData_);
-	particle_.Draw(camera_,CIRCLE);
+	//particle_.Draw(camera_,CIRCLE);
 }

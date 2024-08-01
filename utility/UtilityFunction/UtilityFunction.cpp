@@ -48,6 +48,6 @@ void DrawVector3(const Vector3& v) {
     ImGui::Text("Vector3 : %d, %d, %d", v.x, v.y, v.z);
     ImGui::End();
 #else
-    (void)matrix;
+    (void)v;
 #endif // DEBUG
 }

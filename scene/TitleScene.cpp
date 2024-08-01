@@ -2,72 +2,72 @@
 #include "../manager/GameManager/GameManager.h"
 
 void TitleScene::Initialize() {
-	SetSceneNum(TEST_SCENE);
-	// 入力
-	input_ = Input::GetInstance();
+	//SetSceneNum(TEST_SCENE);
+	//// 入力
+	//input_ = Input::GetInstance();
 
-	/*sprite_ = new Sprite;
-	sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
+	///*sprite_ = new Sprite;
+	//sprite_->Create({ 0,0,0 }, { 1,1 }, { 0,0,0,1 }, MONSTERBALL);*/
 
-	sprite_ = Sprite::CreateUnique({0,0,0}, {1280,720}, {1,1,1,1},TITLESPRITE);
-	black_ = Sprite::CreateUnique({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);
+	///*sprite_ = Sprite::CreateUnique({0,0,0}, {1280,720}, {1,1,1,1},TITLESPRITE);
+	//black_ = Sprite::CreateUnique({ 0,0,0 }, { 1280,720 }, { 1,1,1,1 }, BLACK);*/
 
 
-	transform_.Initialize();
-	//viewProjection.Initialize();
+	//transform_.Initialize();
+	////viewProjection.Initialize();
 
-	transform_.scale = { 1.0f,0.5f,0.7f };
+	//transform_.scale = { 1.0f,0.5f,0.7f };
 
-	t_ = 0;
-	isT_ = 0;
+	//t_ = 0;
+	//isT_ = 0;
 
-	color_ = { 1,1,1,0 };
-	a_ = 0;
-	count_ = 0;
+	//color_ = { 1,1,1,0 };
+	//a_ = 0;
+	//count_ = 0;
 }
 
 void TitleScene::Update() {
-	t_++;
+	//t_++;
 
-	if (t_ % 10 == 0) {
-		isT_++;
-	}
+	//if (t_ % 10 == 0) {
+	//	isT_++;
+	//}
 
-	if (isT_ % 2 == 0) {
-		transform_.translate.y += 1;
-	}
-	else {
-		transform_.translate.y -= 1;
-	}
+	//if (isT_ % 2 == 0) {
+	//	transform_.translate.y += 1;
+	//}
+	//else {
+	//	transform_.translate.y -= 1;
+	//}
 
 
-	
-	sprite_->SetPosition({ transform_.translate.x,transform_.translate.y });
+	//
+	////sprite_->SetPosition({ transform_.translate.x,transform_.translate.y });
 
-	color_.w = a_;
-	black_->SetColor(color_);
+	//color_.w = a_;
+	//black_->SetColor(color_);
 
-	black_->Update();
-	sprite_->Update();
+	//black_->Update();
+	//sprite_->Update();
 
-	// ゲームパッド未接続なら何もせず抜ける
-	/*if (!Input::GetInstance()->GetJoystickState(joyState)) {
-		return;
-	}*/
-	if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || input_->PushKeyTrigger(DIK_SPACE)) {
-		count_ = 1;
-	}
+	//// ゲームパッド未接続なら何もせず抜ける
+	///*if (!Input::GetInstance()->GetJoystickState(joyState)) {
+	//	return;
+	//}*/
+	//if (!input_->GamePadTrigger(XINPUT_GAMEPAD_B) || input_->PushKeyTrigger(DIK_SPACE)) {
+	//	count_ = 1;
+	//}
 
-	if (count_ == 1) {
-		if (t_ % 3 == 0) {
-			a_ += 0.1f;
-		}
-	}
+	//if (count_ == 1) {
+	//	if (t_ % 3 == 0) {
+	//		a_ += 0.1f;
+	//	}
+	//}
 
-	if (a_ >= 1) {
-		SetSceneNum(TEST_SCENE);
-		//SetSceneNum(GAME_SCENE);
-	}
+	//if (a_ >= 1) {
+	//	SetSceneNum(TEST_SCENE);
+	//	//SetSceneNum(GAME_SCENE);
+	//}
 }
 
 void TitleScene::Draw() {

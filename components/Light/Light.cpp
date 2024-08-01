@@ -49,11 +49,11 @@ void Light::Initialize() {
 	// Lightingのデフォ値
 	directionalLightData_->color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	directionalLightData_->direction = { 0.0f, 0.0f, 1.0f };
-	directionalLightData_->intensity = 1.0f;
+	directionalLightData_->intensity = 0.0f;
 }
 
 void Light::AdjustParameter() {
 	ImGui::SliderFloat3("Lighting.direction", &directionalLightData_->direction.x, -1, 1);
-	ImGui::ColorEdit3("Lighting.color", &directionalLightData_->color.x);
+	ImGui::ColorEdit4("Lighting.color", &directionalLightData_->color.x);
 	ImGui::SliderFloat("Lighting.intensity", &directionalLightData_->intensity, 0, 1);
 }

@@ -35,13 +35,13 @@ public:
 
 	void SetParent(const WorldTransform* parent);
 
-	static Model* CreateModelFromObj(int modelName);
+	static Model* CreateModel(const std::string& filename);
 
 	//ファイル名と使う中身が同じ名前の場合これを使う
-	static std::unique_ptr<Model> CreateModelFromObjPtr(const std::string& filename);
+	static std::unique_ptr<Model> CreateModelPtr(const std::string& filename);
 
 	//ファイル名と使う中身が違う名前の場合これを使う
-	static std::unique_ptr<Model> CreateModelFromObjPtr(const std::string& directoryPath, const std::string& filename);
+	static std::unique_ptr<Model> CreateModelPtr(const std::string& directoryPath, const std::string& filename);
 
 	//static std::unique_ptr<Model> CreateModelFromObjPtr(int modelName);
 
@@ -77,8 +77,6 @@ private:
 	void CreateModel();
 
 	void CreateResourceView();
-
-	void LoadTexture();
 
 public:
 	//trueなら.obj || falseなら.gltf

@@ -8,17 +8,6 @@
 #include "../../utility/UtilityFunction/UtilityFunction.h"
 #include "../../base/DirectX12/DirectX12.h"
 
-enum ModelName {
-	CUBE,
-	SPHERE,
-	SKYDOME,
-	PLAYER,
-	ENEMY,
-	PLANE,
-
-	MODELNUM
-};
-
 class ModelManager
 {
 public:
@@ -35,8 +24,7 @@ public:
 	ModelData GetModel(const std::string& filePath);
 	
 public:
-	// Getter
-	ModelData* GetModelData() { return modelData_; }
+	
 
 private:
 	// objの読み込み
@@ -55,5 +43,4 @@ private:
 
 private:
 	std::map<std::string, ModelData> modelDatas;
-	ModelData modelData_[MODELNUM];
 };

@@ -1,10 +1,15 @@
 #pragma once
 #include "../../math/MyMath.h"
+#include "../../structure/structure.h"
+
+struct CameraForGPU {
+	Vector3 worldPosition;
+};
 
 class Camera
 {
 public:
-	//Camera();
+	Camera();
 	void Initialize();
 	void Update();
 	
@@ -26,7 +31,7 @@ public:
 	const Matrix4x4& GetViewProjectionMatrix() const { return viewProjectionMatrix_; }
 	const Vector3& GetRotate() const { return worldTransform_.rotate; }
 	const Vector3& GetTranslate() const { return worldTransform_.translate; }
-
+	const Microsoft::WRL::ComPtr<ID3D12Resource>& GetGPUResource() const { return cameraForGPUResource_; }
 
 private:
 	WorldTransform worldTransform_{};
@@ -35,10 +40,13 @@ private:
 	Matrix4x4 projectionMatrix_{};
 	Matrix4x4 viewProjectionMatrix_{};
 
+	CameraForGPU* position{};
+
 	float FovY_{};
 	float aspectRatio_{};
 	float nearClip_{};
 	float farClip_{};
 
+	Microsoft::WRL::ComPtr<ID3D12Resource> cameraForGPUResource_;
 };
 

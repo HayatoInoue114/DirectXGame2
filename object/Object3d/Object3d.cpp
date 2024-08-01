@@ -7,6 +7,23 @@ void Object3d::Init()
 	CreateTransformationMatrixResource();
 }
 
+void Object3d::Init(const std::string& filename)
+{
+	std::unique_ptr<Model> model = std::make_unique<Model>();
+	model = Model::CreateModelPtr(filename);
+	model_ = model.get();
+	CreateTransformationMatrixResource();
+}
+
+void Object3d::Init(const std::string& filename, Camera* camera)
+{
+	std::unique_ptr<Model> model;
+	model = Model::CreateModelPtr(filename);
+	model_ = model.get();
+	camera_ = camera;
+	CreateTransformationMatrixResource();
+}
+
 void Object3d::Init(Model* model)
 {
 	model_ = model;
@@ -48,13 +65,9 @@ void Object3d::Draw()
 			wvpData_->WVP = worldViewProjectionMatrix_;
 			wvpData_->World = worldMatrix_;
 
-			ImGui::Begin("3d");
-			ImGui::SliderFloat("anime", &animationTime_, 0.1f, 0.1f);
-			ImGui::End();
-
-			DrawMatrix4x4("localMatrix", worldViewProjectionMatrix_);
-			
 		}
+
+		
 
 		D3D12_VERTEX_BUFFER_VIEW vbvs[2] = {
 			model_->GetVBV(),
@@ -64,11 +77,12 @@ void Object3d::Draw()
 		DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 2, vbvs);
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(3, Light::Getinstance()->GetDirectionalLightResource()->GetGPUVirtualAddress());
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, camera_->GetGPUResource()->GetGPUVirtualAddress());
 		if (animation_) {
-			DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(4, skinCluster_.paletteSrvHandle.second);
+			DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(6, skinCluster_.paletteSrvHandle.second);
 			//SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(4, srvIndex_);
 		}
-
+		//Light::Getinstance()->AdjustParameter();
 		model_->Draw();
 	}
 

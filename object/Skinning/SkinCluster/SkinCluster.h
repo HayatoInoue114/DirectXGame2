@@ -2,6 +2,7 @@
 #include "../../../structure/structure.h"
 #include "../../../base/DirectX12/DirectX12.h"
 #include "../../../manager/TextureManager/TextureManager.h"
+#include "../../../manager/SrvManager/SrvManager.h"
 
 #pragma once
 #include "../../../math/MyMath.h"

@@ -45,6 +45,9 @@ void Object3d::Init(Model* model,Camera* camera)
 
 void Object3d::Draw()
 {
+	transform_.rotate = worldTransform_.rotate;
+	transform_.scale = worldTransform_.scale;
+	transform_.translate = worldTransform_.translate;
 	CreateWVPMatrix();
 
 	if (model_) {

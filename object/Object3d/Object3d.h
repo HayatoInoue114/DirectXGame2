@@ -30,6 +30,7 @@ public:
 	void SetCamera(Camera* camera) { camera_ = camera; }
 
 	void SetWorldTransform(const WorldTransform& world) { worldTransform_ = world; }
+	void SetTransformS(const TransformS& transform) { transform_ = transform; }
 	void SetRotate(const Vector3& rotate) { worldTransform_.rotate = rotate; }
 	void SetTranslate(const Vector3& translate) { worldTransform_.translate = translate; }
 
@@ -61,6 +62,7 @@ public:
 	bool isParent_ = false;
 
 private:
+	TransformS transform_{};
 	Model* model_ = nullptr;
 
 	WorldTransform worldTransform_{};

@@ -37,5 +37,6 @@ private:
 	std::unique_ptr<Model> domeModel_;
 
 	std::unique_ptr<Skybox> skybox_;
+	std::unique_ptr<Sprite> s_;
 };
 

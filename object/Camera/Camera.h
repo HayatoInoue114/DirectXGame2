@@ -31,7 +31,7 @@ public:
 	const Matrix4x4& GetViewProjectionMatrix() const { return viewProjectionMatrix_; }
 	const Vector3& GetRotate() const { return worldTransform_.rotate; }
 	const Vector3& GetTranslate() const { return worldTransform_.translate; }
-
+	const Microsoft::WRL::ComPtr<ID3D12Resource>& GetGPUResource() const { return cameraForGPUResource_; }
 
 private:
 	WorldTransform worldTransform_{};

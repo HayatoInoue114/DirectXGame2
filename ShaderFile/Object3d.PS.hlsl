@@ -81,6 +81,7 @@ PixelShaderOutput main(VertexShaderOutput input)
         float32_t4 enviromentColor = gEnviromentTexture.Sample(gSampler, reflectedVector);
 		
         output.color.rgb += enviromentColor.rgb;
+        output.color.a = gMaterial.color.a * textureColor.a;
     }
 
     return output;

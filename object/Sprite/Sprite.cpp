@@ -1,6 +1,7 @@
 #include "Sprite.h"
 #include "../../base/GraphicsRenderer/GraphicsRenderer.h"
 #include "../../manager/TextureManager/TextureManager.h"
+#include "../../manager/SrvManager/SrvManager.h"
 
 /// <summary>
 /// スプライト生成
@@ -22,14 +23,15 @@ Sprite* Sprite::Create(Vector3 position, Vector2 size, Vector4 color, uint32_t t
 	return sprite;
 }
 
-std::unique_ptr<Sprite> Sprite::CreateUnique(Vector3 position, Vector2 size, Vector4 color, uint32_t textureNum) {
+std::unique_ptr<Sprite> Sprite::CreateUnique(Vector3 position, Vector2 size, Vector4 color, const std::string& filename) {
 	std::unique_ptr<Sprite> sprite;
 	sprite = std::make_unique<Sprite>();
 	sprite->Initialize();
 	sprite->SetSize(size);
 	sprite->SetPosition({ position.x,position.y });
 	sprite->SetColor(color);
-	sprite->SetTextureNum(textureNum);
+	sprite->SetFileName(filename);
+	TextureManager::GetInstance()->LoadTexture("", filename);
 	//textureNum_ = textureNum;
 
 	return sprite;
@@ -168,9 +170,7 @@ void Sprite::SetMaterialData() {
 void Sprite::Update() {
 	worldTransform_.scale = { size_.x,size_.y,1.0f };
 
-	SetVertexData();
 	
-	CalculateAndSetWVPMatrix();
 	
 	//色の指定
 	//ImGuiAdjustParameter();
@@ -182,6 +182,9 @@ void Sprite::Draw() {
 	if (isInvisible_) {
 		return;
 	}
+	SetVertexData();
+
+	CalculateAndSetWVPMatrix();
 	//パラメータからUVTransform用の行列を生成する
 	uvTransformMatrix_ = MakeScaleMatrix(uvTransform_.scale);
 	uvTransformMatrix_ = Multiply(uvTransformMatrix_, MakeRotateZMatrix(uvTransform_.rotate.z));
@@ -197,8 +200,8 @@ void Sprite::Draw() {
 	//wvp用のCBufferの場所を設定
 	//TransformationMatrixCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, transformationMatrixResource_->GetGPUVirtualAddress());
-
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetGPUDescriptorHandle(textureNum_));
+	uint32_t index = TextureManager::GetInstance()->GetSrvIndex("resources/" + filename_);
+	SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(2, index);
 	//描画！(DrawCall/ドローコール)
 	directX12_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }

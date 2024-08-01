@@ -125,11 +125,11 @@ void Camera::Update() {
 
 #pragma endregion カメラのキー移動
 
-	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(GraphicsRenderer::Object3d);
+	/*GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(GraphicsRenderer::Object3d);
 	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());
 
 	GraphicsRenderer::GetInstance()->SetRootSignatureAndPSO(GraphicsRenderer::Skinning);
-	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());
+	DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(4, cameraForGPUResource_->GetGPUVirtualAddress());*/
 
 	/*ImGui::Begin("Camera");
 	ImGui::DragFloat3("translate", &worldTransform_.translate.x, -0.01f, 0.01f);

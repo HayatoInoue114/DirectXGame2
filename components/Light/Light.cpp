@@ -54,6 +54,6 @@ void Light::Initialize() {
 
 void Light::AdjustParameter() {
 	ImGui::SliderFloat3("Lighting.direction", &directionalLightData_->direction.x, -1, 1);
-	ImGui::ColorEdit3("Lighting.color", &directionalLightData_->color.x);
+	ImGui::ColorEdit4("Lighting.color", &directionalLightData_->color.x);
 	ImGui::SliderFloat("Lighting.intensity", &directionalLightData_->intensity, 0, 1);
 }

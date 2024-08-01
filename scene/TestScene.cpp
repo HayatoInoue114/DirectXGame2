@@ -1,5 +1,6 @@
 #include "TestScene.h"
 #include "../base/GraphicsRenderer/GraphicsRenderer.h"
+#include "../manager/FileManager/FileManager.h"
 
 void TestScene::Initialize() {
 	// 入力
@@ -7,20 +8,23 @@ void TestScene::Initialize() {
 
 	camera_ = std::make_unique<Camera>();
 	camera_->Initialize();
-	
+
 	model_ = std::make_unique<Model>();
 	model_ = Model::CreateModelPtr("walk.gltf");
 	object_ = std::make_unique<Object3d>();
 	object_->Init(model_.get(), camera_.get());
-	//object_->LoadAnimation("walk/walk.gltf");
-	//object_->StartAnimation(true);
-	//object_->SetAnimationSpeed(1.0f);
 
-	s_ = std::make_unique<Sprite>();
-	s_ = Sprite::CreateUnique({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, "monsterBall.png");
-	s_->Initialize();
-	
+	object_->LoadAnimation("walk/walk.gltf");
+	object_->StartAnimation(true);
+	object_->SetAnimationSpeed(1.0f);
 
+	FileManager::GetInstance()->LoadJsonFile("json", "j");
+
+	jsonModel_ = std::make_unique<Model>();
+	jsonModel_ = Model::CreateModelPtr("json", "j.obj");
+	jsonObject_ = std::make_unique<Object3d>();
+	jsonObject_->Init(jsonModel_.get(), camera_.get());
+	jsonObject_->SetTransformS(FileManager::GetInstance()->GetObjectTransform("j.json"));
 	/*model1_ = std::make_unique<Model>();
 	model1_ = Model::CreateModelFromObjPtr("walk","sneakWalk.gltf");
 	object1_ = std::make_unique<Object3d>();
@@ -42,11 +46,6 @@ void TestScene::Initialize() {
 
 	dome_ = std::make_unique<Object3d>();
 	dome_->Init(domeModel_.get(), camera_.get());
-
-	skybox_ = std::make_unique<Skybox>();
-	skybox_->Initialize();
-	skybox_->SetCamera(camera_.get());
-	skybox_->SetScale({ 1000,1000,1000 });
 }
 
 void TestScene::Update() {
@@ -61,12 +60,11 @@ void TestScene::Update() {
 }
 
 void TestScene::Draw() {
-	//dome_->Draw();
-	skybox_->Draw();
-	object_->Draw();
-	s_->Draw();
+	/*dome_->Draw();
+	object_->Draw();*/
 	/*object1_->Draw();
 	object2_->Draw();*/
+	jsonObject_->Draw();
 }
 
 void TestScene::Finalize() {

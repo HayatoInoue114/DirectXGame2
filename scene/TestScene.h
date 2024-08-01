@@ -6,7 +6,6 @@
 #include "../object/Object3d/Object3d.h"
 #include "../object/Camera/Camera.h"
 #include "../object/Sphere/Sphere.h"
-#include "../object/Skybox/Skybox.h"
 
 #include "IScene.h"
 
@@ -36,7 +35,7 @@ private:
 
 	std::unique_ptr<Model> domeModel_;
 
-	std::unique_ptr<Skybox> skybox_;
-	std::unique_ptr<Sprite> s_;
+	std::unique_ptr<Object3d> jsonObject_;
+	std::unique_ptr<Model> jsonModel_;
 };
 

@@ -82,7 +82,7 @@ void Object3d::Draw()
 			DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(6, skinCluster_.paletteSrvHandle.second);
 			//SrvManager::GetInstance()->SetGraphicsRootDescriptorTable(4, srvIndex_);
 		}
-		Light::Getinstance()->AdjustParameter();
+		//Light::Getinstance()->AdjustParameter();
 		model_->Draw();
 	}
 

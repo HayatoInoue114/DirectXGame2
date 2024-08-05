@@ -8,9 +8,10 @@
 #include <numbers>
 
 
-#include "json.hpp"
+#include "../../externals/json.hpp"
 #include "../../math/MyMath.h"
 #include "../../object/Model/Model.h"
+
 
 
 struct ColliderData {
@@ -23,7 +24,7 @@ struct LevelData {
 	struct ObjectData {
 		std::string type;
 		std::string file_name;
-		SRT srt;
+		TransformS srt;
 		std::map<std::string, std::unique_ptr<ObjectData>> children;
 	};
 	std::map<std::string, std::unique_ptr<ObjectData>> objects;
@@ -85,14 +86,14 @@ public:
 		return nullptr;
 	}
 
-	SRT GetObjectSrt(const std::string& key) const {
+	TransformS GetObjectSrt(const std::string& key) const {
 
 		auto it = levelData_->objects.find(key);
 		if (it != levelData_->objects.end()) {
 			return it->second.get()->srt;
 		}
 
-		return SRT();
+		return TransformS();
 	}
 
 #pragma endregion 

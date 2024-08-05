@@ -5,7 +5,7 @@
 // 初期化処理
 void FileManager::Initialize()
 {
-	levelData_ = make_unique<LevelData>();
+	levelData_ = std::make_unique<LevelData>();
 }
 
 
@@ -105,7 +105,7 @@ void FileManager::ScanningObjects(nlohmann::json& object, std::map<std::string, 
 	if (type.compare("MESH") == 0) {
 
 		// 新しくオブジェクトを作成
-		auto objectData = make_unique<LevelData::ObjectData>();
+		auto objectData = std::make_unique<LevelData::ObjectData>();
 
 
 		if (object.contains("type")) {

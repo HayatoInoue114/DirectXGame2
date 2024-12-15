@@ -38,5 +38,8 @@ private:
 
 	std::unique_ptr<Skybox> skybox_;
 	std::unique_ptr<Sprite> s_;
+
+	std::unique_ptr<Object3d> cobject_;
+	std::unique_ptr<Model> cmodel_;
 };
 

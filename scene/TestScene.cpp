@@ -20,7 +20,11 @@ void TestScene::Initialize() {
 	s_ = Sprite::CreateUnique({ 0,0,0 }, { 100,100 }, { 1,1,1,1 }, "monsterBall.png");
 	s_->Initialize();
 	
-
+	//TextureManager::GetInstance()->LoadTexture("/cube", "cube.dds");
+	cmodel_ = std::make_unique<Model>();
+	cmodel_ = Model::CreateModelPtr("cube.obj");
+	cobject_ = std::make_unique<Object3d>();
+	cobject_->Init(cmodel_.get(), camera_.get());
 	/*model1_ = std::make_unique<Model>();
 	model1_ = Model::CreateModelFromObjPtr("walk","sneakWalk.gltf");
 	object1_ = std::make_unique<Object3d>();
@@ -62,9 +66,10 @@ void TestScene::Update() {
 
 void TestScene::Draw() {
 	//dome_->Draw();
-	skybox_->Draw();
-	object_->Draw();
-	s_->Draw();
+	//skybox_->Draw();
+	//object_->Draw();
+	cobject_->Draw();
+	//s_->Draw();
 	/*object1_->Draw();
 	object2_->Draw();*/
 }
